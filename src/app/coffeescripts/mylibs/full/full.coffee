@@ -49,19 +49,28 @@ define([
 			# create a new webgl canvas
 			webgl = fx.canvas()
 
+			# add the double-click event listener which closes the preview
+			$(webgl).dblclick ->
+				$container.kendoStop(true).kendoAnimate { effects: "zoomOut fadeOut", hide: true, duration: 200, complete: ->
+					paused = true
+				}
+
+			# append the webgl canvas
+			$container.append(webgl)
+
 			# subscribe to the show event
 			$.subscribe "/full/show", (e) ->
 
-				$container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 1000, complete: ->
-					paused = false
-				}
+				$.extend(preview, e)
+
+				paused = false
+
+				$container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 200 }
 
 			# subscribe to the hide event
 			$.subscribe "full/hide", ->
 
-				$container.kendoStop(true).kendoAnimate { effects: "zoomOut fadeOut", hide: true, duration: 500, complete: ->
-					paused = true
-				}
+				
 
 			draw()
 				
