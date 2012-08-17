@@ -28,29 +28,36 @@ Install [Node & NPM](http://nodejs.org/ "node.js")
 ### Install Necessary Node Modules
 
 Install the CoffeeScript transpiler (Global)
+	
 	npm install -g coffee-script
 
 Install Jitter for watching/transpiling files (Global)
+	
 	npm install -g jitter
 
 Install RequireJS for building the src/app directory (Global)
+	
 	npm install -g requirejs
 
 Install Jake for automated builds (Global)
+	
 	npm install -g jake
 
 ### Start Jitter
 
 From the main chrome-photo-booth directory, tell jitter to watch the chrome directory and transpile to the extension directory.
+	
 	jitter src/chrome/coffeescripts extension/chrome/javascripts
 
 From the main chrome-photo-booth directory, tell jitter to watch the app directory and transpile to the app directory
+	
 	jitter src/app/coffeescripts src/app/javascripts
 
 ### Building With RequireJS
 The application is modular and must be built with RequireJS optimizier in order to update the application in the extension.  The code will not work inside of the extension if it is not built first.  CSP in the extension will block the use of any external HTML files which will include all templates.
 
 From the same directory as the jakefile.coffee file, run the following command
+	
 	jake
 
 This will build the files and copy them to the correct location in the **extension** directory.
