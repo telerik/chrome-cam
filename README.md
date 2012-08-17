@@ -28,7 +28,7 @@ The project is structured in two distinct areas.  The "src" directory holds all 
 ### Install Necessary Node Modules
 
 1. Install the CoffeeScript transpiler (Global)
-    npm install -g coffee-script
+	npm install -g coffee-script
 
 2. Install Jitter for watching/transpiling files (Global)
     npm install -g jitter
