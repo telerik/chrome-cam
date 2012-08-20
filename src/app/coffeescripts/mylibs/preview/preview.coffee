@@ -30,36 +30,25 @@ define([
     # the main draw loop which renders the live video effects      
     draw = ->
 
-        if not paused
+        $.subscribe "/camera/stream", (stream)->
 
-            # get the 2d canvas context and draw the image
-            # this happens at the curent framerate
-            ctx.drawImage(window.HTML5CAMERA.canvas, 0, 0, canvas.width, canvas.height)
-            
-            # for each of the preview objects, create a texture of the 
-            # 2d canvas and then apply the webgl effect. these are live
-            # previews
-            for preview in previews
+            if not paused
 
-                # increment the curent frame counter. this is used for animated effects
-                # like old movie and vhs. most effects simply ignore this
-                frame++
+                # get the 2d canvas context and draw the image
+                # this happens at the curent framerate
+                ctx.drawImage stream, 0, 0, canvas.width, canvas.height
+                
+                # for each of the preview objects, create a texture of the 
+                # 2d canvas and then apply the webgl effect. these are live
+                # previews
+                for preview in previews
 
-                # if this is a face tracking effect, we need to pass in a regular canvas
-                # instead of a webgl one
-                if preview.kind == "face"
-
-                    preview.filter(preview.canvas, canvas)
-
-                # otherwise pass in the webgl canvas, the canvas that contains the 
-                # video drawn from the application canvas and the current frame.
-                else
-           
+                    # increment the curent frame counter. this is used for animated effects
+                    # like old movie and vhs. most effects simply ignore this
+                    frame++
+               
                     preview.filter(preview.canvas, canvas, frame)
 
-        # LOOP!
-        utils.getAnimationFrame()(draw)
-    
     # anything under here is public
     pub = 
         
@@ -74,11 +63,16 @@ define([
             # initialize effects
             effects.init()
 
+            # subscribe to the pause and unpause events
+            $.subscribe "/previews/pause", (doPause) ->
+                paused = doPause    
+
             # create an internal canvas that contains a copy of the video. we can't
             # modify the original video feed so we'll modify a copy instead.
             canvas = document.createElement("canvas")
-            canvas.width = 344
-            canvas.height= 216
+            
+            canvas.width = 400 
+            canvas.height= 300
 
             ctx = canvas.getContext("2d")
             
@@ -136,7 +130,7 @@ define([
                                 preview = {}
                                 $.extend(preview, item)
 
-                                preview.canvas = fx.canvas()               
+                                preview.canvas = fx.canvas()         
 
                                 # run the DOM template through a kendo ui template
                                 content = $template({ name: preview.name })
@@ -150,11 +144,18 @@ define([
                                 # add the videos to the page
                                 $content.find("a").append(preview.canvas).click ->
 
+                                    # get the x and y coordinates of this images
+                                    x = $(this).offset().left
+                                    y = $(this).offset().top 
+
+                                    console.info(x)
+                                    console.info(y)
+
                                     # pause the effects
                                     paused = true
 
                                     # transition the new screen in 
-                                    $.publish("/full/show", [preview])
+                                    $.publish("/full/show", [preview, x, y])
 
 
                                 half.el.append($content)

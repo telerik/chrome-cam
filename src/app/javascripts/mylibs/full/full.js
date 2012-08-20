@@ -10,40 +10,62 @@
     paused = true;
     frame = 0;
     draw = function() {
-      if (!paused) {
-        ctx.drawImage(window.HTML5CAMERA.canvas, 0, 0, canvas.width, canvas.height);
-        frame++;
-        preview.filter(webgl, canvas, frame);
-      }
-      return utils.getAnimationFrame()(draw);
+      return $.subscribe("/camera/stream", function() {
+        if (!paused) {
+          frame++;
+          return preview.filter(webgl, window.HTML5CAMERA.canvas, frame);
+        }
+      });
     };
     return pub = {
       init: function(selector) {
         var $container;
+        kendo.fx.grow = {
+          setup: function(element, options) {
+            return $.extend({
+              top: options.top,
+              left: options.left,
+              width: options.width,
+              height: options.height
+            }, options.properties);
+          }
+        };
         $container = $(selector);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
-        canvas.width = $container.width();
-        canvas.height = $container.height();
         webgl = fx.canvas();
         $(webgl).dblclick(function() {
-          return $container.kendoStop(true).kendoAnimate({
-            effects: "zoomOut fadeOut",
-            hide: true,
-            duration: 200,
-            complete: function() {
-              return paused = true;
-            }
+          $.publish("/previews/pause", [false]);
+          return $container.kendoStop().kendoAnimate({
+            effects: "grow",
+            top: preview.canvas.offsetTop,
+            left: preview.canvas.offsetLeft,
+            width: preview.canvas.width,
+            height: preview.canvas.height
+          }, function() {
+            return $container.hide();
           });
         });
         $container.append(webgl);
         $.subscribe("/full/show", function(e) {
+          var fullHeight, fullWidth, x, y;
           $.extend(preview, e);
           paused = false;
+          y = preview.canvas.offsetTop;
+          x = preview.canvas.offsetLeft;
+          $container.css("top", y);
+          $container.css("left", x);
+          fullWidth = $(document).width();
+          fullHeight = $(document).height();
+          $container.width(preview.canvas.width);
+          $container.height(preview.canvas.height);
+          $container.show();
           return $container.kendoStop().kendoAnimate({
-            effects: "zoomIn fadeIn",
-            show: true,
-            duration: 200
+            effects: "grow",
+            top: 0,
+            left: 0,
+            width: fullWidth,
+            height: fullHeight
           });
         });
         $.subscribe("full/hide", function() {});

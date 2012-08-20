@@ -19,7 +19,8 @@
         imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         videoData = new Uint8ClampedArray(message.image);
         imgData.data.set(videoData);
-        return ctx.putImageData(imgData, 0, 0);
+        ctx.putImageData(imgData, 0, 0);
+        return $.publish("/camera/stream", [canvas]);
       });
       return callback();
     };
@@ -48,11 +49,11 @@
         beep.src = "sounds/beep.mp3";
         beep.buffer = "auto";
         canvas = document.createElement("canvas");
-        canvas.width = 460;
-        canvas.height = 340;
+        canvas.width = 720;
+        canvas.height = 480;
         video = document.createElement("video");
-        video.width = 460;
-        video.height = 340;
+        video.width = 720;
+        video.height = 480;
         ctx = canvas.getContext("2d");
         if (testing) {
           draw = function() {
@@ -81,8 +82,8 @@
           }, function() {
             return console.error("Camera Failed");
           });
-          turnOn(callback);
         }
+        turnOn(callback);
         return $.subscribe("/camera/countdown", function(num, hollaback) {
           return countdown(num, hollaback);
         });

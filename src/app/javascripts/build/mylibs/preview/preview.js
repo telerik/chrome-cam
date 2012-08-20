@@ -21,20 +21,18 @@
       };
     };
     draw = function() {
-      var preview, _i, _len;
-      if (!paused) {
-        ctx.drawImage(window.HTML5CAMERA.canvas, 0, 0, canvas.width, canvas.height);
-        for (_i = 0, _len = previews.length; _i < _len; _i++) {
-          preview = previews[_i];
-          frame++;
-          if (preview.kind === "face") {
-            preview.filter(preview.canvas, canvas);
-          } else {
-            preview.filter(preview.canvas, canvas, frame);
+      return $.subscribe("/camera/stream", function() {
+        var preview, _i, _len, _results;
+        if (!paused) {
+          _results = [];
+          for (_i = 0, _len = previews.length; _i < _len; _i++) {
+            preview = previews[_i];
+            frame++;
+            _results.push(preview.filter(preview.canvas, window.HTML5CAMERA.canvas, frame));
           }
+          return _results;
         }
-      }
-      return utils.getAnimationFrame()(draw);
+      });
     };
     return pub = {
       draw: function() {
@@ -43,9 +41,12 @@
       init: function(selector) {
         var bottom, ds, top;
         effects.init();
+        $.subscribe("/previews/pause", function(doPause) {
+          return paused = doPause;
+        });
         canvas = document.createElement("canvas");
-        canvas.width = 344;
-        canvas.height = 216;
+        canvas.width = 400;
+        canvas.height = 300;
         ctx = canvas.getContext("2d");
         $container = $("" + selector);
         top = {
@@ -81,8 +82,13 @@
                   $content = $(content);
                   previews.push(preview);
                   $content.find("a").append(preview.canvas).click(function() {
+                    var x, y;
+                    x = $(this).offset().left;
+                    y = $(this).offset().top;
+                    console.info(x);
+                    console.info(y);
                     paused = true;
-                    return $.publish("/full/show", [preview]);
+                    return $.publish("/full/show", [preview, x, y]);
                   });
                   return half.el.append($content);
                 })());

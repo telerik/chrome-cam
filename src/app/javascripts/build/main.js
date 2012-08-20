@@ -926,20 +926,18 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
       };
     };
     draw = function() {
-      var preview, _i, _len;
-      if (!paused) {
-        ctx.drawImage(window.HTML5CAMERA.canvas, 0, 0, canvas.width, canvas.height);
-        for (_i = 0, _len = previews.length; _i < _len; _i++) {
-          preview = previews[_i];
-          frame++;
-          if (preview.kind === "face") {
-            preview.filter(preview.canvas, canvas);
-          } else {
-            preview.filter(preview.canvas, canvas, frame);
+      return $.subscribe("/camera/stream", function() {
+        var preview, _i, _len, _results;
+        if (!paused) {
+          _results = [];
+          for (_i = 0, _len = previews.length; _i < _len; _i++) {
+            preview = previews[_i];
+            frame++;
+            _results.push(preview.filter(preview.canvas, window.HTML5CAMERA.canvas, frame));
           }
+          return _results;
         }
-      }
-      return utils.getAnimationFrame()(draw);
+      });
     };
     return pub = {
       draw: function() {
@@ -948,9 +946,12 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
       init: function(selector) {
         var bottom, ds, top;
         effects.init();
+        $.subscribe("/previews/pause", function(doPause) {
+          return paused = doPause;
+        });
         canvas = document.createElement("canvas");
-        canvas.width = 344;
-        canvas.height = 216;
+        canvas.width = 400;
+        canvas.height = 300;
         ctx = canvas.getContext("2d");
         $container = $("" + selector);
         top = {
@@ -986,8 +987,13 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
                   $content = $(content);
                   previews.push(preview);
                   $content.find("a").append(preview.canvas).click(function() {
+                    var x, y;
+                    x = $(this).offset().left;
+                    y = $(this).offset().top;
+                    console.info(x);
+                    console.info(y);
                     paused = true;
-                    return $.publish("/full/show", [preview]);
+                    return $.publish("/full/show", [preview, x, y]);
                   });
                   return half.el.append($content);
                 })());
@@ -1026,7 +1032,8 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
         imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         videoData = new Uint8ClampedArray(message.image);
         imgData.data.set(videoData);
-        return ctx.putImageData(imgData, 0, 0);
+        ctx.putImageData(imgData, 0, 0);
+        return $.publish("/camera/stream");
       });
       return callback();
     };
@@ -1050,16 +1057,16 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
       init: function(counter, callback) {
         var draw, testing, update, video;
         window.HTML5CAMERA = {};
-        testing = true;
+        testing = false;
         $counter = $("#" + counter);
         beep.src = "sounds/beep.mp3";
         beep.buffer = "auto";
         canvas = document.createElement("canvas");
-        canvas.width = 460;
-        canvas.height = 340;
+        canvas.width = 720;
+        canvas.height = 480;
         video = document.createElement("video");
-        video.width = 460;
-        video.height = 340;
+        video.width = 720;
+        video.height = 480;
         ctx = canvas.getContext("2d");
         if (testing) {
           draw = function() {
@@ -1088,8 +1095,8 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
           }, function() {
             return console.error("Camera Failed");
           });
-          turnOn(callback);
         }
+        turnOn(callback);
         return $.subscribe("/camera/countdown", function(num, hollaback) {
           return countdown(num, hollaback);
         });
@@ -3828,42 +3835,65 @@ define("libs/webgl/glfx.min", function(){});
     paused = true;
     frame = 0;
     draw = function() {
-      if (!paused) {
-        ctx.drawImage(window.HTML5CAMERA.canvas, 0, 0, canvas.width, canvas.height);
-        frame++;
-        preview.filter(webgl, canvas, frame);
-      }
-      return utils.getAnimationFrame()(draw);
+      return $.subscribe("/camera/stream", function() {
+        if (!paused) {
+          frame++;
+          return preview.filter(webgl, window.HTML5CAMERA.canvas, frame);
+        }
+      });
     };
     return pub = {
       init: function(selector) {
         var $container;
+        kendo.fx.grow = {
+          setup: function(element, options) {
+            return $.extend({
+              top: options.top,
+              left: options.left,
+              width: options.width,
+              height: options.height
+            }, options.properties);
+          }
+        };
         $container = $(selector);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
-        canvas.width = $container.width();
-        canvas.height = $container.height();
         webgl = fx.canvas();
-        $.subscribe("/full/show", function(e) {
+        $(webgl).dblclick(function() {
+          $.publish("/previews/pause", [false]);
           return $container.kendoStop().kendoAnimate({
-            effects: "zoomIn fadeIn",
-            show: true,
-            duration: 1000,
-            complete: function() {
-              return paused = false;
-            }
+            effects: "grow",
+            top: preview.canvas.offsetTop,
+            left: preview.canvas.offsetLeft,
+            width: preview.canvas.width,
+            height: preview.canvas.height
+          }, function() {
+            return $container.hide();
           });
         });
-        $.subscribe("full/hide", function() {
-          return $container.kendoStop(true).kendoAnimate({
-            effects: "zoomOut fadeOut",
-            hide: true,
-            duration: 500,
-            complete: function() {
-              return paused = true;
-            }
+        $container.append(webgl);
+        $.subscribe("/full/show", function(e) {
+          var fullHeight, fullWidth, x, y;
+          $.extend(preview, e);
+          paused = false;
+          y = preview.canvas.offsetTop;
+          x = preview.canvas.offsetLeft;
+          $container.css("top", y);
+          $container.css("left", x);
+          fullWidth = $(document).width();
+          fullHeight = $(document).height();
+          $container.width(preview.canvas.width);
+          $container.height(preview.canvas.height);
+          $container.show();
+          return $container.kendoStop().kendoAnimate({
+            effects: "grow",
+            top: 0,
+            left: 0,
+            width: fullWidth,
+            height: fullHeight
           });
         });
+        $.subscribe("full/hide", function() {});
         return draw();
       }
     };

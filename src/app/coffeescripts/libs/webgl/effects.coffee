@@ -18,6 +18,7 @@ define([
     ghostBuffer = []
 
     draw = (canvas, element, effect) ->
+
         texture = canvas.texture(element)
         canvas.draw(texture)
 

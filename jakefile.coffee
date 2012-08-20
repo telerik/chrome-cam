@@ -19,6 +19,10 @@ task 'default', (params) ->
 
 	jake.exec "r.js -o src/app/javascripts/app.build.js", () -> 
 
+		log "Copying Build Folder"
+
+		jake.cpR "src/app/javascripts/build/main.js", "extension/app/javascripts/main.js"
+
 		log "Copying Styles Folder"
 
 		jake.cpR "src/app/styles", "extension/app/styles"

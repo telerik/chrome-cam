@@ -41,6 +41,8 @@ define([
             # draw the image data to the canvas
             ctx.putImageData(imgData, 0, 0)
 
+            $.publish "/camera/stream", [ canvas ]
+
         # execute the callback that happens when the camera successfully turns on
         callback()
 
@@ -81,13 +83,13 @@ define([
 
             # create a blank canvas element and set it's size
             canvas = document.createElement("canvas")
-            canvas.width = 460
-            canvas.height = 340
+            canvas.width = 720
+            canvas.height = 480
 
             # create a blank video element
             video = document.createElement("video")
-            video.width = 460
-            video.height = 340
+            video.width = 720
+            video.height = 480
 
             # get the canvas context for drawing and reading
             ctx = canvas.getContext("2d")
@@ -118,7 +120,7 @@ define([
                     console.error("Camera Failed")
                 )
 
-                turnOn(callback)
+            turnOn(callback)
     		
             
             # listen for the '/camera/countdown message and respond to the event'
