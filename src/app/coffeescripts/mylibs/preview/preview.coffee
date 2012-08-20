@@ -67,14 +67,14 @@ define([
             $.subscribe "/previews/pause", (doPause) ->
                 paused = doPause    
 
-            # create an internal canvas that contains a copy of the video. we can't
-            # modify the original video feed so we'll modify a copy instead.
+            # create an internal canvas that contains a copy of the video. this
+            # is so we can resize the video stream without resizing the original canvas
+            # which contains our unadulturated stream
             canvas = document.createElement("canvas")
-            
-            canvas.width = 400 
-            canvas.height= 300
-
             ctx = canvas.getContext("2d")
+
+            canvas.width = 360 
+            canvas.height= 240
             
             # the container for this DOM fragment is passed in by the module
             # which calls it's init. grab it from the DOM and cache it.

@@ -60,6 +60,10 @@ body > #wrap {height: auto; min-height: 100%;}
 
 /* Full Styles */
 
+# full > div {
+	margin: auto;
+}
+
 #full {
 	width: 100%;
 	height: 100%;

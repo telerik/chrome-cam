@@ -52,6 +52,11 @@ define([
 			canvas = document.createElement "canvas"
 			ctx = canvas.getContext "2d"
 
+			# create a div to go inside the main content area
+			$wrapper = $("<div></div>")
+
+			$container.append $wrapper
+
 			# create a new webgl canvas
 			webgl = fx.canvas()
 
@@ -60,18 +65,31 @@ define([
 				
 				$.publish("/previews/pause", [false])
 
-				$container.kendoStop().kendoAnimate({
-					effects: "grow"
-					top: preview.canvas.offsetTop
-					left: preview.canvas.offsetLeft
-					width: preview.canvas.width
-					height: preview.canvas.height
-				 }, ->
-				 	$container.hide()
-				 )
+				# $container.kendoStop().kendoAnimate({
+				# 	effects: "grow"
+				# 	top: preview.canvas.offsetTop
+				# 	left: preview.canvas.offsetLeft
+				# 	width: preview.canvas.width
+				# 	height: preview.canvas.height
+				# 	complete: ->
+				#  		$container.hide()
+				#  })
+
+				# $(webgl).kendoStop().kendoAnimate({
+				# 	effects: "grow"
+				# 	top: preview.canvas.offsetTop
+				# 	left: preview.canvas.offsetLeft
+				# 	width: preview.canvas.width
+				# 	height: preview.canvas.height
+				# })
+
+				$container.kendoStop(true).kendoAnimate({
+					effects: "zoomOut",
+					hide: "true"
+				})
 
 			# append the webgl canvas
-			$container.append(webgl)
+			$wrapper.append(webgl)
 
 			# subscribe to the show event
 			$.subscribe "/full/show", (e) ->
@@ -80,29 +98,49 @@ define([
 
 				paused = false
 
-				y = preview.canvas.offsetTop
-				x = preview.canvas.offsetLeft
+				# y = preview.canvas.offsetTop
+				# x = preview.canvas.offsetLeft
 
 				# move the container to the x and y coordinates of the sending preview
-				$container.css "top", y
-				$container.css "left", x
+				# $container.css "top", y
+				# $container.css "left", x
 
 				# get the height based on the aspect ratio of 4:3
-				fullWidth = $(document).width()
-				fullHeight = $(document).height()
+				# fullWidth = $(document).width()
+				# fullHeight = $(document).height()
 
-				$container.width(preview.canvas.width)
-				$container.height(preview.canvas.height)
+				# $container.width(preview.canvas.width)
+				# $container.height(preview.canvas.height)
 
-				$container.show()
+				# get the height of the container minus the footer
+				$wrapper.height $container.height() - 50
 
-				$container.kendoStop().kendoAnimate({
-					effects: "grow"	
-					top: 0
-					left: 0
-					width: fullWidth
-					height: fullHeight
+				# determine the width based on a 3:2 aspect ratio (.66 repeating)
+				$wrapper.width (3 / 2) * $wrapper.height()
+
+				$(webgl).width($wrapper.width())
+				$(webgl).height("height", $wrapper.height())
+
+				$container.kendoStop(true).kendoAnimate({
+					effects: "zoomIn",
+					show: "true"
 				})
+
+				# $container.kendoStop().kendoAnimate({
+				# 	effects: "grow"	
+				# 	top: 0
+				# 	left: 0
+				# 	width: fullWidth
+				# 	height: fullHeight
+				# })
+
+				# $(webgl).kendoStop().kendoAnimate({
+				# 	effects: "grow"	
+				# 	width: 983
+				# 	height: 655
+				# 	top: 0
+				# 	left: 0
+				# })
 	
 				# $container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 200 }
 

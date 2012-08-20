@@ -46,9 +46,9 @@
           return paused = doPause;
         });
         canvas = document.createElement("canvas");
-        canvas.width = 400;
-        canvas.height = 300;
         ctx = canvas.getContext("2d");
+        canvas.width = 360;
+        canvas.height = 240;
         $container = $("" + selector);
         top = {
           el: $("<div class='half'></div>")

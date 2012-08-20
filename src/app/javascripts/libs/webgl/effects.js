@@ -109,6 +109,17 @@
             return draw(canvas, element, effect);
           }
         }, {
+          name: "Frogman",
+          kind: "webgl",
+          filter: function(canvas, element) {
+            var effect;
+            effect = function() {
+              canvas.bulgePinch((canvas.width / 2) - 25, canvas.height / 2, 50, .65);
+              return canvas.bulgePinch((canvas.width / 2) + 25, canvas.height / 2, 50, .65);
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
           name: "Pinch",
           kind: "webgl",
           filter: function(canvas, element) {

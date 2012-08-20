@@ -127,6 +127,16 @@ define([
                 }
 
                 {
+                    name: "Frogman"
+                    kind: "webgl"
+                    filter: (canvas, element) ->
+                        effect = -> 
+                            canvas.bulgePinch (canvas.width / 2) - 25, canvas.height / 2, 50, .65 
+                            canvas.bulgePinch (canvas.width / 2) + 25, canvas.height / 2, 50, .65
+                        draw(canvas, element, effect)
+                }
+
+                {
                     name: "Pinch"
                     kind: "webgl"
                     filter: (canvas, element) -> 
