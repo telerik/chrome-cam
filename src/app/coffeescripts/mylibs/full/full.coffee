@@ -144,9 +144,10 @@ define([
 	
 				# $container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 200 }
 
-			# subscribe to the hide event
-			$.subscribe "full/hide", ->
+			# subscribe to the capture image event
+			$.subscribe "/capture/image", ->
 
+				
 				
 
 			draw()

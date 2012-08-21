@@ -1,11 +1,12 @@
 define([
   'mylibs/camera/camera'
+  'mylibs/bar/bar'
   'mylibs/preview/preview'
   'mylibs/full/full'
   'mylibs/postman/postman'
   'mylibs/utils/utils'
   'text!intro.html'
-], (camera, preview, full, postman, utils) ->
+], (camera, bar, preview, full, postman, utils) ->
 	
 	pub = 
 		    
@@ -21,10 +22,16 @@ define([
 			# initialize the camera
 			camera.init "countdown", ->
 
+				# initialize the command bar
+				bar.init "#footer"
+
+				# initialize the previews
 				preview.init "#select"
 
+				# initialize the full screen capture mode
 				full.init "#full"
 
+				# start drawing some previews
 				preview.draw()
 
 				# we are done loading the app. have the postman deliver that msg.

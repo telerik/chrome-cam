@@ -56,7 +56,7 @@
             show: "true"
           });
         });
-        $.subscribe("full/hide", function() {});
+        $.subscribe("/capture/image", function() {});
         return draw();
       }
     };

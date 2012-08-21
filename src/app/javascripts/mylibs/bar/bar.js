@@ -6,7 +6,11 @@
       init: function(selector) {
         var $container, $content;
         $container = $(selector);
-        return $content = kendo.template(template);
+        $content = $(template);
+        $content.click(function() {
+          return $.publish("/capture/image");
+        });
+        return $container.append($content);
       }
     };
   });
