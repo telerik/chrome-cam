@@ -6,6 +6,7 @@ define([
   'mylibs/postman/postman'
   'mylibs/utils/utils'
   'mylibs/filesystem/filesystem'
+  'mylibs/gallery/gallery'
   'text!intro.html'
 ], (camera, bar, preview, full, postman, utils) ->
 	
