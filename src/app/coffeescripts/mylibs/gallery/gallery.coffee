@@ -1,5 +1,6 @@
 define [
     'mylibs/utils/utils',
-    'mylibs/filesystem/filesystem'
-], (utils, filesystem) ->
+    'mylibs/filesystem/filesystem',
+    'text!mylibs/gallery/views/gallery.html'
+], (utils, filesystem, template) ->
     pub = {}
