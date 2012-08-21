@@ -15,7 +15,7 @@ define([
 	draw = ->
 
 		# subscribe to the app level draw event
-		$.subscribe "/camera/stream", ->
+		$.subscribe "/camera/stream", (stream) ->
 
 			if not paused
 
@@ -29,7 +29,7 @@ define([
 
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
-	            preview.filter(webgl, window.HTML5CAMERA.canvas, frame)
+	            preview.filter(webgl, stream.canvas, frame, stream)
 
 	pub = 
 
@@ -63,7 +63,8 @@ define([
 			# add the double-click event listener which closes the preview
 			$(webgl).dblclick ->
 				
-				$.publish("/previews/pause", [false])
+				# pause the camera
+				$.publish "/camera/pause", [ true ]
 
 				# $container.kendoStop().kendoAnimate({
 				# 	effects: "grow"
@@ -85,7 +86,17 @@ define([
 
 				$container.kendoStop(true).kendoAnimate({
 					effects: "zoomOut",
-					hide: "true"
+					hide: "true", 
+					complete: ->
+
+						# pause the full screen
+						paused = true
+
+						# unpause the camera
+						$.publish "/camera/pause", [ false ]
+
+						# unpause the previews
+						$.publish "/previews/pause", [ false ]
 				})
 
 			# append the webgl canvas
@@ -96,7 +107,8 @@ define([
 
 				$.extend(preview, e)
 
-				paused = false
+				# pause the camera
+				$.publish "/camera/pause", [ true ]
 
 				# y = preview.canvas.offsetTop
 				# x = preview.canvas.offsetLeft
@@ -123,7 +135,14 @@ define([
 
 				$container.kendoStop(true).kendoAnimate({
 					effects: "zoomIn",
-					show: "true"
+					show: "true",
+					complete: ->
+
+						# unpause the camera
+						$.publish "/camera/pause", [ false ]
+				
+						# unpause the full screen
+						paused = false
 				})
 
 				# $container.kendoStop().kendoAnimate({
@@ -147,7 +166,7 @@ define([
 			# subscribe to the capture image event
 			$.subscribe "/capture/image", ->
 
-				
+
 				
 
 			draw()

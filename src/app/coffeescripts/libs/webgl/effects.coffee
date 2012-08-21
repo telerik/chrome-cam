@@ -13,7 +13,11 @@ define([
 
         backCtx: {}
     }
-     
+
+    faces = []
+
+    eyeFactor = .05
+
     timeStripsBuffer = []
     ghostBuffer = []
 
@@ -22,7 +26,7 @@ define([
         texture = canvas.texture(element)
         canvas.draw(texture)
 
-        effect()
+        effect(element)
 
         canvas.update()
         texture.destroy()
@@ -112,7 +116,7 @@ define([
                     kind: "webgl"
                     filter: (canvas, element) ->
                         effect = ->
-                            canvas
+                            canvas                            
                         draw(canvas, element, effect)
 
                 }
@@ -129,10 +133,64 @@ define([
                 {
                     name: "Frogman"
                     kind: "webgl"
-                    filter: (canvas, element) ->
-                        effect = -> 
-                            canvas.bulgePinch (canvas.width / 2) - 25, canvas.height / 2, 50, .65 
-                            canvas.bulgePinch (canvas.width / 2) + 25, canvas.height / 2, 50, .65
+                    filter: (canvas, element, frame, stream) ->
+
+                        if stream.faces.length != 0
+                            faces = stream.faces
+
+                        effect = (element) ->
+
+                            # the stream object holds a face object which contains
+                            # face tracking data about this paticular canvas. the face
+                            # tracking data comes in at 120 x 80 so we need to crank it up
+                            # to the appropriate size
+                            factor = element.width / stream.trackWidth
+
+                            # add the effect to each face we find
+                            for face in faces
+
+                                width = face.width * factor
+                                height = face.height * factor
+                                x = face.x * factor
+                                y = face.y * factor
+
+                                eyeWidth = eyeFactor * element.width
+
+                                canvas.bulgePinch (x + width / 2) - eyeWidth, y + height / 3, eyeWidth * 2, .65 
+                                canvas.bulgePinch (x + width / 2) + eyeWidth, y + height / 3, eyeWidth * 2, .65 
+
+                        draw(canvas, element, effect)
+                }
+
+                {
+                    name: "Chubby Bunny"
+                    kind: "webgl"
+                    filter: (canvas, element, frame, stream) ->
+
+                        if stream.faces.length != 0
+                            faces = stream.faces
+
+                        effect = (element) ->
+
+                            # the stream object holds a face object which contains
+                            # face tracking data about this paticular canvas. the face
+                            # tracking data comes in at 120 x 80 so we need to crank it up
+                            # to the appropriate size
+                            factor = element.width / stream.trackWidth
+
+                            # add the effect to each face we find
+                            for face in faces
+
+                                width = face.width * factor
+                                height = face.height * factor
+                                x = face.x * factor
+                                y = face.y * factor
+
+                                eyeWidth = eyeFactor * element.width
+
+                                canvas.bulgePinch (x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
+                                canvas.bulgePinch (x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
+
                         draw(canvas, element, effect)
                 }
 
@@ -392,10 +450,10 @@ define([
                 }
 
                 {
-                    name: "In Disguise"
+                    name: "Chubby Bunny"
                     kind: "face"
                     filter: (canvas, video) ->
-
+                        # get the face tracking data
                         trackFace video, canvas, assets.images.glasses, 0, 0, 1, 1
                         
                 }

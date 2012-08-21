@@ -1,7 +1,8 @@
 define([
   'mylibs/preview/preview'
   'mylibs/utils/utils'
-], (preview, utils) ->
+  'libs/face/track'
+], (preview, utils, face) ->
 
     ###     Camera
 
@@ -19,29 +20,34 @@ define([
 
     paused = false
 
-    turnOn = (callback, testing) ->
-      
-        # set a applicatoin level variable that is the canvas which contains
-        # the video feed drawn in a loop
-        window.HTML5CAMERA.canvas = canvas
-            
+    turnOn = (callback, testing) ->       
+
         # subscribe to the '/camera/update' event. this is published in a draw
         # loop at the extension level at the current framerate
         $.subscribe "/camera/update", (message) ->
 
-            # create a new image data object
-            imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
-            
-            # convert the incoming message to a typed array
-            videoData = new Uint8ClampedArray(message.image)
-            
-            # set the iamge data equal to the typed array
-            imgData.data.set(videoData)
+            if not paused
 
-            # draw the image data to the canvas
-            ctx.putImageData(imgData, 0, 0)
+                skip = false
 
-            $.publish "/camera/stream", [ canvas ]
+                # create a new image data object
+                imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
+                
+                # convert the incoming message to a typed array
+                videoData = new Uint8ClampedArray(message.image)
+                
+                # set the iamge data equal to the typed array
+                imgData.data.set(videoData)
+
+                # draw the image data to the canvas
+                ctx.putImageData(imgData, 0, 0)
+
+                # run face detection on this canvas and attach the data
+                # to a custom stream object which we can pass down with
+                # the current canvas
+                face.track canvas, skip
+
+                skip = !skip
 
         # execute the callback that happens when the camera successfully turns on
         callback()
@@ -70,9 +76,10 @@ define([
     	
     	init: (counter, callback) ->
 
-            window.HTML5CAMERA = {}
+            # initialize the face tracking module
+            face.init 0, 0, 0, 0
 
-            testing = true
+            testing = false
 
             # set a reference to the countdown DOM object
             $counter = $("##{counter}")
@@ -94,6 +101,10 @@ define([
             # get the canvas context for drawing and reading
             ctx = canvas.getContext("2d")
     		
+            # subscribe to the pause event
+            $.subscribe "/camera/pause", (isPaused) ->
+                paused = isPaused
+
             if testing
 
                 draw = -> 

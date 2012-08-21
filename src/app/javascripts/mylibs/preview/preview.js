@@ -24,12 +24,12 @@
       return $.subscribe("/camera/stream", function(stream) {
         var preview, _i, _len, _results;
         if (!paused) {
-          ctx.drawImage(stream, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
           _results = [];
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
-            _results.push(preview.filter(preview.canvas, canvas, frame));
+            _results.push(preview.filter(preview.canvas, canvas, frame, stream));
           }
           return _results;
         }
@@ -42,14 +42,14 @@
       init: function(selector) {
         var bottom, ds, top;
         effects.init();
-        $.subscribe("/previews/pause", function(doPause) {
-          return paused = doPause;
+        $.subscribe("/previews/pause", function(isPaused) {
+          return paused = isPaused;
         });
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
         canvas.width = 360;
         canvas.height = 240;
-        $container = $("" + selector);
+        $container = $(selector);
         top = {
           el: $("<div class='half'></div>")
         };

@@ -457,20 +457,22 @@ define("libs/face/face", function(){});
 (function() {
 
   define('libs/webgl/effects',['libs/face/ccv', 'libs/face/face'], function(assets) {
-    var draw, face, faceCore, ghostBuffer, pub, timeStripsBuffer, trackFace, trackHead;
+    var draw, eyeFactor, face, faceCore, faces, ghostBuffer, pub, timeStripsBuffer, trackFace, trackHead;
     face = {
       backCanvas: document.createElement("canvas"),
       comp: [],
       lastCanvas: {},
       backCtx: {}
     };
+    faces = [];
+    eyeFactor = .05;
     timeStripsBuffer = [];
     ghostBuffer = [];
     draw = function(canvas, element, effect) {
       var texture;
       texture = canvas.texture(element);
       canvas.draw(texture);
-      effect();
+      effect(element);
       canvas.update();
       return texture.destroy();
     };
@@ -561,6 +563,54 @@ define("libs/face/face", function(){});
             var effect;
             effect = function() {
               return canvas.bulgePinch(canvas.width / 2, canvas.height / 2, (canvas.width / 2) / 2, .65);
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
+          name: "Frogman",
+          kind: "webgl",
+          filter: function(canvas, element, frame, stream) {
+            var effect;
+            if (stream.faces.length !== 0) faces = stream.faces;
+            effect = function(element) {
+              var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
+              factor = element.width / stream.trackWidth;
+              _results = [];
+              for (_i = 0, _len = faces.length; _i < _len; _i++) {
+                face = faces[_i];
+                width = face.width * factor;
+                height = face.height * factor;
+                x = face.x * factor;
+                y = face.y * factor;
+                eyeWidth = eyeFactor * element.width;
+                canvas.bulgePinch((x + width / 2) - eyeWidth, y + height / 3, eyeWidth * 2, .65);
+                _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, y + height / 3, eyeWidth * 2, .65));
+              }
+              return _results;
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
+          name: "Chubby Bunny",
+          kind: "webgl",
+          filter: function(canvas, element, frame, stream) {
+            var effect;
+            if (stream.faces.length !== 0) faces = stream.faces;
+            effect = function(element) {
+              var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
+              factor = element.width / stream.trackWidth;
+              _results = [];
+              for (_i = 0, _len = faces.length; _i < _len; _i++) {
+                face = faces[_i];
+                width = face.width * factor;
+                height = face.height * factor;
+                x = face.x * factor;
+                y = face.y * factor;
+                eyeWidth = eyeFactor * element.width;
+                canvas.bulgePinch((x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65);
+                _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65));
+              }
+              return _results;
             };
             return draw(canvas, element, effect);
           }
@@ -845,7 +895,7 @@ define("libs/face/face", function(){});
             return draw(canvas, element, effect);
           }
         }, {
-          name: "In Disguise",
+          name: "Chubby Bunny",
           kind: "face",
           filter: function(canvas, video) {
             return trackFace(video, canvas, assets.images.glasses, 0, 0, 1, 1);
@@ -901,7 +951,7 @@ b;if(typeof XMLHttpRequest!=="undefined")return new XMLHttpRequest;else for(c=0;
 c,b,e){var d=g.xdRegExp.exec(a),f;if(!d)return!0;a=d[2];d=d[3];d=d.split(":");f=d[1];d=d[0];return(!a||a===c)&&(!d||d===b)&&(!f&&!d||f===e)},finishLoad:function(a,c,b,e,d){b=c?g.strip(b):b;d.isBuild&&(j[a]=b);e(b)},load:function(a,c,b,e){if(e.isBuild&&!e.inlineText)b();else{var d=g.parseName(a),f=d.moduleName+"."+d.ext,m=c.toUrl(f),h=e&&e.text&&e.text.useXhr||g.useXhr;!i||h(m,p,q,r)?g.get(m,function(c){g.finishLoad(a,d.strip,c,b,e)}):c([f],function(a){g.finishLoad(d.moduleName+"."+d.ext,d.strip,a,
 b,e)})}},write:function(a,c,b){if(c in j){var e=g.jsEscape(j[c]);b.asModule(a+"!"+c,"define(function () { return '"+e+"';});\n")}},writeFile:function(a,c,b,e,d){var c=g.parseName(c),f=c.moduleName+"."+c.ext,h=b.toUrl(c.moduleName+"."+c.ext)+".js";g.load(f,b,function(){var b=function(a){return e(h,a)};b.asModule=function(a,b){return e.asModule(a,h,b)};g.write(a,f,b,d)},d)}}})})();
 
-define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<div class="preview">\n\t<div>\n\t\t<a></a>\n\t\t<div><b>${ name }</b></div>\n\t</div>\n</div>';});
+define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<div class="preview">\n\t<div>\n\t\t<a></a>\n\t\t<div class="preview-title"><b>${ name }</b></div>\n\t</div>\n</div>';});
 
 (function() {
 
@@ -926,14 +976,15 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
       };
     };
     draw = function() {
-      return $.subscribe("/camera/stream", function() {
+      return $.subscribe("/camera/stream", function(stream) {
         var preview, _i, _len, _results;
         if (!paused) {
+          ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
           _results = [];
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
-            _results.push(preview.filter(preview.canvas, window.HTML5CAMERA.canvas, frame));
+            _results.push(preview.filter(preview.canvas, canvas, frame, stream));
           }
           return _results;
         }
@@ -946,14 +997,14 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
       init: function(selector) {
         var bottom, ds, top;
         effects.init();
-        $.subscribe("/previews/pause", function(doPause) {
-          return paused = doPause;
+        $.subscribe("/previews/pause", function(isPaused) {
+          return paused = isPaused;
         });
         canvas = document.createElement("canvas");
-        canvas.width = 400;
-        canvas.height = 300;
         ctx = canvas.getContext("2d");
-        $container = $("" + selector);
+        canvas.width = 360;
+        canvas.height = 240;
+        $container = $(selector);
         top = {
           el: $("<div class='half'></div>")
         };
@@ -1013,7 +1064,69 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
 
 (function() {
 
-  define('mylibs/camera/camera',['mylibs/preview/preview', 'mylibs/utils/utils'], function(preview, utils) {
+  define('libs/face/track',['libs/face/ccv', 'libs/face/face'], function() {
+    var backCanvas, backContext, cache, h, pub, w;
+    backCanvas = document.createElement("canvas");
+    backContext = backCanvas.getContext("2d");
+    w = 300 / 4 * 0.8;
+    h = 270 / 4 * 0.8;
+    cache = {};
+    return pub = {
+      init: function(x, y, width, height) {
+        backCanvas.width = 120;
+        backCanvas.height = 80;
+        return cache.comp = [
+          {
+            x: x,
+            y: y,
+            width: backCanvas.width,
+            height: backCanvas.height
+          }
+        ];
+      },
+      track: function(canvas, skip) {
+        var comp, faces, i, _i, _len, _ref;
+        faces = [];
+        if (!skip) {
+          backContext.drawImage(canvas, 0, 0, backCanvas.width, backCanvas.height);
+          comp = ccv.detect_objects(cache.ccv = cache.ccv || {
+            canvas: ccv.grayscale(backCanvas),
+            cascade: cascade,
+            interval: 5,
+            min_neighbors: 1
+          });
+          if (comp.length) {
+            console.log("FACE!");
+            cache.comp = comp;
+          }
+          _ref = cache.comp;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            i = _ref[_i];
+            faces.push({
+              x: i.x,
+              y: i.y,
+              width: i.width,
+              height: i.height
+            });
+          }
+        }
+        return $.publish("/camera/stream", [
+          {
+            canvas: canvas,
+            faces: faces,
+            trackWidth: backCanvas.width,
+            trackHeight: backCanvas.height
+          }
+        ]);
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+
+  define('mylibs/camera/camera',['mylibs/preview/preview', 'mylibs/utils/utils', 'libs/face/track'], function(preview, utils, face) {
     /*     Camera
     
     The camera module takes care of getting the users media and drawing it to a canvas.
@@ -1026,14 +1139,17 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
     beep = document.createElement("audio");
     paused = false;
     turnOn = function(callback, testing) {
-      window.HTML5CAMERA.canvas = canvas;
       $.subscribe("/camera/update", function(message) {
-        var imgData, videoData;
-        imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        videoData = new Uint8ClampedArray(message.image);
-        imgData.data.set(videoData);
-        ctx.putImageData(imgData, 0, 0);
-        return $.publish("/camera/stream");
+        var imgData, skip, videoData;
+        if (!paused) {
+          skip = false;
+          imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          videoData = new Uint8ClampedArray(message.image);
+          imgData.data.set(videoData);
+          ctx.putImageData(imgData, 0, 0);
+          face.track(canvas, skip);
+          return skip = !skip;
+        }
       });
       return callback();
     };
@@ -1056,7 +1172,7 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
     return pub = {
       init: function(counter, callback) {
         var draw, testing, update, video;
-        window.HTML5CAMERA = {};
+        face.init(0, 0, 0, 0);
         testing = false;
         $counter = $("#" + counter);
         beep.src = "sounds/beep.mp3";
@@ -1068,6 +1184,9 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
         video.width = 720;
         video.height = 480;
         ctx = canvas.getContext("2d");
+        $.subscribe("/camera/pause", function(isPaused) {
+          return paused = isPaused;
+        });
         if (testing) {
           draw = function() {
             utils.getAnimationFrame()(draw);
@@ -1100,6 +1219,27 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
         return $.subscribe("/camera/countdown", function(num, hollaback) {
           return countdown(num, hollaback);
         });
+      }
+    };
+  });
+
+}).call(this);
+
+define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar">\n\t<div class="left"></div>\n\t<div class="center">\n\t\t<div class="capture">\n\t\t\t<div class="gray circle">\n\t\t\t\t<div class="red-dot circle"></div>\n\t\t\t</div>\n\t\t\t<div class="countdown">\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div class="right"></div>\n</div>';});
+
+(function() {
+
+  define('mylibs/bar/bar',['text!mylibs/bar/views/bar.html'], function(template) {
+    var pub;
+    return pub = {
+      init: function(selector) {
+        var $container, $content;
+        $container = $(selector);
+        $content = $(template);
+        $content.click(function() {
+          return $.publish("/capture/image");
+        });
+        return $container.append($content);
       }
     };
   });
@@ -3835,16 +3975,16 @@ define("libs/webgl/glfx.min", function(){});
     paused = true;
     frame = 0;
     draw = function() {
-      return $.subscribe("/camera/stream", function() {
+      return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
           frame++;
-          return preview.filter(webgl, window.HTML5CAMERA.canvas, frame);
+          return preview.filter(webgl, stream.canvas, frame, stream);
         }
       });
     };
     return pub = {
       init: function(selector) {
-        var $container;
+        var $container, $wrapper;
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({
@@ -3858,42 +3998,39 @@ define("libs/webgl/glfx.min", function(){});
         $container = $(selector);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
+        $wrapper = $("<div></div>");
+        $container.append($wrapper);
         webgl = fx.canvas();
         $(webgl).dblclick(function() {
-          $.publish("/previews/pause", [false]);
-          return $container.kendoStop().kendoAnimate({
-            effects: "grow",
-            top: preview.canvas.offsetTop,
-            left: preview.canvas.offsetLeft,
-            width: preview.canvas.width,
-            height: preview.canvas.height
-          }, function() {
-            return $container.hide();
+          $.publish("/camera/pause", [true]);
+          return $container.kendoStop(true).kendoAnimate({
+            effects: "zoomOut",
+            hide: "true",
+            complete: function() {
+              paused = true;
+              $.publish("/camera/pause", [false]);
+              return $.publish("/previews/pause", [false]);
+            }
           });
         });
-        $container.append(webgl);
+        $wrapper.append(webgl);
         $.subscribe("/full/show", function(e) {
-          var fullHeight, fullWidth, x, y;
           $.extend(preview, e);
-          paused = false;
-          y = preview.canvas.offsetTop;
-          x = preview.canvas.offsetLeft;
-          $container.css("top", y);
-          $container.css("left", x);
-          fullWidth = $(document).width();
-          fullHeight = $(document).height();
-          $container.width(preview.canvas.width);
-          $container.height(preview.canvas.height);
-          $container.show();
-          return $container.kendoStop().kendoAnimate({
-            effects: "grow",
-            top: 0,
-            left: 0,
-            width: fullWidth,
-            height: fullHeight
+          $.publish("/camera/pause", [true]);
+          $wrapper.height($container.height() - 50);
+          $wrapper.width((3 / 2) * $wrapper.height());
+          $(webgl).width($wrapper.width());
+          $(webgl).height("height", $wrapper.height());
+          return $container.kendoStop(true).kendoAnimate({
+            effects: "zoomIn",
+            show: "true",
+            complete: function() {
+              $.publish("/camera/pause", [false]);
+              return paused = false;
+            }
           });
         });
-        $.subscribe("full/hide", function() {});
+        $.subscribe("/capture/image", function() {});
         return draw();
       }
     };
@@ -3935,7 +4072,7 @@ define('text!intro.html',[],function () { return '<div id="intro">\n\t<p><h1>Wel
 
 (function() {
 
-  define('app',['mylibs/camera/camera', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'text!intro.html'], function(camera, preview, full, postman, utils) {
+  define('app',['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'text!intro.html'], function(camera, bar, preview, full, postman, utils) {
     var pub;
     return pub = {
       init: function() {
@@ -3944,6 +4081,7 @@ define('text!intro.html',[],function () { return '<div id="intro">\n\t<p><h1>Wel
           return $('#pictures').append(intro);
         });
         return camera.init("countdown", function() {
+          bar.init("#footer");
           preview.init("#select");
           full.init("#full");
           preview.draw();

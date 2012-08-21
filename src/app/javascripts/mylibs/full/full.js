@@ -10,10 +10,10 @@
     paused = true;
     frame = 0;
     draw = function() {
-      return $.subscribe("/camera/stream", function() {
+      return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
           frame++;
-          return preview.filter(webgl, window.HTML5CAMERA.canvas, frame);
+          return preview.filter(webgl, stream.canvas, frame, stream);
         }
       });
     };
@@ -37,23 +37,32 @@
         $container.append($wrapper);
         webgl = fx.canvas();
         $(webgl).dblclick(function() {
-          $.publish("/previews/pause", [false]);
+          $.publish("/camera/pause", [true]);
           return $container.kendoStop(true).kendoAnimate({
             effects: "zoomOut",
-            hide: "true"
+            hide: "true",
+            complete: function() {
+              paused = true;
+              $.publish("/camera/pause", [false]);
+              return $.publish("/previews/pause", [false]);
+            }
           });
         });
         $wrapper.append(webgl);
         $.subscribe("/full/show", function(e) {
           $.extend(preview, e);
-          paused = false;
+          $.publish("/camera/pause", [true]);
           $wrapper.height($container.height() - 50);
           $wrapper.width((3 / 2) * $wrapper.height());
           $(webgl).width($wrapper.width());
           $(webgl).height("height", $wrapper.height());
           return $container.kendoStop(true).kendoAnimate({
             effects: "zoomIn",
-            show: "true"
+            show: "true",
+            complete: function() {
+              $.publish("/camera/pause", [false]);
+              return paused = false;
+            }
           });
         });
         $.subscribe("/capture/image", function() {});

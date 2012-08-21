@@ -1,6 +1,6 @@
 (function() {
 
-  define(['mylibs/preview/preview', 'mylibs/utils/utils'], function(preview, utils) {
+  define(['mylibs/preview/preview', 'mylibs/utils/utils', 'libs/face/track'], function(preview, utils, face) {
     /*     Camera
     
     The camera module takes care of getting the users media and drawing it to a canvas.
@@ -13,14 +13,17 @@
     beep = document.createElement("audio");
     paused = false;
     turnOn = function(callback, testing) {
-      window.HTML5CAMERA.canvas = canvas;
       $.subscribe("/camera/update", function(message) {
-        var imgData, videoData;
-        imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        videoData = new Uint8ClampedArray(message.image);
-        imgData.data.set(videoData);
-        ctx.putImageData(imgData, 0, 0);
-        return $.publish("/camera/stream");
+        var imgData, skip, videoData;
+        if (!paused) {
+          skip = false;
+          imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          videoData = new Uint8ClampedArray(message.image);
+          imgData.data.set(videoData);
+          ctx.putImageData(imgData, 0, 0);
+          face.track(canvas, skip);
+          return skip = !skip;
+        }
       });
       return callback();
     };
@@ -43,7 +46,7 @@
     return pub = {
       init: function(counter, callback) {
         var draw, testing, update, video;
-        window.HTML5CAMERA = {};
+        face.init(0, 0, 0, 0);
         testing = false;
         $counter = $("#" + counter);
         beep.src = "sounds/beep.mp3";
@@ -55,6 +58,9 @@
         video.width = 720;
         video.height = 480;
         ctx = canvas.getContext("2d");
+        $.subscribe("/camera/pause", function(isPaused) {
+          return paused = isPaused;
+        });
         if (testing) {
           draw = function() {
             utils.getAnimationFrame()(draw);

@@ -36,7 +36,7 @@ define([
 
                 # get the 2d canvas context and draw the image
                 # this happens at the curent framerate
-                ctx.drawImage stream, 0, 0, canvas.width, canvas.height
+                ctx.drawImage stream.canvas, 0, 0, canvas.width, canvas.height
                 
                 # for each of the preview objects, create a texture of the 
                 # 2d canvas and then apply the webgl effect. these are live
@@ -47,7 +47,7 @@ define([
                     # like old movie and vhs. most effects simply ignore this
                     frame++
                
-                    preview.filter(preview.canvas, canvas, frame)
+                    preview.filter(preview.canvas, canvas, frame, stream)
 
     # anything under here is public
     pub = 
@@ -64,8 +64,8 @@ define([
             effects.init()
 
             # subscribe to the pause and unpause events
-            $.subscribe "/previews/pause", (doPause) ->
-                paused = doPause    
+            $.subscribe "/previews/pause", (isPaused) ->
+                paused = isPaused   
 
             # create an internal canvas that contains a copy of the video. this
             # is so we can resize the video stream without resizing the original canvas
@@ -78,7 +78,7 @@ define([
             
             # the container for this DOM fragment is passed in by the module
             # which calls it's init. grab it from the DOM and cache it.
-            $container = $("#{selector}")
+            $container = $(selector)
 
 
             # we need to create a top and bottom row in our flexbox

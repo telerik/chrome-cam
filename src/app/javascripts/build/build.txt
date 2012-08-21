@@ -8,7 +8,10 @@ mylibs/utils/utils.js
 text.js
 text!mylibs/preview/views/selectPreview.html
 mylibs/preview/preview.js
+libs/face/track.js
 mylibs/camera/camera.js
+text!mylibs/bar/views/bar.html
+mylibs/bar/bar.js
 order.js
 libs/webgl/glfx.min.js
 order!libs/webgl/glfx.min

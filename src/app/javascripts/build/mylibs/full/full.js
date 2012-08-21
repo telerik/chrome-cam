@@ -10,16 +10,16 @@
     paused = true;
     frame = 0;
     draw = function() {
-      return $.subscribe("/camera/stream", function() {
+      return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
           frame++;
-          return preview.filter(webgl, window.HTML5CAMERA.canvas, frame);
+          return preview.filter(webgl, stream.canvas, frame, stream);
         }
       });
     };
     return pub = {
       init: function(selector) {
-        var $container;
+        var $container, $wrapper;
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({
@@ -33,42 +33,39 @@
         $container = $(selector);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
+        $wrapper = $("<div></div>");
+        $container.append($wrapper);
         webgl = fx.canvas();
         $(webgl).dblclick(function() {
-          $.publish("/previews/pause", [false]);
-          return $container.kendoStop().kendoAnimate({
-            effects: "grow",
-            top: preview.canvas.offsetTop,
-            left: preview.canvas.offsetLeft,
-            width: preview.canvas.width,
-            height: preview.canvas.height
-          }, function() {
-            return $container.hide();
+          $.publish("/camera/pause", [true]);
+          return $container.kendoStop(true).kendoAnimate({
+            effects: "zoomOut",
+            hide: "true",
+            complete: function() {
+              paused = true;
+              $.publish("/camera/pause", [false]);
+              return $.publish("/previews/pause", [false]);
+            }
           });
         });
-        $container.append(webgl);
+        $wrapper.append(webgl);
         $.subscribe("/full/show", function(e) {
-          var fullHeight, fullWidth, x, y;
           $.extend(preview, e);
-          paused = false;
-          y = preview.canvas.offsetTop;
-          x = preview.canvas.offsetLeft;
-          $container.css("top", y);
-          $container.css("left", x);
-          fullWidth = $(document).width();
-          fullHeight = $(document).height();
-          $container.width(preview.canvas.width);
-          $container.height(preview.canvas.height);
-          $container.show();
-          return $container.kendoStop().kendoAnimate({
-            effects: "grow",
-            top: 0,
-            left: 0,
-            width: fullWidth,
-            height: fullHeight
+          $.publish("/camera/pause", [true]);
+          $wrapper.height($container.height() - 50);
+          $wrapper.width((3 / 2) * $wrapper.height());
+          $(webgl).width($wrapper.width());
+          $(webgl).height("height", $wrapper.height());
+          return $container.kendoStop(true).kendoAnimate({
+            effects: "zoomIn",
+            show: "true",
+            complete: function() {
+              $.publish("/camera/pause", [false]);
+              return paused = false;
+            }
           });
         });
-        $.subscribe("full/hide", function() {});
+        $.subscribe("/capture/image", function() {});
         return draw();
       }
     };

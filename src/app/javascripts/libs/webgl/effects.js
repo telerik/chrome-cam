@@ -1,20 +1,22 @@
 (function() {
 
   define(['libs/face/ccv', 'libs/face/face'], function(assets) {
-    var draw, face, faceCore, ghostBuffer, pub, timeStripsBuffer, trackFace, trackHead;
+    var draw, eyeFactor, face, faceCore, faces, ghostBuffer, pub, timeStripsBuffer, trackFace, trackHead;
     face = {
       backCanvas: document.createElement("canvas"),
       comp: [],
       lastCanvas: {},
       backCtx: {}
     };
+    faces = [];
+    eyeFactor = .05;
     timeStripsBuffer = [];
     ghostBuffer = [];
     draw = function(canvas, element, effect) {
       var texture;
       texture = canvas.texture(element);
       canvas.draw(texture);
-      effect();
+      effect(element);
       canvas.update();
       return texture.destroy();
     };
@@ -111,11 +113,48 @@
         }, {
           name: "Frogman",
           kind: "webgl",
-          filter: function(canvas, element) {
+          filter: function(canvas, element, frame, stream) {
             var effect;
-            effect = function() {
-              canvas.bulgePinch((canvas.width / 2) - 25, canvas.height / 2, 50, .65);
-              return canvas.bulgePinch((canvas.width / 2) + 25, canvas.height / 2, 50, .65);
+            if (stream.faces.length !== 0) faces = stream.faces;
+            effect = function(element) {
+              var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
+              factor = element.width / stream.trackWidth;
+              _results = [];
+              for (_i = 0, _len = faces.length; _i < _len; _i++) {
+                face = faces[_i];
+                width = face.width * factor;
+                height = face.height * factor;
+                x = face.x * factor;
+                y = face.y * factor;
+                eyeWidth = eyeFactor * element.width;
+                canvas.bulgePinch((x + width / 2) - eyeWidth, y + height / 3, eyeWidth * 2, .65);
+                _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, y + height / 3, eyeWidth * 2, .65));
+              }
+              return _results;
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
+          name: "Chubby Bunny",
+          kind: "webgl",
+          filter: function(canvas, element, frame, stream) {
+            var effect;
+            if (stream.faces.length !== 0) faces = stream.faces;
+            effect = function(element) {
+              var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
+              factor = element.width / stream.trackWidth;
+              _results = [];
+              for (_i = 0, _len = faces.length; _i < _len; _i++) {
+                face = faces[_i];
+                width = face.width * factor;
+                height = face.height * factor;
+                x = face.x * factor;
+                y = face.y * factor;
+                eyeWidth = eyeFactor * element.width;
+                canvas.bulgePinch((x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65);
+                _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65));
+              }
+              return _results;
             };
             return draw(canvas, element, effect);
           }
@@ -400,7 +439,7 @@
             return draw(canvas, element, effect);
           }
         }, {
-          name: "In Disguise",
+          name: "Chubby Bunny",
           kind: "face",
           filter: function(canvas, video) {
             return trackFace(video, canvas, assets.images.glasses, 0, 0, 1, 1);
