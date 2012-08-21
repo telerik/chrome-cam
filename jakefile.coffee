@@ -25,7 +25,7 @@ task 'default', (params) ->
 
 		log "Copying Styles Folder"
 
-		jake.cpR "src/app/styles", "extension/app/styles"
+		jake.cpR "src/app/styles", "extension/app"
 
 		log "Copying Index"
 

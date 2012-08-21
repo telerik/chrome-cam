@@ -2,7 +2,11 @@
 
 * { margin:0; padding:0; } 
 
-html, body, #wrap { height: 100%; background-color: #EDEDED; }
+html, body, #wrap {
+	height: 100%;
+	background-color: #EDEDED;
+	font-family: 'Droid Sans', sans-serif;
+}
 
 body > #wrap {height: auto; min-height: 100%;}
 
@@ -129,6 +133,7 @@ body > #wrap {height: auto; min-height: 100%;}
 .preview-title {
 	text-align: center;
 	font-size: 30px;
+	font-family: 'Permanent Marker', cursive;
 }
 
 /* Full Styles */
