@@ -22,13 +22,15 @@ define([
 
     turnOn = (callback, testing) ->       
 
+        track = {}
+
         # subscribe to the '/camera/update' event. this is published in a draw
         # loop at the extension level at the current framerate
         $.subscribe "/camera/update", (message) ->
 
             if not paused
 
-                skip = false
+                # #skip = false
 
                 # create a new image data object
                 imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
@@ -45,14 +47,15 @@ define([
                 # run face detection on this canvas and attach the data
                 # to a custom stream object which we can pass down with
                 # the current canvas
-                # face.track canvas, skip
+                # if not skip
+                #     track = face.track canvas
 
                 $.publish "/camera/stream", [{ 
                     canvas: canvas, 
                     track: message.track
                 }]
 
-                # skip = !skip
+                #skip = not skip
 
         # execute the callback that happens when the camera successfully turns on
         callback()

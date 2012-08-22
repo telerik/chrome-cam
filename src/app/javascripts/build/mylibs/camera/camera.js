@@ -13,10 +13,11 @@
     beep = document.createElement("audio");
     paused = false;
     turnOn = function(callback, testing) {
+      var track;
+      track = {};
       $.subscribe("/camera/update", function(message) {
-        var imgData, skip, videoData;
+        var imgData, videoData;
         if (!paused) {
-          skip = false;
           imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           videoData = new Uint8ClampedArray(message.image);
           imgData.data.set(videoData);

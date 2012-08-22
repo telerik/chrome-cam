@@ -23,41 +23,35 @@ define([
 				height: backCanvas.height
 			}]
 
-		track: (canvas, skip) ->
+		track: (video) ->
 
-			faces = []
+			track = 
+				faces: []
+				trackWidth: backCanvas.width
+			
+			backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
 
-			# we skip every so many frames to try and speed things up
-			if not skip
+			comp = ccv.detect_objects cache.ccv = cache.ccv || {
+				canvas: ccv.grayscale(backCanvas)
+				cascade: cascade,
+				interval: 5,
+				min_neighbors: 1
+			}
 
-				backContext.drawImage canvas, 0, 0, backCanvas.width, backCanvas.height
+			if comp.length
 
-				comp = ccv.detect_objects cache.ccv = cache.ccv || {
-					canvas: ccv.grayscale(backCanvas)
-					cascade: cascade,
-					interval: 5,
-					min_neighbors: 1
+				console.log("FACE!")
+				cache.comp = comp
+
+			for i in cache.comp
+
+				track.faces.push {
+					x: i.x
+					y: i.y
+					width: i.width
+					height: i.height
 				}
 
-				if comp.length
-
-					console.log("FACE!")
-					cache.comp = comp
-
-				for i in cache.comp
-
-					faces.push {
-						x: i.x
-						y: i.y
-						width: i.width
-						height: i.height
-					}
-
-			$.publish "/camera/stream", [{ 
-				canvas: canvas, 
-				faces: faces, 
-				trackWidth: backCanvas.width, 
-				trackHeight: backCanvas.height 
-			}]
+			return track;
 
 )

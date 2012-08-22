@@ -26,7 +26,7 @@
           faces: [],
           trackWidth: backCanvas.width
         };
-        backContext.drawImage(canvas, 0, 0, backCanvas.width, backCanvas.height);
+        backContext.drawImage(video, 0, 0, backCanvas.width, backCanvas.height);
         comp = ccv.detect_objects(cache.ccv = cache.ccv || {
           canvas: ccv.grayscale(backCanvas),
           cascade: cascade,

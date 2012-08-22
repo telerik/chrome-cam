@@ -20,40 +20,34 @@
           }
         ];
       },
-      track: function(canvas, skip) {
-        var comp, faces, i, _i, _len, _ref;
-        faces = [];
-        if (!skip) {
-          backContext.drawImage(canvas, 0, 0, backCanvas.width, backCanvas.height);
-          comp = ccv.detect_objects(cache.ccv = cache.ccv || {
-            canvas: ccv.grayscale(backCanvas),
-            cascade: cascade,
-            interval: 5,
-            min_neighbors: 1
-          });
-          if (comp.length) {
-            console.log("FACE!");
-            cache.comp = comp;
-          }
-          _ref = cache.comp;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            i = _ref[_i];
-            faces.push({
-              x: i.x,
-              y: i.y,
-              width: i.width,
-              height: i.height
-            });
-          }
+      track: function(video) {
+        var comp, i, track, _i, _len, _ref;
+        track = {
+          faces: [],
+          trackWidth: backCanvas.width
+        };
+        backContext.drawImage(video, 0, 0, backCanvas.width, backCanvas.height);
+        comp = ccv.detect_objects(cache.ccv = cache.ccv || {
+          canvas: ccv.grayscale(backCanvas),
+          cascade: cascade,
+          interval: 5,
+          min_neighbors: 1
+        });
+        if (comp.length) {
+          console.log("FACE!");
+          cache.comp = comp;
         }
-        return $.publish("/camera/stream", [
-          {
-            canvas: canvas,
-            faces: faces,
-            trackWidth: backCanvas.width,
-            trackHeight: backCanvas.height
-          }
-        ]);
+        _ref = cache.comp;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          i = _ref[_i];
+          track.faces.push({
+            x: i.x,
+            y: i.y,
+            width: i.width,
+            height: i.height
+          });
+        }
+        return track;
       }
     };
   });

@@ -1,13 +1,7 @@
 (function() {
 
   define(['libs/face/ccv', 'libs/face/face'], function(assets) {
-    var draw, eyeFactor, face, faceCore, faces, ghostBuffer, pub, timeStripsBuffer, trackFace, trackHead;
-    face = {
-      backCanvas: document.createElement("canvas"),
-      comp: [],
-      lastCanvas: {},
-      backCtx: {}
-    };
+    var draw, eyeFactor, faces, ghostBuffer, pub, timeStripsBuffer;
     faces = [];
     eyeFactor = .05;
     timeStripsBuffer = [];
@@ -20,75 +14,12 @@
       canvas.update();
       return texture.destroy();
     };
-    faceCore = function(video, canvas, prop, callback) {
-      var comp;
-      if (face.lastCanvas !== canvas) {
-        face.ctx = canvas.getContext("2d");
-        face.ccv = null;
-      }
-      face.ctx.drawImage(video, 0, 0, video.width, video.height);
-      face.backCtx.drawImage(video, 0, 0, face.backCanvas.width, face.backCanvas.height);
-      if (!pub.isPreview) {
-        return comp = ccv.detect_objects({
-          canvas: face.backCanvas,
-          cascade: cascade,
-          interval: 4,
-          min_neighbors: 1
-        });
-      } else {
-        return [
-          {
-            x: video.width * .375,
-            y: video.height * .375,
-            width: video.width / 4,
-            height: video.height / 4
-          }
-        ];
-      }
-    };
-    trackFace = function(video, canvas, prop, xoffset, yoffset, xscaler, yscaler) {
-      var aspectHeight, aspectWidth, comp, i, _i, _len, _ref, _results;
-      aspectWidth = video.width / face.backCanvas.width;
-      face.backCanvasheight = (video.height / video.width) * face.backCanvas.width;
-      aspectHeight = video.height / face.backCanvas.height;
-      comp = faceCore(video, canvas, prop);
-      if (comp.length) face.comp = comp;
-      _ref = face.comp;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        i = _ref[_i];
-        _results.push(face.ctx.drawImage(prop, (i.x * aspectWidth) - (xoffset * aspectWidth), (i.y * aspectHeight) - (yoffset * aspectHeight), (i.width * aspectWidth) * xscaler, (i.height * aspectWidth) * yscaler));
-      }
-      return _results;
-    };
-    trackHead = function(video, canvas, prop, xOffset, yOffset, width, height) {
-      var aspectHeight, aspectWidth, comp, i, _i, _len, _ref, _results;
-      aspectWidth = video.width / face.backCanvas.width;
-      face.backCanvasheight = (video.height / video.width) * face.backCanvas.width;
-      aspectHeight = video.height / face.backCanvas.height;
-      comp = faceCore(video, canvas, prop);
-      if (comp.length) face.comp = comp;
-      _ref = face.comp;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        i = _ref[_i];
-        _results.push(face.ctx.drawImage(prop, i.x * aspectWidth - (xOffset * aspectWidth), (i.y * aspectHeight) - (yOffset * aspectHeight), (i.width * aspectWidth) + (width * aspectWidth), (i.height * aspectHeight) + (height * aspectHeight)));
-      }
-      return _results;
-    };
     return pub = {
-      isPreview: true,
       clearBuffer: function() {
         timeStripsBuffer = [];
         return ghostBuffer = [];
       },
-      init: function() {
-        face.backCanvas.width = 200;
-        face.backCtx = face.backCanvas.getContext("2d");
-        return $.subscribe("/effects/props", function(message) {
-          return face.props[message.name].src = message.image;
-        });
-      },
+      init: function() {},
       data: [
         {
           name: "Normal",
@@ -155,6 +86,26 @@
                 _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65));
               }
               return _results;
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
+          name: "Giraffe",
+          kind: "webgl",
+          filter: function(canvas, element, frame, stream) {
+            var effect;
+            if (stream.faces.length !== 0) faces = stream.faces;
+            effect = function(element) {
+              var face, factor, height, width, x, y, _i, _len;
+              factor = element.width / stream.trackWidth;
+              for (_i = 0, _len = faces.length; _i < _len; _i++) {
+                face = faces[_i];
+                width = face.width * factor;
+                height = face.height * factor;
+                x = face.x * factor;
+                y = face.y * factor;
+              }
+              return canvas.blockhead(x, y + height + 25, 1, canvas.height / 2, 1);
             };
             return draw(canvas, element, effect);
           }
@@ -437,24 +388,6 @@
               return canvas.invert();
             };
             return draw(canvas, element, effect);
-          }
-        }, {
-          name: "Chubby Bunny",
-          kind: "face",
-          filter: function(canvas, video) {
-            return trackFace(video, canvas, assets.images.glasses, 0, 0, 1, 1);
-          }
-        }, {
-          name: "Horns",
-          kind: "face",
-          filter: function(canvas, video) {
-            return trackHead(video, canvas, assets.images.horns, 0, 25, 0, 0);
-          }
-        }, {
-          name: "Hipsterizer",
-          kind: "face",
-          filter: function(canvas, video) {
-            return trackFace(video, canvas, assets.images.hipster, 0, 0, 1, 2.2);
           }
         }
       ]

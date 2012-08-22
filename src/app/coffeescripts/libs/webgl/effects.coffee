@@ -3,17 +3,6 @@ define([
   'libs/face/face'
 ], (assets) ->
 
-    face = {
-
-        backCanvas: document.createElement "canvas"
-
-        comp: []
-
-        lastCanvas: {}
-
-        backCtx: {}
-    }
-
     faces = []
 
     eyeFactor = .05
@@ -31,66 +20,7 @@ define([
         canvas.update()
         texture.destroy()
 
-    faceCore = (video, canvas, prop, callback) ->
-
-        if face.lastCanvas != canvas                      
-            face.ctx = canvas.getContext "2d"
-            face.ccv = null
-
-        face.ctx.drawImage(video, 0, 0, video.width, video.height)
-        face.backCtx.drawImage(video, 0, 0, face.backCanvas.width, face.backCanvas.height)
-
-        if not pub.isPreview
-
-            comp = ccv.detect_objects {
-                canvas: face.backCanvas,
-                cascade: cascade,
-                interval: 4,
-                min_neighbors: 1
-            }
-
-        else [{ x: video.width * .375, y: video.height * .375, width: video.width / 4, height: video.height / 4 }]
-
-    trackFace = (video, canvas, prop, xoffset, yoffset, xscaler, yscaler) ->
-
-        aspectWidth = video.width / face.backCanvas.width
-        face.backCanvasheight = (video.height / video.width) * face.backCanvas.width
-        aspectHeight = video.height / face.backCanvas.height
-
-        comp = faceCore video, canvas, prop
-
-        if comp.length
-            face.comp = comp
-
-        for i in face.comp
-            face.ctx.drawImage prop, 
-                (i.x * aspectWidth) - (xoffset * aspectWidth), 
-                (i.y * aspectHeight) - (yoffset * aspectHeight),
-                (i.width * aspectWidth) * xscaler, 
-                (i.height * aspectWidth) * yscaler
-
-
-    trackHead = (video, canvas, prop, xOffset, yOffset, width, height) ->
-
-        aspectWidth = video.width / face.backCanvas.width
-        face.backCanvasheight = (video.height / video.width) * face.backCanvas.width
-        aspectHeight = video.height / face.backCanvas.height
-
-        comp = faceCore video, canvas, prop
-
-        if comp.length
-            face.comp = comp
-
-        for i in face.comp
-            face.ctx.drawImage prop, 
-            i.x * aspectWidth - (xOffset * aspectWidth), 
-            (i.y * aspectHeight) - (yOffset * aspectHeight), 
-            (i.width * aspectWidth) + (width * aspectWidth), 
-            (i.height * aspectHeight) + (height * aspectHeight)     
-
     pub = 
-
-        isPreview: true
 
         clearBuffer: ->
 
@@ -98,15 +28,6 @@ define([
             ghostBuffer = []
 
         init: ->
-
-            face.backCanvas.width = 200
-
-            face.backCtx = face.backCanvas.getContext "2d"
-
-            # the props come in from the main application as image data
-            $.subscribe "/effects/props", (message) ->
-                face.props[message.name].src = message.image
-
 
         data: [
 
@@ -190,6 +111,35 @@ define([
 
                                 canvas.bulgePinch (x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
                                 canvas.bulgePinch (x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
+
+                        draw(canvas, element, effect)
+                }
+
+                {
+                    name: "Giraffe"
+                    kind: "webgl"
+                    filter: (canvas, element, frame, stream) ->
+
+                        if stream.faces.length != 0
+                            faces = stream.faces
+
+                        effect = (element) ->
+
+                            # the stream object holds a face object which contains
+                            # face tracking data about this paticular canvas. the face
+                            # tracking data comes in at 120 x 80 so we need to crank it up
+                            # to the appropriate size
+                            factor = element.width / stream.trackWidth
+
+                            # add the effect to each face we find
+                            for face in faces
+
+                                width = face.width * factor
+                                height = face.height * factor
+                                x = face.x * factor
+                                y = face.y * factor
+
+                            canvas.blockhead x, y + height + 25, 1, canvas.height / 2, 1
 
                         draw(canvas, element, effect)
                 }
@@ -448,41 +398,6 @@ define([
                             canvas.invert()
                         draw(canvas, element, effect)
                 }
-
-                {
-                    name: "Chubby Bunny"
-                    kind: "face"
-                    filter: (canvas, video) ->
-                        # get the face tracking data
-                        trackFace video, canvas, assets.images.glasses, 0, 0, 1, 1
-                        
-                }
-
-                {
-                    name: "Horns"
-                    kind: "face"
-                    filter: (canvas, video) ->
-
-                        trackHead video, canvas, assets.images.horns, 0, 25, 0, 0
-                }
-
-                
-                {
-                    name: "Hipsterizer"
-                    kind: "face"
-                    filter: (canvas, video) ->
-
-                        trackFace video, canvas, assets.images.hipster, 0, 0, 1, 2.2
-                }
-
-                # {
-                #     name: "Sombraro"
-                #     kind: "face"
-                #     filter: (canvas, video) ->
-
-                #         trackFace video, canvas, face.props.sombraro, 75, 25, 4, 2
-                # }
-
                 
         ]
             
