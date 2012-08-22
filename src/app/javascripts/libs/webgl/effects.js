@@ -120,6 +120,16 @@
             return draw(canvas, element, effect);
           }
         }, {
+          name: "Dent",
+          kind: "webgl",
+          filter: function(canvas, element) {
+            var effect;
+            effect = function() {
+              return canvas.bulgePinch(canvas.width / 2, canvas.height / 2, (canvas.width / 2) / 2, -.2);
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
           name: "Swirl",
           kind: "webgl",
           filter: function(canvas, element) {

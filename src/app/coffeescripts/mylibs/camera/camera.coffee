@@ -17,8 +17,8 @@ define([
     canvas = {}
     ctx = {}
     beep = document.createElement("audio")
-
     paused = false
+    window.testing = false
 
     turnOn = (callback, testing) ->       
 
@@ -26,11 +26,15 @@ define([
 
         # subscribe to the '/camera/update' event. this is published in a draw
         # loop at the extension level at the current framerate
+        
         $.subscribe "/camera/update", (message) ->
 
             if not paused
 
-                # #skip = false
+                skip = false
+
+                if window.testing
+                    message.track = face.track canvas
 
                 # create a new image data object
                 imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
@@ -55,7 +59,7 @@ define([
                     track: message.track
                 }]
 
-                #skip = not skip
+                skip = not skip
 
         # execute the callback that happens when the camera successfully turns on
         callback()
@@ -87,8 +91,6 @@ define([
             # initialize the face tracking module
             face.init 0, 0, 0, 0
 
-            testing = false
-
             # set a reference to the countdown DOM object
             $counter = $("##{counter}")
 
@@ -113,7 +115,7 @@ define([
             $.subscribe "/camera/pause", (isPaused) ->
                 paused = isPaused
 
-            if testing
+            if window.testing
 
                 draw = -> 
                     utils.getAnimationFrame()(draw)
