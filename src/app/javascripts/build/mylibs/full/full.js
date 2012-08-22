@@ -13,7 +13,7 @@
       return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
           frame++;
-          return preview.filter(webgl, stream.canvas, frame, stream);
+          return preview.filter(webgl, stream.canvas, frame, stream.track);
         }
       });
     };

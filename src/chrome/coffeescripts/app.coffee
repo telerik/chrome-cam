@@ -5,25 +5,43 @@ define([
 	'mylibs/intents/intents'
 	'mylibs/notify/notify'
 	'mylibs/assets/assets'
-], (postman, utils, file, intents, notify, assets) ->
+	'libs/face/track'
+], (postman, utils, file, intents, notify, assets, face) ->
 	
 	'use strict'
 
 	iframe = iframe = document.getElementById("iframe")
 	canvas = document.getElementById("canvas")	
 	ctx = canvas.getContext("2d")
+	track = {}
+
+	# skip frames for face detection. grasping at straws.
+	skip = false
+	skipBit = 0
+	skipMax = 10
 
 	draw = -> 
-		utils.getAnimationFrame()(draw)
+
+		# utils.getAnimationFrame()(draw)
 		update()
 
 	update = ->
+
+		if skipBit == 0
+			track = face.track video
 
 		ctx.drawImage(video, 0, 0, video.width, video.height)
 		img = ctx.getImageData(0, 0, canvas.width, canvas.height)
 		buffer = img.data.buffer
 
-		$.publish "/postman/deliver", [{ message: { image: img.data.buffer } }, "/camera/update", [ buffer ]]
+		$.publish "/postman/deliver", [{ message: { image: img.data.buffer, track: track } }, "/camera/update", [ buffer ]]
+
+		if skipBit < 4
+			skipBit++
+		else
+			skipBit = 0
+
+		setTimeout update, 1000 / 30
 
 	hollaback = (stream) ->
 
@@ -60,6 +78,9 @@ define([
 
 			# send embeded assets down to the app
 			assets.init()
+
+			# initialize the face tracking
+			face.init 0, 0, 0, 0
 
 			# start the camera
 			navigator.webkitGetUserMedia { video: true }, hollaback, errback

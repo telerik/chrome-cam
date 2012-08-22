@@ -21,8 +21,12 @@
           videoData = new Uint8ClampedArray(message.image);
           imgData.data.set(videoData);
           ctx.putImageData(imgData, 0, 0);
-          face.track(canvas, skip);
-          return skip = !skip;
+          return $.publish("/camera/stream", [
+            {
+              canvas: canvas,
+              track: message.track
+            }
+          ]);
         }
       });
       return callback();

@@ -45,9 +45,14 @@ define([
                 # run face detection on this canvas and attach the data
                 # to a custom stream object which we can pass down with
                 # the current canvas
-                face.track canvas, skip
+                # face.track canvas, skip
 
-                skip = !skip
+                $.publish "/camera/stream", [{ 
+                    canvas: canvas, 
+                    track: message.track
+                }]
+
+                # skip = !skip
 
         # execute the callback that happens when the camera successfully turns on
         callback()

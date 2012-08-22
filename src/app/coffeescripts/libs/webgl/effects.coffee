@@ -133,10 +133,10 @@ define([
                 {
                     name: "Frogman"
                     kind: "webgl"
-                    filter: (canvas, element, frame, stream) ->
+                    filter: (canvas, element, frame, track) ->
 
-                        if stream.faces.length != 0
-                            faces = stream.faces
+                        if track.faces.length != 0
+                            faces = track.faces
 
                         effect = (element) ->
 
@@ -144,7 +144,7 @@ define([
                             # face tracking data about this paticular canvas. the face
                             # tracking data comes in at 120 x 80 so we need to crank it up
                             # to the appropriate size
-                            factor = element.width / stream.trackWidth
+                            factor = element.width / track.trackWidth
 
                             # add the effect to each face we find
                             for face in faces

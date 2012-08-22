@@ -29,7 +29,7 @@
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
-            _results.push(preview.filter(preview.canvas, canvas, frame, stream));
+            _results.push(preview.filter(preview.canvas, canvas, frame, stream.track));
           }
           return _results;
         }

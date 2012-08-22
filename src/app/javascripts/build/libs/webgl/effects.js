@@ -113,12 +113,12 @@
         }, {
           name: "Frogman",
           kind: "webgl",
-          filter: function(canvas, element, frame, stream) {
+          filter: function(canvas, element, frame, track) {
             var effect;
-            if (stream.faces.length !== 0) faces = stream.faces;
+            if (track.faces.length !== 0) faces = track.faces;
             effect = function(element) {
               var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
-              factor = element.width / stream.trackWidth;
+              factor = element.width / track.trackWidth;
               _results = [];
               for (_i = 0, _len = faces.length; _i < _len; _i++) {
                 face = faces[_i];

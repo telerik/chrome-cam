@@ -569,12 +569,12 @@ define("libs/face/face", function(){});
         }, {
           name: "Frogman",
           kind: "webgl",
-          filter: function(canvas, element, frame, stream) {
+          filter: function(canvas, element, frame, track) {
             var effect;
-            if (stream.faces.length !== 0) faces = stream.faces;
+            if (track.faces.length !== 0) faces = track.faces;
             effect = function(element) {
               var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
-              factor = element.width / stream.trackWidth;
+              factor = element.width / track.trackWidth;
               _results = [];
               for (_i = 0, _len = faces.length; _i < _len; _i++) {
                 face = faces[_i];
@@ -984,7 +984,7 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
-            _results.push(preview.filter(preview.canvas, canvas, frame, stream));
+            _results.push(preview.filter(preview.canvas, canvas, frame, stream.track));
           }
           return _results;
         }
@@ -1147,8 +1147,12 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
           videoData = new Uint8ClampedArray(message.image);
           imgData.data.set(videoData);
           ctx.putImageData(imgData, 0, 0);
-          face.track(canvas, skip);
-          return skip = !skip;
+          return $.publish("/camera/stream", [
+            {
+              canvas: canvas,
+              track: message.track
+            }
+          ]);
         }
       });
       return callback();
@@ -3978,7 +3982,7 @@ define("libs/webgl/glfx.min", function(){});
       return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
           frame++;
-          return preview.filter(webgl, stream.canvas, frame, stream);
+          return preview.filter(webgl, stream.canvas, frame, stream.track);
         }
       });
     };

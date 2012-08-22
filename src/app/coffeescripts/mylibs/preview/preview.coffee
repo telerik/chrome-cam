@@ -47,7 +47,7 @@ define([
                     # like old movie and vhs. most effects simply ignore this
                     frame++
                
-                    preview.filter(preview.canvas, canvas, frame, stream)
+                    preview.filter(preview.canvas, canvas, frame, stream.track)
 
     # anything under here is public
     pub = 

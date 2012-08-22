@@ -29,7 +29,7 @@ define([
 
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
-	            preview.filter(webgl, stream.canvas, frame, stream)
+	            preview.filter(webgl, stream.canvas, frame, stream.track)
 
 	pub = 
 
