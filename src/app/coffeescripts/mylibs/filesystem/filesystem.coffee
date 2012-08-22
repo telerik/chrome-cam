@@ -12,5 +12,8 @@ define [
     dataSource = new kendo.data.DataSource
         data: [createTestFile for x in 0..20]
         pageSize: 8
+        
     pub = 
+        init: ->
+
         dataSource: dataSource

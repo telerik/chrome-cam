@@ -8,7 +8,7 @@ define([
   'mylibs/filesystem/filesystem'
   'mylibs/gallery/gallery'
   'text!intro.html'
-], (camera, bar, preview, full, postman, utils) ->
+], (camera, bar, preview, full, postman, utils, filesystem, gallery, intro) ->
 	
 	pub = 
 		    
@@ -32,6 +32,9 @@ define([
 
 				# initialize the full screen capture mode
 				full.init "#full"
+
+				# initialize the thumbnail gallery
+				gallery.init
 
 				# start drawing some previews
 				preview.draw()

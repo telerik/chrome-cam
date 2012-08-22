@@ -3,4 +3,10 @@ define [
     'mylibs/filesystem/filesystem',
     'text!mylibs/gallery/views/gallery.html'
 ], (utils, filesystem, template) ->
-    pub = {}
+    pub =
+        init: (selector) ->
+            $container = $(selector)
+            $container.append $(template)
+
+            $("ul.thumbnails", $container).kendoListView
+                dataSource: filesystem.dataSource
