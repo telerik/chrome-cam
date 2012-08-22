@@ -8,5 +8,14 @@ define [
             $container = $(selector)
             $container.append $(template)
 
-            $("ul.thumbnails", $container).kendoListView
+            $thumbnailList = $("ul.thumbnails", $container)
+
+            $thumbnailList.kendoListView
+                template: kendo.template($("#gallery-thumbnail").html())
                 dataSource: filesystem.dataSource
+            
+            $thumbnailList.on "click", "li", ->
+                $.publish "/gallery/show", [$(this).data("file-name")]
+
+            $.subscribe "/gallery/show", (fileName) ->
+                console.log fileName

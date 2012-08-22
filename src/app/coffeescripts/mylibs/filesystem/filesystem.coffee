@@ -9,11 +9,10 @@ define [
             size: 128*1024
             dateTaken: new Date()
 
-    dataSource = new kendo.data.DataSource
-        data: [createTestFile for x in 0..20]
-        pageSize: 8
-        
     pub = 
         init: ->
+            data = (createTestFile i for i in [1..20])
 
-        dataSource: dataSource
+            @dataSource = new kendo.data.DataSource
+                data: data
+                pageSize: 8

@@ -14,14 +14,11 @@ define([
 
 			# bind the "capture" button
 			$content.click ->
-				
 				# publish the event to capture the image
 				$.publish "/capture/image"
 
 			$content.find(".show-gallery").click ->
-
-				$.publish "/gallery/show"
-				false
+				$.publish "/gallery/list"
 
 			# append it to the container
 			$container.append $content

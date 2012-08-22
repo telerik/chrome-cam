@@ -1,8 +1,9 @@
-<ul class="thumbnails" data-template="gallery-thumbnail" >
+<ul class="thumbnails">
 </ul>
 
 <script type="text/x-kendo-template" id="gallery-thumbnail">
-    <li>
-        ${dateTaken}
+    <li data-file-name="${fileName}">
+        <img src="${thumbnailUrl}" width="300" height="200">
+        <span class="date">${dateTaken}</span>
     </li>
 </script>

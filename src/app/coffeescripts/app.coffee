@@ -13,13 +13,15 @@ define([
 	pub = 
 		    
 		init: ->
-
 			# fire up the postman!
 			postman.init()
 			
 			$.subscribe('/camera/unsupported', ->
 			    $('#pictures').append(intro)
 			)
+
+			# initialize the filesystem
+			filesystem.init()
 
 			# initialize the camera
 			camera.init "countdown", ->
@@ -34,7 +36,7 @@ define([
 				full.init "#full"
 
 				# initialize the thumbnail gallery
-				gallery.init
+				gallery.init "#gallery"
 
 				# start drawing some previews
 				preview.draw()
