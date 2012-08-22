@@ -14,11 +14,12 @@ Check **Developer Mode**
 
 Click **Load Unpacked Extension**
 
-Navigate to where the **extension** folder in this project is and select the whole folder
+Select the **build** folder that is created when you build the application
 
 Launch the application with the App Launcher 
 
 ## Building The Application
+
 The project is structured in two distinct areas.  The "src" directory holds all of the source code.  The "extension" directory holds all of the compiled code that runs in the extension.  Except for the background.js file and the manifest, you are largely expected to develop in the "src" folder.
 
 ### Install Node
