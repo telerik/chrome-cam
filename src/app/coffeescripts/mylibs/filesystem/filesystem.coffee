@@ -15,4 +15,4 @@ define [
 
             @dataSource = new kendo.data.DataSource
                 data: data
-                pageSize: 8
+                pageSize: 12

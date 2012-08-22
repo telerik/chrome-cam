@@ -154,3 +154,29 @@ body > #wrap {height: auto; min-height: 100%;}
 #full > div {
 	margin: auto;
 }
+
+/* Gallery styles */
+
+#gallery {
+	display: none;
+	height: 100%;
+	padding: 0;
+}
+
+#gallery .thumbnails {
+	height: 100%;
+	margin: auto;
+	clear: both;
+}
+
+#gallery .thumbnails .thumbnail {
+	float: left;
+	width: 300px;
+	height: 240px;
+	text-align: center;
+}
+
+#gallery .thumbnails .date {
+	display: block;
+	font-size: 0.7em;
+}

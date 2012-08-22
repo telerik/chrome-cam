@@ -18,6 +18,7 @@ define([
 				$.publish "/capture/image"
 
 			$content.find(".show-gallery").click ->
+				console.log "show gallery?"
 				$.publish "/gallery/list"
 
 			# append it to the container
