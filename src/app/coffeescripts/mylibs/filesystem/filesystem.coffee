@@ -16,8 +16,10 @@ define [
         window.PERSISTENT
         FILE_SYSTEM_SIZE
         (fileSystem) ->
+            console.log fileSystem
             $.publish "/filesystem/ready"
         (fileError) ->
+            console.log fileError
             $.publish "/filesystem/error"
     )
 

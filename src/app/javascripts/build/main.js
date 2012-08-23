@@ -4060,8 +4060,10 @@ define("libs/webgl/glfx.min",[], function(){});
       };
     };
     utils.getFileSystem(window.PERSISTENT, FILE_SYSTEM_SIZE, function(fileSystem) {
+      console.log(fileSystem);
       return $.publish("/filesystem/ready");
     }, function(fileError) {
+      console.log(fileError);
       return $.publish("/filesystem/error");
     });
     return pub = {
