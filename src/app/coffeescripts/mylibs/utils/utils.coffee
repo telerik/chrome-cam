@@ -14,6 +14,4 @@ define([
     	getAnimationFrame: ->
 	        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || (callback, element) ->
 	            return window.setTimeout(callback, 1000 / 60)
-        getFileSystem: ->
-            window.webkitRequestFileSystem || window.requestFileSystem
 )

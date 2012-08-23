@@ -15,16 +15,13 @@
         dateTaken: new Date()
       };
     };
-    utils.getFileSystem(window.PERSISTENT, FILE_SYSTEM_SIZE, function(fileSystem) {
-      console.log(fileSystem);
-      return $.publish("/filesystem/ready");
-    }, function(fileError) {
-      console.log(fileError);
-      return $.publish("/filesystem/error");
-    });
     return pub = {
       init: function() {
         var data, i;
+        $.subscribe("/pictures/bulk", function(result) {
+          return console.log(result);
+        });
+        $.publish("/postman/deliver", [{}, "/file/read", []]);
         data = (function() {
           var _i, _results;
           _results = [];

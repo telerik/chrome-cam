@@ -5,10 +5,9 @@ define([
   'mylibs/full/full'
   'mylibs/postman/postman'
   'mylibs/utils/utils'
-  'mylibs/filesystem/filesystem'
   'mylibs/gallery/gallery'
   'text!intro.html'
-], (camera, bar, preview, full, postman, utils, filesystem, gallery, intro) ->
+], (camera, bar, preview, full, postman, utils, gallery, intro) ->
 	
 	pub = 
 		    
@@ -19,9 +18,6 @@ define([
 			$.subscribe('/camera/unsupported', ->
 			    $('#pictures').append(intro)
 			)
-
-			# initialize the filesystem
-			filesystem.init()
 
 			# initialize the camera
 			camera.init "countdown", ->
