@@ -7,12 +7,13 @@
       var deferred, token;
       deferred = $.Deferred();
       token = $.subscribe("/pictures/bulk", function(result) {
+        var dataSource;
         $.unsubscribe(token);
-        console.log(result);
-        return deferred.resolve(new kendo.data.DataSource({
-          data: result,
+        dataSource = new kendo.data.DataSource({
+          data: result.message,
           pageSize: 12
-        }));
+        });
+        return deferred.resolve(dataSource);
       });
       $.publish("/postman/deliver", [{}, "/file/read", []]);
       return deferred.promise();
@@ -24,6 +25,7 @@
         $container.append($(template));
         $thumbnailList = $(".thumbnails", $container);
         return loadImages().done(function(dataSource) {
+          console.log(dataSource);
           $thumbnailList.on("click", ".thumbnail", function() {
             return $.publish("/gallery/show", [$(this).data("file-name")]);
           });

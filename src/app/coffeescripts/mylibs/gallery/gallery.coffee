@@ -8,10 +8,10 @@ define [
 
         token = $.subscribe "/pictures/bulk", (result) ->
             $.unsubscribe token
-            console.log result
-            deferred.resolve new kendo.data.DataSource
-                data: result
+            dataSource = new kendo.data.DataSource
+                data: result.message
                 pageSize: 12
+            deferred.resolve dataSource
 
         $.publish "/postman/deliver", [ {}, "/file/read", [] ]
 
@@ -26,6 +26,8 @@ define [
 
             # after loading the images
             loadImages().done (dataSource) ->
+                console.log dataSource
+
                 # set up the DOM events
                 $thumbnailList.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]
@@ -44,7 +46,6 @@ define [
                     $container.slideDown()
                     $("#preview").slideUp()
                 
-                # initialize list view
                 $thumbnailList.kendoListView
                     template: kendo.template $("#gallery-thumbnail").html()
                     dataSource: dataSource

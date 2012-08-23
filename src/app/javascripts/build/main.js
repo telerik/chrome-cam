@@ -1119,7 +1119,7 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
     ctx = {};
     beep = document.createElement("audio");
     paused = false;
-    window.testing = true;
+    window.testing = false;
     turnOn = function(callback, testing) {
       var track;
       track = {};
@@ -1255,14 +1255,11 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
           };
           return countdown(0);
         });
-<<<<<<< HEAD
         $content.find(".show-gallery").toggle((function() {
           return $.publish("/gallery/list");
         }), (function() {
           return $.publish("/gallery/hide");
         }));
-=======
->>>>>>> master
         $container.append($content);
         $.subscribe("/bar/capture/show", function() {
           return $capture.kendoStop(true).kendoAnimate({
@@ -4143,12 +4140,13 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
       var deferred, token;
       deferred = $.Deferred();
       token = $.subscribe("/pictures/bulk", function(result) {
+        var dataSource;
         $.unsubscribe(token);
-        console.log(result);
-        return deferred.resolve(new kendo.data.DataSource({
-          data: result,
+        dataSource = new kendo.data.DataSource({
+          data: result.message,
           pageSize: 12
-        }));
+        });
+        return deferred.resolve(dataSource);
       });
       $.publish("/postman/deliver", [{}, "/file/read", []]);
       return deferred.promise();
@@ -4160,6 +4158,7 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
         $container.append($(template));
         $thumbnailList = $(".thumbnails", $container);
         return loadImages().done(function(dataSource) {
+          console.log(dataSource);
           $thumbnailList.on("click", ".thumbnail", function() {
             return $.publish("/gallery/show", [$(this).data("file-name")]);
           });
