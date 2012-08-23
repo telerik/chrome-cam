@@ -111,7 +111,7 @@
             nextPage.append(bottom.el);
             previousPage.kendoStop(true).kendoAnimate({
               effects: "slide:left",
-              duration: 200,
+              duration: 1000,
               hide: true,
               complete: function() {
                 var justPaged;
@@ -121,9 +121,12 @@
               }
             });
             return nextPage.kendoStop(true).kendoAnimate({
-              effects: "slideIn:right",
+              effects: "slideIn:left",
               duration: 200,
-              show: true
+              show: true,
+              complete: function() {
+                return $.publish("/camera/pause", false);
+              }
             });
           }
         });

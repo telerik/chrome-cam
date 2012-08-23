@@ -194,7 +194,7 @@ define([
                     # now move the current page out and the next page in
                     previousPage.kendoStop(true).kendoAnimate({
                         effects: "slide:left"
-                        duration: 200,
+                        duration: 1000,
                         hide: true,
                         complete: ->
                             # the current page becomes the next page
@@ -206,9 +206,12 @@ define([
 
                     # move the next page in
                     nextPage.kendoStop(true).kendoAnimate({
-                        effects: "slideIn:right",
+                        effects: "slideIn:left",
                         duration: 200,
-                        show: true
+                        show: true,
+                        complete: ->
+                            # unpause the camera
+                            $.publish "/camera/pause", false
                     })
 
 
