@@ -41,7 +41,7 @@ task 'default', (params) ->
 
 	jake.exec "r.js -o src/app/javascripts/app.build.js", () -> 
 
-		log "Copying Build Folder Main, Require, jQuery and Kendo"
+		log "Copying App Scripts"
 
 		jake.cpR "src/app/javascripts/build/main.js", "#{folder}/app/javascripts/main.js"
 		jake.cpR "src/app/javascripts/build/require.js", "#{folder}/app/javascripts/require.js"
