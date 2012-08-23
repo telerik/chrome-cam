@@ -35,11 +35,13 @@
           };
           return countdown(0);
         });
+
         $content.find(".show-gallery").toggle((function() {
           return $.publish("/gallery/list");
         }), (function() {
           return $.publish("/gallery/hide");
         }));
+        
         $container.append($content);
         $.subscribe("/bar/capture/show", function() {
           return $capture.kendoStop(true).kendoAnimate({

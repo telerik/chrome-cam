@@ -42,7 +42,7 @@
         return draw();
       },
       init: function(selector) {
-        var $currentPage, $nextPage, bottom, ds, top;
+        var $page1, $page2, bottom, ds, nextPage, previousPage, top;
         effects.init();
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
@@ -52,14 +52,26 @@
         canvas.width = 360;
         canvas.height = 240;
         $container = $(selector);
+        $container.kendoMobileSwipe(function() {
+          $.publish("/camera/pause", [true]);
+          if (ds.page() < ds.totalPages()) {
+            return ds.page(ds.page() + 1);
+          } else {
+            return ds.page(1);
+          }
+        }, {
+          surface: $container
+        });
         top = {
           el: $(halfTemplate)
         };
         bottom = {
           el: $(halfTemplate)
         };
-        $currentPage = $(pageTemplate).appendTo($container);
-        $nextPage = $(pageTemplate).appendTo($container);
+        $page1 = $(pageTemplate).appendTo($container);
+        $page2 = $(pageTemplate).appendTo($container);
+        previousPage = $page1;
+        nextPage = $page2;
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -97,8 +109,24 @@
             };
             create(top);
             create(bottom);
-            $currentPage.append(top.el);
-            return $currentPage.append(bottom.el);
+            nextPage.append(top.el);
+            nextPage.append(bottom.el);
+            previousPage.kendoStop(true).kendoAnimate({
+              effects: "slide:left",
+              duration: 200,
+              hide: true,
+              complete: function() {
+                var justPaged;
+                justPaged = previousPage;
+                previousPage = nextPage;
+                return nextPage = justPaged;
+              }
+            });
+            return nextPage.kendoStop(true).kendoAnimate({
+              effects: "slideIn:right",
+              duration: 200,
+              show: true
+            });
           }
         });
         return ds.read();

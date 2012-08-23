@@ -1,5 +1,5 @@
 define([
-	'../common/javascripts/mylibs/postman'
+	'mylibs/postman/postman'
 	'mylibs/utils/utils'
 	'mylibs/file/file'
 	'mylibs/intents/intents'
@@ -34,7 +34,7 @@ define([
 		img = ctx.getImageData(0, 0, canvas.width, canvas.height)
 		buffer = img.data.buffer
 
-		$.publish "/postman/deliver", [{ message: { image: img.data.buffer, track: track } }, "/camera/update", [ buffer ]]
+		$.publish "/postman/deliver", [ image: img.data.buffer, track: track, "/camera/update", [ buffer ]]
 
 		if skipBit < 4
 			skipBit++

@@ -14,7 +14,7 @@
     ctx = {};
     beep = document.createElement("audio");
     paused = false;
-    window.testing = true;
+    window.testing = false;
     turnOn = function(callback, testing) {
       var track;
       track = {};

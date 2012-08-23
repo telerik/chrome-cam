@@ -113,15 +113,11 @@ define([
 
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
-            $currentPage = $(pageTemplate).appendTo($container)
-            $nextPage = $(pageTemplate).appendTo($container)
-            
-            # set the current page
-            currentPage = $currentPage
-            nextPage = $nextPage
+            $page1 = $(pageTemplate).appendTo($container)
+            $page2 = $(pageTemplate).appendTo($container)
 
-            # store the current page reference
-            currentPage = $nextPage
+            previousPage = $page1
+            nextPage = $page2
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -196,25 +192,24 @@ define([
                     nextPage.append(bottom.el)
 
                     # now move the current page out and the next page in
-                    # currentPage.kendoStop(true).kendoAnimate({
-                    #     effects: "slide:left"
-                    #     duration: 200,
-                    #     hide: true,
-                    #     complete: ->
-                    #         # the current page becomes the next page
-                    #         justPaged = nextPage
+                    previousPage.kendoStop(true).kendoAnimate({
+                        effects: "slide:left"
+                        duration: 200,
+                        hide: true,
+                        complete: ->
+                            # the current page becomes the next page
+                            justPaged = previousPage
                             
-                    #         currentPage = nextPage
-                    #         nextPage = currentPage
+                            previousPage = nextPage
+                            nextPage = justPaged
+                    })
 
-                    # })
-
-                    # # move the next page in
-                    # nextPage.kendoStop(true).kendoAnimate({
-                    #     effects: "slideIn:right",
-                    #     duration: 200,
-                    #     show: true
-                    # })
+                    # move the next page in
+                    nextPage.kendoStop(true).kendoAnimate({
+                        effects: "slideIn:right",
+                        duration: 200,
+                        show: true
+                    })
 
 
             # read from the datasource
