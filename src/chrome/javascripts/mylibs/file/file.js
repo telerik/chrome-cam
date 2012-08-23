@@ -42,7 +42,7 @@
     };
     save = function(name, dataURL) {
       var blob;
-      blob = utils.toBlob(dataURL);
+      blob = utils.toBlob(dataURL, "image/jpg");
       return fileSystem.root.getFile(name, {
         create: true
       }, function(fileEntry) {

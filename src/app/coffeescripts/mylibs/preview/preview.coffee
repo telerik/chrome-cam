@@ -84,6 +84,27 @@ define([
             # which calls it's init. grab it from the DOM and cache it.
             $container = $(selector)
 
+            # attach a kendo mobile swipe event to the container. this is what
+            # will page through the effects
+            $container.kendoMobileSwipe ->
+
+                # pause the camera. that will additionally pause
+                # these previews so there is no need to pause this
+                # as well.
+                $.publish "/camera/pause", [ true ] 
+
+                # if the current page is less than the total 
+                # number of pages
+                if ds.page() < ds.totalPages()
+                    # go to the next page
+                    ds.page ds.page() + 1
+                # otherwise
+                else
+                    # go back to the first page
+                    ds.page 1
+
+            , surface: $container
+
             # we need to create top and bottom rows in our flexbox. these are
             # objects which will hold the top and bottom elements now and an
             # array of the data that belongs in the elements later
@@ -94,6 +115,13 @@ define([
             # page and the next page.
             $currentPage = $(pageTemplate).appendTo($container)
             $nextPage = $(pageTemplate).appendTo($container)
+            
+            # set the current page
+            currentPage = $currentPage
+            nextPage = $nextPage
+
+            # store the current page reference
+            currentPage = $nextPage
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -164,8 +192,30 @@ define([
                     create(bottom)
 
                     # we want to append our two halves on to the next page
-                    $currentPage.append(top.el)
-                    $currentPage.append(bottom.el)
+                    nextPage.append(top.el)
+                    nextPage.append(bottom.el)
+
+                    # now move the current page out and the next page in
+                    # currentPage.kendoStop(true).kendoAnimate({
+                    #     effects: "slide:left"
+                    #     duration: 200,
+                    #     hide: true,
+                    #     complete: ->
+                    #         # the current page becomes the next page
+                    #         justPaged = nextPage
+                            
+                    #         currentPage = nextPage
+                    #         nextPage = currentPage
+
+                    # })
+
+                    # # move the next page in
+                    # nextPage.kendoStop(true).kendoAnimate({
+                    #     effects: "slideIn:right",
+                    #     duration: 200,
+                    #     show: true
+                    # })
+
 
             # read from the datasource
             ds.read()    

@@ -39,7 +39,9 @@ define([
 			# attach to the /capture/image function
 			$.subscribe "/capture/image", ->
 
-				image = canvas.toDataURL()
+				image = webgl.toDataURL()
+
+				console.log image
 
 				# set the name of this image to the current time string
 				name = new Date().getTime() + ".jpg"
