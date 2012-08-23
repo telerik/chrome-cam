@@ -1,6 +1,6 @@
 (function() {
 
-  define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/intents/intents', 'mylibs/notify/notify', 'mylibs/assets/assets', 'libs/face/track'], function(postman, utils, file, intents, notify, assets, face) {
+  define(['../common/javascripts/mylibs/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/intents/intents', 'mylibs/notify/notify', 'mylibs/assets/assets', 'libs/face/track'], function(postman, utils, file, intents, notify, assets, face) {
     'use strict';
     var canvas, ctx, draw, errback, hollaback, iframe, pub, skip, skipBit, skipMax, track, update;
     iframe = iframe = document.getElementById("iframe");

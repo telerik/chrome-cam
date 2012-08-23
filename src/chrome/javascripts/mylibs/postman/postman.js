@@ -12,17 +12,20 @@
     	incoming: the postman listens to the post message event on the window and 
     	dispatches the event with the address specified
     */
-    var pub, recipient;
-    recipient = {};
+    var pub;
     return pub = {
       init: function(r) {
+        var recipient;
         recipient = r;
         window.onmessage = function(event) {
           return $.publish(event.data.address, [event.data.message]);
         };
         return $.subscribe("/postman/deliver", function(message, address, block) {
-          message.address = address;
-          return recipient.webkitPostMessage(message, "*", block);
+          var delivery;
+          delivery = {};
+          delivery.address = address;
+          delivery.message = message;
+          return recipient.webkitPostMessage(delivery, "*", block);
         });
       }
     };

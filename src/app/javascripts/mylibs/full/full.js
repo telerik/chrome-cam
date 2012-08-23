@@ -22,7 +22,8 @@
         var $container, $content, $flash;
         $.subscribe("/capture/image", function() {
           var image, name;
-          image = canvas.toDataURL();
+          image = webgl.toDataURL();
+          console.log(image);
           name = new Date().getTime() + ".jpg";
           return $.publish("/postman/deliver", [
             {
