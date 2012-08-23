@@ -24,13 +24,12 @@ body > #wrap {height: auto; min-height: 100%;}
 
 #footer { 
     position: relative;
-	margin-top: -70px; /* negative value of footer height */
+	margin-top: -60px; /* negative value of footer height */
 	height: 60px;
-	clear:both;
+	clear: both;
 }
 
 .bar {
-	padding-top: 10px;
 	width: 100%;
 	height: 100%;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(15%,rgba(130,130,130,1)), color-stop(100%,rgba(46,46,46,1))); /* Chrome,Safari4+ */
@@ -55,6 +54,7 @@ body > #wrap {height: auto; min-height: 100%;}
 	background: linear-gradient(to bottom, #898989 0%,#404040 100%);
 	width: 45px;
 	height: 45px;
+	margin-top: 5px;
 }
 
 .countdown {
@@ -62,7 +62,8 @@ body > #wrap {height: auto; min-height: 100%;}
 	width: 50px;
 	display: -webkit-box;
 	-webkit-box-align: center;
-	-webkit-box-pack: center;	
+	-webkit-box-pack: center;
+	margin-top: 5px;	
 }
 
 .countdown > span {
@@ -86,6 +87,7 @@ body > #wrap {height: auto; min-height: 100%;}
 	-webkit-box-flex: 1;
 }
 
+
 .center {
 	-webkit-box-flex: 1;
 	text-align: center;
@@ -95,6 +97,18 @@ body > #wrap {height: auto; min-height: 100%;}
 .right {
 	height: 100%;
 	-webkit-box-flex: 1;
+}
+
+.galleryLink {
+	display: block;
+	background: white;
+	height: 48px;
+	width: 72px;
+	float: right;
+	margin-right: 35px;
+	-webkit-box-shadow:  0px 3px 5px 2px rgba(0, 0, 0, .75);
+    box-shadow:  0px 3px 5px 2px rgba(0, 0, 0, .75);
+    margin-top: 5px;
 }
 
 /* Preview Styles */
@@ -141,6 +155,44 @@ body > #wrap {height: auto; min-height: 100%;}
 	border-bottom-color: #D5D5D5;
 	-webkit-border-image: -webkit-linear-gradient(#c4c4c4, #bbb) 1 100%;
 }
+
+.mode {
+	list-style-type: none;
+	position: relative;
+	top: 13px;
+	margin-left: 35px;
+}
+
+.mode li {
+	display: inline;
+	float: left;
+}
+
+.mode a {
+	display: block;
+	width: 35px;
+	height: 30px;
+	background: #F4F4F4;
+	border: 1px solid #d9d9d9;
+	background-repeat: no-repeat;
+	background-image: url('images/cameraModeSprite.png');
+}
+	.mode .photo { background-position: 50% 6px; }
+	.mode .video { background-position: 50% -30px; }
+	.mode .paparazzi { background-position: 50% -68px; }
+
+.mode li:first-child a {
+	border-bottom-left-radius: 2px;
+	border-top-left-radius: 2px;
+	border-right: 0px solid transparent;
+}
+
+.mode li:last-child a {
+	border-bottom-right-radius: 2px;
+	border-top-right-radius: 2px;
+	border-left: 0px solid transparent;
+}
+
 
 .preview-title {
 	text-align: center;
