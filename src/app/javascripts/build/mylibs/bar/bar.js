@@ -7,7 +7,8 @@
         var $container, $content;
         $container = $(selector);
         $content = $(template);
-        $content.click(function() {
+        $content.on("click", ".capture", function() {
+          console.log("clicky!");
           return $.publish("/capture/image");
         });
         return $container.append($content);
