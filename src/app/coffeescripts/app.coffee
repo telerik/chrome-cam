@@ -13,7 +13,7 @@ define([
 		init: ->
 
 			# fire up the postman!
-			postman.init()
+			postman.init window.top
 			
 			$.subscribe('/camera/unsupported', ->
 			    $('#pictures').append(intro)

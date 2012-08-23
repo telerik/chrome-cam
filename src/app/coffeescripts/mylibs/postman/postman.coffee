@@ -18,7 +18,9 @@ define([
 	# anything under this is public
 	pub =
 
-		init: () ->
+		init: (r) ->
+
+			recipient = r
 
 			# attach an event listener to the window for post messages
 			window.onmessage = (event) ->
@@ -28,12 +30,15 @@ define([
 
 
 			# subscribe to the send event
-			$.subscribe "/postman/deliver", (message, address) ->
+			$.subscribe "/postman/deliver", (message, address, block) ->
 			
+				delivery = {}
+
 				# add the address on to the message object
-				message.address = address
+				delivery.address = address
+				delivery.message = message
 
 				# send the message as a post message to the extension outside
 				# of the sandbox
-				window.top.webkitPostMessage message, "*"
+				recipient.webkitPostMessage delivery, "*", block
 )

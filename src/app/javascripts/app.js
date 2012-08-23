@@ -4,7 +4,7 @@
     var pub;
     return pub = {
       init: function() {
-        postman.init();
+        postman.init(window.top);
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
         });
