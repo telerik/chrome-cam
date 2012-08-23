@@ -44,6 +44,7 @@ body > #wrap {height: auto; min-height: 100%;}
 	margin: auto;
 	width: 150px;
 	height: 100%;
+	display: none;
 }
 
 .gray {
@@ -63,6 +64,7 @@ body > #wrap {height: auto; min-height: 100%;}
 	display: -webkit-box;
 	-webkit-box-align: center;
 	-webkit-box-pack: center;	
+	display: none;
 }
 
 .red-dot {
@@ -106,6 +108,9 @@ body > #wrap {height: auto; min-height: 100%;}
 #select {
 	height: 92%;
 	width: 100%;
+}
+
+#select > .page {
 	display: -webkit-box;
 	-webkit-box-align: center;
 	-webkit-box-pack: center;

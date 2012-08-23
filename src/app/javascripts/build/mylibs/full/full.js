@@ -21,6 +21,17 @@
     return pub = {
       init: function(selector) {
         var $container, $wrapper;
+        $.subscribe("/capture/image", function() {
+          var image, name;
+          image = canvas.toDataURL();
+          name = new Date().getTime() + ".jpg";
+          return $.publish("/postman/deliver", [
+            {
+              name: name,
+              image: image
+            }, "/file/save"
+          ]);
+        });
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({

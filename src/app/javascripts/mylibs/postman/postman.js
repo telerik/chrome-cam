@@ -16,13 +16,18 @@
 
     var pub;
     return pub = {
-      init: function() {
+      init: function(r) {
+        var recipient;
+        recipient = r;
         window.onmessage = function(event) {
           return $.publish(event.data.address, [event.data.message]);
         };
-        return $.subscribe("/postman/deliver", function(message, address) {
-          message.address = address;
-          return window.top.webkitPostMessage(message, "*");
+        return $.subscribe("/postman/deliver", function(message, address, block) {
+          var delivery;
+          delivery = {};
+          delivery.address = address;
+          delivery.message = message;
+          return recipient.webkitPostMessage(delivery, "*", block);
         });
       }
     };

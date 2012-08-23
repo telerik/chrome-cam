@@ -1,7 +1,8 @@
 define([
   'mylibs/utils/utils'
+  'text!mylibs/full/views/full.html'
   'libs/webgl/glfx'
-], (utils) ->
+], (utils, fullTemplate) ->
 	
 	canvas = {}
 	ctx = {}
@@ -35,6 +36,18 @@ define([
 
 		init: (selector) ->
 
+			# attach to the /capture/image function
+			$.subscribe "/capture/image", ->
+
+				image = canvas.toDataURL()
+
+				# set the name of this image to the current time string
+				name = new Date().getTime() + ".jpg"
+
+				# save the image to the file system. this is up to the extension
+				# to handle
+				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
+
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
 				setup: (element, options) ->
@@ -53,9 +66,12 @@ define([
 			ctx = canvas.getContext "2d"
 
 			# create a div to go inside the main content area
-			$wrapper = $("<div></div>")
+			$content = $(fullTemplate)
 
-			$container.append $wrapper
+			# get a reference to the flash
+			$flash = $content.find ".flash"
+
+			$container.append $content
 
 			# create a new webgl canvas
 			webgl = fx.canvas()
@@ -63,6 +79,9 @@ define([
 			# add the double-click event listener which closes the preview
 			$(webgl).dblclick ->
 				
+				# hide the controls in the bar
+				$.publish "/bar/capture/hide"
+
 				# pause the camera
 				$.publish "/camera/pause", [ true ]
 
@@ -100,10 +119,13 @@ define([
 				})
 
 			# append the webgl canvas
-			$wrapper.append(webgl)
+			$content.append(webgl)
 
 			# subscribe to the show event
 			$.subscribe "/full/show", (e) ->
+
+				# show the record controls in the footer
+				$.publish "/bar/capture/show"
 
 				$.extend(preview, e)
 
@@ -125,13 +147,13 @@ define([
 				# $container.height(preview.canvas.height)
 
 				# get the height of the container minus the footer
-				$wrapper.height $container.height() - 50
+				$content.height $container.height() - 50
 
 				# determine the width based on a 3:2 aspect ratio (.66 repeating)
-				$wrapper.width (3 / 2) * $wrapper.height()
+				$content.width (3 / 2) * $content.height()
 
-				$(webgl).width($wrapper.width())
-				$(webgl).height("height", $wrapper.height())
+				$(webgl).width($content.width())
+				$(webgl).height("height", $content.height())
 
 				$container.kendoStop(true).kendoAnimate({
 					effects: "zoomIn",

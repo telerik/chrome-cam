@@ -1,7 +1,7 @@
 define([
 
 ], () ->
-	
+
 	###		The Postman!
 
 	The postman is a super simple combination of pub/sub and post message. 
@@ -15,29 +15,30 @@ define([
 
 	###
 
-	# object level vars
-	recipient = {}
-
- 	# anything under this is public
+	# anything under this is public
 	pub =
 
 		init: (r) ->
 
-			# set the recipient window
 			recipient = r
 
-			# listen for the window message event
+			# attach an event listener to the window for post messages
 			window.onmessage = (event) ->
 
 				# receive the command to save a file
-				$.publish event.data.address, [ event.data.message ]
+				$.publish event.data.address, [event.data.message]
+
 
 			# subscribe to the send event
 			$.subscribe "/postman/deliver", (message, address, block) ->
 			
-				# add an address to the message
-				message.address = address
+				delivery = {}
 
-				# deliver to recipient
-				recipient.webkitPostMessage message, "*", block
+				# add the address on to the message object
+				delivery.address = address
+				delivery.message = message
+
+				# send the message as a post message to the extension outside
+				# of the sandbox
+				recipient.webkitPostMessage delivery, "*", block
 )

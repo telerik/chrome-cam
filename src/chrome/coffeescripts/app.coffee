@@ -1,5 +1,5 @@
 define([
-	'mylibs/postman/postman'
+	'../common/javascripts/mylibs/postman'
 	'mylibs/utils/utils'
 	'mylibs/file/file'
 	'mylibs/intents/intents'
