@@ -576,6 +576,16 @@ define("libs/face/face", function(){});
             return draw(canvas, element, effect);
           }
         }, {
+          name: "Dent",
+          kind: "webgl",
+          filter: function(canvas, element) {
+            var effect;
+            effect = function() {
+              return canvas.bulgePinch(canvas.width / 2, canvas.height / 2, (canvas.width / 2) / 2, -.2);
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
           name: "Swirl",
           kind: "webgl",
           filter: function(canvas, element) {
@@ -1065,22 +1075,26 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
     ctx = {};
     beep = document.createElement("audio");
     paused = false;
+    window.testing = false;
     turnOn = function(callback, testing) {
       var track;
       track = {};
       $.subscribe("/camera/update", function(message) {
-        var imgData, videoData;
+        var imgData, skip, videoData;
         if (!paused) {
+          skip = false;
+          if (window.testing) message.track = face.track(canvas);
           imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           videoData = new Uint8ClampedArray(message.image);
           imgData.data.set(videoData);
           ctx.putImageData(imgData, 0, 0);
-          return $.publish("/camera/stream", [
+          $.publish("/camera/stream", [
             {
               canvas: canvas,
               track: message.track
             }
           ]);
+          return skip = !skip;
         }
       });
       return callback();
@@ -1103,9 +1117,8 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
     };
     return pub = {
       init: function(counter, callback) {
-        var draw, testing, update, video;
+        var draw, update, video;
         face.init(0, 0, 0, 0);
-        testing = false;
         $counter = $("#" + counter);
         beep.src = "sounds/beep.mp3";
         beep.buffer = "auto";
@@ -1119,7 +1132,7 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
         $.subscribe("/camera/pause", function(isPaused) {
           return paused = isPaused;
         });
-        if (testing) {
+        if (window.testing) {
           draw = function() {
             utils.getAnimationFrame()(draw);
             return update();

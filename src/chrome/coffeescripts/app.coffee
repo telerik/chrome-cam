@@ -77,7 +77,7 @@ define([
 			$.publish "/file/read", []
 
 			# send embeded assets down to the app
-			assets.init()
+			# assets.init()
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0

@@ -154,6 +154,15 @@ define([
                 }
 
                 {
+                    name: "Dent"
+                    kind: "webgl"
+                    filter: (canvas, element) -> 
+                        effect = ->
+                            canvas.bulgePinch canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, -.2
+                        draw(canvas, element, effect)
+                }
+
+                {
                     name: "Swirl"
                     kind: "webgl"
                     filter: (canvas, element) -> 

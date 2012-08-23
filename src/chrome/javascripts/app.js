@@ -53,7 +53,6 @@
         file.init();
         postman.init(iframe.contentWindow);
         $.publish("/file/read", []);
-        assets.init();
         face.init(0, 0, 0, 0);
         return navigator.webkitGetUserMedia({
           video: true
