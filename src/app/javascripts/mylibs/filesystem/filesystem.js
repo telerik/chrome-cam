@@ -2,7 +2,10 @@
 (function() {
 
   define(['mylibs/utils/utils'], function(utils) {
-    var createTestFile, pub;
+    var FILE_SYSTEM_SIZE, KIBIBYTE, MEBIBYTE, createTestFile, pub;
+    KIBIBYTE = 1024;
+    MEBIBYTE = KIBIBYTE * 1024;
+    FILE_SYSTEM_SIZE = 5 * MEBIBYTE;
     createTestFile = function(fileName) {
       var file;
       return file = {
@@ -12,6 +15,11 @@
         dateTaken: new Date()
       };
     };
+    utils.getFileSystem(window.PERSISTENT, FILE_SYSTEM_SIZE, function(fileSystem) {
+      return $.publish("/filesystem/ready");
+    }, function(fileError) {
+      return $.publish("/filesystem/error");
+    });
     return pub = {
       init: function() {
         var data, i;

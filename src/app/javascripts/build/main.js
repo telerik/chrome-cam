@@ -885,6 +885,9 @@ define("libs/face/face",[], function(){});
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
           return window.setTimeout(callback, 1000 / 60);
         };
+      },
+      getFileSystem: function() {
+        return window.webkitRequestFileSystem || window.requestFileSystem;
       }
     };
   });
@@ -4043,7 +4046,10 @@ define("libs/webgl/glfx.min",[], function(){});
 (function() {
 
   define('mylibs/filesystem/filesystem',['mylibs/utils/utils'], function(utils) {
-    var createTestFile, pub;
+    var FILE_SYSTEM_SIZE, KIBIBYTE, MEBIBYTE, createTestFile, pub;
+    KIBIBYTE = 1024;
+    MEBIBYTE = KIBIBYTE * 1024;
+    FILE_SYSTEM_SIZE = 5 * MEBIBYTE;
     createTestFile = function(fileName) {
       var file;
       return file = {
@@ -4053,6 +4059,11 @@ define("libs/webgl/glfx.min",[], function(){});
         dateTaken: new Date()
       };
     };
+    utils.getFileSystem(window.PERSISTENT, FILE_SYSTEM_SIZE, function(fileSystem) {
+      return $.publish("/filesystem/ready");
+    }, function(fileError) {
+      return $.publish("/filesystem/error");
+    });
     return pub = {
       init: function() {
         var data, i;
