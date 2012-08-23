@@ -894,11 +894,15 @@ b;if(typeof XMLHttpRequest!=="undefined")return new XMLHttpRequest;else for(c=0;
 c,b,e){var d=g.xdRegExp.exec(a),f;if(!d)return!0;a=d[2];d=d[3];d=d.split(":");f=d[1];d=d[0];return(!a||a===c)&&(!d||d===b)&&(!f&&!d||f===e)},finishLoad:function(a,c,b,e,d){b=c?g.strip(b):b;d.isBuild&&(j[a]=b);e(b)},load:function(a,c,b,e){if(e.isBuild&&!e.inlineText)b();else{var d=g.parseName(a),f=d.moduleName+"."+d.ext,m=c.toUrl(f),h=e&&e.text&&e.text.useXhr||g.useXhr;!i||h(m,p,q,r)?g.get(m,function(c){g.finishLoad(a,d.strip,c,b,e)}):c([f],function(a){g.finishLoad(d.moduleName+"."+d.ext,d.strip,a,
 b,e)})}},write:function(a,c,b){if(c in j){var e=g.jsEscape(j[c]);b.asModule(a+"!"+c,"define(function () { return '"+e+"';});\n")}},writeFile:function(a,c,b,e,d){var c=g.parseName(c),f=c.moduleName+"."+c.ext,h=b.toUrl(c.moduleName+"."+c.ext)+".js";g.load(f,b,function(){var b=function(a){return e(h,a)};b.asModule=function(a,b){return e.asModule(a,h,b)};g.write(a,f,b,d)},d)}}})})();
 
-define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<div class="preview">\n\t<div>\n\t\t<a></a>\n\t\t<div class="preview-title"><b>${ name }</b></div>\n\t</div>\n</div>';});
+define('text!mylibs/preview/views/preview.html',[],function () { return '<div class="preview">\n\t<div>\n\t\t<a></a>\n\t\t<div class="preview-title"><b>${ name }</b></div>\n\t</div>\n</div>';});
+
+define('text!mylibs/preview/views/half.html',[],function () { return '<div class="half"></div>';});
+
+define('text!mylibs/preview/views/page.html',[],function () { return '<div class="page"></div>';});
 
 (function() {
 
-  define('mylibs/preview/preview',['libs/webgl/effects', 'mylibs/utils/utils', 'text!mylibs/preview/views/selectPreview.html'], function(effects, utils, template) {
+  define('mylibs/preview/preview',['libs/webgl/effects', 'mylibs/utils/utils', 'text!mylibs/preview/views/preview.html', 'text!mylibs/preview/views/half.html', 'text!mylibs/preview/views/page.html'], function(effects, utils, previewTemplate, halfTemplate, pageTemplate) {
     /*     Select Preview
     
     Select preview shows pages of 6 live previews using webgl effects
@@ -938,7 +942,7 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
         return draw();
       },
       init: function(selector) {
-        var bottom, ds, top;
+        var $currentPage, $nextPage, bottom, ds, top;
         effects.init();
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
@@ -949,11 +953,13 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
         canvas.height = 240;
         $container = $(selector);
         top = {
-          el: $("<div class='half'></div>")
+          el: $(halfTemplate)
         };
         bottom = {
-          el: $("<div class='half'></div>")
+          el: $(halfTemplate)
         };
+        $currentPage = $(pageTemplate).appendTo($container);
+        $nextPage = $(pageTemplate).appendTo($container);
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -971,7 +977,7 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
                 item = _ref[_i];
                 _results.push((function() {
                   var $content, $template, content, preview;
-                  $template = kendo.template(template);
+                  $template = kendo.template(previewTemplate);
                   preview = {};
                   $.extend(preview, item);
                   preview.canvas = fx.canvas();
@@ -981,13 +987,8 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
                   $content = $(content);
                   previews.push(preview);
                   $content.find("a").append(preview.canvas).click(function() {
-                    var x, y;
-                    x = $(this).offset().left;
-                    y = $(this).offset().top;
-                    console.info(x);
-                    console.info(y);
                     paused = true;
-                    return $.publish("/full/show", [preview, x, y]);
+                    return $.publish("/full/show", [preview]);
                   });
                   return half.el.append($content);
                 })());
@@ -995,9 +996,11 @@ define('text!mylibs/preview/views/selectPreview.html',[],function () { return '<
               return _results;
             };
             create(top);
-            return create(bottom);
+            create(bottom);
+            $currentPage.append(top.el);
+            return $currentPage.append(bottom.el);
           }
-        }, $container.append(top.el), $container.append(bottom.el));
+        });
         return ds.read();
       }
     };
@@ -1181,7 +1184,8 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
         var $container, $content;
         $container = $(selector);
         $content = $(template);
-        $content.click(function() {
+        $content.on("click", ".capture", function() {
+          console.log("clicky!");
           return $.publish("/capture/image");
         });
         return $container.append($content);
@@ -3930,6 +3934,17 @@ define("libs/webgl/glfx.min", function(){});
     return pub = {
       init: function(selector) {
         var $container, $wrapper;
+        $.subscribe("/capture/image", function() {
+          var image, name;
+          image = canvas.toDataURL();
+          name = new Date().getTime() + ".jpg";
+          return $.publish("/postman/deliver", [
+            {
+              name: name,
+              image: image
+            }, "/file/save"
+          ]);
+        });
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({
@@ -3999,13 +4014,18 @@ define("libs/webgl/glfx.min", function(){});
     */
     var pub;
     return pub = {
-      init: function() {
+      init: function(r) {
+        var recipient;
+        recipient = r;
         window.onmessage = function(event) {
           return $.publish(event.data.address, [event.data.message]);
         };
-        return $.subscribe("/postman/deliver", function(message, address) {
-          message.address = address;
-          return window.top.webkitPostMessage(message, "*");
+        return $.subscribe("/postman/deliver", function(message, address, block) {
+          var delivery;
+          delivery = {};
+          delivery.address = address;
+          delivery.message = message;
+          return recipient.webkitPostMessage(delivery, "*", block);
         });
       }
     };
@@ -4021,7 +4041,7 @@ define('text!intro.html',[],function () { return '<div id="intro">\n\t<p><h1>Wel
     var pub;
     return pub = {
       init: function() {
-        postman.init();
+        postman.init(window.top);
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
         });

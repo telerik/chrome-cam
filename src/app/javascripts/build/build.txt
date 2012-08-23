@@ -6,7 +6,9 @@ libs/face/face.js
 libs/webgl/effects.js
 mylibs/utils/utils.js
 text.js
-text!mylibs/preview/views/selectPreview.html
+text!mylibs/preview/views/preview.html
+text!mylibs/preview/views/half.html
+text!mylibs/preview/views/page.html
 mylibs/preview/preview.js
 libs/face/track.js
 mylibs/camera/camera.js
