@@ -4,14 +4,51 @@
     var pub;
     return pub = {
       init: function(selector) {
-        var $container, $content;
+        var $capture, $container, $content, $counters;
         $container = $(selector);
         $content = $(template);
+        $capture = $content.find(".capture");
+        $counters = $content.find(".countdown > span");
         $content.on("click", ".capture", function() {
-          console.log("clicky!");
-          return $.publish("/capture/image");
+          var countdown;
+          $capture.kendoStop(true).kendoAnimate({
+            effects: "zoomOut fadeOut",
+            duration: 100,
+            hide: "true"
+          });
+          countdown = function(position) {
+            return $($counters[position]).kendoStop(true).kendoAnimate({
+              effects: "fadeIn",
+              duration: 500,
+              show: true,
+              complete: function() {
+                ++position;
+                if (position < 3) {
+                  return countdown(position);
+                } else {
+                  console.log("clicky!");
+                  return $.publish("/capture/image");
+                }
+              }
+            });
+          };
+          return countdown(0);
         });
-        return $container.append($content);
+        $container.append($content);
+        $.subscribe("/bar/capture/show", function() {
+          return $capture.kendoStop(true).kendoAnimate({
+            effects: "slideIn:up",
+            show: true,
+            duration: 200
+          });
+        });
+        return $.subscribe("/bar/capture/hide", function() {
+          return $capture.kendoStop(true).kendoAnimate({
+            effects: "slide:down",
+            show: true,
+            duration: 200
+          });
+        });
       }
     };
   });

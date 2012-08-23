@@ -14,6 +14,7 @@ libs/face/track.js
 mylibs/camera/camera.js
 text!mylibs/bar/views/bar.html
 mylibs/bar/bar.js
+text!mylibs/full/views/full.html
 order.js
 libs/webgl/glfx.min.js
 order!libs/webgl/glfx.min

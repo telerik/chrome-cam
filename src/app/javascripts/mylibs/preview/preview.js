@@ -40,7 +40,7 @@
         return draw();
       },
       init: function(selector) {
-        var $currentPage, $nextPage, bottom, currentPage, ds, nextPage, top;
+        var $page1, $page2, bottom, ds, nextPage, previousPage, top;
         effects.init();
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
@@ -66,11 +66,10 @@
         bottom = {
           el: $(halfTemplate)
         };
-        $currentPage = $(pageTemplate).appendTo($container);
-        $nextPage = $(pageTemplate).appendTo($container);
-        currentPage = $currentPage;
-        nextPage = $nextPage;
-        currentPage = $nextPage;
+        $page1 = $(pageTemplate).appendTo($container);
+        $page2 = $(pageTemplate).appendTo($container);
+        previousPage = $page1;
+        nextPage = $page2;
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -109,7 +108,23 @@
             create(top);
             create(bottom);
             nextPage.append(top.el);
-            return nextPage.append(bottom.el);
+            nextPage.append(bottom.el);
+            previousPage.kendoStop(true).kendoAnimate({
+              effects: "slide:left",
+              duration: 200,
+              hide: true,
+              complete: function() {
+                var justPaged;
+                justPaged = previousPage;
+                previousPage = nextPage;
+                return nextPage = justPaged;
+              }
+            });
+            return nextPage.kendoStop(true).kendoAnimate({
+              effects: "slideIn:right",
+              duration: 200,
+              show: true
+            });
           }
         });
         return ds.read();

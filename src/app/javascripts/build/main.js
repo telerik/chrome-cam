@@ -942,7 +942,7 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
         return draw();
       },
       init: function(selector) {
-        var $currentPage, $nextPage, bottom, ds, top;
+        var $page1, $page2, bottom, ds, nextPage, previousPage, top;
         effects.init();
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
@@ -952,14 +952,26 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
         canvas.width = 360;
         canvas.height = 240;
         $container = $(selector);
+        $container.kendoMobileSwipe(function() {
+          $.publish("/camera/pause", [true]);
+          if (ds.page() < ds.totalPages()) {
+            return ds.page(ds.page() + 1);
+          } else {
+            return ds.page(1);
+          }
+        }, {
+          surface: $container
+        });
         top = {
           el: $(halfTemplate)
         };
         bottom = {
           el: $(halfTemplate)
         };
-        $currentPage = $(pageTemplate).appendTo($container);
-        $nextPage = $(pageTemplate).appendTo($container);
+        $page1 = $(pageTemplate).appendTo($container);
+        $page2 = $(pageTemplate).appendTo($container);
+        previousPage = $page1;
+        nextPage = $page2;
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -997,8 +1009,24 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
             };
             create(top);
             create(bottom);
-            $currentPage.append(top.el);
-            return $currentPage.append(bottom.el);
+            nextPage.append(top.el);
+            nextPage.append(bottom.el);
+            previousPage.kendoStop(true).kendoAnimate({
+              effects: "slide:left",
+              duration: 200,
+              hide: true,
+              complete: function() {
+                var justPaged;
+                justPaged = previousPage;
+                previousPage = nextPage;
+                return nextPage = justPaged;
+              }
+            });
+            return nextPage.kendoStop(true).kendoAnimate({
+              effects: "slideIn:right",
+              duration: 200,
+              show: true
+            });
           }
         });
         return ds.read();
@@ -1173,7 +1201,7 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
 
 }).call(this);
 
-define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar">\n\t<div class="left"></div>\n\t<div class="center">\n\t\t<div class="capture">\n\t\t\t<div class="gray circle">\n\t\t\t\t<div class="red-dot circle"></div>\n\t\t\t</div>\n\t\t\t<div class="countdown">\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div class="right"></div>\n</div>';});
+define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar">\n\t<div class="left"></div>\n\t<div class="center">\n\t\t<div class="capture">\n\t\t\t<div class="gray circle">\n\t\t\t\t<div class="red-dot circle"></div>\n\t\t\t</div>\n\t\t</div>\n\t\t<div class="countdown">\n\t\t\t<span class="red-dot circle"></span>\n\t\t\t<span class="red-dot circle"></span>\n\t\t\t<span class="red-dot circle"></span>\n\t\t</div>\n\t</div>\n\t<div class="right"></div>\n</div>';});
 
 (function() {
 
@@ -1181,19 +1209,58 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
     var pub;
     return pub = {
       init: function(selector) {
-        var $container, $content;
+        var $capture, $container, $content, $counters;
         $container = $(selector);
         $content = $(template);
+        $capture = $content.find(".capture");
+        $counters = $content.find(".countdown > span");
         $content.on("click", ".capture", function() {
-          console.log("clicky!");
-          return $.publish("/capture/image");
+          var countdown;
+          $capture.kendoStop(true).kendoAnimate({
+            effects: "zoomOut fadeOut",
+            duration: 100,
+            hide: "true"
+          });
+          countdown = function(position) {
+            return $($counters[position]).kendoStop(true).kendoAnimate({
+              effects: "fadeIn",
+              duration: 500,
+              show: true,
+              complete: function() {
+                ++position;
+                if (position < 3) {
+                  return countdown(position);
+                } else {
+                  console.log("clicky!");
+                  return $.publish("/capture/image");
+                }
+              }
+            });
+          };
+          return countdown(0);
         });
-        return $container.append($content);
+        $container.append($content);
+        $.subscribe("/bar/capture/show", function() {
+          return $capture.kendoStop(true).kendoAnimate({
+            effects: "slideIn:up",
+            show: true,
+            duration: 200
+          });
+        });
+        return $.subscribe("/bar/capture/hide", function() {
+          return $capture.kendoStop(true).kendoAnimate({
+            effects: "slide:down",
+            show: true,
+            duration: 200
+          });
+        });
       }
     };
   });
 
 }).call(this);
+
+define('text!mylibs/full/views/full.html',[],function () { return '<div class="wrapper">\n\t<div class="flash"></div>\n</div>';});
 
 /*
  RequireJS order 1.0.5 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
@@ -3914,7 +3981,7 @@ define("libs/webgl/glfx.min", function(){});
 
 (function() {
 
-  define('mylibs/full/full',['mylibs/utils/utils', 'libs/webgl/glfx'], function(utils) {
+  define('mylibs/full/full',['mylibs/utils/utils', 'text!mylibs/full/views/full.html', 'libs/webgl/glfx'], function(utils, fullTemplate) {
     var canvas, ctx, draw, frame, paused, preview, pub, webgl;
     canvas = {};
     ctx = {};
@@ -3933,10 +4000,11 @@ define("libs/webgl/glfx.min", function(){});
     };
     return pub = {
       init: function(selector) {
-        var $container, $wrapper;
+        var $container, $content, $flash;
         $.subscribe("/capture/image", function() {
           var image, name;
-          image = canvas.toDataURL();
+          image = webgl.toDataURL();
+          console.log(image);
           name = new Date().getTime() + ".jpg";
           return $.publish("/postman/deliver", [
             {
@@ -3958,10 +4026,12 @@ define("libs/webgl/glfx.min", function(){});
         $container = $(selector);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
-        $wrapper = $("<div></div>");
-        $container.append($wrapper);
+        $content = $(fullTemplate);
+        $flash = $content.find(".flash");
+        $container.append($content);
         webgl = fx.canvas();
         $(webgl).dblclick(function() {
+          $.publish("/bar/capture/hide");
           $.publish("/camera/pause", [true]);
           return $container.kendoStop(true).kendoAnimate({
             effects: "zoomOut",
@@ -3973,14 +4043,15 @@ define("libs/webgl/glfx.min", function(){});
             }
           });
         });
-        $wrapper.append(webgl);
+        $content.append(webgl);
         $.subscribe("/full/show", function(e) {
+          $.publish("/bar/capture/show");
           $.extend(preview, e);
           $.publish("/camera/pause", [true]);
-          $wrapper.height($container.height() - 50);
-          $wrapper.width((3 / 2) * $wrapper.height());
-          $(webgl).width($wrapper.width());
-          $(webgl).height("height", $wrapper.height());
+          $content.height($container.height() - 50);
+          $content.width((3 / 2) * $content.height());
+          $(webgl).width($content.width());
+          $(webgl).height("height", $content.height());
           return $container.kendoStop(true).kendoAnimate({
             effects: "zoomIn",
             show: "true",
