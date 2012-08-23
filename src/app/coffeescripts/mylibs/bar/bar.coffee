@@ -15,11 +15,38 @@ define([
 			# get a reference to the "capture" button
 			$capture = $content.find ".capture"
 
+			# the countdown spans
+			$counters = $content.find ".countdown > span"
+
 			# bind the "capture" button
 			$content.on "click", ".capture", ->
-				console.log("clicky!")
-				# publish the event to capture the image
-				$.publish "/capture/image"
+				
+				$capture.kendoStop(true).kendoAnimate({
+					effects: "zoomOut fadeOut",
+					duration: 100,
+					hide: "true"
+				})
+
+				# countdown
+				countdown = (position) ->
+					$($counters[position]).kendoStop(true).kendoAnimate({
+						effects: "fadeIn",
+						duration: 500,
+						show: true,
+						complete: ->
+							# fade in the next dot!
+							++position
+
+							if position < 3
+								countdown(position)
+
+							else
+								console.log("clicky!")
+								# publish the event to capture the image
+								$.publish "/capture/image"
+					})
+
+				countdown(0)
 
 			# append it to the container
 			$container.append $content

@@ -4,13 +4,35 @@
     var pub;
     return pub = {
       init: function(selector) {
-        var $capture, $container, $content;
+        var $capture, $container, $content, $counters;
         $container = $(selector);
         $content = $(template);
         $capture = $content.find(".capture");
+        $counters = $content.find(".countdown > span");
         $content.on("click", ".capture", function() {
-          console.log("clicky!");
-          return $.publish("/capture/image");
+          var countdown;
+          $capture.kendoStop(true).kendoAnimate({
+            effects: "zoomOut fadeOut",
+            duration: 100,
+            hide: "true"
+          });
+          countdown = function(position) {
+            return $($counters[position]).kendoStop(true).kendoAnimate({
+              effects: "fadeIn",
+              duration: 500,
+              show: true,
+              complete: function() {
+                ++position;
+                if (position < 3) {
+                  return countdown(position);
+                } else {
+                  console.log("clicky!");
+                  return $.publish("/capture/image");
+                }
+              }
+            });
+          };
+          return countdown(0);
         });
         $container.append($content);
         $.subscribe("/bar/capture/show", function() {
