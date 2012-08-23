@@ -1,8 +1,10 @@
 define([
   'libs/webgl/effects'
   'mylibs/utils/utils'
-  'text!mylibs/preview/views/selectPreview.html'
-], (effects, utils, template) ->
+  'text!mylibs/preview/views/preview.html'
+  'text!mylibs/preview/views/half.html'
+  'text!mylibs/preview/views/page.html'
+], (effects, utils, previewTemplate, halfTemplate, pageTemplate) ->
     
     ###     Select Preview
 
@@ -61,6 +63,7 @@ define([
         init: (selector) ->
         
             # initialize effects
+            # TODO: this should be initialized somewhere else
             effects.init()
 
             # subscribe to the pause and unpause events
@@ -73,6 +76,7 @@ define([
             canvas = document.createElement("canvas")
             ctx = canvas.getContext("2d")
 
+            # set the width and height of the previews
             canvas.width = 360 
             canvas.height= 240
             
@@ -80,14 +84,16 @@ define([
             # which calls it's init. grab it from the DOM and cache it.
             $container = $(selector)
 
+            # we need to create top and bottom rows in our flexbox. these are
+            # objects which will hold the top and bottom elements now and an
+            # array of the data that belongs in the elements later
+            top = { el: $(halfTemplate) }
+            bottom = { el: $(halfTemplate) }
 
-            # we need to create a top and bottom row in our flexbox
-            top = 
-                el: $("<div class='half'></div>")
-
-            bottom = 
-                el: $("<div class='half'></div>")
-
+            # in order to page through previews, we need to create two pages. the current
+            # page and the next page.
+            $currentPage = $(pageTemplate).appendTo($container)
+            $nextPage = $(pageTemplate).appendTo($container)
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -124,7 +130,7 @@ define([
                             do ->
 
                                 # get the template for the current preview
-                                $template = kendo.template(template)
+                                $template = kendo.template(previewTemplate)
 
                                 # create a preview object which extends the current item in the dataset
                                 preview = {}
@@ -142,21 +148,14 @@ define([
                                 previews.push(preview)
 
                                 # add the videos to the page
-                                $content.find("a").append(preview.canvas).click ->
-
-                                    # get the x and y coordinates of this images
-                                    x = $(this).offset().left
-                                    y = $(this).offset().top 
-
-                                    console.info(x)
-                                    console.info(y)
+                                $content.find("a").append(preview.canvas)
+                                                  .click ->
 
                                     # pause the effects
                                     paused = true
 
                                     # transition the new screen in 
-                                    $.publish("/full/show", [preview, x, y])
-
+                                    $.publish("/full/show", [preview])
 
                                 half.el.append($content)
 
@@ -164,8 +163,9 @@ define([
                     create(top)
                     create(bottom)
 
-                $container.append(top.el)
-                $container.append(bottom.el)
+                    # we want to append our two halves on to the next page
+                    $currentPage.append(top.el)
+                    $currentPage.append(bottom.el)
 
             # read from the datasource
             ds.read()    

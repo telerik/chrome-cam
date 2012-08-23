@@ -18,7 +18,7 @@ define([
     ctx = {}
     beep = document.createElement("audio")
     paused = false
-    window.testing = false
+    window.testing = true
 
     turnOn = (callback, testing) ->       
 
@@ -47,12 +47,6 @@ define([
 
                 # draw the image data to the canvas
                 ctx.putImageData(imgData, 0, 0)
-
-                # run face detection on this canvas and attach the data
-                # to a custom stream object which we can pass down with
-                # the current canvas
-                # if not skip
-                #     track = face.track canvas
 
                 $.publish "/camera/stream", [{ 
                     canvas: canvas, 
