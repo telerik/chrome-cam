@@ -64,7 +64,10 @@ body > #wrap {height: auto; min-height: 100%;}
 	display: -webkit-box;
 	-webkit-box-align: center;
 	-webkit-box-pack: center;	
-	display: none;
+}
+
+.countdown > span {
+	display: none;	
 }
 
 .red-dot {
