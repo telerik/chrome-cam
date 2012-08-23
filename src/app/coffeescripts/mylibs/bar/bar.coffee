@@ -17,9 +17,7 @@ define([
 				# publish the event to capture the image
 				$.publish "/capture/image"
 
-			$content.find(".show-gallery").click ->
-				console.log "show gallery?"
-				$.publish "/gallery/list"
+			$content.find(".show-gallery").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
 
 			# append it to the container
 			$container.append $content

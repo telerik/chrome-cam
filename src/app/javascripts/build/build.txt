@@ -19,6 +19,9 @@ order!libs/webgl/effects
 libs/webgl/glfx.js
 mylibs/full/full.js
 mylibs/postman/postman.js
+mylibs/filesystem/filesystem.js
+text!mylibs/gallery/views/gallery.html
+mylibs/gallery/gallery.js
 text!intro.html
 app.js
 libs/jquery/pubsub.js

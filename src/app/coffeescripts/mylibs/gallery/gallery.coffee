@@ -18,10 +18,14 @@ define [
                 $.publish "/gallery/show", [$(this).data("file-name")]
 
             $.subscribe "/gallery/list", ->
-                console.log "show gallery!"
                 $.publish "/previews/pause", [true]
                 $container.slideDown()
                 $("#preview").slideUp()
+
+            $.subscribe "/gallery/hide", ->
+                $container.slideUp()
+                $("#preview").slideDown ->
+                    $.publish "/previews/pause", [false]
 
             $.subscribe "/gallery/show", (fileName) ->
                 console.log fileName
