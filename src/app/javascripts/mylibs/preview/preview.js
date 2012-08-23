@@ -1,6 +1,6 @@
 (function() {
 
-  define(['libs/webgl/effects', 'mylibs/utils/utils', 'text!mylibs/preview/views/selectPreview.html'], function(effects, utils, template) {
+  define(['libs/webgl/effects', 'mylibs/utils/utils', 'text!mylibs/preview/views/preview.html', 'text!mylibs/preview/views/half.html', 'text!mylibs/preview/views/page.html'], function(effects, utils, previewTemplate, halfTemplate, pageTemplate) {
     /*     Select Preview
     
     Select preview shows pages of 6 live previews using webgl effects
@@ -40,7 +40,7 @@
         return draw();
       },
       init: function(selector) {
-        var bottom, ds, top;
+        var $currentPage, $nextPage, bottom, ds, top;
         effects.init();
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
@@ -51,11 +51,13 @@
         canvas.height = 240;
         $container = $(selector);
         top = {
-          el: $("<div class='half'></div>")
+          el: $(halfTemplate)
         };
         bottom = {
-          el: $("<div class='half'></div>")
+          el: $(halfTemplate)
         };
+        $currentPage = $(pageTemplate).appendTo($container);
+        $nextPage = $(pageTemplate).appendTo($container);
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -73,7 +75,7 @@
                 item = _ref[_i];
                 _results.push((function() {
                   var $content, $template, content, preview;
-                  $template = kendo.template(template);
+                  $template = kendo.template(previewTemplate);
                   preview = {};
                   $.extend(preview, item);
                   preview.canvas = fx.canvas();
@@ -83,13 +85,8 @@
                   $content = $(content);
                   previews.push(preview);
                   $content.find("a").append(preview.canvas).click(function() {
-                    var x, y;
-                    x = $(this).offset().left;
-                    y = $(this).offset().top;
-                    console.info(x);
-                    console.info(y);
                     paused = true;
-                    return $.publish("/full/show", [preview, x, y]);
+                    return $.publish("/full/show", [preview]);
                   });
                   return half.el.append($content);
                 })());
@@ -97,9 +94,11 @@
               return _results;
             };
             create(top);
-            return create(bottom);
+            create(bottom);
+            $currentPage.append(top.el);
+            return $currentPage.append(bottom.el);
           }
-        }, $container.append(top.el), $container.append(bottom.el));
+        });
         return ds.read();
       }
     };
