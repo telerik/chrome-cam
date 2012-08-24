@@ -55,13 +55,7 @@
         return fileEntry.createWriter(function(fileWriter) {
           fileWriter.onwrite = function(e) {
             $.publish("/share/gdrive/upload", [blob]);
-            return $.publish("/postman/deliver", [
-              {
-                message: {
-                  file: blob
-                }
-              }, "/file/saved/" + name, []
-            ]);
+            return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
           };
           fileWriter.onerror = function(e) {
             return errorHandler(e);

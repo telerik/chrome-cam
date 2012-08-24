@@ -1264,6 +1264,15 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
           return $.publish("/gallery/hide");
         }));
         $container.append($content);
+        $.subscribe("/bar/preview/update", function(message) {
+          var $image;
+          $image = $("<img />", {
+            src: message.thumbnailURL,
+            width: 72,
+            height: 48
+          });
+          return $content.find(".galleryLink").empty().append($image);
+        });
         $.subscribe("/bar/capture/show", function() {
           return $capture.kendoStop(true).kendoAnimate({
             effects: "slideIn:up",
@@ -4030,11 +4039,13 @@ define("libs/webgl/glfx.min",[], function(){});
         $.subscribe("/capture/image", function() {
           var image, name, token;
           image = webgl.toDataURL();
-          console.log(image);
           name = new Date().getTime() + ".jpg";
-          token = $.subscribe("/file/saved/" + name, function(message) {
-            console.log("got it?");
-            console.log(message);
+          token = $.subscribe("/file/saved/" + name, function() {
+            $.publish("/bar/preview/update", [
+              {
+                thumbnailURL: image
+              }
+            ]);
             return $.unsubscribe(token);
           });
           console.log(token);

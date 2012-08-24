@@ -67,7 +67,7 @@ define([
         # called when the write ends
         fileWriter.onwrite = (e) ->
           $.publish "/share/gdrive/upload", [ blob ]
-          $.publish "/postman/deliver", [ { message: { file: blob } }, "/file/saved/#{name}", [] ]
+          $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
 
         # called when the write pukes
         fileWriter.onerror = (e) ->

@@ -24,11 +24,13 @@
         $.subscribe("/capture/image", function() {
           var image, name, token;
           image = webgl.toDataURL();
-          console.log(image);
           name = new Date().getTime() + ".jpg";
-          token = $.subscribe("/file/saved/" + name, function(message) {
-            console.log("got it?");
-            console.log(message);
+          token = $.subscribe("/file/saved/" + name, function() {
+            $.publish("/bar/preview/update", [
+              {
+                thumbnailURL: image
+              }
+            ]);
             return $.unsubscribe(token);
           });
           console.log(token);

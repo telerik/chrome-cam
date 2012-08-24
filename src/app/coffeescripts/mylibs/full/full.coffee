@@ -41,20 +41,19 @@ define([
 
 				image = webgl.toDataURL()
 
-				console.log image
-
 				# set the name of this image to the current time string
 				name = new Date().getTime() + ".jpg"
 
+				# we'll respond after the image finishes saving
+				token = $.subscribe "/file/saved/#{name}", ->
+					# I may have it bouncing around too much, but I don't want the bar to
+					# just respond to *all* file saves, or have this module know about
+					# the bar's internals
+					$.publish "/bar/preview/update", [ thumbnailURL: image ]
+					$.unsubscribe token
+
 				# save the image to the file system. this is up to the extension
 				# to handle
-				token = $.subscribe "/file/saved/#{name}", (message) ->
-					console.log "got it?"
-					console.log message
-					#$.publish "/bar/preview/update", [ message ]
-					$.unsubscribe token
-				console.log token
-
 				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
 
 			# setup the shrink function - this most likely belongs in a widget file

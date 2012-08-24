@@ -41,6 +41,15 @@
           return $.publish("/gallery/hide");
         }));
         $container.append($content);
+        $.subscribe("/bar/preview/update", function(message) {
+          var $image;
+          $image = $("<img />", {
+            src: message.thumbnailURL,
+            width: 72,
+            height: 48
+          });
+          return $content.find(".galleryLink").empty().append($image);
+        });
         $.subscribe("/bar/capture/show", function() {
           return $capture.kendoStop(true).kendoAnimate({
             effects: "slideIn:up",

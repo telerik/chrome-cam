@@ -48,10 +48,15 @@ define([
 
 				countdown(0)
 
+			# link to show or hide the gallery
 			$content.find(".galleryLink").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
 
 			# append it to the container
 			$container.append $content
+
+			$.subscribe "/bar/preview/update", (message) ->
+				$image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
+				$content.find(".galleryLink").empty().append($image)
 
 			# subscribe to the show and hide events for the capture controls
 			$.subscribe "/bar/capture/show", ->
