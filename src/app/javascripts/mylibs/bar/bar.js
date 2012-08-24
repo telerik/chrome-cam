@@ -18,16 +18,29 @@
           });
           countdown = function(position) {
             return $($counters[position]).kendoStop(true).kendoAnimate({
-              effects: "fadeIn",
-              duration: 500,
+              effects: "zoomIn fadeIn",
+              duration: 200,
               show: true,
               complete: function() {
                 ++position;
                 if (position < 3) {
-                  return countdown(position);
+                  return setTimeout(function() {
+                    return countdown(position);
+                  }, 500);
                 } else {
                   console.log("clicky!");
-                  return $.publish("/capture/image");
+                  $.publish("/full/flash");
+                  $.publish("/capture/image");
+                  $capture.kendoStop(true).kendoAnimate({
+                    effects: "zoomIn fadeIn",
+                    duration: 100,
+                    show: true
+                  });
+                  return $counters.kendoStop(true).kendoAnimate({
+                    effects: "zoomOut fadeOut",
+                    hide: true,
+                    duration: 100
+                  });
                 }
               }
             });

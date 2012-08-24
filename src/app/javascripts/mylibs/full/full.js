@@ -23,7 +23,6 @@
         $.subscribe("/capture/image", function() {
           var image, name;
           image = webgl.toDataURL();
-          console.log(image);
           name = new Date().getTime() + ".jpg";
           return $.publish("/postman/deliver", [
             {
@@ -45,9 +44,8 @@
         $container = $(selector);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
-        $content = $(fullTemplate);
+        $content = $(fullTemplate).appendTo($container);
         $flash = $content.find(".flash");
-        $container.append($content);
         webgl = fx.canvas();
         $(webgl).dblclick(function() {
           $.publish("/bar/capture/hide");
@@ -62,7 +60,7 @@
             }
           });
         });
-        $content.append(webgl);
+        $content.prepend(webgl);
         $.subscribe("/full/show", function(e) {
           $.publish("/bar/capture/show");
           $.extend(preview, e);
@@ -81,6 +79,14 @@
           });
         });
         $.subscribe("/capture/image", function() {});
+        $.subscribe("/full/flash", function() {
+          $flash.show();
+          return $flash.kendoStop(true).kendoAnimate({
+            effects: "fadeOut",
+            duration: 2000,
+            hide: true
+          });
+        });
         return draw();
       }
     };

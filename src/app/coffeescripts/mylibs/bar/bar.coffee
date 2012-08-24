@@ -30,20 +30,42 @@ define([
 				# countdown
 				countdown = (position) ->
 					$($counters[position]).kendoStop(true).kendoAnimate({
-						effects: "fadeIn",
-						duration: 500,
+						effects: "zoomIn fadeIn",
+						duration: 200,
 						show: true,
 						complete: ->
+							
 							# fade in the next dot!
 							++position
 
 							if position < 3
-								countdown(position)
+								setTimeout -> 
+									countdown position
+								, 500
 
 							else
+								
 								console.log("clicky!")
+								
+								# publish the flash event
+								$.publish "/full/flash"
+
 								# publish the event to capture the image
 								$.publish "/capture/image"
+
+								# fade the capture button back in
+								$capture.kendoStop(true).kendoAnimate({
+									effects: "zoomIn fadeIn",
+									duration: 100,
+									show: true
+								})
+
+								# fade the counters out
+								$counters.kendoStop(true).kendoAnimate({
+									effects: "zoomOut fadeOut",
+									hide: true,
+									duration: 100
+								})
 					})
 
 				countdown(0)

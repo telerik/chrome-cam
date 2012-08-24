@@ -41,8 +41,6 @@ define([
 
 				image = webgl.toDataURL()
 
-				console.log image
-
 				# set the name of this image to the current time string
 				name = new Date().getTime() + ".jpg"
 
@@ -68,12 +66,10 @@ define([
 			ctx = canvas.getContext "2d"
 
 			# create a div to go inside the main content area
-			$content = $(fullTemplate)
+			$content = $(fullTemplate).appendTo($container)
 
 			# get a reference to the flash
 			$flash = $content.find ".flash"
-
-			$container.append $content
 
 			# create a new webgl canvas
 			webgl = fx.canvas()
@@ -121,7 +117,7 @@ define([
 				})
 
 			# append the webgl canvas
-			$content.append(webgl)
+			$content.prepend(webgl)
 
 			# subscribe to the show event
 			$.subscribe "/full/show", (e) ->
@@ -190,8 +186,15 @@ define([
 			# subscribe to the capture image event
 			$.subscribe "/capture/image", ->
 
-
+			# subscribe to the flash event
+			$.subscribe "/full/flash", ->
 				
+				$flash.show()	
+				$flash.kendoStop(true).kendoAnimate({
+					effects: "fadeOut",
+					duration: 2000,
+					hide: true
+				})
 
 			draw()
 				
