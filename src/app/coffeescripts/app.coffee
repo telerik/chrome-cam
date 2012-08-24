@@ -12,6 +12,7 @@ define([
 	pub = 
 		    
 		init: ->
+
 			# fire up the postman!
 			postman.init window.top
 			
