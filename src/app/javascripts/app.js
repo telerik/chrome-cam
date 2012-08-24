@@ -1,6 +1,6 @@
 (function() {
 
-  define(['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'text!intro.html'], function(camera, bar, preview, full, postman, utils) {
+  define(['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'text!intro.html'], function(camera, bar, preview, full, postman, utils, gallery, intro) {
     var pub;
     return pub = {
       init: function() {
@@ -12,6 +12,7 @@
           bar.init("#footer");
           preview.init("#select");
           full.init("#full");
+          gallery.init("#gallery");
           preview.draw();
           return $.publish("/postman/deliver", [
             {

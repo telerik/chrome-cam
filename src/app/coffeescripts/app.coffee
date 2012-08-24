@@ -5,13 +5,13 @@ define([
   'mylibs/full/full'
   'mylibs/postman/postman'
   'mylibs/utils/utils'
+  'mylibs/gallery/gallery'
   'text!intro.html'
-], (camera, bar, preview, full, postman, utils) ->
+], (camera, bar, preview, full, postman, utils, gallery, intro) ->
 	
 	pub = 
 		    
 		init: ->
-
 			# fire up the postman!
 			postman.init window.top
 			
@@ -30,6 +30,9 @@ define([
 
 				# initialize the full screen capture mode
 				full.init "#full"
+
+				# initialize the thumbnail gallery
+				gallery.init "#gallery"
 
 				# start drawing some previews
 				preview.draw()

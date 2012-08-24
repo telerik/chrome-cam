@@ -56,7 +56,7 @@ define([
   save = (name, dataURL) ->
 
     # convert the incoming image into a blob for storage
-    blob = utils.toBlob dataURL, "image/jpg"
+    blob = utils.toBlob dataURL
 
     # get the file from the file system, creating it if it doesn't exist
     fileSystem.root.getFile name,  create: true, (fileEntry) ->
