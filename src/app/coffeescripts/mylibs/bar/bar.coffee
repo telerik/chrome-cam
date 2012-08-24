@@ -48,7 +48,7 @@ define([
 
 				countdown(0)
 
-			$content.find(".show-gallery").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
+			$content.find(".galleryLink").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
 
 			# append it to the container
 			$container.append $content
