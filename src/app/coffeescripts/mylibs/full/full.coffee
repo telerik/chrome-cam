@@ -48,6 +48,13 @@ define([
 
 				# save the image to the file system. this is up to the extension
 				# to handle
+				token = $.subscribe "/file/saved/#{name}", (message) ->
+					console.log "got it?"
+					console.log message
+					#$.publish "/bar/preview/update", [ message ]
+					$.unsubscribe token
+				console.log token
+
 				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
 
 			# setup the shrink function - this most likely belongs in a widget file

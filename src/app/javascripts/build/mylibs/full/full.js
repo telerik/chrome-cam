@@ -22,10 +22,16 @@
       init: function(selector) {
         var $container, $content, $flash;
         $.subscribe("/capture/image", function() {
-          var image, name;
+          var image, name, token;
           image = webgl.toDataURL();
           console.log(image);
           name = new Date().getTime() + ".jpg";
+          token = $.subscribe("/file/saved/" + name, function(message) {
+            console.log("got it?");
+            console.log(message);
+            return $.unsubscribe(token);
+          });
+          console.log(token);
           return $.publish("/postman/deliver", [
             {
               name: name,

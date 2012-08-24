@@ -59,24 +59,23 @@ define([
     blob = utils.toBlob dataURL
 
     # get the file from the file system, creating it if it doesn't exist
-    fileSystem.root.getFile name,  create: true, (fileEntry) ->
+    fileSystem.root.getFile name, create: true, (fileEntry) ->
 
       # create a writer
       fileEntry.createWriter (fileWriter) ->
 
         # called when the write ends
-        fileWriter.onwriteend = (e) ->
-
+        fileWriter.onwrite = (e) ->
           $.publish "/share/gdrive/upload", [ blob ]
+          $.publish "/postman/deliver", [ { message: { file: blob } }, "/file/saved/#{name}", [] ]
 
         # called when the write pukes
         fileWriter.onerror = (e) ->
-
             errorHandler e
 
         # write the blob to the file system
         fileWriter.write blob
-            
+        
     # we didn't get access to the file system for some reason
     , errorHandler
 
@@ -91,7 +90,7 @@ define([
 
             # dispatch events that we killed it
             $.publish "/notify/show", [ "File Deleted!", "The picture was deleted successfully", false ]
-            $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}" ]
+            $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
 
         # file couldn't be deleted
         , errorHandler
