@@ -33,10 +33,14 @@
           interval: 5,
           min_neighbors: 1
         });
+<<<<<<< HEAD
         if (comp.length) {
           console.log("FACE!");
           cache.comp = comp;
         }
+=======
+        if (comp.length) cache.comp = comp;
+>>>>>>> c724f69... Adding flash effect
         _ref = cache.comp;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           i = _ref[_i];
