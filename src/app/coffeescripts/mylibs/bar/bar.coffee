@@ -1,11 +1,11 @@
 define([
   'text!mylibs/bar/views/bar.html'
 ], (template) ->
-	
+	recordMode = "image"
+
 	pub = 
 
 		init: (selector) ->
-	
 			# get a reference to the command bar container by it's selector
 			$container = $(selector)
 
@@ -51,7 +51,7 @@ define([
 								$.publish "/full/flash"
 
 								# publish the event to capture the image
-								$.publish "/capture/image"
+								$.publish "/capture/#{recordMode}"
 
 								# fade the capture button back in
 								$capture.kendoStop(true).kendoAnimate({
@@ -95,4 +95,14 @@ define([
 					show: true
 					duration: 200
 				})
+
+			# TODO: data-bind this, or at least reuse more code...
+			$(".photo", $container).on "click", ->
+				$(".mode a", $container).removeClass "active"
+				$(this).addClass "active"
+				recordMode = "image"
+			$(".video", $container).on "click", ->
+				$(".mode a", $container).removeClass "active"
+				$(this).addClass "active"
+				recordMode = "video"
 )

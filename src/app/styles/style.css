@@ -187,6 +187,7 @@ body > #wrap {height: auto; min-height: 100%;}
 	.mode .photo { background-position: 50% 6px; }
 	.mode .video { background-position: 50% -30px; }
 	.mode .paparazzi { background-position: 50% -68px; }
+	.mode .active { background-color: #C0C0C0; }
 
 .mode li:first-child a {
 	border-bottom-left-radius: 2px;
