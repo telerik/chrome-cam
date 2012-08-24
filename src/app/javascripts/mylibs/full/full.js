@@ -41,12 +41,18 @@
           ]);
         });
         $.subscribe("/capture/video/record", function() {
-          var RECORD_FRAME_RATE, addFrame, frames, recordInterval, token;
+          var RECORD_FRAME_RATE, addFrame, frames, recordBuffer, recordBufferCanvas, recordInterval, token;
           console.log("Recording...");
           RECORD_FRAME_RATE = 1000 / 30;
+          recordBufferCanvas = document.createElement("canvas");
+          recordBufferCanvas.width = 720 / 2;
+          recordBufferCanvas.height = 480 / 2;
+          recordBuffer = recordBufferCanvas.getContext("2d");
+          recordBuffer.scale(0.5, 0.5);
           frames = [];
           addFrame = function() {
-            frame = webgl.toDataURL('image/webp', 1);
+            recordBuffer.drawImage(webgl, 0, 0);
+            frame = recordBufferCanvas.toDataURL('image/webp', 0.9);
             return frames.push(frame);
           };
           recordInterval = setInterval(addFrame, RECORD_FRAME_RATE);

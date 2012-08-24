@@ -62,11 +62,21 @@ define([
 
 				RECORD_FRAME_RATE = 1000 / 30
 
+				recordBufferCanvas = document.createElement("canvas")
+				recordBufferCanvas.width = 720 / 2
+				recordBufferCanvas.height = 480 / 2
+				recordBuffer = recordBufferCanvas.getContext("2d")
+				recordBuffer.scale(0.5, 0.5)
+
 				frames = []
 
 				addFrame = ->
 					# TODO: resize frame to conserve memory?
-					frame = webgl.toDataURL('image/webp', 1)
+					#recordBuffer.drawImage webgl, 0, 0, 720, 480, 600, 300
+					#console.log webgl.getImageData(0, 0, 720, 480)
+					recordBuffer.drawImage webgl, 0, 0
+
+					frame = recordBufferCanvas.toDataURL('image/webp', 0.9)
 					frames.push frame
 
 				recordInterval = setInterval(addFrame, RECORD_FRAME_RATE)
