@@ -104,5 +104,5 @@ define([
 			$(".video", $container).on "click", ->
 				$(".mode a", $container).removeClass "active"
 				$(this).addClass "active"
-				recordMode = "video"
+				recordMode = "video/record"
 )

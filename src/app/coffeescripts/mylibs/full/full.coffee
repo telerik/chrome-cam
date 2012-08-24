@@ -56,6 +56,31 @@ define([
 				# to handle
 				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
 
+			$.subscribe "/capture/video/record", ->
+
+				console.log "Recording..."
+
+				RECORD_FRAME_RATE = 1000 / 30
+
+				frames = []
+
+				addFrame = ->
+					# TODO: resize frame to conserve memory?
+					frame = webgl.toDataURL('image/webp', 1)
+					frames.push frame
+
+				recordInterval = setInterval(addFrame, RECORD_FRAME_RATE)
+
+				token = $.subscribe "/camera/video/stop", ->
+					console.log "Done recording!"
+
+					clearInterval recordInterval
+					blob = Whammy.fromImageArray(frames, RECORD_FRAME_RATE)
+					console.log window.URL.createObjectURL(blob)
+					$.unsubscribe token
+
+				setTimeout (-> $.publish "/camera/video/stop", []), 6000
+
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
 				setup: (element, options) ->

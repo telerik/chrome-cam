@@ -40,6 +40,28 @@
             }, "/file/save"
           ]);
         });
+        $.subscribe("/capture/video/record", function() {
+          var RECORD_FRAME_RATE, addFrame, frames, recordInterval, token;
+          console.log("Recording...");
+          RECORD_FRAME_RATE = 1000 / 30;
+          frames = [];
+          addFrame = function() {
+            frame = webgl.toDataURL('image/webp', 1);
+            return frames.push(frame);
+          };
+          recordInterval = setInterval(addFrame, RECORD_FRAME_RATE);
+          token = $.subscribe("/camera/video/stop", function() {
+            var blob;
+            console.log("Done recording!");
+            clearInterval(recordInterval);
+            blob = Whammy.fromImageArray(frames, RECORD_FRAME_RATE);
+            console.log(window.URL.createObjectURL(blob));
+            return $.unsubscribe(token);
+          });
+          return setTimeout((function() {
+            return $.publish("/camera/video/stop", []);
+          }), 6000);
+        });
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({

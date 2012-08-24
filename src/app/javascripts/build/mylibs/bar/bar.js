@@ -86,7 +86,7 @@
         return $(".video", $container).on("click", function() {
           $(".mode a", $container).removeClass("active");
           $(this).addClass("active");
-          return recordMode = "video";
+          return recordMode = "video/record";
         });
       }
     };
