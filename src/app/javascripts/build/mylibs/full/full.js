@@ -33,7 +33,6 @@
             ]);
             return $.unsubscribe(token);
           });
-          console.log(token);
           return $.publish("/postman/deliver", [
             {
               name: name,
