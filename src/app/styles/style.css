@@ -58,6 +58,7 @@ body > #wrap {height: auto; min-height: 100%;}
 }
 
 .countdown {
+	margin: auto;
 	position: absolute;
 	width: 50px;
 	display: -webkit-box;
