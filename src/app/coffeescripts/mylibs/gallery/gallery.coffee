@@ -2,7 +2,6 @@ define [
     'mylibs/utils/utils',
     'text!mylibs/gallery/views/gallery.html'
 ], (utils, template) ->
-
     loadImages = ->
         deferred = $.Deferred()
 
@@ -16,6 +15,33 @@ define [
         $.publish "/postman/deliver", [ {}, "/file/read", [] ]
 
         deferred.promise()
+
+    setupSubscriptionEvents = ($container) ->
+        $.subscribe "/gallery/show", (fileName) ->
+            console.log fileName
+
+        $.subscribe "/gallery/hide", ->
+            $container.kendoStop().kendoAnimate
+                effect: "slide:down"
+                duration: 1000
+                hide: true
+            $("#preview").kendoStop().kendoAnimate
+                effect: "slideIn:down"
+                duration: 1000
+                show: true
+                complete: ->
+                    $.publish "/previews/pause", [false]
+
+        $.subscribe "/gallery/list", ->
+            $.publish "/previews/pause", [true]
+            $container.kendoStop().kendoAnimate
+                effect: "slideIn:up"
+                duration: 1000
+                show: true
+            $("#preview").kendoStop().kendoAnimate
+                effect: "slide:up"
+                duration: 1000
+                hide: true
 
     pub =
         init: (selector) ->
@@ -32,19 +58,15 @@ define [
                 $thumbnailList.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]
 
-                # set up the subscription events
-                $.subscribe "/gallery/hide", ->
-                    $container.slideUp()
-                    $("#preview").slideDown ->
-                        $.publish "/previews/pause", [false]
+                # TODO: add transition effect...
+                $container.kendoMobileSwipe (e) -> 
+                    if e.direction == "right" && dataSource.page() > 1
+                        dataSource.page dataSource.page() - 1
+                    
+                    if e.direction == "left" && dataSource.page() < dataSource.totalPages()
+                        dataSource.page dataSource.page() + 1
 
-                $.subscribe "/gallery/show", (fileName) ->
-                    console.log fileName
-
-                $.subscribe "/gallery/list", ->
-                    $.publish "/previews/pause", [true]
-                    $container.slideDown()
-                    $("#preview").slideUp()
+                setupSubscriptionEvents $container
                 
                 $thumbnailList.kendoListView
                     template: kendo.template $("#gallery-thumbnail").html()
