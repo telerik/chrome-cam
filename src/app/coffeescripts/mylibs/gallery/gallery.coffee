@@ -2,7 +2,6 @@ define [
     'mylibs/utils/utils',
     'text!mylibs/gallery/views/gallery.html'
 ], (utils, template) ->
-
     loadImages = ->
         deferred = $.Deferred()
 
@@ -59,8 +58,13 @@ define [
                 $thumbnailList.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]
 
+                # TODO: add transition effect...
                 $container.kendoMobileSwipe (e) -> 
-                    console.log "swiped gallery #{e.direction}"
+                    if e.direction == "right" && dataSource.page() > 1
+                        dataSource.page dataSource.page() - 1
+                    
+                    if e.direction == "left" && dataSource.page() < dataSource.totalPages()
+                        dataSource.page dataSource.page() + 1
 
                 setupSubscriptionEvents $container
                 

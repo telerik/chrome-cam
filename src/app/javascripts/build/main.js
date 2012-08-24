@@ -4235,7 +4235,12 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
             return $.publish("/gallery/show", [$(this).data("file-name")]);
           });
           $container.kendoMobileSwipe(function(e) {
-            return console.log("swiped gallery " + e.direction);
+            if (e.direction === "right" && dataSource.page() > 1) {
+              dataSource.page(dataSource.page() - 1);
+            }
+            if (e.direction === "left" && dataSource.page() < dataSource.totalPages()) {
+              return dataSource.page(dataSource.page() + 1);
+            }
           });
           setupSubscriptionEvents($container);
           return $thumbnailList.kendoListView({

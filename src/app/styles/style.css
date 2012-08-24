@@ -240,6 +240,15 @@ body > #wrap {height: auto; min-height: 100%;}
 	clear: both;
 }
 
+#gallery .thumbnails:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
 #gallery .thumbnails .thumbnail {
 	float: left;
 	width: 300px;
