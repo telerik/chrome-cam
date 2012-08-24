@@ -55,6 +55,7 @@ body > #wrap {height: auto; min-height: 100%;}
 	width: 45px;
 	height: 45px;
 	margin-top: 5px;
+	cursor: pointer;
 }
 
 .countdown {
@@ -131,6 +132,9 @@ body > #wrap {height: auto; min-height: 100%;}
 #select {
 	height: 92%;
 	width: 100%;
+	display: -webkit-box;
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
 }
 
 #select > .page {
