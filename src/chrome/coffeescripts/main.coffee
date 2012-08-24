@@ -4,8 +4,9 @@ require([
 
   # Load our app module and pass it to our definition function
   'order!libs/jquery/jquery'
-  'app',
+  'order!libs/whammy/whammy.min'
+  'app'
 
-], ($, app) ->
+], ($, whammy, app) ->
 	app.init()
 )
