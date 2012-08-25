@@ -1,6 +1,6 @@
 util = require('util')
 
-folder = "chrome-photo-booth"
+folder = "chrome-cam"
 
 log = (msg) ->
 
