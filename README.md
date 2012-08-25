@@ -1,5 +1,5 @@
-# Chrome PhotoBooth Application
-A Chrome OS PhotoBooth Style Application
+# Chrome Cam Application
+A Chrome OS Camera Application
 
 ## Running The Application
 In order to run this application, you will need the latest build of [Chrome Canary](https://tools.google.com/dlpage/chromesxs/ "Google Chrome - Get a fast new browser. For PC, Mac, and Linux").
@@ -14,7 +14,7 @@ Check **Developer Mode**
 
 Click **Load Unpacked Extension**
 
-Select the **build** folder that is created when you build the application
+Select the **chrome-cam** folder that is created when you build the application
 
 Launch the application with the App Launcher 
 
@@ -46,11 +46,11 @@ Install Jake for automated builds (Global)
 
 ### Start Jitter
 
-From the main chrome-photo-booth directory, tell jitter to watch the chrome directory and transpile to the extension directory.
+From the main chrome-cam directory, tell jitter to watch the chrome directory and transpile to the extension directory.
 	
 	jitter src/chrome/coffeescripts extension/chrome/javascripts
 
-From the main chrome-photo-booth directory, tell jitter to watch the app directory and transpile to the app directory
+From the main chrome-cam directory, tell jitter to watch the app directory and transpile to the app directory
 	
 	jitter src/app/coffeescripts src/app/javascripts
 
