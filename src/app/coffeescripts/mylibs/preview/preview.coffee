@@ -21,13 +21,13 @@ define([
     $container = {}
     webgl = fx.canvas()
     frame = 0
-    direction = "left"
+    ds = {}
 
     # define the animations. we slide different directions depending on if we are going forward or back.
-    pageAnimation = () ->
-
-        pageOut: "slide:#{direction} fadeOut"
-        pageIn: "slideIn:#{direction} fadeIn"
+    animation =
+        direction: "left"
+        in: -> "slideIn:#{@direction} fadeIn" 
+        out: -> "slide:#{@direction} fadeOut"
         
     # the main draw loop which renders the live video effects      
     draw = ->
@@ -51,6 +51,46 @@ define([
                
                     preview.filter(preview.canvas, canvas, frame, stream.track)
 
+    keyboard = (enabled) ->
+
+        # if we have enabled keyboard navigation
+        if enabled
+
+            # subscribe to the left arrow key
+            $.subscribe "/events/key/arrow", (e) ->
+
+                page e
+
+        # otherwise
+        else
+
+            # unsubscribe from events
+            $.unsubcribe "/events/key/arrow"
+
+    page = (direction) ->
+
+        animation.direction = direction
+
+        # if the direction requested was left
+        if direction == "left"
+
+            # if the current page is less than the total 
+            # number of pages
+            if ds.page() < ds.totalPages()
+
+                # go to the next page
+                ds.page ds.page() + 1
+
+        # otherwise
+        else
+
+            # if this isn't page one
+            if ds.page() > 1
+
+                # go to the previous page
+                ds.page(ds.page() - 1)
+
+
     # anything under here is public
     pub = 
         
@@ -65,6 +105,9 @@ define([
             # initialize effects
             # TODO: this should be initialized somewhere else
             effects.init()
+
+            # bind to keyboard events
+            keyboard true
 
             # subscribe to the pause and unpause events
             $.subscribe "/previews/pause", (isPaused) ->
@@ -88,30 +131,8 @@ define([
             # will page through the effects
             $container.kendoMobileSwipe (e) ->
 
-                # pause the camera. that will additionally pause
-                # these previews so there is no need to pause this
-                # as well.
-                $.publish "/camera/pause", [ true ] 
-
-                # check the direction of the swipe. if the swipe
-                # direction is right, go to the next page
-                direction = e.direction
-                if e.direction == "left"
-
-                    # if the current page is less than the total 
-                    # number of pages
-                    if ds.page() < ds.totalPages()
-                        # go to the next page
-                        ds.page ds.page() + 1
-
-                # otherwise
-                else
-
-                    # if this isn't page one
-                    if ds.page() > 1
-                        # go to the previous page
-                        ds.page(ds.page() - 1)
-
+                # page in the direction of the swipe
+                page e.direction
 
             , surface: $container
 
@@ -201,9 +222,14 @@ define([
                     nextPage.append(top.el)
                     nextPage.append(bottom.el)
 
-                    # now move the current page out and the next page in
+                    # pause the camera. that will additionally pause
+                    # these previews so there is no need to pause this
+                    # as well.
+                    $.publish "/camera/pause", [ true ] 
+
+                    # move the current page out and the next page in
                     previousPage.kendoStop(true).kendoAnimate({
-                        effects: pageAnimation().pageOut
+                        effects: animation.out()
                         duration: 1000,
                         hide: true,
                         complete: ->
@@ -216,7 +242,7 @@ define([
 
                     # move the next page in
                     nextPage.kendoStop(true).kendoAnimate({
-                        effects: pageAnimation().pageIn,
+                        effects: animation.in(),
                         duration: 200,
                         show: true,
                         complete: ->

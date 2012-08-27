@@ -805,7 +805,7 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var $container, canvas, ctx, direction, draw, frame, pageAnimation, paused, previews, pub, webgl;
+    var $container, animation, canvas, ctx, draw, ds, frame, keyboard, page, paused, previews, pub, webgl;
     paused = false;
     canvas = {};
     ctx = {};
@@ -813,12 +813,15 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
     $container = {};
     webgl = fx.canvas();
     frame = 0;
-    direction = "left";
-    pageAnimation = function() {
-      return {
-        pageOut: "slide:" + direction + " fadeOut",
-        pageIn: "slideIn:" + direction + " fadeIn"
-      };
+    ds = {};
+    animation = {
+      direction: "left",
+      "in": function() {
+        return "slideIn:" + this.direction + " fadeIn";
+      },
+      out: function() {
+        return "slide:" + this.direction + " fadeOut";
+      }
     };
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
@@ -835,13 +838,35 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
         }
       });
     };
+    keyboard = function(enabled) {
+      if (enabled) {
+        return $.subscribe("/events/key/arrow", function(e) {
+          return page(e);
+        });
+      } else {
+        return $.unsubcribe("/events/key/arrow");
+      }
+    };
+    page = function(direction) {
+      animation.direction = direction;
+      if (direction === "left") {
+        if (ds.page() < ds.totalPages()) {
+          return ds.page(ds.page() + 1);
+        }
+      } else {
+        if (ds.page() > 1) {
+          return ds.page(ds.page() - 1);
+        }
+      }
+    };
     return pub = {
       draw: function() {
         return draw();
       },
       init: function(selector) {
-        var $page1, $page2, bottom, ds, nextPage, previousPage, top;
+        var $page1, $page2, bottom, nextPage, previousPage, top;
         effects.init();
+        keyboard(true);
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
         });
@@ -851,17 +876,7 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
         canvas.height = 240;
         $container = $(selector);
         $container.kendoMobileSwipe(function(e) {
-          $.publish("/camera/pause", [true]);
-          direction = e.direction;
-          if (e.direction === "left") {
-            if (ds.page() < ds.totalPages()) {
-              return ds.page(ds.page() + 1);
-            }
-          } else {
-            if (ds.page() > 1) {
-              return ds.page(ds.page() - 1);
-            }
-          }
+          return page(e.direction);
         }, {
           surface: $container
         });
@@ -914,8 +929,9 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
             create(bottom);
             nextPage.append(top.el);
             nextPage.append(bottom.el);
+            $.publish("/camera/pause", [true]);
             previousPage.kendoStop(true).kendoAnimate({
-              effects: pageAnimation().pageOut,
+              effects: animation.out(),
               duration: 1000,
               hide: true,
               complete: function() {
@@ -926,7 +942,7 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
               }
             });
             return nextPage.kendoStop(true).kendoAnimate({
-              effects: pageAnimation().pageIn,
+              effects: animation["in"](),
               duration: 200,
               show: true,
               complete: function() {
@@ -3972,13 +3988,31 @@ define("libs/webgl/glfx.min",[], function(){});
           ]);
         });
         $.subscribe("/capture/video/record", function() {
-          var frames, recordBuffer, recordBufferCanvas, stopToken, streamToken, webglContext;
+          var frames, recordBuffer, recordBufferCanvas, stopToken, streamToken, transcode;
           console.log("Recording...");
           recordBufferCanvas = document.createElement("canvas");
           recordBufferCanvas.width = 720;
           recordBufferCanvas.height = 480;
           recordBuffer = recordBufferCanvas.getContext("2d");
-          webglContext = webgl.getContext("2d");
+          transcode = function() {
+            var blob, frames, i, pair, video, _i, _len, _ref;
+            video = new Whammy.Video();
+            _ref = (function() {
+              var _j, _ref, _results;
+              _results = [];
+              for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
+                _results.push(frames.slice(i, i + 2));
+              }
+              return _results;
+            })();
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              pair = _ref[_i];
+              video.add(pair[0].imageData, pair[1].time - pair[0].time);
+            }
+            blob = video.compile();
+            frames = [];
+            return console.log(window.URL.createObjectURL(blob));
+          };
           frames = [];
           streamToken = $.subscribe("/camera/stream", function(message) {
             return frames.push({
@@ -3987,28 +4021,9 @@ define("libs/webgl/glfx.min",[], function(){});
             });
           });
           stopToken = $.subscribe("/camera/video/stop", function() {
-            var framesDone, i, transcode, _i, _ref, _results;
+            var framesDone, i, _i, _ref, _results;
             $.unsubscribe(stopToken);
             $.unsubscribe(streamToken);
-            transcode = function() {
-              var blob, i, pair, video, _i, _len, _ref;
-              video = new Whammy.Video();
-              _ref = (function() {
-                var _j, _ref, _results;
-                _results = [];
-                for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
-                  _results.push(frames.slice(i, i + 2));
-                }
-                return _results;
-              })();
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                pair = _ref[_i];
-                video.add(pair[0].imageData, pair[1].time - pair[0].time);
-              }
-              blob = video.compile();
-              frames = [];
-              return console.log(window.URL.createObjectURL(blob));
-            };
             framesDone = 0;
             _results = [];
             for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
@@ -4218,15 +4233,37 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
 
 }).call(this);
 
+// Generated by CoffeeScript 1.3.3
+(function() {
+
+  define('mylibs/events/events',[], function() {
+    var pub;
+    return pub = {
+      init: function() {
+        return $(document).keydown(function(e) {
+          if (e.keyCode === 37) {
+            $.publish("/events/key/arrow", ["left"]);
+          }
+          if (e.keyCode === 39) {
+            return $.publish("/events/key/arrow", ["right"]);
+          }
+        });
+      }
+    };
+  });
+
+}).call(this);
+
 define('text!intro.html',[],function () { return '<div id="intro">\n\t<p><h1>Welcome to HTML5 Camera!</h1></p>\n\t<p>This site is an experiment with HTML5 technologies, including WebRTC, Device Orientation, Canvas, Video and others.</p>\n\t<p>In order to use this site, you will need a browser that is on the bleeding edge of HTML5.  Currently, HTML5 Camera Supports the following browsers...</p>\n\t<ul>\n\t\t<li><a href="http://www.chromium.org/getting-involved/dev-channel">Chrome Dev Channel</a></li>\n\t\t<li><a href="http://www.chromium.org/getting-involved/dev-channel">Chrome Canary</a></li>\n\t\t<li><a href="http://snapshot.opera.com/labs/camera/">Opera Labs Camera Build</a></li>\n\t</ul>\t\n\t<p>For the Chrome Builds, you will need to turn on the experimental WebRTC feature by entering <strong>chrome://flags</strong> in your address bar and then enabling <strong>Media Streaming</strong></p>\n\t<br />\n\t<p><div class="chrome-flags"><img src="stylesheets/images/chrome_flags.png" alt="Enable Media Streaming Under Chrome Flags" /></div></p>\n</div>';});
 
 // Generated by CoffeeScript 1.3.3
 (function() {
 
-  define('app',['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'text!intro.html'], function(camera, bar, preview, full, postman, utils, gallery, intro) {
+  define('app',['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/events/events', 'text!intro.html'], function(camera, bar, preview, full, postman, utils, gallery, events, intro) {
     var pub;
     return pub = {
       init: function() {
+        events.init();
         postman.init(window.top);
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
