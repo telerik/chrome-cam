@@ -41,46 +41,61 @@
           ]);
         });
         $.subscribe("/capture/video/record", function() {
-          var addFrame, frames, recordBuffer, recordBufferCanvas, recordInterval, token;
+          var frames, recordBuffer, recordBufferCanvas, stopToken, streamToken, webglContext;
           console.log("Recording...");
           recordBufferCanvas = document.createElement("canvas");
-          recordBufferCanvas.width = 720 / 2;
-          recordBufferCanvas.height = 480 / 2;
+          recordBufferCanvas.width = 720;
+          recordBufferCanvas.height = 480;
           recordBuffer = recordBufferCanvas.getContext("2d");
-          recordBuffer.scale(0.5, 0.5);
-          recordBuffer.imageSmoothingEnabled = recordBuffer.webkitImageSmoothingEnabled = false;
+          webglContext = webgl.getContext("2d");
           frames = [];
-          addFrame = function() {
-            recordBuffer.drawImage(webgl, 0, 0);
+          streamToken = $.subscribe("/camera/stream", function(message) {
             return frames.push({
-              imageData: recordBufferCanvas.toDataURL('image/webp', 0.9),
+              imageData: message.canvas.getContext("2d").getImageData(0, 0, message.canvas.width, message.canvas.height),
               time: Date.now()
             });
-          };
-          recordInterval = setInterval(addFrame, 1000 / 20);
-          token = $.subscribe("/camera/video/stop", function() {
-            var blob, i, pair, video, _i, _len, _ref;
-            console.log("Done recording!");
-            frames.sort(function() {
-              return 0.5 - Math.random();
-            });
-            video = new Whammy.Video();
-            _ref = (function() {
-              var _j, _ref, _results;
-              _results = [];
-              for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
-                _results.push(frames.slice(i, i + 2));
+          });
+          stopToken = $.subscribe("/camera/video/stop", function() {
+            var framesDone, i, transcode, _i, _ref, _results;
+            $.unsubscribe(stopToken);
+            $.unsubscribe(streamToken);
+            transcode = function() {
+              var blob, i, pair, video, _i, _len, _ref;
+              video = new Whammy.Video();
+              _ref = (function() {
+                var _j, _ref, _results;
+                _results = [];
+                for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
+                  _results.push(frames.slice(i, i + 2));
+                }
+                return _results;
+              })();
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                pair = _ref[_i];
+                video.add(pair[0].imageData, pair[1].time - pair[0].time);
               }
-              return _results;
-            })();
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              pair = _ref[_i];
-              video.add(pair[0].imageData, 16);
+              blob = video.compile();
+              frames = [];
+              return console.log(window.URL.createObjectURL(blob));
+            };
+            framesDone = 0;
+            _results = [];
+            for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+              _results.push(setTimeout((function(i) {
+                return function() {
+                  recordBuffer.putImageData(frames[i].imageData, 0, 0);
+                  frames[i] = {
+                    imageData: recordBufferCanvas.toDataURL('image/webp', 1),
+                    time: frames[i].time
+                  };
+                  ++framesDone;
+                  if (framesDone === frames.length) {
+                    return transcode();
+                  }
+                };
+              })(i), 0));
             }
-            clearInterval(recordInterval);
-            blob = video.compile();
-            console.log(window.URL.createObjectURL(blob));
-            return $.unsubscribe(token);
+            return _results;
           });
           return setTimeout((function() {
             return $.publish("/camera/video/stop", []);

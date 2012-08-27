@@ -61,34 +61,38 @@ define([
 				console.log "Recording..."
 
 				recordBufferCanvas = document.createElement("canvas")
-				recordBufferCanvas.width = 720 / 2
-				recordBufferCanvas.height = 480 / 2
+				recordBufferCanvas.width = 720
+				recordBufferCanvas.height = 480
 				recordBuffer = recordBufferCanvas.getContext("2d")
-				recordBuffer.scale(0.5, 0.5)
-				recordBuffer.imageSmoothingEnabled = recordBuffer.webkitImageSmoothingEnabled = false
 
-				frames = []
-
-				addFrame = ->
-					# TODO: resize frame to conserve memory?
-					#recordBuffer.drawImage webgl, 0, 0, 720, 480, 600, 300
-					#console.log webgl.getImageData(0, 0, 720, 480)
-					recordBuffer.drawImage webgl, 0, 0
-					frames.push imageData: recordBufferCanvas.toDataURL('image/webp', 0.9), time: Date.now()
-
-				recordInterval = setInterval(addFrame, 1000 / 20)
-
-				token = $.subscribe "/camera/video/stop", ->
-					console.log "Done recording!"
-
+				transcode = ->
 					video = new Whammy.Video()
 					for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
 						video.add pair[0].imageData, pair[1].time - pair[0].time
 
-					clearInterval recordInterval
 					blob = video.compile()
+					frames = []
 					console.log window.URL.createObjectURL(blob)
-					$.unsubscribe token
+
+				frames = []
+
+				streamToken = $.subscribe "/camera/stream", (message) ->
+					frames.push imageData: message.canvas.getContext("2d").getImageData(0, 0, message.canvas.width, message.canvas.height), time: Date.now()
+
+				stopToken = $.subscribe "/camera/video/stop", ->
+					$.unsubscribe stopToken
+					$.unsubscribe streamToken
+
+					framesDone = 0;
+					for i in [0...frames.length]
+						setTimeout do (i) ->
+							->
+								recordBuffer.putImageData frames[i].imageData, 0, 0
+								frames[i] = imageData: recordBufferCanvas.toDataURL('image/webp', 1), time: frames[i].time
+								++framesDone
+								if framesDone == frames.length
+									transcode()
+						, 0
 
 				setTimeout (-> $.publish "/camera/video/stop", []), 6000
 
