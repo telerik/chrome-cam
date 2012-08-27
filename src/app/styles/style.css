@@ -21,6 +21,11 @@ body > #wrap {height: auto; min-height: 100%;}
 	border-radius: 50%;
 }
 
+[draggable] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 /* Bar styles */
 
 #footer { 

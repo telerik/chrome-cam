@@ -86,22 +86,32 @@ define([
 
             # attach a kendo mobile swipe event to the container. this is what
             # will page through the effects
-            $container.kendoMobileSwipe ->
+            $container.kendoMobileSwipe (e) ->
 
                 # pause the camera. that will additionally pause
                 # these previews so there is no need to pause this
                 # as well.
                 $.publish "/camera/pause", [ true ] 
 
-                # if the current page is less than the total 
-                # number of pages
-                if ds.page() < ds.totalPages()
-                    # go to the next page
-                    ds.page ds.page() + 1
+                # check the direction of the swipe. if the swipe
+                # direction is right, go to the next page
+                direction = e.direction
+                if e.direction == "left"
+
+                    # if the current page is less than the total 
+                    # number of pages
+                    if ds.page() < ds.totalPages()
+                        # go to the next page
+                        ds.page ds.page() + 1
+
                 # otherwise
                 else
-                    # go back to the first page
-                    ds.page 1
+
+                    # if this isn't page one
+                    if ds.page() > 1
+                        # go to the previous page
+                        ds.page(ds.page() - 1)
+
 
             , surface: $container
 
@@ -193,7 +203,7 @@ define([
 
                     # now move the current page out and the next page in
                     previousPage.kendoStop(true).kendoAnimate({
-                        effects: "slide:left"
+                        effects: pageAnimation().pageOut
                         duration: 1000,
                         hide: true,
                         complete: ->
@@ -206,7 +216,7 @@ define([
 
                     # move the next page in
                     nextPage.kendoStop(true).kendoAnimate({
-                        effects: "slideIn:left",
+                        effects: pageAnimation().pageIn,
                         duration: 200,
                         show: true,
                         complete: ->

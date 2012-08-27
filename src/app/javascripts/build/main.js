@@ -783,7 +783,7 @@ b;if(typeof XMLHttpRequest!=="undefined")return new XMLHttpRequest;else for(c=0;
 c,b,e){var d=g.xdRegExp.exec(a),f;if(!d)return!0;a=d[2];d=d[3];d=d.split(":");f=d[1];d=d[0];return(!a||a===c)&&(!d||d===b)&&(!f&&!d||f===e)},finishLoad:function(a,c,b,e,d){b=c?g.strip(b):b;d.isBuild&&(j[a]=b);e(b)},load:function(a,c,b,e){if(e.isBuild&&!e.inlineText)b();else{var d=g.parseName(a),f=d.moduleName+"."+d.ext,m=c.toUrl(f),h=e&&e.text&&e.text.useXhr||g.useXhr;!i||h(m,p,q,r)?g.get(m,function(c){g.finishLoad(a,d.strip,c,b,e)}):c([f],function(a){g.finishLoad(d.moduleName+"."+d.ext,d.strip,a,
 b,e)})}},write:function(a,c,b){if(c in j){var e=g.jsEscape(j[c]);b.asModule(a+"!"+c,"define(function () { return '"+e+"';});\n")}},writeFile:function(a,c,b,e,d){var c=g.parseName(c),f=c.moduleName+"."+c.ext,h=b.toUrl(c.moduleName+"."+c.ext)+".js";g.load(f,b,function(){var b=function(a){return e(h,a)};b.asModule=function(a,b){return e.asModule(a,h,b)};g.write(a,f,b,d)},d)}}})})();
 
-define('text!mylibs/preview/views/preview.html',[],function () { return '<div class="preview">\n\t<div>\n\t\t<a></a>\n\t\t<div class="preview-title"><b>${ name }</b></div>\n\t</div>\n</div>';});
+define('text!mylibs/preview/views/preview.html',[],function () { return '<div class="preview" draggable>\n\t<div>\n\t\t<a></a>\n\t\t<div class="preview-title"><b>${ name }</b></div>\n\t</div>\n</div>';});
 
 define('text!mylibs/preview/views/half.html',[],function () { return '<div class="half"></div>';});
 
@@ -4043,7 +4043,7 @@ define("libs/webgl/glfx.min", function(){});
 
 }).call(this);
 
-define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div class="thumbnails">\n</div>\n\n<script type="text/x-kendo-template" id="gallery-thumbnail">\n    <div class="thumbnail" data-file-name="${name}">\n        <img src="${image}" width="270" height="180">\n    </div>\n</script>';});
+define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div class="thumbnails">\n</div>\n\n<script type="text/x-kendo-template" id="gallery-thumbnail">\n    <div class="thumbnail" draggable="true" data-file-name="${name}">\n        <img src="${image}" width="270" height="180">\n    </div>\n</script>';});
 
 (function() {
 
