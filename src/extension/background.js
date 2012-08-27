@@ -1,7 +1,7 @@
 chrome.app.runtime.onLaunched.addListener(function() { 
   
   function onWindowLoaded(win) {
-  	console.log(win)
+  	APP = win;
   }
 
   var win = chrome.app.window.create('main.html', { 

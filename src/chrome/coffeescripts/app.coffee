@@ -71,7 +71,7 @@ define([
 			file.init()
 
 			# cue up the postman!
-			postman.init(iframe.contentWindow)
+			postman.init iframe.contentWindow
 
 			# get the currently saved files
 			$.publish "/file/read", []

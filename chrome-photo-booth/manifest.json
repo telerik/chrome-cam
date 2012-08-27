@@ -1,0 +1,30 @@
+{
+ "name": "HTML5 Camera",
+ "description": "A PhotoBooth Application For Chrome",
+ "version": "1.0",
+ "manifest_version": 2,
+ "offline_enabled" : true,
+ "app": {
+  "background": {
+    "scripts": [ "background.js" ]
+  }
+ },
+ "icons": {
+   "16": "icon_16.png",
+   "24": "icon_24.png",
+   "32": "icon_32.png",
+   "64": "icon_64.png",
+   "128": "icon_128.png"
+ },
+ "permissions": [
+   "experimental",
+   "unlimitedStorage",
+   "videoCapture",
+   "fileSystem",
+   "fileSystemWrite",
+   "notifications"
+ ],
+  "sandbox": {
+    "pages": [ "app/index.html" ]
+  }
+}

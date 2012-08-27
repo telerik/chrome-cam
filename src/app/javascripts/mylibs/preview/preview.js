@@ -52,12 +52,17 @@
         canvas.width = 360;
         canvas.height = 240;
         $container = $(selector);
-        $container.kendoMobileSwipe(function() {
+        $container.kendoMobileSwipe(function(e) {
           $.publish("/camera/pause", [true]);
-          if (ds.page() < ds.totalPages()) {
-            return ds.page(ds.page() + 1);
+          direction = e.direction;
+          if (e.direction === "left") {
+            if (ds.page() < ds.totalPages()) {
+              return ds.page(ds.page() + 1);
+            }
           } else {
-            return ds.page(1);
+            if (ds.page() > 1) {
+              return ds.page(ds.page() - 1);
+            }
           }
         }, {
           surface: $container
@@ -112,7 +117,7 @@
             nextPage.append(top.el);
             nextPage.append(bottom.el);
             previousPage.kendoStop(true).kendoAnimate({
-              effects: "slide:left",
+              effects: pageAnimation().pageOut,
               duration: 1000,
               hide: true,
               complete: function() {
@@ -123,7 +128,7 @@
               }
             });
             return nextPage.kendoStop(true).kendoAnimate({
-              effects: "slideIn:left",
+              effects: pageAnimation().pageIn,
               duration: 200,
               show: true,
               complete: function() {
