@@ -3962,6 +3962,12 @@ define("libs/webgl/glfx.min",[], function(){});
                 thumbnailURL: image
               }
             ]);
+            $.publish("/gallery/add", [
+              {
+                name: name,
+                image: image
+              }
+            ]);
             return $.unsubscribe(token);
           });
           return $.publish("/postman/deliver", [
@@ -3972,13 +3978,31 @@ define("libs/webgl/glfx.min",[], function(){});
           ]);
         });
         $.subscribe("/capture/video/record", function() {
-          var frames, recordBuffer, recordBufferCanvas, stopToken, streamToken, webglContext;
+          var frames, recordBuffer, recordBufferCanvas, stopToken, streamToken, transcode;
           console.log("Recording...");
           recordBufferCanvas = document.createElement("canvas");
           recordBufferCanvas.width = 720;
           recordBufferCanvas.height = 480;
           recordBuffer = recordBufferCanvas.getContext("2d");
-          webglContext = webgl.getContext("2d");
+          transcode = function() {
+            var blob, frames, i, pair, video, _i, _len, _ref;
+            video = new Whammy.Video();
+            _ref = (function() {
+              var _j, _ref, _results;
+              _results = [];
+              for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
+                _results.push(frames.slice(i, i + 2));
+              }
+              return _results;
+            })();
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              pair = _ref[_i];
+              video.add(pair[0].imageData, pair[1].time - pair[0].time);
+            }
+            blob = video.compile();
+            frames = [];
+            return console.log(window.URL.createObjectURL(blob));
+          };
           frames = [];
           streamToken = $.subscribe("/camera/stream", function(message) {
             return frames.push({
@@ -3987,28 +4011,9 @@ define("libs/webgl/glfx.min",[], function(){});
             });
           });
           stopToken = $.subscribe("/camera/video/stop", function() {
-            var framesDone, i, transcode, _i, _ref, _results;
+            var framesDone, i, _i, _ref, _results;
             $.unsubscribe(stopToken);
             $.unsubscribe(streamToken);
-            transcode = function() {
-              var blob, i, pair, video, _i, _len, _ref;
-              video = new Whammy.Video();
-              _ref = (function() {
-                var _j, _ref, _results;
-                _results = [];
-                for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
-                  _results.push(frames.slice(i, i + 2));
-                }
-                return _results;
-              })();
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                pair = _ref[_i];
-                video.add(pair[0].imageData, pair[1].time - pair[0].time);
-              }
-              blob = video.compile();
-              frames = [];
-              return console.log(window.URL.createObjectURL(blob));
-            };
             framesDone = 0;
             _results = [];
             for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
@@ -4194,7 +4199,7 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
         $container.append($(template));
         $thumbnailList = $(".thumbnails", $container);
         return loadImages().done(function(dataSource) {
-          console.log(dataSource);
+          var thumbnailList;
           $thumbnailList.on("click", ".thumbnail", function() {
             return $.publish("/gallery/show", [$(this).data("file-name")]);
           });
@@ -4207,9 +4212,14 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
             }
           });
           setupSubscriptionEvents($container);
-          return $thumbnailList.kendoListView({
+          $thumbnailList.kendoListView({
             template: kendo.template($("#gallery-thumbnail").html()),
             dataSource: dataSource
+          });
+          thumbnailList = $thumbnailList.data("kendoListView");
+          return $.subscribe("/gallery/add", function(file) {
+            dataSource.add(file);
+            return thumbnailList.refresh();
           });
         });
       }

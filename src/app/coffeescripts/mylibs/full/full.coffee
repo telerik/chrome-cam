@@ -48,8 +48,10 @@ define([
 				token = $.subscribe "/file/saved/#{name}", ->
 					# I may have it bouncing around too much, but I don't want the bar to
 					# just respond to *all* file saves, or have this module know about
-					# the bar's internals
+					# the bar / gallery's internals
 					$.publish "/bar/preview/update", [ thumbnailURL: image ]
+					$.publish "/gallery/add", [ name: name, image: image ]
+					
 					$.unsubscribe token
 
 				# save the image to the file system. this is up to the extension

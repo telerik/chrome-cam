@@ -58,7 +58,7 @@
         $container.append($(template));
         $thumbnailList = $(".thumbnails", $container);
         return loadImages().done(function(dataSource) {
-          console.log(dataSource);
+          var thumbnailList;
           $thumbnailList.on("click", ".thumbnail", function() {
             return $.publish("/gallery/show", [$(this).data("file-name")]);
           });
@@ -71,9 +71,14 @@
             }
           });
           setupSubscriptionEvents($container);
-          return $thumbnailList.kendoListView({
+          $thumbnailList.kendoListView({
             template: kendo.template($("#gallery-thumbnail").html()),
             dataSource: dataSource
+          });
+          thumbnailList = $thumbnailList.data("kendoListView");
+          return $.subscribe("/gallery/add", function(file) {
+            dataSource.add(file);
+            return thumbnailList.refresh();
           });
         });
       }

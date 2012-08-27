@@ -52,8 +52,6 @@ define [
 
             # after loading the images
             loadImages().done (dataSource) ->
-                console.log dataSource
-
                 # set up the DOM events
                 $thumbnailList.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]
@@ -71,3 +69,9 @@ define [
                 $thumbnailList.kendoListView
                     template: kendo.template $("#gallery-thumbnail").html()
                     dataSource: dataSource
+
+                thumbnailList = $thumbnailList.data "kendoListView"
+
+                $.subscribe "/gallery/add", (file) ->
+                    dataSource.add file
+                    thumbnailList.refresh()
