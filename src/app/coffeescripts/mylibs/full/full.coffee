@@ -60,13 +60,12 @@ define([
 
 				console.log "Recording..."
 
-				RECORD_FRAME_RATE = 1000 / 30
-
 				recordBufferCanvas = document.createElement("canvas")
 				recordBufferCanvas.width = 720 / 2
 				recordBufferCanvas.height = 480 / 2
 				recordBuffer = recordBufferCanvas.getContext("2d")
 				recordBuffer.scale(0.5, 0.5)
+				recordBuffer.imageSmoothingEnabled = recordBuffer.webkitImageSmoothingEnabled = false
 
 				frames = []
 
@@ -75,17 +74,19 @@ define([
 					#recordBuffer.drawImage webgl, 0, 0, 720, 480, 600, 300
 					#console.log webgl.getImageData(0, 0, 720, 480)
 					recordBuffer.drawImage webgl, 0, 0
+					frames.push imageData: recordBufferCanvas.toDataURL('image/webp', 0.9), time: Date.now()
 
-					frame = recordBufferCanvas.toDataURL('image/webp', 0.9)
-					frames.push frame
-
-				recordInterval = setInterval(addFrame, RECORD_FRAME_RATE)
+				recordInterval = setInterval(addFrame, 1000 / 20)
 
 				token = $.subscribe "/camera/video/stop", ->
 					console.log "Done recording!"
 
+					video = new Whammy.Video()
+					for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
+						video.add pair[0].imageData, pair[1].time - pair[0].time
+
 					clearInterval recordInterval
-					blob = Whammy.fromImageArray(frames, RECORD_FRAME_RATE)
+					blob = video.compile()
 					console.log window.URL.createObjectURL(blob)
 					$.unsubscribe token
 

@@ -41,26 +41,44 @@
           ]);
         });
         $.subscribe("/capture/video/record", function() {
-          var RECORD_FRAME_RATE, addFrame, frames, recordBuffer, recordBufferCanvas, recordInterval, token;
+          var addFrame, frames, recordBuffer, recordBufferCanvas, recordInterval, token;
           console.log("Recording...");
-          RECORD_FRAME_RATE = 1000 / 30;
           recordBufferCanvas = document.createElement("canvas");
           recordBufferCanvas.width = 720 / 2;
           recordBufferCanvas.height = 480 / 2;
           recordBuffer = recordBufferCanvas.getContext("2d");
           recordBuffer.scale(0.5, 0.5);
+          recordBuffer.imageSmoothingEnabled = recordBuffer.webkitImageSmoothingEnabled = false;
           frames = [];
           addFrame = function() {
             recordBuffer.drawImage(webgl, 0, 0);
-            frame = recordBufferCanvas.toDataURL('image/webp', 0.9);
-            return frames.push(frame);
+            return frames.push({
+              imageData: recordBufferCanvas.toDataURL('image/webp', 0.9),
+              time: Date.now()
+            });
           };
-          recordInterval = setInterval(addFrame, RECORD_FRAME_RATE);
+          recordInterval = setInterval(addFrame, 1000 / 20);
           token = $.subscribe("/camera/video/stop", function() {
-            var blob;
+            var blob, i, pair, video, _i, _len, _ref;
             console.log("Done recording!");
+            frames.sort(function() {
+              return 0.5 - Math.random();
+            });
+            video = new Whammy.Video();
+            _ref = (function() {
+              var _j, _ref, _results;
+              _results = [];
+              for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
+                _results.push(frames.slice(i, i + 2));
+              }
+              return _results;
+            })();
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              pair = _ref[_i];
+              video.add(pair[0].imageData, 16);
+            }
             clearInterval(recordInterval);
-            blob = Whammy.fromImageArray(frames, RECORD_FRAME_RATE);
+            blob = video.compile();
             console.log(window.URL.createObjectURL(blob));
             return $.unsubscribe(token);
           });

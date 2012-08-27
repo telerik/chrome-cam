@@ -378,13 +378,16 @@ var Whammy = (function(){
 	WhammyVideo.prototype.add = function(frame, duration){
 		if(typeof duration != 'undefined' && this.duration) throw "you can't pass a duration if the fps is set";
 		if(typeof duration == 'undefined' && !this.duration) throw "if you don't have the fps set, you ned to have durations here."
-		if('canvas' in frame){ //CanvasRenderingContext2D
-			frame = frame.canvas;	
-		}
-		if('toDataURL' in frame){
-			frame = frame.toDataURL('image/webp', this.quality)
-		}else if(typeof frame != "string"){
-			throw "frame must be a a HTMLCanvasElement, a CanvasRenderingContext2D or a DataURI formatted string"
+		if(typeof frame != "string") {
+			if('canvas' in frame){ //CanvasRenderingContext2D
+				frame = frame.canvas;	
+			}
+			else if('toDataURL' in frame){
+				frame = frame.toDataURL('image/webp', this.quality)
+			}
+			else {
+				throw "frame must be a a HTMLCanvasElement, a CanvasRenderingContext2D or a DataURI formatted string"
+			}
 		}
 		if (!(/^data:image\/webp;base64,/ig).test(frame)) {
 			throw "Input must be formatted properly as a base64 encoded DataURI of type image/webp";

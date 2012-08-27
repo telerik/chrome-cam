@@ -5,7 +5,7 @@ require([
   # Load our app module and pass it to our definition function
   'app'
   'order!libs/jquery/plugins'
-  'order!libs/whammy/whammy.min'
+  'order!libs/whammy/whammy'
   'libs/webgl/glfx'
 
 ], (app) ->
