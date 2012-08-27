@@ -24,6 +24,7 @@ mylibs/full/full.js
 mylibs/postman/postman.js
 text!mylibs/gallery/views/gallery.html
 mylibs/gallery/gallery.js
+mylibs/events/events.js
 text!intro.html
 app.js
 libs/jquery/pubsub.js

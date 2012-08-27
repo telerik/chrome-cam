@@ -6,12 +6,16 @@ define([
   'mylibs/postman/postman'
   'mylibs/utils/utils'
   'mylibs/gallery/gallery'
+  'mylibs/events/events'
   'text!intro.html'
-], (camera, bar, preview, full, postman, utils, gallery, intro) ->
+], (camera, bar, preview, full, postman, utils, gallery, events, intro) ->
 	
 	pub = 
 		    
 		init: ->
+
+			# bind document level events
+			events.init()
 
 			# fire up the postman!
 			postman.init window.top

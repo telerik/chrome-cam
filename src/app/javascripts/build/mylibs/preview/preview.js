@@ -7,7 +7,7 @@
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var $container, canvas, ctx, direction, draw, frame, pageAnimation, paused, previews, pub, webgl;
+    var $container, animation, canvas, ctx, draw, ds, frame, keyboard, page, paused, previews, pub, webgl;
     paused = false;
     canvas = {};
     ctx = {};
@@ -15,12 +15,15 @@
     $container = {};
     webgl = fx.canvas();
     frame = 0;
-    direction = "left";
-    pageAnimation = function() {
-      return {
-        pageOut: "slide:" + direction + " fadeOut",
-        pageIn: "slideIn:" + direction + " fadeIn"
-      };
+    ds = {};
+    animation = {
+      direction: "left",
+      "in": function() {
+        return "slideIn:" + this.direction + " fadeIn";
+      },
+      out: function() {
+        return "slide:" + this.direction + " fadeOut";
+      }
     };
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
@@ -37,13 +40,35 @@
         }
       });
     };
+    keyboard = function(enabled) {
+      if (enabled) {
+        return $.subscribe("/events/key/arrow", function(e) {
+          return page(e);
+        });
+      } else {
+        return $.unsubcribe("/events/key/arrow");
+      }
+    };
+    page = function(direction) {
+      animation.direction = direction;
+      if (direction === "left") {
+        if (ds.page() < ds.totalPages()) {
+          return ds.page(ds.page() + 1);
+        }
+      } else {
+        if (ds.page() > 1) {
+          return ds.page(ds.page() - 1);
+        }
+      }
+    };
     return pub = {
       draw: function() {
         return draw();
       },
       init: function(selector) {
-        var $page1, $page2, bottom, ds, nextPage, previousPage, top;
+        var $page1, $page2, bottom, nextPage, previousPage, top;
         effects.init();
+        keyboard(true);
         $.subscribe("/previews/pause", function(isPaused) {
           return paused = isPaused;
         });
@@ -53,17 +78,7 @@
         canvas.height = 240;
         $container = $(selector);
         $container.kendoMobileSwipe(function(e) {
-          $.publish("/camera/pause", [true]);
-          direction = e.direction;
-          if (e.direction === "left") {
-            if (ds.page() < ds.totalPages()) {
-              return ds.page(ds.page() + 1);
-            }
-          } else {
-            if (ds.page() > 1) {
-              return ds.page(ds.page() - 1);
-            }
-          }
+          return page(e.direction);
         }, {
           surface: $container
         });
@@ -116,8 +131,9 @@
             create(bottom);
             nextPage.append(top.el);
             nextPage.append(bottom.el);
+            $.publish("/camera/pause", [true]);
             previousPage.kendoStop(true).kendoAnimate({
-              effects: pageAnimation().pageOut,
+              effects: animation.out(),
               duration: 1000,
               hide: true,
               complete: function() {
@@ -128,7 +144,7 @@
               }
             });
             return nextPage.kendoStop(true).kendoAnimate({
-              effects: pageAnimation().pageIn,
+              effects: animation["in"](),
               duration: 200,
               show: true,
               complete: function() {
