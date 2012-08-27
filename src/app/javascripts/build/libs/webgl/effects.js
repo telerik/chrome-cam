@@ -227,7 +227,7 @@
             var effect;
             if (track.faces.length !== 0) faces = track.faces;
             effect = function(element) {
-              var eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
+              var eyeHeight, eyeWidth, face, factor, height, width, x, y, _i, _len, _results;
               factor = element.width / track.trackWidth;
               _results = [];
               for (_i = 0, _len = faces.length; _i < _len; _i++) {
@@ -237,8 +237,9 @@
                 x = face.x * factor;
                 y = face.y * factor;
                 eyeWidth = eyeFactor * element.width;
+                eyeHeight = eyeFactor * element.height;
                 canvas.bulgePinch((x + width / 2) - eyeWidth, y + height / 3, eyeWidth * 2, .65);
-                _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, y + height / 3, eyeWidth * 2, .65));
+                _results.push(canvas.bulgePinch((x + width / 2) + eyeWidth, y + height / 3, eyeHeight * 2, .65));
               }
               return _results;
             };

@@ -68,8 +68,8 @@
         });
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
-        canvas.width = 360;
-        canvas.height = 240;
+        canvas.width = webgl.width = 360;
+        canvas.height = webgl.width = 240;
         $container = $(selector);
         $container.kendoMobileSwipe(function(e) {
           return page(e.direction);
@@ -107,6 +107,8 @@
                   preview = {};
                   $.extend(preview, item);
                   preview.canvas = fx.canvas();
+                  preview.canvas.width = canvas.width;
+                  preview.canvas.height = canvas.height;
                   content = $template({
                     name: preview.name
                   });

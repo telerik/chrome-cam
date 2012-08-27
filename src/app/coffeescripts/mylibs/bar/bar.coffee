@@ -45,8 +45,6 @@ define([
 
 							else
 								
-								console.log("clicky!")
-								
 								# publish the flash event
 								$.publish "/full/flash"
 
@@ -71,7 +69,7 @@ define([
 				countdown(0)
 
 			# link to show or hide the gallery
-			$content.find(".galleryLink").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
+			$content.find(".galleryLink").toggle -> $.publish "/gallery/list", -> $.publish "/gallery/hide"
 
 			# append it to the container
 			$container.append $content

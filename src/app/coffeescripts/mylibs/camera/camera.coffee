@@ -18,7 +18,7 @@ define([
     ctx = {}
     beep = document.createElement("audio")
     paused = false
-    window.testing = false 
+    window.testing = true 
 
     turnOn = (callback, testing) ->       
 
