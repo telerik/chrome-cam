@@ -6,6 +6,9 @@ define [
         deferred = $.Deferred()
 
         token = $.subscribe "/pictures/bulk", (result) ->
+            if result.message instanceof Array and result.message.length > 0
+                $.publish "/bar/preview/update", [thumbnailURL: result.message[-1..][0].image]
+
             $.unsubscribe token
             dataSource = new kendo.data.DataSource
                 data: result.message

@@ -1172,6 +1172,7 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
         $container.append($content);
         $.subscribe("/bar/preview/update", function(message) {
           var $image;
+          console.log(message);
           $image = $("<img />", {
             src: message.thumbnailURL,
             width: 72,
@@ -4149,6 +4150,13 @@ define('text!mylibs/gallery/views/gallery.html',[],function () { return '<div cl
       deferred = $.Deferred();
       token = $.subscribe("/pictures/bulk", function(result) {
         var dataSource;
+        if (result.message instanceof Array && result.message.length > 0) {
+          $.publish("/bar/preview/update", [
+            {
+              thumbnailURL: result.message.slice(-1)[0].image
+            }
+          ]);
+        }
         $.unsubscribe(token);
         dataSource = new kendo.data.DataSource({
           data: result.message,

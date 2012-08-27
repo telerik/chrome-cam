@@ -8,6 +8,13 @@
       deferred = $.Deferred();
       token = $.subscribe("/pictures/bulk", function(result) {
         var dataSource;
+        if (result.message instanceof Array && result.message.length > 0) {
+          $.publish("/bar/preview/update", [
+            {
+              thumbnailURL: result.message.slice(-1)[0].image
+            }
+          ]);
+        }
         $.unsubscribe(token);
         dataSource = new kendo.data.DataSource({
           data: result.message,
