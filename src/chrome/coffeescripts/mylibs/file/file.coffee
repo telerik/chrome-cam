@@ -53,10 +53,10 @@ define([
     $.publish "/notify/show", [ "File Access Denied", "Access to the file system could not be obtained.", false ]
 
   # saves a file to the file system. overwrites the file if it exists.
-  save = (name, dataURL) ->
+  save = (name, blob) ->
 
-    # convert the incoming image into a blob for storage
-    blob = utils.toBlob dataURL
+    if typeof blob == "string"
+      blob = utils.toBlob blob
 
     # get the file from the file system, creating it if it doesn't exist
     fileSystem.root.getFile name, create: true, (fileEntry) ->
@@ -221,7 +221,7 @@ define([
 
       # subscribe to events
       $.subscribe "/file/save", (message) ->
-        save message.name, message.image
+        save message.name, message.file
 
       $.subscribe "/file/delete", (message) ->
         destroy message.name

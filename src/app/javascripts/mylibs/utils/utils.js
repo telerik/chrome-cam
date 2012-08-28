@@ -16,7 +16,7 @@
       createVideo: function(frames) {
         var canvas, ctx, framesDone, i, transcode, _ref, _results;
         transcode = function() {
-          var blob, i, pair, video, _i, _len, _ref;
+          var blob, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
           _ref = (function() {
             var _ref, _results;
@@ -32,7 +32,14 @@
           }
           blob = video.compile();
           frames = [];
-          return console.log(window.URL.createObjectURL(blob));
+          name = new Date().getTime() + ".webm";
+          console.log("Recording Done!");
+          return $.publish("/postman/deliver", [
+            {
+              name: name,
+              file: blob
+            }, "/file/save"
+          ]);
         };
         canvas = document.createElement("canvas");
         canvas.width = 720;
@@ -41,7 +48,7 @@
         framesDone = 0;
         _results = [];
         for (i = 0, _ref = frames.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-          _results.push(setTimeout((function(i) {
+          _results.push((function(i) {
             var imageData, videoData;
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             videoData = new Uint8ClampedArray(frames[i].imageData);
@@ -53,7 +60,7 @@
             };
             ++framesDone;
             if (framesDone === frames.length) return transcode();
-          })(i)));
+          })(i));
         }
         return _results;
       }

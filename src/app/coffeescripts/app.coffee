@@ -17,7 +17,7 @@ define([
 
 			# bind document level events
 			events.init()
-
+			
 			# fire up the postman!
 			postman.init window.top
 			

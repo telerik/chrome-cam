@@ -10,8 +10,6 @@ define([
 
     pub = 
 
-    	# add a method onto the pixel array 
-
     	# normalizes webkitRequestAnimationFrame
     	getAnimationFrame: ->
 	        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || (callback, element) ->
@@ -27,7 +25,13 @@ define([
 
 		    	blob = video.compile()
 		    	frames = []
-		    	console.log window.URL.createObjectURL(blob)
+		    	
+		    	name = new Date().getTime() + ".webm"
+
+		    	console.log("Recording Done!")
+
+		    	# save the recording
+		    	$.publish "/postman/deliver", [  name: name, file: blob, "/file/save" ]
 
 	    	canvas = document.createElement("canvas")
 	    	canvas.width = 720
@@ -38,7 +42,8 @@ define([
 
 	    	for i in [0...frames.length]
 
-	    		setTimeout do (i) ->
+	    		do (i) ->
+	    			
 	    			imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
 	    			videoData = new Uint8ClampedArray(frames[i].imageData)
 	    			imageData.data.set(videoData)

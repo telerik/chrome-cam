@@ -13,6 +13,7 @@ define([
 	frame = 0
 	frames = []
 	recording = false
+	$flash = {}
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -39,12 +40,23 @@ define([
 
 	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
 
+	flash = ->
+
+		$flash.show()	
+		$flash.kendoStop(true).kendoAnimate({
+			effects: "fadeOut",
+			duration: 2000,
+			hide: true
+		})
+
 	pub = 
 
 		init: (selector) ->
 
 			# attach to the /capture/image function
 			$.subscribe "/capture/image", ->
+
+				flash()
 
 				image = webgl.toDataURL()
 
@@ -61,9 +73,9 @@ define([
 
 				# save the image to the file system. this is up to the extension
 				# to handle
-				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
+				$.publish "/postman/deliver", [  name: name, file: image, "/file/save" ]
 
-			$.subscribe "/capture/video/record", ->
+			$.subscribe "/capture/video", ->
 
 				console.log "Recording..."
 
@@ -215,12 +227,7 @@ define([
 			# subscribe to the flash event
 			$.subscribe "/full/flash", ->
 				
-				$flash.show()	
-				$flash.kendoStop(true).kendoAnimate({
-					effects: "fadeOut",
-					duration: 2000,
-					hide: true
-				})
+				flash()
 
 			draw()
 				

@@ -1,7 +1,7 @@
 (function() {
 
   define(['mylibs/utils/utils', 'text!mylibs/full/views/full.html', 'libs/webgl/glfx'], function(utils, fullTemplate) {
-    var canvas, ctx, draw, frame, frames, paused, preview, pub, recording, webgl;
+    var $flash, canvas, ctx, draw, flash, frame, frames, paused, preview, pub, recording, webgl;
     canvas = {};
     ctx = {};
     preview = {};
@@ -11,6 +11,7 @@
     frame = 0;
     frames = [];
     recording = false;
+    $flash = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
@@ -25,11 +26,20 @@
         }
       });
     };
+    flash = function() {
+      $flash.show();
+      return $flash.kendoStop(true).kendoAnimate({
+        effects: "fadeOut",
+        duration: 2000,
+        hide: true
+      });
+    };
     return pub = {
       init: function(selector) {
-        var $container, $content, $flash;
+        var $container, $content;
         $.subscribe("/capture/image", function() {
           var image, name, token;
+          flash();
           image = webgl.toDataURL();
           name = new Date().getTime() + ".jpg";
           token = $.subscribe("/file/saved/" + name, function() {
@@ -43,11 +53,11 @@
           return $.publish("/postman/deliver", [
             {
               name: name,
-              image: image
+              file: image
             }, "/file/save"
           ]);
         });
-        $.subscribe("/capture/video/record", function() {
+        $.subscribe("/capture/video", function() {
           console.log("Recording...");
           frames = [];
           recording = true;
@@ -105,12 +115,7 @@
           });
         });
         $.subscribe("/full/flash", function() {
-          $flash.show();
-          return $flash.kendoStop(true).kendoAnimate({
-            effects: "fadeOut",
-            duration: 2000,
-            hide: true
-          });
+          return flash();
         });
         return draw();
       }

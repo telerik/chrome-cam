@@ -22,7 +22,7 @@ define([
     webgl = fx.canvas()
     frame = 0
     ds = {}
-
+    
     # define the animations. we slide different directions depending on if we are going forward or back.
     animation =
         direction: "left"
