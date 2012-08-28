@@ -193,7 +193,7 @@ body > #wrap {height: auto; min-height: 100%;}
 
 .mode a {
 	display: block;
-	width: 35px;
+	width: 36px;
 	height: 30px;
 	background-color: rgba(244, 244, 244, 0.3);
 	border: 1px solid rgba(244, 244, 244, .3);
@@ -203,7 +203,7 @@ body > #wrap {height: auto; min-height: 100%;}
 }
 
 	.mode .photo { background-position: 50% 6px; }
-	.mode .video { background-position: 50% -30px; }
+	.mode .video { background-position: 50% -29px; }
 	.mode .paparazzi { background-position: 50% -68px; }
 	.mode .active { background-color: #C0C0C0; }
 

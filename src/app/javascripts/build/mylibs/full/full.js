@@ -2,7 +2,7 @@
 (function() {
 
   define(['mylibs/utils/utils', 'text!mylibs/full/views/full.html', 'libs/webgl/glfx'], function(utils, fullTemplate) {
-    var canvas, ctx, draw, frame, paused, preview, pub, webgl;
+    var VIDEO_MAX, canvas, ctx, draw, frame, frames, paused, preview, pub, record, recordStart, webgl;
     canvas = {};
     ctx = {};
     preview = {};
@@ -10,11 +10,27 @@
     preview = {};
     paused = true;
     frame = 0;
+    frames = [];
+    record = false;
+    recordStart = 0;
+    VIDEO_MAX = 6;
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
+        var length, link, url, webmBlob;
         if (!paused) {
           frame++;
-          return preview.filter(webgl, stream.canvas, frame, stream.track);
+          preview.filter(webgl, stream.canvas, frame, stream.track);
+          if (record) {
+            length = (Date.now() - recordStart) / 1000;
+            frames.push(webgl.toDataURL('image/webp', 1));
+            if (length > VIDEO_MAX) {
+              record = false;
+              webmBlob = Whammy.fromImageArray(frames, 1000 / 60);
+              url = window.URL.createObjectURL(webmBlob);
+              link = $("<a href='" + url + "'>Download</a>");
+              return console.log(link);
+            }
+          }
         }
       });
     };
@@ -31,12 +47,6 @@
                 thumbnailURL: image
               }
             ]);
-            $.publish("/gallery/add", [
-              {
-                name: name,
-                image: image
-              }
-            ]);
             return $.unsubscribe(token);
           });
           return $.publish("/postman/deliver", [
@@ -46,65 +56,10 @@
             }, "/file/save"
           ]);
         });
-        $.subscribe("/capture/video/record", function() {
-          var frames, recordBuffer, recordBufferCanvas, stopToken, streamToken, transcode;
-          console.log("Recording...");
-          recordBufferCanvas = document.createElement("canvas");
-          recordBufferCanvas.width = 720;
-          recordBufferCanvas.height = 480;
-          recordBuffer = recordBufferCanvas.getContext("2d");
-          transcode = function() {
-            var blob, frames, i, pair, video, _i, _len, _ref;
-            video = new Whammy.Video();
-            _ref = (function() {
-              var _j, _ref, _results;
-              _results = [];
-              for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
-                _results.push(frames.slice(i, i + 2));
-              }
-              return _results;
-            })();
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              pair = _ref[_i];
-              video.add(pair[0].imageData, pair[1].time - pair[0].time);
-            }
-            blob = video.compile();
-            frames = [];
-            return console.log(window.URL.createObjectURL(blob));
-          };
+        $.subscribe("/capture/video", function() {
           frames = [];
-          streamToken = $.subscribe("/camera/stream", function(message) {
-            return frames.push({
-              imageData: message.canvas.getContext("2d").getImageData(0, 0, message.canvas.width, message.canvas.height),
-              time: Date.now()
-            });
-          });
-          stopToken = $.subscribe("/camera/video/stop", function() {
-            var framesDone, i, _i, _ref, _results;
-            $.unsubscribe(stopToken);
-            $.unsubscribe(streamToken);
-            framesDone = 0;
-            _results = [];
-            for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-              _results.push(setTimeout((function(i) {
-                return function() {
-                  recordBuffer.putImageData(frames[i].imageData, 0, 0);
-                  frames[i] = {
-                    imageData: recordBufferCanvas.toDataURL('image/webp', 1),
-                    time: frames[i].time
-                  };
-                  ++framesDone;
-                  if (framesDone === frames.length) {
-                    return transcode();
-                  }
-                };
-              })(i), 0));
-            }
-            return _results;
-          });
-          return setTimeout((function() {
-            return $.publish("/camera/video/stop", []);
-          }), 6000);
+          recordStart = Date.now();
+          return record = true;
         });
         kendo.fx.grow = {
           setup: function(element, options) {
@@ -153,7 +108,6 @@
             }
           });
         });
-        $.subscribe("/capture/image", function() {});
         $.subscribe("/full/flash", function() {
           $flash.show();
           return $flash.kendoStop(true).kendoAnimate({
