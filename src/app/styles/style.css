@@ -255,7 +255,7 @@ body > #wrap {height: auto; min-height: 100%;}
 /* Gallery styles */
 
 #gallery {
-	display: none;
+	display: -webkit-box;
 	height: 100%;
 	padding: 0;
 }
