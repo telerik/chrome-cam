@@ -1,7 +1,11 @@
 (function() {
 
   define(['mylibs/utils/utils', 'text!mylibs/full/views/full.html', 'libs/webgl/glfx'], function(utils, fullTemplate) {
+<<<<<<< HEAD
     var $flash, canvas, ctx, draw, flash, frame, frames, paused, preview, pub, recording, webgl;
+=======
+    var canvas, ctx, draw, frame, frames, paused, preview, pub, recording, webgl;
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
     canvas = {};
     ctx = {};
     preview = {};
@@ -11,7 +15,10 @@
     frame = 0;
     frames = [];
     recording = false;
+<<<<<<< HEAD
     $flash = {};
+=======
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         if (!paused) {
@@ -57,7 +64,11 @@
             }, "/file/save"
           ]);
         });
+<<<<<<< HEAD
         $.subscribe("/capture/video", function() {
+=======
+        $.subscribe("/capture/video/record", function() {
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
           console.log("Recording...");
           frames = [];
           recording = true;

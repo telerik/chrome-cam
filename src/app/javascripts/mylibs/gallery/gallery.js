@@ -42,32 +42,15 @@
         return console.log(fileName);
       });
       $.subscribe("/gallery/hide", function() {
-        $container.kendoStop().kendoAnimate({
-          effect: "slide:down",
-          duration: 1000,
-          hide: true
-        });
-        return $("#preview").kendoStop().kendoAnimate({
-          effect: "slideIn:down",
-          duration: 1000,
-          show: true,
-          complete: function() {
-            return $.publish("/previews/pause", [false]);
-          }
+        $container.hide();
+        return $("#wrap").show(function() {
+          return $.publish("/previews/pause", [false]);
         });
       });
       $.subscribe("/gallery/list", function() {
         $.publish("/previews/pause", [true]);
-        $container.kendoStop().kendoAnimate({
-          effect: "slideIn:up",
-          duration: 1000,
-          show: true
-        });
-        return $("#preview").kendoStop().kendoAnimate({
-          effect: "slide:up",
-          duration: 1000,
-          hide: true
-        });
+        $container.show();
+        return $("#wrap").hide();
       });
       return $.subscribe("/gallery/page", function(dataSource) {
         return createPage(dataSource, $container);

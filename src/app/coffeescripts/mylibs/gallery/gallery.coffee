@@ -41,27 +41,13 @@ define [
             console.log fileName
 
         $.subscribe "/gallery/hide", ->
-            $container.kendoStop().kendoAnimate
-                effect: "slide:down"
-                duration: 1000
-                hide: true
-            $("#preview").kendoStop().kendoAnimate
-                effect: "slideIn:down"
-                duration: 1000
-                show: true
-                complete: ->
-                    $.publish "/previews/pause", [false]
+            $container.hide()
+            $("#wrap").show -> $.publish "/previews/pause", [false]
 
         $.subscribe "/gallery/list", ->
             $.publish "/previews/pause", [true]
-            $container.kendoStop().kendoAnimate
-                effect: "slideIn:up"
-                duration: 1000
-                show: true
-            $("#preview").kendoStop().kendoAnimate
-                effect: "slide:up"
-                duration: 1000
-                hide: true
+            $container.show()
+            $("#wrap").hide()
 
         $.subscribe "/gallery/page", (dataSource) ->
             createPage dataSource, $container

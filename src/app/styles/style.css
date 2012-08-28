@@ -156,14 +156,18 @@ body > #wrap {height: auto; min-height: 100%;}
 	-webkit-box-pack: center;
 	-webkit-box-orient: horizontal;
 }
-	.half + .half { margin-top: 27px; }
+	.half + .half, .gallery-row + .gallery-row { margin-top: 27px; }
 
 .preview { margin-left: 27px; }
-	.half .preview:first-child { margin-left: 0px; }
+.thumbnail { margin-left: 25px; }
+	.half .preview:first-child, .thumbnail:first-child { margin-left: 0px; }
 
 .preview > div {
 	width: 360px;
 	height: 280px;
+}
+
+.preview > div, .thumbnail {
 	background: white;
     box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
     border-radius: 2px;
@@ -177,6 +181,30 @@ body > #wrap {height: auto; min-height: 100%;}
 	position: absolute;
 	width: 360px;
 	height: 240px;
+}
+
+/* Gallery styles */
+
+#gallery {
+	display: -webkit-box;
+	height: 100%;
+	padding: 20px 0 0;
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
+	-webkit-box-orient: vertical;
+}
+
+#gallery .gallery-row {
+	display: -webkit-box;
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
+	-webkit-box-orient: horizontal;
+}
+
+#gallery .thumbnail {
+	text-align: center;
+	width: 270px;
+	height: 257px;
 }
 
 .mode {
@@ -193,7 +221,7 @@ body > #wrap {height: auto; min-height: 100%;}
 
 .mode a {
 	display: block;
-	width: 35px;
+	width: 36px;
 	height: 30px;
 	background-color: rgba(244, 244, 244, 0.3);
 	border: 1px solid rgba(244, 244, 244, .3);
@@ -203,7 +231,7 @@ body > #wrap {height: auto; min-height: 100%;}
 }
 
 	.mode .photo { background-position: 50% 6px; }
-	.mode .video { background-position: 50% -30px; }
+	.mode .video { background-position: 50% -29px; }
 	.mode .paparazzi { background-position: 50% -68px; }
 	.mode .active { background-color: #C0C0C0; }
 
@@ -251,22 +279,6 @@ body > #wrap {height: auto; min-height: 100%;}
 	width: 100%;
 	height: 100%;
 	background-color: #EDEDED;
-}
-/* Gallery styles */
-
-#gallery {
-	display: none;
-	height: 100%;
-	padding: 0;
-}
-
-#gallery .gallery-row {
-	display: -webkit-box;
-}
-
-#gallery .thumbnail {
-	-webkit-box-flex: 1;
-	text-align: center;
 }
 
 /* loader styles */

@@ -14,6 +14,7 @@
         };
       },
       createVideo: function(frames) {
+<<<<<<< HEAD
         var canvas, ctx, framesDone, i, transcode, _ref, _results;
         transcode = function() {
           var blob, i, name, pair, video, _i, _len, _ref;
@@ -23,6 +24,17 @@
             _results = [];
             for (i = 0, _ref = frames.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
               _results.push(frames.slice(i, (i + 2)));
+=======
+        var canvas, ctx, framesDone, i, transcode, _i, _ref, _results;
+        transcode = function() {
+          var blob, i, pair, video, _i, _len, _ref;
+          video = new Whammy.Video();
+          _ref = (function() {
+            var _j, _ref, _results;
+            _results = [];
+            for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
+              _results.push(frames.slice(i, i + 2));
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
             }
             return _results;
           })();
@@ -32,6 +44,7 @@
           }
           blob = video.compile();
           frames = [];
+<<<<<<< HEAD
           name = new Date().getTime() + ".webm";
           console.log("Recording Done!");
           return $.publish("/postman/deliver", [
@@ -40,6 +53,9 @@
               file: blob
             }, "/file/save"
           ]);
+=======
+          return console.log(window.URL.createObjectURL(blob));
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
         };
         canvas = document.createElement("canvas");
         canvas.width = 720;
@@ -47,8 +63,13 @@
         ctx = canvas.getContext("2d");
         framesDone = 0;
         _results = [];
+<<<<<<< HEAD
         for (i = 0, _ref = frames.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
           _results.push((function(i) {
+=======
+        for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+          _results.push(setTimeout((function(i) {
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
             var imageData, videoData;
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             videoData = new Uint8ClampedArray(frames[i].imageData);
@@ -59,8 +80,15 @@
               time: frames[i].time
             };
             ++framesDone;
+<<<<<<< HEAD
             if (framesDone === frames.length) return transcode();
           })(i));
+=======
+            if (framesDone === frames.length) {
+              return transcode();
+            }
+          })(i)));
+>>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
         }
         return _results;
       }
