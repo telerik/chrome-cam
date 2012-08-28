@@ -11,6 +11,10 @@ define([
 	preview = {}
 	paused = true
 	frame = 0
+	frames = []
+	record = false
+	recordStart = 0
+	VIDEO_MAX = 6
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -31,6 +35,26 @@ define([
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
 	            preview.filter(webgl, stream.canvas, frame, stream.track)
+
+	            # check if we're recording. if so, pop this canvas to the frame buffer
+	            if record
+
+	            	# check the video length. we can only do 6 seconds
+	            	length = (Date.now() - recordStart) / 1000
+	
+	            	# take the current webgl canvas an extract a webp image.
+	            	# push that image into an array that we can stitch together
+	            	# to make the webm video
+		            frames.push webgl.toDataURL('image/webp', 1)
+
+		            if length > VIDEO_MAX
+
+		            	record = false
+
+		            	webmBlob = Whammy.fromImageArray(frames, 1000 / 60)
+		            	url = window.URL.createObjectURL(webmBlob)
+		            	link = $("<a href='#{url}'>Download</a>")
+		            	console.log link
 
 	pub = 
 
@@ -55,6 +79,12 @@ define([
 				# save the image to the file system. this is up to the extension
 				# to handle
 				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
+
+			$.subscribe "/capture/video", ->
+
+  				frames = []
+  				recordStart = Date.now()
+  				record = true
 
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
@@ -190,9 +220,6 @@ define([
 				# })
 	
 				# $container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 200 }
-
-			# subscribe to the capture image event
-			$.subscribe "/capture/image", ->
 
 			# subscribe to the flash event
 			$.subscribe "/full/flash", ->

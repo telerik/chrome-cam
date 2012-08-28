@@ -7,8 +7,9 @@ define([
   'mylibs/utils/utils'
   'mylibs/gallery/gallery'
   'mylibs/events/events'
+  'libs/record/record'
   'text!intro.html'
-], (camera, bar, preview, full, postman, utils, gallery, events, intro) ->
+], (camera, bar, preview, full, postman, utils, gallery, events, record, intro) ->
 	
 	pub = 
 		    
