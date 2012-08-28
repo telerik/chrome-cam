@@ -70,28 +70,18 @@ define([
 				frames = []
 
 				recording = true
-					
-
-				# stopToken = $.subscribe "/camera/video/stop", ->
-				# 	$.unsubscribe stopToken
-				# 	$.unsubscribe streamToken
-
-				# 	framesDone = 0;
-				# 	for i in [0...frames.length]
-				# 		setTimeout do (i) ->
-				# 			->
-				# 				recordBuffer.putImageData frames[i].imageData, 0, 0
-				# 				frames[i] = imageData: recordBufferCanvas.toDataURL('image/webp', 1), time: frames[i].time
-				# 				++framesDone
-				# 				if framesDone == frames.length
-				# 					transcode()
-				# 		, 0
 
 				setTimeout (-> 
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
 				), 6000
+
+			$.subscribe "/capture/video", ->
+
+  				frames = []
+  				recordStart = Date.now()
+  				record = true
 
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
@@ -227,9 +217,6 @@ define([
 				# })
 	
 				# $container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 200 }
-
-			# subscribe to the capture image event
-			$.subscribe "/capture/image", ->
 
 			# subscribe to the flash event
 			$.subscribe "/full/flash", ->

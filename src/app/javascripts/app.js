@@ -1,6 +1,6 @@
 (function() {
 
-  define(['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/events/events', 'text!intro.html'], function(camera, bar, preview, full, postman, utils, gallery, events, intro) {
+  define(['mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/events/events', 'libs/record/record', 'text!intro.html'], function(camera, bar, preview, full, postman, utils, gallery, events, record, intro) {
     var pub;
     return pub = {
       init: function() {

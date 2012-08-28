@@ -29,7 +29,6 @@
                     return countdown(position);
                   }, 500);
                 } else {
-                  console.log("clicky!");
                   $.publish("/full/flash");
                   $.publish("/capture/" + recordMode);
                   $capture.kendoStop(true).kendoAnimate({
@@ -48,11 +47,11 @@
           };
           return countdown(0);
         });
-        $content.find(".galleryLink").toggle((function() {
-          return $.publish("/gallery/list");
-        }), (function() {
-          return $.publish("/gallery/hide");
-        }));
+        $content.find(".galleryLink").toggle(function() {
+          return $.publish("/gallery/list", function() {
+            return $.publish("/gallery/hide");
+          });
+        });
         $container.append($content);
         $.subscribe("/bar/preview/update", function(message) {
           var $image;

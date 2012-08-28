@@ -173,6 +173,12 @@ body > #wrap {height: auto; min-height: 100%;}
 	-webkit-border-image: -webkit-linear-gradient(#c4c4c4, #bbb) 1 100%;
 }
 
+.preview .loading {
+	position: absolute;
+	width: 360px;
+	height: 240px;
+}
+
 .mode {
 	list-style-type: none;
 	position: relative;
@@ -189,15 +195,20 @@ body > #wrap {height: auto; min-height: 100%;}
 	display: block;
 	width: 35px;
 	height: 30px;
-	background: #F4F4F4;
-	border: 1px solid #d9d9d9;
+	background-color: rgba(244, 244, 244, 0.3);
+	border: 1px solid rgba(244, 244, 244, .3);
 	background-repeat: no-repeat;
-	background-image: url('images/cameraModeSprite.png');
+/*	background-image: url('images/cameraModeSprite.png'); */
+    background-image: url('images/cameraModeSpritex2.png');
+    background-size: 24px 95px;
 }
+
 	.mode .photo { background-position: 50% 6px; }
 	.mode .video { background-position: 50% -30px; }
 	.mode .paparazzi { background-position: 50% -68px; }
 	.mode .active { background-color: #C0C0C0; }
+
+.mode a:hover { background-color: rgba(244, 244, 244, 0.5); }
 
 .mode li:first-child a {
 	border-bottom-left-radius: 2px;
@@ -210,7 +221,6 @@ body > #wrap {height: auto; min-height: 100%;}
 	border-top-right-radius: 2px;
 	border-left: 0px solid transparent;
 }
-
 
 .preview-title {
 	text-align: center;
@@ -276,4 +286,50 @@ body > #wrap {height: auto; min-height: 100%;}
 #gallery .thumbnails .date {
 	display: block;
 	font-size: 0.7em;
+}
+
+/* loader styles */
+
+#circleG{
+width:149.33333333333334px;
+}
+
+.circleG{
+background-color:#FFFFFF;
+float:left;
+height:32px;
+margin-left:17px;
+width:32px;
+-webkit-animation-name:bounce_circleG;
+-webkit-border-radius:21px;
+-webkit-animation-duration:1.9500000000000002s;
+-webkit-animation-iteration-count:infinite;
+-webkit-animation-direction:linear;
+opacity:0.3;
+border-radius:21px;
+}
+
+#circleG_1{
+-webkit-animation-delay:0.39s;
+}
+
+#circleG_2{
+-webkit-animation-delay:0.91s;
+}
+
+#circleG_3{
+-webkit-animation-delay:1.17s;
+}
+
+@-webkit-keyframes bounce_circleG{
+0%{
+opacity:0.3}
+
+50%{
+opacity:1;
+background-color:#000000}
+
+100%{
+opacity:0.3}
+
 }

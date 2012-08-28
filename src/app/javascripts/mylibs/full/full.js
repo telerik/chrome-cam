@@ -57,6 +57,12 @@
             return recording = false;
           }), 6000);
         });
+        $.subscribe("/capture/video", function() {
+          var record, recordStart;
+          frames = [];
+          recordStart = Date.now();
+          return record = true;
+        });
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({
@@ -104,7 +110,6 @@
             }
           });
         });
-        $.subscribe("/capture/image", function() {});
         $.subscribe("/full/flash", function() {
           $flash.show();
           return $flash.kendoStop(true).kendoAnimate({
