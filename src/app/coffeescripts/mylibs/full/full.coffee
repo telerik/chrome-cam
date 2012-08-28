@@ -77,12 +77,6 @@ define([
 					recording = false
 				), 6000
 
-			$.subscribe "/capture/video", ->
-
-  				frames = []
-  				recordStart = Date.now()
-  				record = true
-
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
 				setup: (element, options) ->

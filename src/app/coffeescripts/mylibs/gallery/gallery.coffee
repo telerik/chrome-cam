@@ -1,20 +1,40 @@
 define [
     'mylibs/utils/utils',
     'text!mylibs/gallery/views/gallery.html'
-], (utils, template) ->
+], (utils, templateSource) ->
+    template = kendo.template(templateSource)
+
     loadImages = ->
         deferred = $.Deferred()
 
         token = $.subscribe "/pictures/bulk", (result) ->
+            if result.message instanceof Array and result.message.length > 0
+                $.publish "/bar/preview/update", [thumbnailURL: result.message[-1..][0].image]
+
             $.unsubscribe token
             dataSource = new kendo.data.DataSource
                 data: result.message
                 pageSize: 12
+                change: ->
+                    $.publish "/gallery/page", [ dataSource ]
+            dataSource.read()
+
             deferred.resolve dataSource
 
         $.publish "/postman/deliver", [ {}, "/file/read", [] ]
 
         deferred.promise()
+
+    createPage = (dataSource, $container) -> 
+        # handle paging now!
+        rowLength = 4
+        rows = [
+            dataSource.view()[0 * rowLength ... 1 * rowLength]
+            dataSource.view()[1 * rowLength ... 2 * rowLength]
+            dataSource.view()[2 * rowLength ... 3 * rowLength]
+        ]
+
+        $container.html template(rows: rows)
 
     setupSubscriptionEvents = ($container) ->
         $.subscribe "/gallery/show", (fileName) ->
@@ -43,19 +63,17 @@ define [
                 duration: 1000
                 hide: true
 
+        $.subscribe "/gallery/page", (dataSource) ->
+            createPage dataSource, $container
+
     pub =
         init: (selector) ->
             $container = $(selector)
-            $container.append $(template)
-
-            $thumbnailList = $(".thumbnails", $container)
 
             # after loading the images
             loadImages().done (dataSource) ->
-                console.log dataSource
-
                 # set up the DOM events
-                $thumbnailList.on "click", ".thumbnail", ->
+                $container.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]
 
                 # TODO: add transition effect...
@@ -68,6 +86,8 @@ define [
 
                 setupSubscriptionEvents $container
                 
-                $thumbnailList.kendoListView
-                    template: kendo.template $("#gallery-thumbnail").html()
-                    dataSource: dataSource
+                # TODO: trigger refresh of items in list
+                $.subscribe "/gallery/add", (file) ->
+                    dataSource.add file
+
+                $.publish "/gallery/page", [ dataSource ]

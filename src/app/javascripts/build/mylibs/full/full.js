@@ -31,6 +31,12 @@
                 thumbnailURL: image
               }
             ]);
+            $.publish("/gallery/add", [
+              {
+                name: name,
+                image: image
+              }
+            ]);
             return $.unsubscribe(token);
           });
           return $.publish("/postman/deliver", [

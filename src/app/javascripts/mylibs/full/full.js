@@ -57,12 +57,6 @@
             return recording = false;
           }), 6000);
         });
-        $.subscribe("/capture/video", function() {
-          var record, recordStart;
-          frames = [];
-          recordStart = Date.now();
-          return record = true;
-        });
         kendo.fx.grow = {
           setup: function(element, options) {
             return $.extend({
