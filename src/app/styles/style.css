@@ -192,14 +192,9 @@ body > #wrap {height: auto; min-height: 100%;}
 	background-color: rgba(244, 244, 244, 0.3);
 	border: 1px solid rgba(244, 244, 244, .3);
 	background-repeat: no-repeat;
-	background-image: url('images/cameraModeSprite.png');
-}
-
-@media only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 2dppx) {
-  .mode a {
+/*	background-image: url('images/cameraModeSprite.png'); */
     background-image: url('images/cameraModeSpritex2.png');
     background-size: 24px 95px;
-  }
 }
 
 	.mode .photo { background-position: 50% 6px; }
