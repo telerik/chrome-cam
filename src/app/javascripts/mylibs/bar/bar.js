@@ -1,7 +1,8 @@
 (function() {
 
   define(['text!mylibs/bar/views/bar.html'], function(template) {
-    var pub;
+    var pub, recordMode;
+    recordMode = "image";
     return pub = {
       init: function(selector) {
         var $capture, $container, $content, $counters;
@@ -29,7 +30,7 @@
                   }, 500);
                 } else {
                   $.publish("/full/flash");
-                  $.publish("/capture/image");
+                  $.publish("/capture/" + recordMode);
                   $capture.kendoStop(true).kendoAnimate({
                     effects: "zoomIn fadeIn",
                     duration: 100,
@@ -54,6 +55,7 @@
         $container.append($content);
         $.subscribe("/bar/preview/update", function(message) {
           var $image;
+          console.log(message);
           $image = $("<img />", {
             src: message.thumbnailURL,
             width: 72,
@@ -68,12 +70,22 @@
             duration: 200
           });
         });
-        return $.subscribe("/bar/capture/hide", function() {
+        $.subscribe("/bar/capture/hide", function() {
           return $capture.kendoStop(true).kendoAnimate({
             effects: "slide:down",
             show: true,
             duration: 200
           });
+        });
+        $(".photo", $container).on("click", function() {
+          $(".mode a", $container).removeClass("active");
+          $(this).addClass("active");
+          return recordMode = "image";
+        });
+        return $(".video", $container).on("click", function() {
+          $(".mode a", $container).removeClass("active");
+          $(this).addClass("active");
+          return recordMode = "video/record";
         });
       }
     };

@@ -1,7 +1,7 @@
 (function() {
 
   define(['mylibs/utils/utils', 'text!mylibs/full/views/full.html', 'libs/webgl/glfx'], function(utils, fullTemplate) {
-    var VIDEO_MAX, canvas, ctx, draw, frame, frames, paused, preview, pub, record, recordStart, webgl;
+    var canvas, ctx, draw, frame, frames, paused, preview, pub, recording, webgl;
     canvas = {};
     ctx = {};
     preview = {};
@@ -10,25 +10,17 @@
     paused = true;
     frame = 0;
     frames = [];
-    record = false;
-    recordStart = 0;
-    VIDEO_MAX = 6;
+    recording = false;
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var length, link, url, webmBlob;
         if (!paused) {
           frame++;
           preview.filter(webgl, stream.canvas, frame, stream.track);
-          if (record) {
-            length = (Date.now() - recordStart) / 1000;
-            frames.push(webgl.toDataURL('image/webp', 1));
-            if (length > VIDEO_MAX) {
-              record = false;
-              webmBlob = Whammy.fromImageArray(frames, 1000 / 60);
-              url = window.URL.createObjectURL(webmBlob);
-              link = $("<a href='" + url + "'>Download</a>");
-              return console.log(link);
-            }
+          if (recording) {
+            return frames.push({
+              imageData: webgl.getPixelArray(),
+              time: Date.now()
+            });
           }
         }
       });
@@ -55,10 +47,15 @@
             }, "/file/save"
           ]);
         });
-        $.subscribe("/capture/video", function() {
+        $.subscribe("/capture/video/record", function() {
+          console.log("Recording...");
           frames = [];
-          recordStart = Date.now();
-          return record = true;
+          recording = true;
+          return setTimeout((function() {
+            utils.createVideo(frames);
+            console.log("Recording Done!");
+            return recording = false;
+          }), 6000);
         });
         kendo.fx.grow = {
           setup: function(element, options) {

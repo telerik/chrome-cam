@@ -1,6 +1,6 @@
 (function() {
 
-  require(['app', 'order!libs/jquery/plugins', 'libs/webgl/glfx'], function(app) {
+  require(['app', 'order!libs/jquery/plugins', 'order!libs/whammy/whammy', 'libs/webgl/glfx'], function(app) {
     return app.init();
   });
 

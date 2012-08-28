@@ -35,4 +35,6 @@ libs/jquery/jquery.masonry.min.js
 order!libs/jquery/jquery.masonry.min
 libs/jquery/plugins.js
 order!libs/jquery/plugins
+libs/whammy/whammy.js
+order!libs/whammy/whammy
 main.js

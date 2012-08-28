@@ -12,9 +12,7 @@ define([
 	paused = true
 	frame = 0
 	frames = []
-	record = false
-	recordStart = 0
-	VIDEO_MAX = 6
+	recording = false
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -36,25 +34,10 @@ define([
 	            # video drawn from the application canvas and the current frame.
 	            preview.filter(webgl, stream.canvas, frame, stream.track)
 
-	            # check if we're recording. if so, pop this canvas to the frame buffer
-	            if record
+	            # if we are recording, dump this canvas to a pixel array
+	            if recording
 
-	            	# check the video length. we can only do 6 seconds
-	            	length = (Date.now() - recordStart) / 1000
-	
-	            	# take the current webgl canvas an extract a webp image.
-	            	# push that image into an array that we can stitch together
-	            	# to make the webm video
-		            frames.push webgl.toDataURL('image/webp', 1)
-
-		            if length > VIDEO_MAX
-
-		            	record = false
-
-		            	webmBlob = Whammy.fromImageArray(frames, 1000 / 60)
-		            	url = window.URL.createObjectURL(webmBlob)
-		            	link = $("<a href='#{url}'>Download</a>")
-		            	console.log link
+	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
 
 	pub = 
 
@@ -80,11 +63,19 @@ define([
 				# to handle
 				$.publish "/postman/deliver", [  name: name, image: image, "/file/save" ]
 
-			$.subscribe "/capture/video", ->
+			$.subscribe "/capture/video/record", ->
 
-  				frames = []
-  				recordStart = Date.now()
-  				record = true
+				console.log "Recording..."
+
+				frames = []
+
+				recording = true
+
+				setTimeout (-> 
+					utils.createVideo frames
+					console.log("Recording Done!")
+					recording = false
+				), 6000
 
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
