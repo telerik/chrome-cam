@@ -189,15 +189,29 @@ body > #wrap {height: auto; min-height: 100%;}
 	display: block;
 	width: 35px;
 	height: 30px;
-	background: #F4F4F4;
-	border: 1px solid #d9d9d9;
+	background-color: rgba(244, 244, 244, 0.3);
+	border: 1px solid rgba(244, 244, 244, .3);
 	background-repeat: no-repeat;
 	background-image: url('images/cameraModeSprite.png');
 }
+
+@media (min--moz-device-pixel-ratio: 1.5),
+       (-o-min-device-pixel-ratio: 3/2),
+       (-webkit-min-device-pixel-ratio: 1.5),
+       (min-device-pixel-ratio: 1.5),
+       (min-resolution: 1.5dppx) {
+  .mode a{
+    background-image: url('images/cameraModeSpritex2.png');
+    background-size: 24px 95px;
+  }
+}
+
 	.mode .photo { background-position: 50% 6px; }
 	.mode .video { background-position: 50% -30px; }
 	.mode .paparazzi { background-position: 50% -68px; }
 	.mode .active { background-color: #C0C0C0; }
+
+.mode a:hover { background-color: rgba(244, 244, 244, 0.5); }
 
 .mode li:first-child a {
 	border-bottom-left-radius: 2px;
@@ -210,7 +224,6 @@ body > #wrap {height: auto; min-height: 100%;}
 	border-top-right-radius: 2px;
 	border-left: 0px solid transparent;
 }
-
 
 .preview-title {
 	text-align: center;
