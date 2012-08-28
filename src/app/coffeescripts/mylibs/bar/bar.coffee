@@ -68,11 +68,11 @@ define([
 
 				countdown(0)
 
-			# link to show or hide the gallery
-			$content.find(".galleryLink").toggle -> $.publish "/gallery/list", -> $.publish "/gallery/hide"
-
 			# append it to the container
 			$container.append $content
+
+			# link to show or hide the gallery
+			$content.find(".galleryLink").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
 
 			$.subscribe "/bar/preview/update", (message) ->
 				console.log message
