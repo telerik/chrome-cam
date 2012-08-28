@@ -195,8 +195,8 @@ body > #wrap {height: auto; min-height: 100%;}
 	background-image: url('images/cameraModeSprite.png');
 }
 
-@media (min-device-pixel-ratio: 1.5) {
-  .mode a{
+@media only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 2dppx) {
+  .mode a {
     background-image: url('images/cameraModeSpritex2.png');
     background-size: 24px 95px;
   }
