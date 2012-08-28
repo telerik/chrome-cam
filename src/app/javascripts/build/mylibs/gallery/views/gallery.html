@@ -1,8 +1,9 @@
-<div class="thumbnails">
-</div>
-
-<script type="text/x-kendo-template" id="gallery-thumbnail">
-    <div class="thumbnail" draggable="true" data-file-name="${name}">
-        <img src="${image}" width="270" height="180">
-    </div>
-</script>
+# for (var row = 0; row < rows.length; ++row) { #
+	<div class="gallery-row">
+		# for (var col = 0; col < rows[row].length; ++col) { #
+			<div class="thumbnail" draggable="true">
+				<img src="#: rows[row][col].image #" width="270" height="180">
+			</div>
+		# } #
+	</div>
+# } #
