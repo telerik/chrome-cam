@@ -120,8 +120,8 @@ define([
             ctx = canvas.getContext("2d")
 
             # set the width and height of the previews
-            canvas.width = 360 
-            canvas.height= 240
+            canvas.width = webgl.width = 360 
+            canvas.height= webgl.width = 240
             
             # the container for this DOM fragment is passed in by the module
             # which calls it's init. grab it from the DOM and cache it.
@@ -191,7 +191,9 @@ define([
                                 preview = {}
                                 $.extend(preview, item)
 
-                                preview.canvas = fx.canvas()         
+                                preview.canvas = fx.canvas()   
+                                preview.canvas.width = canvas.width
+                                preview.canvas.height = canvas.height      
 
                                 # run the DOM template through a kendo ui template
                                 content = $template({ name: preview.name })
