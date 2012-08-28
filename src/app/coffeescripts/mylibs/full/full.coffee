@@ -11,6 +11,8 @@ define([
 	preview = {}
 	paused = true
 	frame = 0
+	frames = []
+	recording = false
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -31,6 +33,11 @@ define([
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
 	            preview.filter(webgl, stream.canvas, frame, stream.track)
+
+	            # if we are recording, dump this canvas to a pixel array
+	            if recording
+
+	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
 
 	pub = 
 
@@ -60,41 +67,31 @@ define([
 
 				console.log "Recording..."
 
-				recordBufferCanvas = document.createElement("canvas")
-				recordBufferCanvas.width = 720
-				recordBufferCanvas.height = 480
-				recordBuffer = recordBufferCanvas.getContext("2d")
-
-				transcode = ->
-					video = new Whammy.Video()
-					for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
-						video.add pair[0].imageData, pair[1].time - pair[0].time
-
-					blob = video.compile()
-					frames = []
-					console.log window.URL.createObjectURL(blob)
-
 				frames = []
 
-				streamToken = $.subscribe "/camera/stream", (message) ->
-					frames.push imageData: message.canvas.getContext("2d").getImageData(0, 0, message.canvas.width, message.canvas.height), time: Date.now()
+				recording = true
+					
 
-				stopToken = $.subscribe "/camera/video/stop", ->
-					$.unsubscribe stopToken
-					$.unsubscribe streamToken
+				# stopToken = $.subscribe "/camera/video/stop", ->
+				# 	$.unsubscribe stopToken
+				# 	$.unsubscribe streamToken
 
-					framesDone = 0;
-					for i in [0...frames.length]
-						setTimeout do (i) ->
-							->
-								recordBuffer.putImageData frames[i].imageData, 0, 0
-								frames[i] = imageData: recordBufferCanvas.toDataURL('image/webp', 1), time: frames[i].time
-								++framesDone
-								if framesDone == frames.length
-									transcode()
-						, 0
+				# 	framesDone = 0;
+				# 	for i in [0...frames.length]
+				# 		setTimeout do (i) ->
+				# 			->
+				# 				recordBuffer.putImageData frames[i].imageData, 0, 0
+				# 				frames[i] = imageData: recordBufferCanvas.toDataURL('image/webp', 1), time: frames[i].time
+				# 				++framesDone
+				# 				if framesDone == frames.length
+				# 					transcode()
+				# 		, 0
 
-				setTimeout (-> $.publish "/camera/video/stop", []), 6000
+				setTimeout (-> 
+					utils.createVideo frames
+					console.log("Recording Done!")
+					recording = false
+				), 6000
 
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
