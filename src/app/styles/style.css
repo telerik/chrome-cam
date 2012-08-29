@@ -9,9 +9,7 @@ html, body, #wrap {
 	overflow: hidden;
 }
 
-body > #wrap {height: auto; min-height: 100%;}
-
-#main { padding-bottom: 150px; }  /* must be same height as the footer */
+body > #wrap { height: 100%;}
 
 .hidden {
 	display: none;
@@ -132,7 +130,7 @@ body > #wrap {height: auto; min-height: 100%;}
 }
 
 #preview > div {
-	position: absolute;
+	/* position: absolute; */
 }
 
 #select {
@@ -192,6 +190,8 @@ body > #wrap {height: auto; min-height: 100%;}
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
 	-webkit-box-orient: vertical;
+	z-index: 200;
+	background-color: #f1f1f1;
 }
 
 #gallery .gallery-row {
