@@ -6,11 +6,15 @@
     return pub = {
       init: function() {
         return $(document).keydown(function(e) {
-          if (e.keyCode === 37) {
-            $.publish("/events/key/arrow", ["left"]);
-          }
-          if (e.keyCode === 39) {
-            return $.publish("/events/key/arrow", ["right"]);
+          var arrowKeys;
+          arrowKeys = {
+            37: "left",
+            39: "right",
+            38: "up",
+            40: "down"
+          };
+          if (e.keyCode in arrowKeys) {
+            return $.publish("/events/key/arrow", arrowKeys[e.keyCode]);
           }
         });
       }

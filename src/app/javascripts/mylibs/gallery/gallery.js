@@ -39,19 +39,36 @@
       }));
     };
     setupSubscriptionEvents = function($container) {
+      kendo.fx.hide = {
+        setup: function(element, options) {
+          return $.extend({
+            height: 25
+          }, options.properties);
+        }
+      };
       $.subscribe("/gallery/show", function(fileName) {
         return console.log(fileName);
       });
       $.subscribe("/gallery/hide", function() {
         $container.hide();
-        return $("#wrap").show(function() {
-          return $.publish("/previews/pause", [false]);
+        return $("#wrap").kendoStop(true).kendoAnimate({
+          effects: "expandVertical",
+          show: true,
+          duration: 1000,
+          done: function() {
+            return $.publish("/camera/pause", [false]);
+          }
         });
       });
       $.subscribe("/gallery/list", function() {
-        $.publish("/previews/pause", [true]);
+        $.publish("/camera/pause", [true]);
         $container.show();
-        return $("#wrap").hide();
+        return $("#wrap").kendoStop(true).kendoAnimate({
+          effects: "expandVertical",
+          reverse: true,
+          hide: true,
+          duration: 1000
+        });
       });
       return $.subscribe("/gallery/page", function(dataSource) {
         return createPage(dataSource, $container);

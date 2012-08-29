@@ -37,17 +37,32 @@ define [
         $container.html template(rows: rows)
 
     setupSubscriptionEvents = ($container) ->
+
+        kendo.fx.hide =
+            setup: (element, options) ->
+                $.extend { height: 25 }, options.properties
+
         $.subscribe "/gallery/show", (fileName) ->
             console.log fileName
 
         $.subscribe "/gallery/hide", ->
             $container.hide()
-            $("#wrap").show -> $.publish "/previews/pause", [false]
+            $("#wrap").kendoStop(true).kendoAnimate
+                effects: "expandVertical"
+                show: true
+                duration: 1000
+                done: ->
+                    $.publish "/camera/pause", [false]
 
         $.subscribe "/gallery/list", ->
-            $.publish "/previews/pause", [true]
+            $.publish "/camera/pause", [true]
             $container.show()
-            $("#wrap").hide()
+
+            $("#wrap").kendoStop(true).kendoAnimate
+                effects: "expandVertical"
+                reverse: true
+                hide: true
+                duration: 1000
 
         $.subscribe "/gallery/page", (dataSource) ->
             createPage dataSource, $container
