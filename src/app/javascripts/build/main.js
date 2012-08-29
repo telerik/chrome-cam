@@ -784,17 +784,18 @@ define("libs/face/face", function(){});
           blob = video.compile();
           frames = [];
           name = new Date().getTime() + ".webm";
-          console.log("Recording Done!");
-          return $.publish("/postman/deliver", [
+          $.publish("/postman/deliver", [
             {
               name: name,
               file: blob
             }, "/file/save"
           ]);
+          $.publish("/bar/time/hide");
+          return $.publish("/bar/capture/show");
         };
         canvas = document.createElement("canvas");
-        canvas.width = 360;
-        canvas.height = 240;
+        canvas.width = 720;
+        canvas.height = 480;
         ctx = canvas.getContext("2d");
         framesDone = 0;
         _results = [];
@@ -1158,14 +1159,15 @@ define('text!mylibs/preview/views/page.html',[],function () { return '<div class
 
 }).call(this);
 
-define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar">\n\t<div class="left">\n\t\t<ul class="mode">\n\t\t\t<li><a href="#" data-mode="image" data-shape="circle" class="photo active" alt="Photo Mode" title="Photo Mode"></a></li>\n\t\t\t<li><a href="#" data-mode="video" data-shape="square" class="video" alt="Video Mode" title="Video Mode"></a></li>\n\t\t\t<li><a href="#" data-mode="paparazzi" data-shape="circle" class="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a></li>\n\t\t</ul>\n\t</div>\n\t<div class="center">\n\t\t<div>\n\t\t\t<div class="capture">\n\t\t\t\t<div class="gray circle">\n\t\t\t\t\t<div class="red-dot circle"></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="countdown">\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div class="right">\n\t\t<a href="#" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery"></a>\n\t</div>\n</div>\n';});
+define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar">\n\t<div class="left">\n\t\t<ul class="mode">\n\t\t\t<li><a href="#" data-mode="image" data-shape="circle" class="photo active" alt="Photo Mode" title="Photo Mode"></a></li>\n\t\t\t<li><a href="#" data-mode="video" data-shape="square" class="video" alt="Video Mode" title="Video Mode"></a></li>\n\t\t\t<li><a href="#" data-mode="paparazzi" data-shape="circle" class="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a></li>\n\t\t</ul>\n\t</div>\n\t<div class="center">\n\t\t<div>\n\t\t\t<div class="capture">\n\t\t\t\t<div class="gray circle">\n\t\t\t\t\t<div class="red-dot circle"></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="countdown">\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t\t<span class="red-dot circle"></span>\n\t\t\t</div>\n\t\t\t<h1 class="white timer"></h1>\n\t\t</div>\n\t</div>\n\t<div class="right">\n\t\t<a href="#" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery"></a>\n\t</div>\n</div>\n';});
 
 (function() {
 
   define('mylibs/bar/bar',['text!mylibs/bar/views/bar.html'], function(template) {
-    var countdown, el, mode, pub;
+    var countdown, el, mode, pub, startTime;
     mode = "image";
     el = {};
+    startTime = 0;
     kendo.fx.circle = {
       setup: function(element, options) {
         return $.extend({
@@ -1208,6 +1210,7 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
         el.$capture = el.$content.find(".capture");
         el.$dot = el.$capture.find("> div > div");
         el.$counters = el.$content.find(".countdown > span");
+        el.$timer = el.$content.find(".timer");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
           return el.$dot.kendoStop().kendoAnimate({
@@ -1220,6 +1223,9 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
               return $.publish("/capture/" + mode);
             });
           } else {
+            startTime = Date.now();
+            el.$capture.hide();
+            el.$timer.show();
             return $.publish("/capture/" + mode);
           }
         });
@@ -1252,6 +1258,16 @@ define('text!mylibs/bar/views/bar.html',[],function () { return '<div class="bar
             show: true,
             duration: 200
           });
+        });
+        $.subscribe("/bar/time/hide", function() {
+          return el.$timer.kendoStop(true).kendoAnimate({
+            effects: "slide:up",
+            hide: true,
+            duration: 200
+          });
+        });
+        $.subscribe("/bar/timer/update", function() {
+          return el.$timer.html(kendo.toString((Date.now() - startTime) / 1000, "00.00"));
         });
         $(".photo", el.$container).on("click", function() {
           var recordMode;
@@ -4006,14 +4022,17 @@ define("libs/webgl/glfx.min", function(){});
     $flash = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
+        var time;
         if (!paused) {
           frame++;
           preview.filter(webgl, stream.canvas, frame, stream.track);
           if (recording) {
-            return frames.push({
+            time = Date.now();
+            frames.push({
               imageData: webgl.getPixelArray(),
               time: Date.now()
             });
+            return $.publish("/bar/timer/update");
           }
         }
       });
