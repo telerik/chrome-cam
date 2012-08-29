@@ -17,6 +17,7 @@ define [
                 pageSize: 12
                 change: ->
                     $.publish "/gallery/page", [ dataSource ]
+            
             dataSource.read()
 
             deferred.resolve dataSource
