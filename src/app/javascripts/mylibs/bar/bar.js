@@ -1,9 +1,10 @@
 (function() {
 
   define(['text!mylibs/bar/views/bar.html'], function(template) {
-    var countdown, el, mode, pub;
+    var countdown, el, mode, pub, startTime;
     mode = "image";
     el = {};
+    startTime = 0;
     kendo.fx.circle = {
       setup: function(element, options) {
         return $.extend({
@@ -46,6 +47,7 @@
         el.$capture = el.$content.find(".capture");
         el.$dot = el.$capture.find("> div > div");
         el.$counters = el.$content.find(".countdown > span");
+        el.$timer = el.$content.find(".timer");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
           return el.$dot.kendoStop().kendoAnimate({
@@ -58,6 +60,9 @@
               return $.publish("/capture/" + mode);
             });
           } else {
+            startTime = Date.now();
+            el.$capture.hide();
+            el.$timer.show();
             return $.publish("/capture/" + mode);
           }
         });
@@ -90,6 +95,16 @@
             show: true,
             duration: 200
           });
+        });
+        $.subscribe("/bar/time/hide", function() {
+          return el.$timer.kendoStop(true).kendoAnimate({
+            effects: "slide:up",
+            hide: true,
+            duration: 200
+          });
+        });
+        $.subscribe("/bar/timer/update", function() {
+          return el.$timer.html(kendo.toString((Date.now() - startTime) / 1000, "00.00"));
         });
         $(".photo", el.$container).on("click", function() {
           var recordMode;

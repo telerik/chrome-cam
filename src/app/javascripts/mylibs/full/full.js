@@ -14,14 +14,17 @@
     $flash = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
+        var time;
         if (!paused) {
           frame++;
           preview.filter(webgl, stream.canvas, frame, stream.track);
           if (recording) {
-            return frames.push({
+            time = Date.now();
+            frames.push({
               imageData: webgl.getPixelArray(),
               time: Date.now()
             });
+            return $.publish("/bar/timer/update");
           }
         }
       });
