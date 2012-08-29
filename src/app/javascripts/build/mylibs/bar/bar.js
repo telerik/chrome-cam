@@ -62,21 +62,12 @@
             return $.publish("/capture/" + mode);
           }
         });
-<<<<<<< HEAD
-        el.$content.find(".galleryLink").toggle(function() {
-          return $.publish("/gallery/list", function() {
-            return $.publish("/gallery/hide");
-          });
-        });
-        $container.append(el.$content);
-=======
-        $container.append($content);
-        $content.find(".galleryLink").toggle((function() {
+        el.$content.find(".galleryLink").toggle((function() {
           return $.publish("/gallery/list");
         }), (function() {
           return $.publish("/gallery/hide");
         }));
->>>>>>> 292326157fd931e6ecb112e74e8204e9fe1a15d1
+        $container.append(el.$content);
         $.subscribe("/bar/preview/update", function(message) {
           var $image;
           console.log(message);
