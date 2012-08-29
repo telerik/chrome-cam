@@ -47,20 +47,21 @@ define [
             console.log fileName
 
         $.subscribe "/gallery/hide", ->
-            $container.hide()
-            $("#wrap").kendoStop(true).kendoAnimate
-                effects: "expandVertical"
+            $("#footer").animate "margin-top": "-60px"
+            $("#wrap").kendoStop(true).css(height: "100%").kendoAnimate
+                effects: "expand"
                 show: true
                 duration: 1000
                 done: ->
                     $.publish "/camera/pause", [false]
+                    $container.hide()
 
         $.subscribe "/gallery/list", ->
             $.publish "/camera/pause", [true]
             $container.show()
-
+            $("#footer").animate "margin-top": 0
             $("#wrap").kendoStop(true).kendoAnimate
-                effects: "expandVertical"
+                effects: "expand"
                 reverse: true
                 hide: true
                 duration: 1000
@@ -78,13 +79,15 @@ define [
                 $container.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]
 
+                changePage = (direction) ->
+                    if direction > 0 and dataSource.page() > 1
+                        dataSource.page dataSource.page() - 1
+                    if direction < 0 and dataSource.page() < dataSource.totalPages()
+                        dataSource.page dataSource.page() + 1
+
                 # TODO: add transition effect...
                 $container.kendoMobileSwipe (e) -> 
-                    if e.direction == "right" && dataSource.page() > 1
-                        dataSource.page dataSource.page() - 1
-                    
-                    if e.direction == "left" && dataSource.page() < dataSource.totalPages()
-                        dataSource.page dataSource.page() + 1
+                    changePage (e.direction == "left") - (e.direction == "right")
 
                 setupSubscriptionEvents $container
                 

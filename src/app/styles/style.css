@@ -27,7 +27,7 @@ body > #wrap { height: 100%;}
 /* Bar styles */
 
 #footer { 
-    position: relative;
+	/*position: relative;*/
 	margin-top: -60px; /* negative value of footer height */
 	height: 60px;
 	clear: both;
