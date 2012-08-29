@@ -34,8 +34,8 @@ define([
 		    	$.publish "/postman/deliver", [  name: name, file: blob, "/file/save" ]
 
 	    	canvas = document.createElement("canvas")
-	    	canvas.width = 720
-	    	canvas.height = 480
+	    	canvas.width = 360
+	    	canvas.height = 240
 	    	ctx = canvas.getContext("2d")
 
 	    	framesDone = 0;

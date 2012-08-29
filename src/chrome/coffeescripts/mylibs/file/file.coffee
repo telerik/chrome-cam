@@ -171,8 +171,9 @@ define([
               # only process this file if it is in fact a file, and not a directory
               if entry.isFile
 
-                # store the name
+                # store the name and type
                 name = entry.name
+                type = name.split(".").pop()
 
                 # get a reference to the file so we can ready from it
                 entry.file (file) ->
@@ -187,10 +188,10 @@ define([
                       # in order to do that we need to collect them here by checking the length of the array we are building against the length
                       # of the array that is holding the file entries.  Once they are the same, we know we have them all and we can sort by name
                       # which is the timestamp, and send them down to the app.
-                      files.push({ name: name, image: this.result, strip: false })
+                      files.push({ name: name, file: this.result, type: type, strip: false })
 
                       if files.length == entries.length
-                        
+                          
                         # sort the files array by name
                         files.sort(compare)
 

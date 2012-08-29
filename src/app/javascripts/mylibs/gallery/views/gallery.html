@@ -2,7 +2,11 @@
 	<div class="gallery-row">
 		# for (var col = 0; col < rows[row].length; ++col) { #
 			<div class="thumbnail" draggable="true">
-				<img src="#: rows[row][col].image #" width="270" height="180">
+				# if (rows[row][col].type === 'webm') { # 
+					<video src="#: rows[row][col].file #" width="270" height="180" controls></video>
+				# } else { #
+					<img src="#: rows[row][col].file #" width="270" height="180">
+				# } #
 			</div>
 		# } #
 	</div>
