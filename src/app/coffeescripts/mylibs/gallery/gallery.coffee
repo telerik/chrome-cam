@@ -12,7 +12,7 @@ define [
 
         token = $.subscribe "/pictures/bulk", (result) ->
             if result.message && result.message.length > 0
-                $.publish "/bar/preview/update", [thumbnailURL: result.message[-1..][0].file]
+                $.publish "/bar/preview/update", [thumbnailURL: result.message[result.message.length - 1].file]
 
             $.unsubscribe token
             dataSource = new kendo.data.DataSource
@@ -40,8 +40,8 @@ define [
             setup: (element, options) ->
                 $.extend { height: 25 }, options.properties
 
-        $.subscribe "/gallery/show", (fileName) ->
-            console.log fileName
+        $.subscribe "/gallery/show", (message) ->
+            console.log message.imageData
 
         $.subscribe "/gallery/hide", ->
             console.log "hide gallery"
@@ -78,7 +78,7 @@ define [
                 
                 # set up the DOM events
                 $container.on "click", ".thumbnail", ->
-                    $.publish "/gallery/show", [$(this).data("file-name")]
+                    $.publish "/gallery/show", [{ imageData: $("img", this).attr("src") }]
 
                 changePage = (direction) ->
                     # TODO: add transition effect...
@@ -87,8 +87,9 @@ define [
                     if direction < 0 and dataSource.page() < dataSource.totalPages()
                         dataSource.page dataSource.page() + 1
 
-                $container.kendoMobileSwipe (e) -> 
-                    changePage (e.direction == "up") - (e.direction == "down")
+                $container.kendoMobileSwipe (e) ->
+                     #changePage (e.direction == "up") - (e.direction == "down")
+                     changePage (e.direction == "left") - (e.direction == "right")
 
                 $.subscribe "/events/key/arrow", (e) ->
                     changePage (e == "down") - (e == "up")

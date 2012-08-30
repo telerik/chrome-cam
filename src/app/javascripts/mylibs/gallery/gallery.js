@@ -14,7 +14,7 @@
         if (result.message && result.message.length > 0) {
           $.publish("/bar/preview/update", [
             {
-              thumbnailURL: result.message.slice(-1)[0].file
+              thumbnailURL: result.message[result.message.length - 1].file
             }
           ]);
         }
@@ -54,8 +54,8 @@
           }, options.properties);
         }
       };
-      $.subscribe("/gallery/show", function(fileName) {
-        return console.log(fileName);
+      $.subscribe("/gallery/show", function(message) {
+        return console.log(message.imageData);
       });
       $.subscribe("/gallery/hide", function() {
         console.log("hide gallery");
@@ -100,9 +100,14 @@
           var changePage;
           console.log("done loading images");
           $container.on("click", ".thumbnail", function() {
-            return $.publish("/gallery/show", [$(this).data("file-name")]);
+            return $.publish("/gallery/show", [
+              {
+                imageData: $("img", this).attr("src")
+              }
+            ]);
           });
           changePage = function(direction) {
+            console.log(direction);
             if (direction > 0 && dataSource.page() > 1) {
               dataSource.page(dataSource.page() - 1);
             }
@@ -111,7 +116,7 @@
             }
           };
           $container.kendoMobileSwipe(function(e) {
-            return changePage((e.direction === "up") - (e.direction === "down"));
+            return changePage((e.direction === "left") - (e.direction === "right"));
           });
           $.subscribe("/events/key/arrow", function(e) {
             return changePage((e === "down") - (e === "up"));
