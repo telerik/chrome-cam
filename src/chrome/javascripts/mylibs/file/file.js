@@ -152,6 +152,12 @@
               };
               if (entries.length > 0) {
                 return readFile(0);
+              } else {
+                return $.publish("/postman/deliver", [
+                  {
+                    message: []
+                  }, "/pictures/bulk", []
+                ]);
               }
             });
           };

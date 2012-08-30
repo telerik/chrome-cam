@@ -44,6 +44,7 @@ define [
             console.log fileName
 
         $.subscribe "/gallery/hide", ->
+            console.log "hide gallery"
             $("#footer").animate "margin-top": "-60px"
             $("#wrap").kendoStop(true).css(height: "100%").kendoAnimate
                 effects: "expand"
@@ -54,6 +55,7 @@ define [
                     $container.hide()
 
         $.subscribe "/gallery/list", ->
+            console.log "show gallery"
             $.publish "/camera/pause", [true]
             $container.show()
             $("#footer").animate "margin-top": 0
@@ -72,6 +74,8 @@ define [
 
             # after loading the images
             loadImages().done (dataSource) ->
+                console.log "done loading images"
+                
                 # set up the DOM events
                 $container.on "click", ".thumbnail", ->
                     $.publish "/gallery/show", [$(this).data("file-name")]

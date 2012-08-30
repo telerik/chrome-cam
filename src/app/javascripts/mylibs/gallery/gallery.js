@@ -58,6 +58,7 @@
         return console.log(fileName);
       });
       $.subscribe("/gallery/hide", function() {
+        console.log("hide gallery");
         $("#footer").animate({
           "margin-top": "-60px"
         });
@@ -74,6 +75,7 @@
         });
       });
       $.subscribe("/gallery/list", function() {
+        console.log("show gallery");
         $.publish("/camera/pause", [true]);
         $container.show();
         $("#footer").animate({
@@ -96,6 +98,7 @@
         $container = $(selector);
         return loadImages().done(function(dataSource) {
           var changePage;
+          console.log("done loading images");
           $container.on("click", ".thumbnail", function() {
             return $.publish("/gallery/show", [$(this).data("file-name")]);
           });

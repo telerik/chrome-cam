@@ -133,6 +133,10 @@ body > #wrap { height: 100%;}
     margin-top: 5px;
 }
 
+.galleryLink.hidden {
+    display: none;
+}
+
 /* Preview Styles */
 
 #preview {

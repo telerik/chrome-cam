@@ -207,6 +207,8 @@ define([
             # if our entries array has files in it, start reading them.
             if entries.length > 0
               readFile(0)
+            else
+              $.publish "/postman/deliver", [ { message: [] }, "/pictures/bulk", [] ]
 
         read()
 
