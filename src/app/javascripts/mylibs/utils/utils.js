@@ -35,17 +35,18 @@
           blob = video.compile();
           frames = [];
           name = new Date().getTime() + ".webm";
-          console.log("Recording Done!");
-          return $.publish("/postman/deliver", [
+          $.publish("/postman/deliver", [
             {
               name: name,
               file: blob
             }, "/file/save"
           ]);
+          $.publish("/bar/time/hide");
+          return $.publish("/bar/capture/show");
         };
         canvas = document.createElement("canvas");
-        canvas.width = 360;
-        canvas.height = 240;
+        canvas.width = 720;
+        canvas.height = 480;
         ctx = canvas.getContext("2d");
         framesDone = 0;
         _results = [];

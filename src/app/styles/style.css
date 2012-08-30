@@ -19,6 +19,10 @@ body > #wrap { height: 100%;}
 	border-radius: 50%;
 }
 
+.white {
+	color: white;
+}
+
 [draggable] {
   -webkit-user-select: none;
   user-select: none;
@@ -107,7 +111,7 @@ body > #wrap { height: 100%;}
 }
 
 .center > div {
-	width: 200px;
+	width: 150px;
 	height: 200px;
 	margin: auto;
 }

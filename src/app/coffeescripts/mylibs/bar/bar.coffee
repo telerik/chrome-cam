@@ -4,6 +4,7 @@ define([
 
 	mode = "image"
 	el = {}
+	startTime = 0
 
 	# create the box to square and back effect
 	kendo.fx.circle =
@@ -63,6 +64,9 @@ define([
 			# the countdown spans
 			el.$counters = el.$content.find ".countdown > span"
 
+			# the timer span
+			el.$timer = el.$content.find ".timer"
+
 			# we need to switch modes when clicking on the icons
 			el.$content.find(".mode").on "click", "a", ->
 				mode = $(this).data("mode")
@@ -74,6 +78,14 @@ define([
 					# start the countdown
 					countdown 0, -> $.publish "/capture/#{mode}"
 				else
+
+					# set the start time to right now
+					startTime = Date.now()
+
+					# replace the capture button with the counter
+					el.$capture.hide()
+					el.$timer.show()
+
 					# publish the capture method
 					$.publish "/capture/#{mode}"
 
@@ -103,6 +115,16 @@ define([
 					show: true
 					duration: 200
 				})
+
+			$.subscribe "/bar/time/hide", ->
+				el.$timer.kendoStop(true).kendoAnimate({
+					effects: "slide:up"
+					hide: true
+					duration: 200
+				})
+
+			$.subscribe "/bar/timer/update", ->
+				el.$timer.html kendo.toString((Date.now() - startTime) / 1000, "00.00")
 
 			# TODO: data-bind this, or at least reuse more code...
 			$(".photo", el.$container).on "click", ->

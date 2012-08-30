@@ -38,7 +38,13 @@ define([
 	            # if we are recording, dump this canvas to a pixel array
 	            if recording
 
+	            	time = Date.now()
+
+	            	# push the current frame onto the buffer
 	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
+
+	            	# update the time in the bar
+	            	$.publish "/bar/timer/update" 
 
 	flash = ->
 
