@@ -51,7 +51,7 @@ define [
                 effects: "zoomIn"
                 show: true
 
-            $details.on "click", ->
+            $details.find(".back").on "click", ->
                 $details.kendoStop(true).kendoAnimate
                     effects: "zoomOut"
                     hide: true

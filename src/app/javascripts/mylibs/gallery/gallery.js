@@ -64,7 +64,7 @@
           effects: "zoomIn",
           show: true
         });
-        return $details.on("click", function() {
+        return $details.find(".back").on("click", function() {
           return $details.kendoStop(true).kendoAnimate({
             effects: "zoomOut",
             hide: true
