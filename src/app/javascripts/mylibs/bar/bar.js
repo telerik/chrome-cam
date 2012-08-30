@@ -55,11 +55,17 @@
             effects: $(this).data("shape")
           });
         });
-        el.$content.on("click", ".capture", function() {
+        el.$content.on("click", ".capture", function(e) {
+          var capture;
           if (mode === "image") {
-            return countdown(0, function() {
+            capture = function() {
               return $.publish("/capture/" + mode);
-            });
+            };
+            if (e.ctrlKey) {
+              return capture();
+            } else {
+              return countdown(0, capture);
+            }
           } else {
             startTime = Date.now();
             el.$capture.hide();

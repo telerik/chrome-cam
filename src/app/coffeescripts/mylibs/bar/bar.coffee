@@ -73,10 +73,14 @@ define([
 				el.$dot.kendoStop().kendoAnimate { effects: $(this).data("shape") }
 
 			# bind the "capture" button
-			el.$content.on "click", ".capture", ->
+			el.$content.on "click", ".capture", (e) ->
 				if mode == "image"
 					# start the countdown
-					countdown 0, -> $.publish "/capture/#{mode}"
+					capture = -> $.publish "/capture/#{mode}"
+					if e.ctrlKey
+						capture()
+					else
+						countdown 0, capture
 				else
 
 					# set the start time to right now
