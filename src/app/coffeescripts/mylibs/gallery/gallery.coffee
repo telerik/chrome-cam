@@ -29,11 +29,8 @@ define [
     createPage = (dataSource, $container) -> 
         # handle paging now!
         rowLength = 4
-        rows = [
-            dataSource.view()[0 * rowLength ... 1 * rowLength]
-            dataSource.view()[1 * rowLength ... 2 * rowLength]
-            dataSource.view()[2 * rowLength ... 3 * rowLength]
-        ]
+        numberOfRows = 3
+        rows = (dataSource.view()[i * rowLength ... (i+1) * rowLength] for i in [0 ... numberOfRows])
 
         $container.html template(rows: rows)
 

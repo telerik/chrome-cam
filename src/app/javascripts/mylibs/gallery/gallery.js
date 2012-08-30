@@ -31,9 +31,17 @@
       return deferred.promise();
     };
     createPage = function(dataSource, $container) {
-      var rowLength, rows;
+      var i, numberOfRows, rowLength, rows;
       rowLength = 4;
-      rows = [dataSource.view().slice(0 * rowLength, 1 * rowLength), dataSource.view().slice(1 * rowLength, 2 * rowLength), dataSource.view().slice(2 * rowLength, 3 * rowLength)];
+      numberOfRows = 3;
+      rows = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 0; 0 <= numberOfRows ? _i < numberOfRows : _i > numberOfRows; i = 0 <= numberOfRows ? ++_i : --_i) {
+          _results.push(dataSource.view().slice(i * rowLength, (i + 1) * rowLength));
+        }
+        return _results;
+      })();
       return $container.html(template({
         rows: rows
       }));
