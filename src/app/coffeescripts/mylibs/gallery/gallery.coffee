@@ -1,8 +1,10 @@
 define [
     'mylibs/utils/utils',
-    'text!mylibs/gallery/views/gallery.html'
-], (utils, templateSource) ->
+    'text!mylibs/gallery/views/gallery.html',
+    'text!mylibs/gallery/views/details.html'
+], (utils, templateSource, detailsTemplateSource) ->
     template = kendo.template(templateSource)
+    detailsTemplate = kendo.template(detailsTemplateSource)
 
     rowLength = 4
     numberOfRows = 4
@@ -41,7 +43,11 @@ define [
                 $.extend { height: 25 }, options.properties
 
         $.subscribe "/gallery/show", (message) ->
-            console.log message.imageData
+            $container.find(".details").remove()
+            $container.append detailsTemplate(message)
+            $container.find(".details").kendoStop(true).kendoAnimate
+                effects: "zoomIn"
+                show: true
 
         $.subscribe "/gallery/hide", ->
             console.log "hide gallery"
