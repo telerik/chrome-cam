@@ -168,10 +168,11 @@ body > #wrap { height: 100%;}
 	-webkit-box-pack: center;
 	-webkit-box-orient: horizontal;
 }
-	.half + .half, .gallery-row + .gallery-row { margin-top: 27px; }
+	.half + .half { margin-top: 27px; }
+	.gallery-row + .gallery-row { margin-top: 10px; }
 
 .preview { margin-left: 27px; }
-.thumbnail { margin-left: 25px; }
+.thumbnail { margin-left: 10px; }
 	.half .preview:first-child, .thumbnail:first-child { margin-left: 0px; }
 
 .preview > div {
@@ -218,7 +219,7 @@ body > #wrap { height: 100%;}
 #gallery .thumbnail {
 	text-align: center;
 	width: 270px;
-	height: 257px;
+	height: 217px;
 }
 
 .mode {
