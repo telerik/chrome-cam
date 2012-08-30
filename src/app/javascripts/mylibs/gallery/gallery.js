@@ -100,7 +100,10 @@
             }
           };
           $container.kendoMobileSwipe(function(e) {
-            return changePage((e.direction === "left") - (e.direction === "right"));
+            return changePage((e.direction === "up") - (e.direction === "down"));
+          });
+          $.subscribe("/events/key/arrow", function(e) {
+            return changePage((e === "down") - (e === "up"));
           });
           setupSubscriptionEvents($container);
           $.subscribe("/gallery/add", function(file) {
