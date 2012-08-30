@@ -75,7 +75,6 @@
         $container.append(el.$content);
         $.subscribe("/bar/preview/update", function(message) {
           var $image;
-          console.log(message);
           $image = $("<img />", {
             src: message.thumbnailURL,
             width: 72,

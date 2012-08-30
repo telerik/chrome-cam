@@ -96,7 +96,6 @@ define([
 			$container.append el.$content
 
 			$.subscribe "/bar/preview/update", (message) ->
-				console.log message
 				$image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
 				el.$content.find(".galleryLink").empty().append($image)
 

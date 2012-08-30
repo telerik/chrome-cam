@@ -9,10 +9,10 @@
       deferred = $.Deferred();
       token = $.subscribe("/pictures/bulk", function(result) {
         var dataSource;
-        if (result.message instanceof Array && result.message.length > 0) {
+        if (result.message && result.message.length > 0) {
           $.publish("/bar/preview/update", [
             {
-              thumbnailURL: result.message.slice(-1)[0].image
+              thumbnailURL: result.message.slice(-1)[0].file
             }
           ]);
         }
