@@ -44,10 +44,17 @@ define [
 
         $.subscribe "/gallery/show", (message) ->
             $container.find(".details").remove()
-            $container.append detailsTemplate(message)
-            $container.find(".details").kendoStop(true).kendoAnimate
+            $details = $(detailsTemplate(message))
+            $container.append $details
+            
+            $details.kendoStop(true).kendoAnimate
                 effects: "zoomIn"
                 show: true
+
+            $details.on "click", ->
+                $details.kendoStop(true).kendoAnimate
+                    effects: "zoomOut"
+                    hide: true
 
         $.subscribe "/gallery/hide", ->
             console.log "hide gallery"

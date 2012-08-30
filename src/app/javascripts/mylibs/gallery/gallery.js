@@ -56,11 +56,19 @@
         }
       };
       $.subscribe("/gallery/show", function(message) {
+        var $details;
         $container.find(".details").remove();
-        $container.append(detailsTemplate(message));
-        return $container.find(".details").kendoStop(true).kendoAnimate({
+        $details = $(detailsTemplate(message));
+        $container.append($details);
+        $details.kendoStop(true).kendoAnimate({
           effects: "zoomIn",
           show: true
+        });
+        return $details.on("click", function() {
+          return $details.kendoStop(true).kendoAnimate({
+            effects: "zoomOut",
+            hide: true
+          });
         });
       });
       $.subscribe("/gallery/hide", function() {
