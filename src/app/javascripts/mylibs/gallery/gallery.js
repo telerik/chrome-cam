@@ -2,8 +2,10 @@
 (function() {
 
   define(['mylibs/utils/utils', 'text!mylibs/gallery/views/gallery.html'], function(utils, templateSource) {
-    var createPage, loadImages, pub, setupSubscriptionEvents, template;
+    var createPage, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
     template = kendo.template(templateSource);
+    rowLength = 4;
+    numberOfRows = 4;
     loadImages = function() {
       var deferred, token;
       deferred = $.Deferred();
@@ -19,7 +21,7 @@
         $.unsubscribe(token);
         dataSource = new kendo.data.DataSource({
           data: result.message,
-          pageSize: 12,
+          pageSize: rowLength * numberOfRows,
           change: function() {
             return $.publish("/gallery/page", [dataSource]);
           }
@@ -31,9 +33,7 @@
       return deferred.promise();
     };
     createPage = function(dataSource, $container) {
-      var i, numberOfRows, rowLength, rows;
-      rowLength = 4;
-      numberOfRows = 3;
+      var i, rows;
       rows = (function() {
         var _i, _results;
         _results = [];

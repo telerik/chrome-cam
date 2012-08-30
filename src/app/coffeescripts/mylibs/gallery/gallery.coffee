@@ -4,6 +4,9 @@ define [
 ], (utils, templateSource) ->
     template = kendo.template(templateSource)
 
+    rowLength = 4
+    numberOfRows = 4
+
     loadImages = ->
         deferred = $.Deferred()
 
@@ -14,7 +17,7 @@ define [
             $.unsubscribe token
             dataSource = new kendo.data.DataSource
                 data: result.message
-                pageSize: 12
+                pageSize: rowLength * numberOfRows
                 change: ->
                     $.publish "/gallery/page", [ dataSource ]
             
@@ -27,9 +30,6 @@ define [
         deferred.promise()
 
     createPage = (dataSource, $container) -> 
-        # handle paging now!
-        rowLength = 4
-        numberOfRows = 3
         rows = (dataSource.view()[i * rowLength ... (i+1) * rowLength] for i in [0 ... numberOfRows])
 
         $container.html template(rows: rows)
