@@ -106,9 +106,12 @@
           var changePage;
           console.log("done loading images");
           $container.on("click", ".thumbnail", function() {
+            var $media;
+            $media = $(this).children().first();
             return $.publish("/gallery/show", [
               {
-                imageData: $("img", this).attr("src")
+                src: $media.attr("src"),
+                type: $media.data("media-type")
               }
             ]);
           });

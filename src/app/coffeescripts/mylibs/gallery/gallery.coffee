@@ -84,7 +84,8 @@ define [
                 
                 # set up the DOM events
                 $container.on "click", ".thumbnail", ->
-                    $.publish "/gallery/show", [{ imageData: $("img", this).attr("src") }]
+                    $media = $(this).children().first()
+                    $.publish "/gallery/show", [{ src: $media.attr("src"), type: $media.data("media-type") }]
 
                 changePage = (direction) ->
                     # TODO: add transition effect...
