@@ -39,7 +39,8 @@ define [
     createDetailsViewModel = (message) ->
         $.extend {}, message,
             deleteItem: ->
-                console.log "Delete item"
+                console.log ["Delete item", message]
+                #$.publish "/postman/deliver", [  name: message.name, "/file/delete", [] ]
 
     setupSubscriptionEvents = ($container) ->
 
@@ -99,7 +100,7 @@ define [
                 # set up the DOM events
                 $container.on "click", ".thumbnail", ->
                     $media = $(this).children().first()
-                    $.publish "/gallery/show", [{ src: $media.attr("src"), type: $media.data("media-type") }]
+                    $.publish "/gallery/show", [{ src: $media.attr("src"), type: $media.data("media-type"), name: $media.data("file-name") }]
 
                 changePage = (direction) ->
                     # TODO: add transition effect...

@@ -50,7 +50,7 @@
     createDetailsViewModel = function(message) {
       return $.extend({}, message, {
         deleteItem: function() {
-          return console.log("Delete item");
+          return console.log(["Delete item", message]);
         }
       });
     };
@@ -128,7 +128,8 @@
             return $.publish("/gallery/show", [
               {
                 src: $media.attr("src"),
-                type: $media.data("media-type")
+                type: $media.data("media-type"),
+                name: $media.data("file-name")
               }
             ]);
           });
