@@ -39,8 +39,12 @@ define [
     createDetailsViewModel = (message) ->
         $.extend {}, message,
             deleteItem: ->
-                console.log ["Delete item", message]
-                #$.publish "/postman/deliver", [  name: message.name, "/file/delete", [] ]
+                deleteToken = $.subscribe "/file/deleted/#{message.name}", =>
+                    $.unsubscribe deleteToken
+                    console.log "deleted file"
+                    this.close()
+                $.publish "/postman/deliver", [  name: message.name, "/file/delete", [] ]
+
 
     setupSubscriptionEvents = ($container) ->
 
@@ -52,17 +56,19 @@ define [
             model = createDetailsViewModel(message)
             $container.find(".details").remove()
             $details = $(detailsTemplate(model))
+
+            # hack: viewModel really shouldn't know about view. Switch to pub/sub later
+            model.close = ->
+                $details.kendoStop(true).kendoAnimate
+                    effects: "zoomOut"
+                    hide: true 
+
             kendo.bind($details, model)
             $container.append $details
             
             $details.kendoStop(true).kendoAnimate
                 effects: "zoomIn"
                 show: true
-
-            $details.find(".back").on "click", ->
-                $details.kendoStop(true).kendoAnimate
-                    effects: "zoomOut"
-                    hide: true
 
         $.subscribe "/gallery/hide", ->
             console.log "hide gallery"

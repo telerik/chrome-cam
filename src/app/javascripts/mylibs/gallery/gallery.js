@@ -50,7 +50,18 @@
     createDetailsViewModel = function(message) {
       return $.extend({}, message, {
         deleteItem: function() {
-          return console.log(["Delete item", message]);
+          var deleteToken,
+            _this = this;
+          deleteToken = $.subscribe("/file/deleted/" + message.name, function() {
+            $.unsubscribe(deleteToken);
+            console.log("deleted file");
+            return _this.close();
+          });
+          return $.publish("/postman/deliver", [
+            {
+              name: message.name
+            }, "/file/delete", []
+          ]);
         }
       });
     };
@@ -67,17 +78,17 @@
         model = createDetailsViewModel(message);
         $container.find(".details").remove();
         $details = $(detailsTemplate(model));
-        kendo.bind($details, model);
-        $container.append($details);
-        $details.kendoStop(true).kendoAnimate({
-          effects: "zoomIn",
-          show: true
-        });
-        return $details.find(".back").on("click", function() {
+        model.close = function() {
           return $details.kendoStop(true).kendoAnimate({
             effects: "zoomOut",
             hide: true
           });
+        };
+        kendo.bind($details, model);
+        $container.append($details);
+        return $details.kendoStop(true).kendoAnimate({
+          effects: "zoomIn",
+          show: true
         });
       });
       $.subscribe("/gallery/hide", function() {
