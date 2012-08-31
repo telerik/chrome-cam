@@ -2,7 +2,7 @@
 (function() {
 
   define(['mylibs/utils/utils', 'text!mylibs/gallery/views/gallery.html', 'text!mylibs/gallery/views/details.html'], function(utils, templateSource, detailsTemplateSource) {
-    var createPage, detailsTemplate, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
+    var createDetailsViewModel, createPage, detailsTemplate, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
     template = kendo.template(templateSource);
     detailsTemplate = kendo.template(detailsTemplateSource);
     rowLength = 4;
@@ -47,6 +47,13 @@
         rows: rows
       }));
     };
+    createDetailsViewModel = function(message) {
+      return $.extend({}, message, {
+        deleteItem: function() {
+          return console.log("Delete item");
+        }
+      });
+    };
     setupSubscriptionEvents = function($container) {
       kendo.fx.hide = {
         setup: function(element, options) {
@@ -56,9 +63,11 @@
         }
       };
       $.subscribe("/gallery/show", function(message) {
-        var $details;
+        var $details, model;
+        model = createDetailsViewModel(message);
         $container.find(".details").remove();
-        $details = $(detailsTemplate(message));
+        $details = $(detailsTemplate(model));
+        kendo.bind($details, model);
         $container.append($details);
         $details.kendoStop(true).kendoAnimate({
           effects: "zoomIn",

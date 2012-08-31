@@ -36,6 +36,11 @@ define [
 
         $container.html template(rows: rows)
 
+    createDetailsViewModel = (message) ->
+        $.extend {}, message,
+            deleteItem: ->
+                console.log "Delete item"
+
     setupSubscriptionEvents = ($container) ->
 
         kendo.fx.hide =
@@ -43,8 +48,10 @@ define [
                 $.extend { height: 25 }, options.properties
 
         $.subscribe "/gallery/show", (message) ->
+            model = createDetailsViewModel(message)
             $container.find(".details").remove()
-            $details = $(detailsTemplate(message))
+            $details = $(detailsTemplate(model))
+            kendo.bind($details, model)
             $container.append $details
             
             $details.kendoStop(true).kendoAnimate
