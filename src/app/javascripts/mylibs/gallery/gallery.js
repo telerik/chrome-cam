@@ -54,7 +54,6 @@
             _this = this;
           deleteToken = $.subscribe("/file/deleted/" + message.name, function() {
             $.unsubscribe(deleteToken);
-            console.log("deleted file");
             return _this.close();
           });
           return $.publish("/postman/deliver", [
@@ -62,6 +61,9 @@
               name: message.name
             }, "/file/delete", []
           ]);
+        },
+        close: function() {
+          return $.publish("/gallery/details/hide");
         }
       });
     };
@@ -73,17 +75,17 @@
           }, options.properties);
         }
       };
-      $.subscribe("/gallery/show", function(message) {
+      $.subscribe("/gallery/details/hide", function() {
+        return $container.find(".details").kendoStop(true).kendoAnimate({
+          effects: "zoomOut",
+          hide: true
+        });
+      });
+      $.subscribe("/gallery/details/show", function(message) {
         var $details, model;
         model = createDetailsViewModel(message);
         $container.find(".details").remove();
         $details = $(detailsTemplate(model));
-        model.close = function() {
-          return $details.kendoStop(true).kendoAnimate({
-            effects: "zoomOut",
-            hide: true
-          });
-        };
         kendo.bind($details, model);
         $container.append($details);
         return $details.kendoStop(true).kendoAnimate({
@@ -136,7 +138,7 @@
           $container.on("click", ".thumbnail", function() {
             var $media;
             $media = $(this).children().first();
-            return $.publish("/gallery/show", [
+            return $.publish("/gallery/details/show", [
               {
                 src: $media.attr("src"),
                 type: $media.data("media-type"),

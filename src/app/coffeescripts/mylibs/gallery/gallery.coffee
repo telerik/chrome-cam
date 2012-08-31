@@ -41,9 +41,10 @@ define [
             deleteItem: ->
                 deleteToken = $.subscribe "/file/deleted/#{message.name}", =>
                     $.unsubscribe deleteToken
-                    console.log "deleted file"
                     this.close()
                 $.publish "/postman/deliver", [  name: message.name, "/file/delete", [] ]
+            close: ->
+                $.publish "/gallery/details/hide"
 
 
     setupSubscriptionEvents = ($container) ->
@@ -52,16 +53,15 @@ define [
             setup: (element, options) ->
                 $.extend { height: 25 }, options.properties
 
-        $.subscribe "/gallery/show", (message) ->
+        $.subscribe "/gallery/details/hide", ->
+            $container.find(".details").kendoStop(true).kendoAnimate
+                effects: "zoomOut"
+                hide: true
+
+        $.subscribe "/gallery/details/show", (message) ->
             model = createDetailsViewModel(message)
             $container.find(".details").remove()
             $details = $(detailsTemplate(model))
-
-            # hack: viewModel really shouldn't know about view. Switch to pub/sub later
-            model.close = ->
-                $details.kendoStop(true).kendoAnimate
-                    effects: "zoomOut"
-                    hide: true 
 
             kendo.bind($details, model)
             $container.append $details
@@ -106,7 +106,7 @@ define [
                 # set up the DOM events
                 $container.on "click", ".thumbnail", ->
                     $media = $(this).children().first()
-                    $.publish "/gallery/show", [{ src: $media.attr("src"), type: $media.data("media-type"), name: $media.data("file-name") }]
+                    $.publish "/gallery/details/show", [{ src: $media.attr("src"), type: $media.data("media-type"), name: $media.data("file-name") }]
 
                 changePage = (direction) ->
                     # TODO: add transition effect...
