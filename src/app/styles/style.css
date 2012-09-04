@@ -177,6 +177,7 @@ body > #wrap { height: 100%;}
 	margin-right: 10px;
 	cursor: pointer;
 }
+	.delete:hover { opacity: .7; }
 
 /* Preview Styles */
 
