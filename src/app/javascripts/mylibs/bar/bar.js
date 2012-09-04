@@ -49,6 +49,7 @@
         el.$dot = el.$capture.find("> div > div");
         el.$counters = el.$content.find(".countdown > span");
         el.$timer = el.$content.find(".timer");
+        el.$bar = el.$content.find(".bar");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
           return el.$dot.kendoStop().kendoAnimate({
@@ -108,6 +109,12 @@
             hide: true,
             duration: 200
           });
+        });
+        $.subscribe("/bar/gallerymode/show", function() {
+          return el.$content.removeClass("previewMode").addClass("galleryMode");
+        });
+        $.subscribe("/bar/gallerymode/hide", function() {
+          return el.$content.removeClass("galleryMode").addClass("previewMode");
         });
         $.subscribe("/bar/timer/update", function() {
           return el.$timer.html(kendo.toString((Date.now() - startTime) / 1000, "00.00"));

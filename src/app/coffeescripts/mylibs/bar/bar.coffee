@@ -126,6 +126,13 @@ define([
 					duration: 200
 				})
 
+			# TODO: The bar probably shouldn't have two different display modes
+			$.subscribe "/bar/gallerymode/show", ->
+				el.$content.removeClass("previewMode").addClass("galleryMode")
+
+			$.subscribe "/bar/gallerymode/hide", ->
+				el.$content.removeClass("galleryMode").addClass("previewMode")
+
 			$.subscribe "/bar/timer/update", ->
 				el.$timer.html kendo.toString((Date.now() - startTime) / 1000, "00.00")
 

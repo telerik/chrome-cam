@@ -82,6 +82,7 @@ define [
                 duration: 1000
                 complete: ->
                     $.publish "/camera/pause", [false]
+                    $.publish "/bar/gallerymode/hide"
                     $container.hide()
 
         $.subscribe "/gallery/list", ->
@@ -94,6 +95,8 @@ define [
                 reverse: true
                 hide: true
                 duration: 1000
+                complete: ->
+                    $.publish "/bar/gallerymode/show"
 
         $.subscribe "/gallery/page", (dataSource) ->
             createPage dataSource, $container

@@ -5,6 +5,7 @@
 			<li><a href="#" data-mode="video" data-shape="square" class="video" alt="Video Mode" title="Video Mode"></a></li>
 			<li><a href="#" data-mode="paparazzi" data-shape="circle" class="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a></li>
 		</ul>
+		<span class="back" data-bind="click: close">&lsaquo; Camera</span>
 	</div>
 	<div class="center">
 		<div>
@@ -23,5 +24,7 @@
 	</div>
 	<div class="right">
 		<a href="#" class="galleryLink hidden" alt="Go to the Gallery" title="Go to the Gallery"></a>
+		<span class="delete" data-bind="click: deleteItem">Delete</span>
+		<button class="share">Share</button>
 	</div>
 </div>

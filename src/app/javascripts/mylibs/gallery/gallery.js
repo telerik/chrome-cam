@@ -110,6 +110,7 @@
           duration: 1000,
           complete: function() {
             $.publish("/camera/pause", [false]);
+            $.publish("/bar/gallerymode/hide");
             return $container.hide();
           }
         });
@@ -125,7 +126,10 @@
           effects: "expand",
           reverse: true,
           hide: true,
-          duration: 1000
+          duration: 1000,
+          complete: function() {
+            return $.publish("/bar/gallerymode/show");
+          }
         });
       });
       return $.subscribe("/gallery/page", function(dataSource) {
