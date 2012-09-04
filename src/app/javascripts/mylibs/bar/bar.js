@@ -49,7 +49,6 @@
         el.$dot = el.$capture.find("> div > div");
         el.$counters = el.$content.find(".countdown > span");
         el.$timer = el.$content.find(".timer");
-        el.$bar = el.$content.find(".bar");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
           return el.$dot.kendoStop().kendoAnimate({

@@ -28,6 +28,12 @@ body > #wrap { height: 100%;}
   user-select: none;
 }
 
+/* Animations */
+
+.animate {
+	-webkit-transition: all 0.5s ease-out;  
+}
+
 /* Bar styles */
 
 #footer { 

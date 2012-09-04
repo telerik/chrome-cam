@@ -75,28 +75,26 @@ define [
 
         $.subscribe "/gallery/hide", ->
             console.log "hide gallery"
+
+            # TODO: Use kendoAnimate for this
             $("#footer").animate "margin-top": "-60px"
-            $("#wrap").kendoStop(true).css(height: "100%").kendoAnimate
-                effects: "expand"
-                show: true
-                duration: 1000
-                complete: ->
-                    $.publish "/camera/pause", [false]
-                    $.publish "/bar/gallerymode/hide"
-                    $container.hide()
+            $("#wrap")[0].style.height = "100%";
+
+            $.publish "/camera/pause", [false]
+            $.publish "/bar/gallerymode/hide"
+            $container.hide()
 
         $.subscribe "/gallery/list", ->
             console.log "show gallery"
             $.publish "/camera/pause", [true]
             $container.show()
             $("#footer").animate "margin-top": 0
-            $("#wrap").kendoStop(true).kendoAnimate
-                effects: "expand"
-                reverse: true
-                hide: true
-                duration: 1000
-                complete: ->
-                    $.publish "/bar/gallerymode/show"
+
+            # TODO: Use kendoAnimate for this
+            $("#wrap").addClass "animate"
+            $("#wrap").css(height: 0)
+
+            $.publish "/bar/gallerymode/show"
 
         $.subscribe "/gallery/page", (dataSource) ->
             createPage dataSource, $container

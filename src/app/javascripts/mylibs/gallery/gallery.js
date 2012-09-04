@@ -102,18 +102,10 @@
         $("#footer").animate({
           "margin-top": "-60px"
         });
-        return $("#wrap").kendoStop(true).css({
-          height: "100%"
-        }).kendoAnimate({
-          effects: "expand",
-          show: true,
-          duration: 1000,
-          complete: function() {
-            $.publish("/camera/pause", [false]);
-            $.publish("/bar/gallerymode/hide");
-            return $container.hide();
-          }
-        });
+        $("#wrap")[0].style.height = "100%";
+        $.publish("/camera/pause", [false]);
+        $.publish("/bar/gallerymode/hide");
+        return $container.hide();
       });
       $.subscribe("/gallery/list", function() {
         console.log("show gallery");
@@ -122,15 +114,11 @@
         $("#footer").animate({
           "margin-top": 0
         });
-        return $("#wrap").kendoStop(true).kendoAnimate({
-          effects: "expand",
-          reverse: true,
-          hide: true,
-          duration: 1000,
-          complete: function() {
-            return $.publish("/bar/gallerymode/show");
-          }
+        $("#wrap").addClass("animate");
+        $("#wrap").css({
+          height: 0
         });
+        return $.publish("/bar/gallerymode/show");
       });
       return $.subscribe("/gallery/page", function(dataSource) {
         return createPage(dataSource, $container);
