@@ -109,6 +109,7 @@
             duration: 200
           });
         });
+        el.$content.addClass("previewMode");
         $.subscribe("/bar/gallerymode/show", function() {
           return el.$content.removeClass("previewMode").addClass("galleryMode");
         });

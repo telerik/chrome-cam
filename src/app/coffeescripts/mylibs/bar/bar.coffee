@@ -127,6 +127,7 @@ define([
 				})
 
 			# TODO: The bar probably shouldn't have two different display modes
+			el.$content.addClass "previewMode"
 			$.subscribe "/bar/gallerymode/show", ->
 				el.$content.removeClass("previewMode").addClass("galleryMode")
 
