@@ -22,6 +22,9 @@ define [
                 pageSize: rowLength * numberOfRows
                 change: ->
                     $.publish "/gallery/page", [ dataSource ]
+                sort:
+                    dir: "desc"
+                    field: "name"
             
             dataSource.read()
 

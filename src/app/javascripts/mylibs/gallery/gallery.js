@@ -25,6 +25,10 @@
           pageSize: rowLength * numberOfRows,
           change: function() {
             return $.publish("/gallery/page", [dataSource]);
+          },
+          sort: {
+            dir: "desc",
+            field: "name"
           }
         });
         dataSource.read();
