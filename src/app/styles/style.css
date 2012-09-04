@@ -141,12 +141,8 @@ body > #wrap { height: 100%;}
 	    display: none;
 	}
 
-.back {
-	display: block;
-	padding: 17px 0 0;
-	cursor: pointer;
-}
-	.back:hover { font-weight: bold; }
+.back { cursor: pointer; }
+	.back:hover { color: #ccc; }
 
 .bar button {
 	border: 0px solid;
@@ -155,6 +151,31 @@ body > #wrap { height: 100%;}
 	color: black;
 	padding: 7px 14px;
 	font-size: 14px;
+	cursor: pointer;
+}
+
+	.bar button:hover {
+		background: #ccc;
+	}
+
+.details .bar .right, .details .bar .left {
+	display: -webkit-box;
+	-webkit-box-align: center;
+}
+	.details .bar .right { -webkit-box-pack: end; }
+
+.delete {
+	background-repeat: no-repeat;
+	background-image: url('images/cameraModeSpritex2.png');
+	background-size: 24px 140px;
+	display: block;
+	width: 24px;
+	overflow: hidden;
+	text-indent: -999px;
+	direction: rtl;
+	background-position: 0 -116px;
+	margin-right: 10px;
+	cursor: pointer;
 }
 
 /* Preview Styles */
