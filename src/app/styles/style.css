@@ -52,6 +52,8 @@ body > #wrap { height: 100%;}
 	-webkit-box-pack: center;
 	font-size: 20px;
 	color: #fff;
+	position: relative;
+	overflow: hidden;
 }
 
 .capture {
