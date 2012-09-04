@@ -120,7 +120,7 @@ define [
 
                 $container.kendoMobileSwipe (e) ->
                      #changePage (e.direction == "up") - (e.direction == "down")
-                     changePage (e.direction == "left") - (e.direction == "right")
+                     changePage (e.direction == "right") - (e.direction == "left")
 
                 $.subscribe "/events/key/arrow", (e) ->
                     changePage (e == "down") - (e == "up")

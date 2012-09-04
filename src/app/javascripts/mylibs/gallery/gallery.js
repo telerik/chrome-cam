@@ -159,7 +159,7 @@
             }
           };
           $container.kendoMobileSwipe(function(e) {
-            return changePage((e.direction === "left") - (e.direction === "right"));
+            return changePage((e.direction === "right") - (e.direction === "left"));
           });
           $.subscribe("/events/key/arrow", function(e) {
             return changePage((e === "down") - (e === "up"));
