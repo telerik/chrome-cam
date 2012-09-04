@@ -108,7 +108,7 @@
           effects: "expand",
           show: true,
           duration: 1000,
-          done: function() {
+          complete: function() {
             $.publish("/camera/pause", [false]);
             return $container.hide();
           }

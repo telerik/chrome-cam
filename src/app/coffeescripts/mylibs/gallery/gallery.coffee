@@ -80,7 +80,7 @@ define [
                 effects: "expand"
                 show: true
                 duration: 1000
-                done: ->
+                complete: ->
                     $.publish "/camera/pause", [false]
                     $container.hide()
 
