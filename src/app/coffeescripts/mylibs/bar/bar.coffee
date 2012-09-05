@@ -4,6 +4,8 @@ define([
 ], (kendo, template) ->
 
 	mode = "image"
+	activeShape = "circle"
+	captureShape = "circle"
 	el = {}
 	startTime = 0
 
@@ -48,6 +50,12 @@ define([
 
 		}
 
+
+	updateCaptureDotShape = (shape) ->
+		el.$dot.kendoStop().kendoAnimate
+			effects: shape
+			duration: 100
+
 	pub = 
 
 		init: (selector) ->
@@ -68,10 +76,14 @@ define([
 			# we need to switch modes when clicking on the icons
 			el.$content.find(".mode").on "click", "a", ->
 				mode = $(this).data("mode")
-				el.$dot.kendoStop().kendoAnimate { effects: $(this).data("shape") }
+				activeShape = $(this).data("shape")
+				captureShape = $(this).data("capture-shape")
+				updateCaptureDotShape activeShape
 
 			# bind the "capture" button
 			el.$content.on "click", ".capture", (e) ->
+				updateCaptureDotShape captureShape
+
 				if mode == "image"
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
@@ -83,6 +95,11 @@ define([
 
 					# set the start time to right now
 					startTime = Date.now()
+
+					token = $.subscribe "/capture/#{mode}/completed", ->
+						$.unsubscribe token
+						el.$content.removeClass("recording")
+						updateCaptureDotShape activeShape
 
 					# publish the capture method
 					$.publish "/capture/#{mode}"

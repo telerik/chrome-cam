@@ -70,7 +70,8 @@
           return setTimeout((function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
-            return recording = false;
+            recording = false;
+            return $.publish("/capture/video/completed");
           }), 6000);
         });
         kendo.fx.grow = {

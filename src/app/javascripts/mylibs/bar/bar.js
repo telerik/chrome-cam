@@ -2,8 +2,10 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/bar/views/bar.html'], function(kendo, template) {
-    var countdown, el, mode, pub, startTime;
+    var activeShape, captureShape, countdown, el, mode, pub, startTime, updateCaptureDotShape;
     mode = "image";
+    activeShape = "circle";
+    captureShape = "circle";
     el = {};
     startTime = 0;
     kendo.fx.circle = {
@@ -40,6 +42,12 @@
         }
       });
     };
+    updateCaptureDotShape = function(shape) {
+      return el.$dot.kendoStop().kendoAnimate({
+        effects: shape,
+        duration: 100
+      });
+    };
     return pub = {
       init: function(selector) {
         var $container;
@@ -50,12 +58,13 @@
         el.$counters = el.$content.find(".countdown > span");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
-          return el.$dot.kendoStop().kendoAnimate({
-            effects: $(this).data("shape")
-          });
+          activeShape = $(this).data("shape");
+          captureShape = $(this).data("capture-shape");
+          return updateCaptureDotShape(activeShape);
         });
         el.$content.on("click", ".capture", function(e) {
-          var capture;
+          var capture, token;
+          updateCaptureDotShape(captureShape);
           if (mode === "image") {
             capture = function() {
               return $.publish("/capture/" + mode);
@@ -67,6 +76,11 @@
             }
           } else {
             startTime = Date.now();
+            token = $.subscribe("/capture/" + mode + "/completed", function() {
+              $.unsubscribe(token);
+              el.$content.removeClass("recording");
+              return updateCaptureDotShape(activeShape);
+            });
             $.publish("/capture/" + mode);
             return el.$content.addClass("recording");
           }

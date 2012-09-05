@@ -97,6 +97,8 @@ define([
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
+
+					$.publish "/capture/video/completed"
 				), 6000
 
 			# setup the shrink function - this most likely belongs in a widget file
