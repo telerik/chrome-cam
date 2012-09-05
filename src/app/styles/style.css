@@ -218,7 +218,10 @@ body > #wrap { height: 100%;}
 	.half + .half { margin-top: 27px; }
 	.gallery-row + .gallery-row { margin-top: 17px; }
 
-.preview { margin-left: 27px; }
+.preview { 
+	margin-left: 27px;
+	-webkit-transition: -webkit-transform .08s ease-in-out;
+}
 .thumbnail { margin-left: 17px; }
 	.half .preview:first-child, .thumbnail:first-child { margin-left: 0px; }
 
