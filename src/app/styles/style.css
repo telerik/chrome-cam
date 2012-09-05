@@ -273,6 +273,11 @@ body > #wrap { height: 100%;}
 	box-shadow: 0px 0px 7px 1px rgba(0, 0, 0, 0.75);
 }
 
+#gallery .selected {
+	border: 2px solid #2D2D2D;
+	padding: 1px;
+}
+
 /* Details styles */
 
 #gallery .details {
