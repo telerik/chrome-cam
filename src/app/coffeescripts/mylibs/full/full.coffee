@@ -16,6 +16,7 @@ define([
 	recording = false
 	$flash = {}
 	startTime = 0
+	$container = {}
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -93,11 +94,14 @@ define([
 				
 				startTime = Date.now()
 
+				$container.find(".timer").removeClass("hidden")
+
 				setTimeout (-> 
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
 
+					$container.find(".timer").addClass("hidden")
 					$.publish "/capture/video/completed"
 				), 6000
 

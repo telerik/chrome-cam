@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'text!mylibs/full/views/full.html'], function(kendo, effects, utils, fullTemplate) {
-    var $flash, canvas, ctx, draw, flash, frame, frames, paused, preview, pub, recording, startTime, webgl;
+    var $container, $flash, canvas, ctx, draw, flash, frame, frames, paused, preview, pub, recording, startTime, webgl;
     canvas = {};
     ctx = {};
     preview = {};
@@ -14,6 +14,7 @@
     recording = false;
     $flash = {};
     startTime = 0;
+    $container = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         var time;
@@ -41,7 +42,7 @@
     };
     return pub = {
       init: function(selector) {
-        var $container, $content;
+        var $content;
         $.subscribe("/capture/image", function() {
           var image, name, token;
           flash();
@@ -67,10 +68,12 @@
           frames = [];
           recording = true;
           startTime = Date.now();
+          $container.find(".timer").removeClass("hidden");
           return setTimeout((function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
             recording = false;
+            $container.find(".timer").addClass("hidden");
             return $.publish("/capture/video/completed");
           }), 6000);
         });
