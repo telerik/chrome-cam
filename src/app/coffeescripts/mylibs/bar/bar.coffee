@@ -94,6 +94,8 @@ define([
 					# publish the capture method
 					$.publish "/capture/#{mode}"
 
+					el.$content.addClass("recording")
+
 			# link to show or hide the gallery
 			el.$content.on "click", ".galleryLink", ->
 				$.publish "/gallery/list"
@@ -125,6 +127,10 @@ define([
 				})
 
 			$.subscribe "/bar/time/hide", ->
+				# Removing the recording class should be tied into some event
+				# that is fired when the video recording stops.
+				el.$content.removeClass("recording")
+				
 				el.$timer.kendoStop(true).kendoAnimate({
 					effects: "slide:up"
 					hide: true
