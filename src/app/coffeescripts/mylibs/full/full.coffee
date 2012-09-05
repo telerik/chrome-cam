@@ -45,8 +45,7 @@ define([
 	            	# push the current frame onto the buffer
 	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
 
-	            	# update the time in the bar
-	            	$.publish "/bar/timer/update" 
+	            	# update the time in the view
 	            	$.publish "/full/timer/update"
 
 	flash = ->

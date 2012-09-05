@@ -65,9 +65,6 @@ define([
 			# the countdown spans
 			el.$counters = el.$content.find ".countdown > span"
 
-			# the timer span
-			el.$timer = el.$content.find ".timer"
-
 			# we need to switch modes when clicking on the icons
 			el.$content.find(".mode").on "click", "a", ->
 				mode = $(this).data("mode")
@@ -86,10 +83,6 @@ define([
 
 					# set the start time to right now
 					startTime = Date.now()
-
-					# replace the capture button with the counter
-					el.$capture.hide()
-					el.$timer.show()
 
 					# publish the capture method
 					$.publish "/capture/#{mode}"
@@ -126,17 +119,6 @@ define([
 					duration: 200
 				})
 
-			$.subscribe "/bar/time/hide", ->
-				# Removing the recording class should be tied into some event
-				# that is fired when the video recording stops.
-				el.$content.removeClass("recording")
-				
-				el.$timer.kendoStop(true).kendoAnimate({
-					effects: "slide:up"
-					hide: true
-					duration: 200
-				})
-
 			# TODO: The bar probably shouldn't have two different display modes
 			el.$content.addClass "previewMode"
 			$.subscribe "/bar/gallerymode/show", ->
@@ -144,9 +126,6 @@ define([
 
 			$.subscribe "/bar/gallerymode/hide", ->
 				el.$content.removeClass("galleryMode").addClass("previewMode")
-
-			$.subscribe "/bar/timer/update", ->
-				el.$timer.html kendo.toString((Date.now() - startTime) / 1000, "00.00")
 
 			# TODO: data-bind this, or at least reuse more code...
 			$(".photo", el.$container).on "click", ->

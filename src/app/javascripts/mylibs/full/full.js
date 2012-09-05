@@ -26,7 +26,6 @@
               imageData: webgl.getPixelArray(),
               time: Date.now()
             });
-            $.publish("/bar/timer/update");
             return $.publish("/full/timer/update");
           }
         }

@@ -48,7 +48,6 @@
         el.$capture = el.$content.find(".capture");
         el.$dot = el.$capture.find("> div > div");
         el.$counters = el.$content.find(".countdown > span");
-        el.$timer = el.$content.find(".timer");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
           return el.$dot.kendoStop().kendoAnimate({
@@ -68,8 +67,6 @@
             }
           } else {
             startTime = Date.now();
-            el.$capture.hide();
-            el.$timer.show();
             $.publish("/capture/" + mode);
             return el.$content.addClass("recording");
           }
@@ -104,23 +101,12 @@
             duration: 200
           });
         });
-        $.subscribe("/bar/time/hide", function() {
-          el.$content.removeClass("recording");
-          return el.$timer.kendoStop(true).kendoAnimate({
-            effects: "slide:up",
-            hide: true,
-            duration: 200
-          });
-        });
         el.$content.addClass("previewMode");
         $.subscribe("/bar/gallerymode/show", function() {
           return el.$content.removeClass("previewMode").addClass("galleryMode");
         });
         $.subscribe("/bar/gallerymode/hide", function() {
           return el.$content.removeClass("galleryMode").addClass("previewMode");
-        });
-        $.subscribe("/bar/timer/update", function() {
-          return el.$timer.html(kendo.toString((Date.now() - startTime) / 1000, "00.00"));
         });
         $(".photo", el.$container).on("click", function() {
           var recordMode;
