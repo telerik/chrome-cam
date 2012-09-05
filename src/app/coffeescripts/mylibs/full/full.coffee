@@ -1,8 +1,9 @@
 define([
+  'Kendo'
   'mylibs/effects/effects'
   'mylibs/utils/utils'
   'text!mylibs/full/views/full.html'
-], (effects, utils, fullTemplate) ->
+], (kendo, effects, utils, fullTemplate) ->
 	
 	canvas = {}
 	ctx = {}
@@ -14,6 +15,7 @@ define([
 	frames = []
 	recording = false
 	$flash = {}
+	startTime = 0
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -45,6 +47,7 @@ define([
 
 	            	# update the time in the bar
 	            	$.publish "/bar/timer/update" 
+	            	$.publish "/full/timer/update"
 
 	flash = ->
 
@@ -88,6 +91,8 @@ define([
 				frames = []
 
 				recording = true
+				
+				startTime = Date.now()
 
 				setTimeout (-> 
 					utils.createVideo frames
@@ -235,6 +240,8 @@ define([
 				
 				flash()
 
+			$.subscribe "/full/timer/update", ->
+				$container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "00.00")
 			draw()
 				
 )
