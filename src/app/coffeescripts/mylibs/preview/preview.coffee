@@ -18,7 +18,7 @@ define [
     canvas = {}
     ctx = {}
     previews = []
-    $container = {}
+    el = {}
     webgl = fx.canvas()
     frame = 0
     ds = {}
@@ -28,7 +28,7 @@ define [
     animation = 
         effects: "pageturn:horizontal"
         reverse: false
-        duration: 1000
+        duration: 800
         
     # the main draw loop which renders the live video effects      
     draw = ->
@@ -128,18 +128,15 @@ define [
             
             # the container for this DOM fragment is passed in by the module
             # which calls it's init. grab it from the DOM and cache it.
-            el.container = $(selector)
-
             # attach a kendo mobile swipe event to the container. this is what
             # will page through the effects
-            el.container.kendoTouch {
+            el.container = $(selector).kendoTouch {
                 enableSwipe: true,
                 swipe: (e) ->
 
                     # page in the direction of the swipe
                     page e.direction
-
-            } 
+            }
 
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
@@ -198,13 +195,13 @@ define [
                                 content = $template({ name: preview.name })
 
                                 # wrap the template output in jQuery
-                                $content = $(content)
+                                content = $(content)
 
                                 # push the current effect onto the array
                                 previews.push(preview)
 
                                 # add the videos to the page
-                                $content.find("a").append(preview.canvas)
+                                content.find("a").append(preview.canvas)
                                                   .click ->
 
                                     # pause the effects
@@ -213,7 +210,7 @@ define [
                                     # transition the new screen in 
                                     $.publish("/full/show", [preview])
 
-                                half.append($content)
+                                half.append(content)
 
                         return half
 
@@ -240,8 +237,6 @@ define [
                             nextPage = justPaged
 
                             justPaged.empty()
-
-                            $.publish "/camera/pause", [ false ] 
                     }
 
                     # move the next page in

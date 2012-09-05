@@ -5,12 +5,12 @@
     
     Select preview shows pages of 6 live previews using webgl effects
     */
-    var $container, animation, canvas, ctx, draw, ds, el, frame, keyboard, page, paused, previews, pub, webgl;
+    var animation, canvas, ctx, draw, ds, el, frame, keyboard, page, paused, previews, pub, webgl;
     paused = false;
     canvas = {};
     ctx = {};
     previews = [];
-    $container = {};
+    el = {};
     webgl = fx.canvas();
     frame = 0;
     ds = {};
@@ -18,7 +18,7 @@
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
-      duration: 1000
+      duration: 800
     };
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
@@ -68,8 +68,7 @@
         ctx = canvas.getContext("2d");
         canvas.width = webgl.width = 360;
         canvas.height = webgl.width = 240;
-        el.container = $(selector);
-        el.container.kendoTouch({
+        el.container = $(selector).kendoTouch({
           enableSwipe: true,
           swipe: function(e) {
             return page(e.direction);
@@ -91,7 +90,7 @@
               var half, item, _fn, _i, _len;
               half = $(halfTemplate);
               _fn = function() {
-                var $content, $template, content, preview;
+                var $template, content, preview;
                 $template = kendo.template(previewTemplate);
                 preview = {};
                 $.extend(preview, item);
@@ -101,12 +100,12 @@
                 content = $template({
                   name: preview.name
                 });
-                $content = $(content);
+                content = $(content);
                 previews.push(preview);
-                $content.find("a").append(preview.canvas).click(function() {
+                content.find("a").append(preview.canvas).click(function() {
                   return $.publish("/full/show", [preview]);
                 });
-                return half.append($content);
+                return half.append(content);
               };
               for (_i = 0, _len = data.length; _i < _len; _i++) {
                 item = data[_i];
@@ -127,8 +126,7 @@
                 justPaged = previousPage;
                 previousPage = nextPage;
                 nextPage = justPaged;
-                justPaged.empty();
-                return $.publish("/camera/pause", [false]);
+                return justPaged.empty();
               }
             });
           }
