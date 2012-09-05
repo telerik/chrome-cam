@@ -19,10 +19,6 @@ body > #wrap { height: 100%;}
 	border-radius: 50%;
 }
 
-.white {
-	color: white;
-}
-
 [draggable] {
   -webkit-user-select: none;
   user-select: none;
@@ -117,6 +113,34 @@ body > #wrap { height: 100%;}
 .countdown > span {
 	display: none;	
 }
+
+.timer {
+	background: #60626A;
+	border-radius: 2px;
+	height: 16px;
+	width: 60px;
+	font-size: 17px;
+	color: white;
+	padding: 5px;
+	text-align: right;
+	position: absolute;
+	top: 30px;
+	left: 10%;
+	line-height: 17px;
+}
+	.timer:before {
+		content: "";
+		position: absolute;
+		display: block;
+		top: 8px;
+		left: 7px;
+		background-color: #BA000D;
+		width: 10px;
+		height: 10px;
+		margin: auto;
+		box-shadow: 0px 0px 4px 0px rgba(251, 247, 193, .5);
+		border-radius: 50%;
+	}
 
 .red-dot {
 	position: relative;
