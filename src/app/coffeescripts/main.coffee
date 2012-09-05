@@ -3,7 +3,7 @@
 require.config {
 	paths: 
 		Kendo: 'libs/kendo/kendo'
-		Glfx: 'libs/webgl/glfx'
+		Glfx: 'libs/glfx/glfx'
 }
 
 require [

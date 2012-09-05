@@ -1,6 +1,5 @@
 define([
-  'order!libs/webgl/glfx.min'
-  'order!libs/webgl/effects'
+  'order!libs/glfx/glfx.min'
 ], ->
   
   return fx
