@@ -73,11 +73,12 @@
             return $.publish("/capture/" + mode);
           }
         });
-        el.$content.find(".galleryLink").toggle((function() {
+        el.$content.on("click", ".galleryLink", function() {
           return $.publish("/gallery/list");
-        }), (function() {
+        });
+        el.$content.on("click", ".back", function() {
           return $.publish("/gallery/hide");
-        }));
+        });
         $container.append(el.$content);
         $.subscribe("/bar/preview/update", function(message) {
           var $image;

@@ -94,7 +94,11 @@ define([
 					$.publish "/capture/#{mode}"
 
 			# link to show or hide the gallery
-			el.$content.find(".galleryLink").toggle (-> $.publish "/gallery/list"), (-> $.publish "/gallery/hide")
+			el.$content.on "click", ".galleryLink", ->
+				$.publish "/gallery/list"
+
+			el.$content.on "click", ".back", ->
+				$.publish "/gallery/hide"
 
 			# append it to the container
 			$container.append el.$content
