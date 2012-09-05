@@ -1,8 +1,10 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/bar/views/bar.html'], function(kendo, template) {
-    var countdown, el, mode, pub, startTime;
+    var activeShape, captureShape, countdown, el, mode, pub, startTime, updateCaptureDotShape;
     mode = "image";
+    activeShape = "circle";
+    captureShape = "circle";
     el = {};
     startTime = 0;
     kendo.fx.circle = {
@@ -39,6 +41,12 @@
         }
       });
     };
+    updateCaptureDotShape = function(shape) {
+      return el.$dot.kendoStop().kendoAnimate({
+        effects: shape,
+        duration: 100
+      });
+    };
     return pub = {
       init: function(selector) {
         var $container;
@@ -47,15 +55,15 @@
         el.$capture = el.$content.find(".capture");
         el.$dot = el.$capture.find("> div > div");
         el.$counters = el.$content.find(".countdown > span");
-        el.$timer = el.$content.find(".timer");
         el.$content.find(".mode").on("click", "a", function() {
           mode = $(this).data("mode");
-          return el.$dot.kendoStop().kendoAnimate({
-            effects: $(this).data("shape")
-          });
+          activeShape = $(this).data("shape");
+          captureShape = $(this).data("capture-shape");
+          return updateCaptureDotShape(activeShape);
         });
         el.$content.on("click", ".capture", function(e) {
-          var capture;
+          var capture, token;
+          updateCaptureDotShape(captureShape);
           if (mode === "image") {
             capture = function() {
               return $.publish("/capture/" + mode);
@@ -67,8 +75,11 @@
             }
           } else {
             startTime = Date.now();
-            el.$capture.hide();
-            el.$timer.show();
+            token = $.subscribe("/capture/" + mode + "/completed", function() {
+              $.unsubscribe(token);
+              el.$content.removeClass("recording");
+              return updateCaptureDotShape(activeShape);
+            });
             $.publish("/capture/" + mode);
             return el.$content.addClass("recording");
           }
@@ -103,23 +114,12 @@
             duration: 200
           });
         });
-        $.subscribe("/bar/time/hide", function() {
-          el.$content.removeClass("recording");
-          return el.$timer.kendoStop(true).kendoAnimate({
-            effects: "slide:up",
-            hide: true,
-            duration: 200
-          });
-        });
         el.$content.addClass("previewMode");
         $.subscribe("/bar/gallerymode/show", function() {
           return el.$content.removeClass("previewMode").addClass("galleryMode");
         });
         $.subscribe("/bar/gallerymode/hide", function() {
           return el.$content.removeClass("galleryMode").addClass("previewMode");
-        });
-        $.subscribe("/bar/timer/update", function() {
-          return el.$timer.html(kendo.toString((Date.now() - startTime) / 1000, "00.00"));
         });
         $(".photo", el.$container).on("click", function() {
           var recordMode;

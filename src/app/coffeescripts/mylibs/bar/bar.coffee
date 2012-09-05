@@ -4,6 +4,8 @@ define([
 ], (kendo, template) ->
 
 	mode = "image"
+	activeShape = "circle"
+	captureShape = "circle"
 	el = {}
 	startTime = 0
 
@@ -48,6 +50,12 @@ define([
 
 		}
 
+
+	updateCaptureDotShape = (shape) ->
+		el.$dot.kendoStop().kendoAnimate
+			effects: shape
+			duration: 100
+
 	pub = 
 
 		init: (selector) ->
@@ -65,16 +73,17 @@ define([
 			# the countdown spans
 			el.$counters = el.$content.find ".countdown > span"
 
-			# the timer span
-			el.$timer = el.$content.find ".timer"
-
 			# we need to switch modes when clicking on the icons
 			el.$content.find(".mode").on "click", "a", ->
 				mode = $(this).data("mode")
-				el.$dot.kendoStop().kendoAnimate { effects: $(this).data("shape") }
+				activeShape = $(this).data("shape")
+				captureShape = $(this).data("capture-shape")
+				updateCaptureDotShape activeShape
 
 			# bind the "capture" button
 			el.$content.on "click", ".capture", (e) ->
+				updateCaptureDotShape captureShape
+
 				if mode == "image"
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
@@ -87,9 +96,10 @@ define([
 					# set the start time to right now
 					startTime = Date.now()
 
-					# replace the capture button with the counter
-					el.$capture.hide()
-					el.$timer.show()
+					token = $.subscribe "/capture/#{mode}/completed", ->
+						$.unsubscribe token
+						el.$content.removeClass("recording")
+						updateCaptureDotShape activeShape
 
 					# publish the capture method
 					$.publish "/capture/#{mode}"
@@ -126,17 +136,6 @@ define([
 					duration: 200
 				})
 
-			$.subscribe "/bar/time/hide", ->
-				# Removing the recording class should be tied into some event
-				# that is fired when the video recording stops.
-				el.$content.removeClass("recording")
-				
-				el.$timer.kendoStop(true).kendoAnimate({
-					effects: "slide:up"
-					hide: true
-					duration: 200
-				})
-
 			# TODO: The bar probably shouldn't have two different display modes
 			el.$content.addClass "previewMode"
 			$.subscribe "/bar/gallerymode/show", ->
@@ -144,9 +143,6 @@ define([
 
 			$.subscribe "/bar/gallerymode/hide", ->
 				el.$content.removeClass("galleryMode").addClass("previewMode")
-
-			$.subscribe "/bar/timer/update", ->
-				el.$timer.html kendo.toString((Date.now() - startTime) / 1000, "00.00")
 
 			# TODO: data-bind this, or at least reuse more code...
 			$(".photo", el.$container).on "click", ->

@@ -1,8 +1,9 @@
 define([
+  'Kendo'
   'mylibs/effects/effects'
   'mylibs/utils/utils'
   'text!mylibs/full/views/full.html'
-], (effects, utils, fullTemplate) ->
+], (kendo, effects, utils, fullTemplate) ->
 	
 	canvas = {}
 	ctx = {}
@@ -14,6 +15,8 @@ define([
 	frames = []
 	recording = false
 	$flash = {}
+	startTime = 0
+	$container = {}
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -43,8 +46,8 @@ define([
 	            	# push the current frame onto the buffer
 	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
 
-	            	# update the time in the bar
-	            	$.publish "/bar/timer/update" 
+	            	# update the time in the view
+	            	$.publish "/full/timer/update"
 
 	flash = ->
 
@@ -88,11 +91,18 @@ define([
 				frames = []
 
 				recording = true
+				
+				startTime = Date.now()
+
+				$container.find(".timer").removeClass("hidden")
 
 				setTimeout (-> 
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
+
+					$container.find(".timer").addClass("hidden")
+					$.publish "/capture/video/completed"
 				), 6000
 
 			# setup the shrink function - this most likely belongs in a widget file
@@ -235,6 +245,8 @@ define([
 				
 				flash()
 
+			$.subscribe "/full/timer/update", ->
+				$container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "00.00")
 			draw()
 				
 )
