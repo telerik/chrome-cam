@@ -1,8 +1,9 @@
 define [
+    'Kendo'
     'mylibs/utils/utils',
     'text!mylibs/gallery/views/gallery.html',
     'text!mylibs/gallery/views/details.html'
-], (utils, templateSource, detailsTemplateSource) ->
+], (kendo, utils, templateSource, detailsTemplateSource) ->
     template = kendo.template(templateSource)
     detailsTemplate = kendo.template(detailsTemplateSource)
 

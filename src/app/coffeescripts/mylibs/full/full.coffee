@@ -1,8 +1,8 @@
 define([
+  'mylibs/effects/effects'
   'mylibs/utils/utils'
   'text!mylibs/full/views/full.html'
-  'libs/webgl/glfx'
-], (utils, fullTemplate) ->
+], (effects, utils, fullTemplate) ->
 	
 	canvas = {}
 	ctx = {}

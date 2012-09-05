@@ -1,4 +1,6 @@
 define([
+  'Kendo'
+  'Glfx'
   'mylibs/camera/camera'
   'mylibs/bar/bar'
   'mylibs/preview/preview'
@@ -9,7 +11,7 @@ define([
   'mylibs/events/events'
   'libs/record/record'
   'text!intro.html'
-], (camera, bar, preview, full, postman, utils, gallery, events, record, intro) ->
+], (kendo, glfx, camera, bar, preview, full, postman, utils, gallery, events, record, intro) ->
 	
 	pub = 
 		    

@@ -1,6 +1,7 @@
 define([
+  'Kendo'
   'text!mylibs/bar/views/bar.html'
-], (template) ->
+], (kendo, template) ->
 
 	mode = "image"
 	el = {}

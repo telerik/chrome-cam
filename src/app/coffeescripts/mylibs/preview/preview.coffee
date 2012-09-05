@@ -1,5 +1,5 @@
 define([
-  'libs/webgl/effects'
+  'mylibs/effects/effects'
   'mylibs/utils/utils'
   'text!mylibs/preview/views/preview.html'
   'text!mylibs/preview/views/half.html'
