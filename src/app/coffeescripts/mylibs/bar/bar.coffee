@@ -101,7 +101,7 @@ define([
 
 			$.subscribe "/bar/preview/update", (message) ->
 				$image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
-				el.$content.find(".galleryLink").empty().append($image).fadeIn()
+				el.$content.find(".galleryLink").empty().append($image).removeClass("hidden")
 
 			# subscribe to the show and hide events for the capture controls
 			$.subscribe "/bar/capture/show", ->

@@ -86,7 +86,7 @@
             width: 72,
             height: 48
           });
-          return el.$content.find(".galleryLink").empty().append($image).fadeIn();
+          return el.$content.find(".galleryLink").empty().append($image).removeClass("hidden");
         });
         $.subscribe("/bar/capture/show", function() {
           return el.$capture.kendoStop(true).kendoAnimate({
