@@ -274,7 +274,7 @@ body > #wrap { height: 100%;}
 }
 
 #gallery .selected {
-	border: 2px solid #2D2D2D;
+	border: 2px solid magenta;
 	padding: 1px;
 }
 
