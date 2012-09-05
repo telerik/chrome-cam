@@ -181,6 +181,9 @@ body > #wrap { height: 100%;}
 }
 	.delete:hover { opacity: .7; }
 
+.galleryMode .mode, .galleryMode .galleryLink,
+.previewMode .back, .previewMode .delete, .previewMode .share { display: none; }
+
 /* Preview Styles */
 
 #preview {
