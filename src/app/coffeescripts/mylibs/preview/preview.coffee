@@ -18,7 +18,7 @@ define([
     canvas = {}
     ctx = {}
     previews = []
-    $container = {}
+    el = {}
     webgl = fx.canvas()
     frame = 0
     ds = {}
@@ -26,8 +26,8 @@ define([
     # define the animations. we slide different directions depending on if we are going forward or back.
     animation =
         direction: "left"
-        in: -> "slideIn:#{@direction} fadeIn" 
-        out: -> "slide:#{@direction} fadeOut"
+        in: -> "pageturn" 
+        out: -> "pageturn:horizontal"
         
     # the main draw loop which renders the live video effects      
     draw = ->
@@ -125,30 +125,21 @@ define([
             
             # the container for this DOM fragment is passed in by the module
             # which calls it's init. grab it from the DOM and cache it.
-            $container = $(selector)
+            el.container = $(selector).kendoTouch {
+                enableSwipe: true,
+                swipe: (e) ->
 
-            # attach a kendo mobile swipe event to the container. this is what
-            # will page through the effects
-            $container.kendoMobileSwipe (e) ->
-
-                # page in the direction of the swipe
-                page e.direction
-
-            , surface: $container
-
-            # we need to create top and bottom rows in our flexbox. these are
-            # objects which will hold the top and bottom elements now and an
-            # array of the data that belongs in the elements later
-            top = { el: $(halfTemplate) }
-            bottom = { el: $(halfTemplate) }
+                    # page in the direction of the swipe
+                    page e.direction
+            }
 
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
-            $page1 = $(pageTemplate).appendTo($container)
-            $page2 = $(pageTemplate).appendTo($container)
+            page1 = $(pageTemplate).appendTo($container)
+            page2 = $(pageTemplate).appendTo($container)
 
-            previousPage = $page1
-            nextPage = $page2
+            previousPage = page1
+            nextPage = page2
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -171,14 +162,14 @@ define([
 
                     # we need these 6 items broken up into a top and bottom
                     # set of images for the flexbox
-                    top.data = this.view().slice(0,3)
-                    bottom.data = this.view().slice(3,6)
+                    top = this.view().slice(0,3)
+                    bottom = this.view().slice(3,6)
 
-                    create = (half) ->
+                    create = (row) ->
 
-                        half.el.empty()
+                        half = $(halfTemplate)
 
-                        for item in half.data
+                        for item in row
 
                             # this is wrapped in a closure so that it doesn't step on itself during
                             # the async loop
@@ -199,13 +190,13 @@ define([
                                 content = $template({ name: preview.name })
 
                                 # wrap the template output in jQuery
-                                $content = $(content)
+                                content = $(content)
 
                                 # push the current effect onto the array
                                 previews.push(preview)
 
                                 # add the videos to the page
-                                $content.find("a").append(preview.canvas)
+                                content.find("a").append(preview.canvas)
                                                   .click ->
 
                                     # pause the effects
@@ -214,15 +205,16 @@ define([
                                     # transition the new screen in 
                                     $.publish("/full/show", [preview])
 
-                                half.el.append($content)
+                                half.append(content)
 
+                        return half
 
-                    create(top)
-                    create(bottom)
+                    nextPage.append create(top)
+                    nextPage.append create(bottom)
 
                     # we want to append our two halves on to the next page
-                    nextPage.append(top.el)
-                    nextPage.append(bottom.el)
+                    # nextPage.append(top.el)
+                    # nextPage.append(bottom.el)
 
                     # pause the camera. that will additionally pause
                     # these previews so there is no need to pause this
@@ -230,27 +222,30 @@ define([
                     $.publish "/camera/pause", [ true ] 
 
                     # move the current page out and the next page in
-                    previousPage.kendoStop(true).kendoAnimate({
-                        effects: animation.out()
-                        duration: 1000,
-                        hide: true,
+                    el.container.kendoAnimate {
+                        effects: "pageturn:horizontal"
+                        face: previousPage
+                        back: nextPage
+                        duration: 1000
                         complete: ->
                             # the current page becomes the next page
                             justPaged = previousPage
                             
                             previousPage = nextPage
                             nextPage = justPaged
-                    })
+
+                            justPaged.empty()
+                    }
 
                     # move the next page in
-                    nextPage.kendoStop(true).kendoAnimate({
-                        effects: animation.in(),
-                        duration: 200,
-                        show: true,
-                        complete: ->
-                            # unpause the camera
-                            $.publish "/camera/pause", false
-                    })
+                    # nextPage.kendoStop(true).kendoAnimate({
+                    #     effects: animation.in(),
+                    #     duration: 200,
+                    #     show: true,
+                    #     complete: ->
+                    #         # unpause the camera
+                    #         $.publish "/camera/pause", false
+                    # })
 
 
             # read from the datasource

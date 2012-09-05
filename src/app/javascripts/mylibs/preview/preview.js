@@ -5,22 +5,22 @@
     
     Select preview shows pages of 6 live previews using webgl effects
     */
-    var $container, animation, canvas, ctx, draw, ds, frame, keyboard, page, paused, previews, pub, webgl;
+    var animation, canvas, ctx, draw, ds, el, frame, keyboard, page, paused, previews, pub, webgl;
     paused = false;
     canvas = {};
     ctx = {};
     previews = [];
-    $container = {};
+    el = {};
     webgl = fx.canvas();
     frame = 0;
     ds = {};
     animation = {
       direction: "left",
       "in": function() {
-        return "slideIn:" + this.direction + " fadeIn";
+        return "pageturn";
       },
       out: function() {
-        return "slide:" + this.direction + " fadeOut";
+        return "pageturn:horizontal";
       }
     };
     draw = function() {
@@ -60,7 +60,7 @@
         return draw();
       },
       init: function(selector) {
-        var $page1, $page2, bottom, nextPage, previousPage, top;
+        var nextPage, page1, page2, previousPage;
         effects.init();
         keyboard(true);
         $.subscribe("/previews/pause", function(isPaused) {
@@ -70,81 +70,66 @@
         ctx = canvas.getContext("2d");
         canvas.width = webgl.width = 360;
         canvas.height = webgl.width = 240;
-        $container = $(selector);
-        $container.kendoMobileSwipe(function(e) {
-          return page(e.direction);
-        }, {
-          surface: $container
+        el.container = $(selector).kendoTouch({
+          enableSwipe: true,
+          swipe: function(e) {
+            return page(e.direction);
+          }
         });
-        top = {
-          el: $(halfTemplate)
-        };
-        bottom = {
-          el: $(halfTemplate)
-        };
-        $page1 = $(pageTemplate).appendTo($container);
-        $page2 = $(pageTemplate).appendTo($container);
-        previousPage = $page1;
-        nextPage = $page2;
+        page1 = $(pageTemplate).appendTo($container);
+        page2 = $(pageTemplate).appendTo($container);
+        previousPage = page1;
+        nextPage = page2;
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var create;
+            var bottom, create, top;
             previews = [];
-            top.data = this.view().slice(0, 3);
-            bottom.data = this.view().slice(3, 6);
-            create = function(half) {
-              var item, _i, _len, _ref, _results;
-              half.el.empty();
-              _ref = half.data;
-              _results = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                item = _ref[_i];
-                _results.push((function() {
-                  var $content, $template, content, preview;
-                  $template = kendo.template(previewTemplate);
-                  preview = {};
-                  $.extend(preview, item);
-                  preview.canvas = fx.canvas();
-                  preview.canvas.width = canvas.width;
-                  preview.canvas.height = canvas.height;
-                  content = $template({
-                    name: preview.name
-                  });
-                  $content = $(content);
-                  previews.push(preview);
-                  $content.find("a").append(preview.canvas).click(function() {
-                    paused = true;
-                    return $.publish("/full/show", [preview]);
-                  });
-                  return half.el.append($content);
-                })());
+            top = this.view().slice(0, 3);
+            bottom = this.view().slice(3, 6);
+            create = function(row) {
+              var half, item, _fn, _i, _len;
+              half = $(halfTemplate);
+              _fn = function() {
+                var $template, content, preview;
+                $template = kendo.template(previewTemplate);
+                preview = {};
+                $.extend(preview, item);
+                preview.canvas = fx.canvas();
+                preview.canvas.width = canvas.width;
+                preview.canvas.height = canvas.height;
+                content = $template({
+                  name: preview.name
+                });
+                content = $(content);
+                previews.push(preview);
+                content.find("a").append(preview.canvas).click(function() {
+                  paused = true;
+                  return $.publish("/full/show", [preview]);
+                });
+                return half.append(content);
+              };
+              for (_i = 0, _len = row.length; _i < _len; _i++) {
+                item = row[_i];
+                _fn();
               }
-              return _results;
+              return half;
             };
-            create(top);
-            create(bottom);
-            nextPage.append(top.el);
-            nextPage.append(bottom.el);
+            nextPage.append(create(top));
+            nextPage.append(create(bottom));
             $.publish("/camera/pause", [true]);
-            previousPage.kendoStop(true).kendoAnimate({
-              effects: animation.out(),
+            return el.container.kendoAnimate({
+              effects: "pageturn:horizontal",
+              face: previousPage,
+              back: nextPage,
               duration: 1000,
-              hide: true,
               complete: function() {
                 var justPaged;
                 justPaged = previousPage;
                 previousPage = nextPage;
-                return nextPage = justPaged;
-              }
-            });
-            return nextPage.kendoStop(true).kendoAnimate({
-              effects: animation["in"](),
-              duration: 200,
-              show: true,
-              complete: function() {
-                return $.publish("/camera/pause", false);
+                nextPage = justPaged;
+                return justPaged.empty();
               }
             });
           }
