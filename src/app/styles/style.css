@@ -267,7 +267,7 @@ body > #wrap { height: 100%;}
 }
 
 	
-#gallery .thumbnail:hover {
+#gallery .thumbnail:hover, .preview:hover {
 	cursor: pointer;
 	-webkit-transform: scale(1.05);
 	box-shadow: 0px 0px 7px 1px rgba(0, 0, 0, 0.75);
