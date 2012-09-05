@@ -112,6 +112,12 @@ define [
                     $media = $(this).children().first()
                     $.publish "/gallery/details/show", [{ src: $media.attr("src"), type: $media.data("media-type"), name: $media.data("file-name") }]
 
+                $container.on "click", ".thumbnail", ->
+                    $(selector).find(".thumbnail").each ->
+                        $(this).removeClass("selected")
+
+                    $(this).addClass("selected")
+
                 changePage = (direction) ->
                     # TODO: add transition effect...
                     if direction > 0 and dataSource.page() > 1

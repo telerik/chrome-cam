@@ -142,6 +142,12 @@
               }
             ]);
           });
+          $container.on("click", ".thumbnail", function() {
+            $(selector).find(".thumbnail").each(function() {
+              return $(this).removeClass("selected");
+            });
+            return $(this).addClass("selected");
+          });
           changePage = function(direction) {
             if (direction > 0 && dataSource.page() > 1) {
               dataSource.page(dataSource.page() - 1);
