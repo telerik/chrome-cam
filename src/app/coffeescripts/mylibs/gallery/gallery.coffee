@@ -108,7 +108,7 @@ define [
                 console.log "done loading images"
                 
                 # set up the DOM events
-                $container.on "click", ".thumbnail", ->
+                $container.on "dblclick", ".thumbnail", ->
                     $media = $(this).children().first()
                     $.publish "/gallery/details/show", [{ src: $media.attr("src"), type: $media.data("media-type"), name: $media.data("file-name") }]
 

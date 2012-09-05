@@ -131,7 +131,7 @@
         return loadImages().done(function(dataSource) {
           var changePage;
           console.log("done loading images");
-          $container.on("click", ".thumbnail", function() {
+          $container.on("dblclick", ".thumbnail", function() {
             var $media;
             $media = $(this).children().first();
             return $.publish("/gallery/details/show", [
