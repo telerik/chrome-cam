@@ -182,10 +182,17 @@ body > #wrap { height: 100%;}
 	.delete:hover { opacity: .7; }
 
 .galleryMode .mode, .galleryMode .galleryLink,
-.previewMode .back, .previewMode .delete, .previewMode .share { display: none; }
+.previewMode .back, .previewMode .delete, .previewMode .share,
+.bar.recording .mode, .bar.recording .galleryLink { display: none; }
 
 .bar.galleryMode, .details .bar {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(15%,rgba(46,46,46,1)), color-stop(100%,rgba(130,130,130,1)));
+}
+
+.bar.recording {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e9a5a5), color-stop(100%,#cf3a3b)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #e9a5a5 0%,#cf3a3b 100%); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom, #e9a5a5 0%,#cf3a3b 100%); /* W3C */
 }
 
 /* Preview Styles */
