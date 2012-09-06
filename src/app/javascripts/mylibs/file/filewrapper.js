@@ -2,56 +2,34 @@
 (function() {
 
   define([], function(file) {
-    var pub;
+    var asyncFileRequest, pub;
+    asyncFileRequest = function(requestMessage, responseMessage, data) {
+      var deferred, token;
+      deferred = $.Deferred();
+      token = $.subscribe(responseMessage, function(result) {
+        $.unsubscribe(token);
+        return deferred.resolve((result || {}).message);
+      });
+      $.publish("/postman/deliver", [data, requestMessage, []]);
+      return deferred.promise();
+    };
     return pub = {
       list: function() {
-        var deferred, token;
-        deferred = $.Deferred();
-        token = $.subscribe("/file/listResult", function(result) {
-          $.unsubscribe(token);
-          return deferred.resolve(result.message);
-        });
-        $.publish("/postman/deliver", [{}, "/file/list", []]);
-        return deferred.promise();
+        return asyncFileRequest("/file/list", "/file/listResult", {});
       },
       readAll: function() {
-        var deferred, token;
-        deferred = $.Deferred();
-        token = $.subscribe("/pictures/bulk", function(result) {
-          $.unsubscribe(token);
-          return deferred.resolve(result.message);
-        });
-        $.publish("/postman/deliver", [{}, "/file/read", []]);
-        return deferred.promise();
+        return asyncFileRequest("/file/read", "/pictures/bulk", {});
       },
       deleteFile: function(filename) {
-        var deferred, token;
-        deferred = $.Deferred();
-        token = $.subscribe("/file/deleted/" + filename, function() {
-          $.unsubscribe(token);
-          return deferred.resolve();
+        return asyncFileRequest("/file/delete", "/file/deleted/" + filename, {
+          name: filename
         });
-        $.publish("/postman/deliver", [
-          {
-            name: filename
-          }, "/file/delete", []
-        ]);
-        return deferred.promise();
       },
       save: function(filename, blob) {
-        var deferred, token;
-        deferred = $.Deferred();
-        token = $.subscribe("/file/saved/" + filename, function() {
-          $.unsubscribe(token);
-          return deferred.resolve();
+        return asyncFileRequest("/file/save", "/file/saved/" + filename, {
+          name: filename,
+          file: blob
         });
-        $.publish("/postman/deliver", [
-          {
-            name: filename,
-            file: blob
-          }, "/file/save"
-        ]);
-        return deferred.promise();
       },
       readFile: function(filename) {
         throw "not implemented";
