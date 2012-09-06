@@ -34,9 +34,6 @@ define([
 		    	# hide the time
 		    	$.publish "/bar/time/hide"
 
-		    	# enable capture controls
-		    	$.publish "/bar/capture/show"
-
 	    	canvas = document.createElement("canvas")
 	    	canvas.width = 720
 	    	canvas.height = 480

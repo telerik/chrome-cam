@@ -31,7 +31,7 @@ define [
 
             deferred.resolve dataSource
 
-        $.publish "/postman/deliver", [ {}, "/file/read", [] ]
+        $.publish "/postman/deliver", [ {}, "/file/read" ]
 
         deferred.promise()
 
@@ -79,6 +79,7 @@ define [
 
             # TODO: Use kendoAnimate for this
             $("#footer").animate "margin-top": "-60px"
+            $("#wrap").kendoAnimate { effects: "slideIn:down", duration: 500 }
             $("#wrap")[0].style.height = "100%";
 
             $.publish "/camera/pause", [false]
@@ -93,7 +94,8 @@ define [
 
             # TODO: Use kendoAnimate for this
             $("#wrap").addClass "animate"
-            $("#wrap").css(height: 0)
+            $("#wrap").kendoAnimate { effects: "slide:up", duration: 500 }
+            $("#wrap").css "height", 0
 
             $.publish "/bar/gallerymode/show"
 
@@ -106,6 +108,7 @@ define [
 
             # after loading the images
             loadImages().done (dataSource) ->
+
                 console.log "done loading images"
                 
                 # set up the DOM events

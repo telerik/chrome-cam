@@ -63,7 +63,7 @@ define([
 		init: (selector) ->
 
 			# attach to the /capture/image function
-			$.subscribe "/capture/image", ->
+			$.subscribe "/capture/photo", ->
 
 				flash()
 

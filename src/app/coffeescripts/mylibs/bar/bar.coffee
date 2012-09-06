@@ -3,11 +3,9 @@ define [
   'text!mylibs/bar/views/bar.html'
 ], (kendo, template) ->
 
-	mode = "image"
-	activeShape = "circle"
-	captureShape = "circle"
 	el = {}
 	startTime = 0
+	mode = "photo"
 
 	# create the box to square and back effect
 	kendo.fx.circle =
@@ -21,22 +19,24 @@ define [
 	viewModel = kendo.observable {
 
 		mode:
+		
 			click: (e) ->
-				
-				div = $(e.target)
 
-				# we need to switch modes when clicking on the icons
-				mode = div.data("mode")
-				activeShape = div.data("shape")
-				captureShape = div.data("capture-shape")
-				updateCaptureDotShape activeShape
+				a = $(e.target)
+
+				mode = a.data "mode"
+
+				# loop through all of the buttons and remove the active class
+				el.mode.find("a").removeClass "active"
+
+				# add the active class to this anchor
+				a.addClass "active"
 
 		capture:
+			
 			click: (e) ->
 
-				updateCaptureDotShape captureShape
-
-				if mode == "image"
+				if mode == "photo"
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
 					if e.ctrlKey
@@ -51,18 +51,29 @@ define [
 					token = $.subscribe "/capture/#{mode}/completed", ->
 						$.unsubscribe token
 						el.content.removeClass("recording")
-						updateCaptureDotShape activeShape
+						el.dot.css "border-radius", "100"
 
 					# publish the capture method
 					$.publish "/capture/#{mode}"
 
-					el.content.addClass("recording")
+					el.dot.css "border-radius", "0"
+
+					el.content.addClass "recording"
 
 		filters:
 			click: (e) ->
 
+		gallery:
+			click: (e) ->
+				$.publish "/gallery/list"
+
+		camera:
+			click: (e) ->
+				console.log "go back to the camera!"
+
 	}
-	
+
+
 
 	# countdown
 	countdown = (position, callback) ->
@@ -95,12 +106,6 @@ define [
 
 		}
 
-
-	updateCaptureDotShape = (shape) ->
-		el.dot.kendoStop().kendoAnimate
-			effects: shape
-			duration: 100
-
 	pub = 
 
 		init: (selector) ->
@@ -113,17 +118,21 @@ define [
 
 			# get a reference to the "capture" button
 			el.capture = el.content.find ".capture"
+			el.capture.show = ->
+				this.kendoStop(true).kendoAnimate { effects: "slideIn:up", show: true, duration: 200 }
+			el.capture.hide = ->
+				this.kendoStop(true).kendoAnimate { effects: "slide:down", show: true, duration: 200 }
 
 			el.dot = el.capture.find("> div > div")
 
 			el.mode = el.content.find ".mode"
+			el.mode.show = ->
+				this.kendoStop(true).kendoAnimate { effects: "slideIn:right", show: true, duration: 200 }
+			el.mode.hide = ->
+				this.kendoStop(true).kendoAnimate { effects: "slide:left", hide: true, duration: 200 }
 
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"
-
-			# link to show or hide the gallery
-			el.content.on "click", ".galleryLink", ->
-				$.publish "/gallery/list"
 
 			el.content.on "click", ".back", ->
 				$.publish "/gallery/hide"
@@ -134,19 +143,21 @@ define [
 			# bind the container to the view model
 			kendo.bind el.container, viewModel
 
+			# ******* Subscribe To Events **************
+			# ******************************************
+
 			$.subscribe "/bar/preview/update", (message) ->
 				image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
 				el.content.find(".galleryLink").empty().append(image).removeClass("hidden")
 
 			# subscribe to the show and hide events for the capture controls
 			$.subscribe "/bar/capture/show", ->
-				el.capture.kendoStop(true).kendoAnimate { effects: "slideIn:up", show: true, duration: 200 }
-				el.mode.kendoStop(true).kendoAnimate { effects: "slideIn:right", show: true, duration: 200 }
-
+				el.capture.show()
+				el.mode.show()
 
 			$.subscribe "/bar/capture/hide", ->
-				el.capture.kendoStop(true).kendoAnimate { effects: "slide:down", show: true, duration: 200 }
-				el.mode.kendoStop(true).kendoAnimate { effects: "slide:left", hide: true, duration: 200 }
+				el.capture.hide()
+				el.mode.hide()
 
 			# TODO: The bar probably shouldn't have two different display modes
 			el.content.addClass "previewMode"
@@ -155,15 +166,5 @@ define [
 
 			$.subscribe "/bar/gallerymode/hide", ->
 				el.content.removeClass("galleryMode").addClass("previewMode")
-
-			# TODO: data-bind this, or at least reuse more code...
-			$(".photo", el.container).on "click", ->
-				$(".mode a", el.container).removeClass "active"
-				$(this).addClass "active"
-				recordMode = "image"
-			$(".video", el.container).on "click", ->
-				$(".mode a", el.container).removeClass "active"
-				$(this).addClass "active"
-				recordMode = "video/record"
 
 		
