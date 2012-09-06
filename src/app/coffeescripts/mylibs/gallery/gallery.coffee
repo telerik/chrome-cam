@@ -12,12 +12,13 @@ define [
     numberOfRows = 4
 
     loadImages = ->
-
         deferred = $.Deferred()
 
-        filewrapper.readAll().done (files) ->
-            if files && files.length > 0
-                $.publish "/bar/preview/update", [thumbnailURL: files[files.length - 1].file]
+        $.publish "/bar/preview/update", [thumbnailURL: "derpderpin"]
+
+        filewrapper.list().done (files) ->
+            # if files && files.length > 0
+            #     $.publish "/bar/preview/update", [thumbnailURL: files[files.length - 1].file]
 
             dataSource = new kendo.data.DataSource
                 data: files
@@ -32,13 +33,14 @@ define [
 
             deferred.resolve dataSource
 
-        $.subscribe "/file/listResult", (files) =>
-            console.log ["File list: ", files]
-
         deferred.promise()
 
     createPage = (dataSource, $container) -> 
         rows = (dataSource.view()[i * rowLength ... (i+1) * rowLength] for i in [0 ... numberOfRows])
+
+        for file in dataSource.view()
+            filewrapper.readFile(file.name).done (file) ->
+                $container.find("[data-file-name='#{file.name}']").attr("src", file.file)
 
         $container.html template(rows: rows)
 

@@ -8,18 +8,15 @@
     rowLength = 4;
     numberOfRows = 4;
     loadImages = function() {
-      var deferred,
-        _this = this;
+      var deferred;
       deferred = $.Deferred();
-      filewrapper.readAll().done(function(files) {
-        var dataSource;
-        if (files && files.length > 0) {
-          $.publish("/bar/preview/update", [
-            {
-              thumbnailURL: files[files.length - 1].file
-            }
-          ]);
+      $.publish("/bar/preview/update", [
+        {
+          thumbnailURL: "derpderpin"
         }
+      ]);
+      filewrapper.list().done(function(files) {
+        var dataSource;
         dataSource = new kendo.data.DataSource({
           data: files,
           pageSize: rowLength * numberOfRows,
@@ -34,13 +31,10 @@
         dataSource.read();
         return deferred.resolve(dataSource);
       });
-      $.subscribe("/file/listResult", function(files) {
-        return console.log(["File list: ", files]);
-      });
       return deferred.promise();
     };
     createPage = function(dataSource, $container) {
-      var i, rows;
+      var file, i, rows, _i, _len, _ref;
       rows = (function() {
         var _i, _results;
         _results = [];
@@ -49,6 +43,13 @@
         }
         return _results;
       })();
+      _ref = dataSource.view();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        filewrapper.readFile(file.name).done(function(file) {
+          return $container.find("[data-file-name='" + file.name + "']").attr("src", file.file);
+        });
+      }
       return $container.html(template({
         rows: rows
       }));
