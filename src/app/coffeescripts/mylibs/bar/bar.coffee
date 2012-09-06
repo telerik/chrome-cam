@@ -87,7 +87,7 @@ define([
 				if mode == "image"
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
-					if e.ctrlKey
+					if e.ctrlKey or e.metaKey
 						capture()
 					else
 						countdown 0, capture
