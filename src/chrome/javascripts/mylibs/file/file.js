@@ -7,9 +7,9 @@
     The file module takes care of all the reading and writing to and from the file system
     */
 
-    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, list, myPicturesDir, pub, read, save;
+    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, list, myPicturesDir, pub, read, save, withFileSystem;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-    fileSystem = {};
+    fileSystem = null;
     myPicturesDir = {};
     blobBuiler = {};
     compare = function(a, b) {
@@ -46,38 +46,56 @@
       $.publish("/notify/show", ["File Error", msg, true]);
       return $.publish("/notify/show", ["File Access Denied", "Access to the file system could not be obtained.", false]);
     };
+    withFileSystem = function(fn) {
+      if (fileSystem) {
+        return fn(fileSystem);
+      } else {
+        return window.webkitStorageInfo.requestQuota(PERSISTENT, 5000 * 1024, function(grantedBytes) {
+          var success;
+          success = function(fs) {
+            fileSystem = fs;
+            return fn(fs);
+          };
+          return window.requestFileSystem(PERSISTENT, grantedBytes, success, errorHandler);
+        });
+      }
+    };
     save = function(name, blob) {
       if (typeof blob === "string") {
         blob = utils.toBlob(blob);
       }
-      return fileSystem.root.getFile(name, {
-        create: true
-      }, function(fileEntry) {
-        return fileEntry.createWriter(function(fileWriter) {
-          fileWriter.onwrite = function(e) {
-            $.publish("/share/gdrive/upload", [blob]);
-            return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
-          };
-          fileWriter.onerror = function(e) {
-            return errorHandler(e);
-          };
-          return fileWriter.write(blob);
-        });
-      }, errorHandler);
+      return withFileSystem(function() {
+        return fileSystem.root.getFile(name, {
+          create: true
+        }, function(fileEntry) {
+          return fileEntry.createWriter(function(fileWriter) {
+            fileWriter.onwrite = function(e) {
+              $.publish("/share/gdrive/upload", [blob]);
+              return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
+            };
+            fileWriter.onerror = function(e) {
+              return errorHandler(e);
+            };
+            return fileWriter.write(blob);
+          });
+        }, errorHandler);
+      });
     };
     destroy = function(name) {
-      return fileSystem.root.getFile(name, {
-        create: false
-      }, function(fileEntry) {
-        return fileEntry.remove(function() {
-          $.publish("/notify/show", ["File Deleted!", "The picture was deleted successfully", false]);
-          return $.publish("/postman/deliver", [
-            {
-              message: ""
-            }, "/file/deleted/" + name, []
-          ]);
+      return withFileSystem(function() {
+        return fileSystem.root.getFile(name, {
+          create: false
+        }, function(fileEntry) {
+          return fileEntry.remove(function() {
+            $.publish("/notify/show", ["File Deleted!", "The picture was deleted successfully", false]);
+            return $.publish("/postman/deliver", [
+              {
+                message: ""
+              }, "/file/deleted/" + name, []
+            ]);
+          }, errorHandler);
         }, errorHandler);
-      }, errorHandler);
+      });
     };
     download = function(name, dataURL) {
       var blob;
@@ -97,11 +115,11 @@
       });
     };
     list = function() {
-      var getFileExtension, success;
+      var getFileExtension;
       getFileExtension = function(filename) {
         return filename.split('.').pop();
       };
-      success = function(fs) {
+      return withFileSystem(function(fs) {
         var dirReader;
         dirReader = fs.root.createReader();
         return dirReader.readEntries(function(results) {
@@ -127,18 +145,11 @@
             }, "/file/listResult", []
           ]);
         });
-      };
-      return window.webkitStorageInfo.requestQuota(PERSISTENT, 5000 * 1024, function(grantedBytes) {
-        return window.requestFileSystem(PERSISTENT, grantedBytes, success, errorHandler);
       });
     };
     read = function() {
-      var success;
-      window.webkitStorageInfo.requestQuota(PERSISTENT, 5000 * 1024, function(grantedBytes) {
-        return window.requestFileSystem(PERSISTENT, grantedBytes, success, errorHandler);
-      });
-      return success = function(fs) {
-        fs.root.getDirectory("MyPictures", {
+      return withFileSystem(function(fs) {
+        return fs.root.getDirectory("MyPictures", {
           create: true
         }, function(dirEntry) {
           var dirReader, entries, files;
@@ -199,8 +210,7 @@
           };
           return read();
         }, errorHandler);
-        return fileSystem = fs;
-      };
+      });
     };
     return pub = {
       init: function(kb) {
