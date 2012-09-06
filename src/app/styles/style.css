@@ -93,9 +93,10 @@ body > #wrap { height: 100%;}
 	background-color: rgba(244, 244, 244, 0.3);
 	border: 1px solid rgba(244, 244, 244, .3);
 	background-repeat: no-repeat;
-    background-image: url('images/cameraModeSpritex2.png');
     background-size: 24px 140px;
 }
+.mode a, .delete { background-image: url('images/cameraModeSpritex2.png'); }
+
 	.mode a:hover { background-color: rgba(244, 244, 244, 0.5); }
 	.mode .active, .mode .active:hover { 
 		background-color: rgba(192, 192, 192, 1);
@@ -187,12 +188,11 @@ body > #wrap { height: 100%;}
 
 .delete {
 	background-repeat: no-repeat;
-	background-image: url('images/cameraModeSpritex2.png');
 	background-size: 24px 140px;
 	display: block;
 	width: 24px;
 	overflow: hidden;
-	text-indent: -999px;
+	text-indent: 999px;
 	direction: rtl;
 	background-position: 0 -116px;
 	margin-right: 10px;
@@ -309,6 +309,7 @@ body > #wrap { height: 100%;}
 #gallery .thumbnail:hover, .preview:hover {
 	cursor: pointer;
 	-webkit-transform: scale(1.02);
+	transform: scale(1.02);
 	box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.75);
 }
 
