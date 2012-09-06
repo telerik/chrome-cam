@@ -105,6 +105,7 @@
         });
       });
       $.subscribe("/gallery/hide", function() {
+        $("#wrap").show();
         console.log("hide gallery");
         $("#footer").animate({
           "margin-top": "-60px"
@@ -115,16 +116,21 @@
         return $container.hide();
       });
       $.subscribe("/gallery/list", function() {
+        var wrap;
         console.log("show gallery");
         $.publish("/camera/pause", [true]);
         $container.show();
         $("#footer").animate({
           "margin-top": 0
         });
-        $("#wrap").addClass("animate");
-        $("#wrap").css({
+        wrap = $("#wrap");
+        wrap.addClass("animate");
+        wrap.css({
           height: 0
         });
+        setTimeout((function() {
+          return wrap.hide();
+        }), 1000);
         return $.publish("/bar/gallerymode/show");
       });
       return $.subscribe("/gallery/page", function(dataSource) {

@@ -82,6 +82,8 @@ define [
                 show: true
 
         $.subscribe "/gallery/hide", ->
+            # HACK
+            $("#wrap").show()
             console.log "hide gallery"
 
             # TODO: Use kendoAnimate for this
@@ -99,8 +101,12 @@ define [
             $("#footer").animate "margin-top": 0
 
             # TODO: Use kendoAnimate for this
-            $("#wrap").addClass "animate"
-            $("#wrap").css(height: 0)
+            wrap = $("#wrap")
+            wrap.addClass "animate"
+            wrap.css(height: 0)
+
+            # HACK
+            setTimeout (-> wrap.hide()), 1000
 
             $.publish "/bar/gallerymode/show"
 
