@@ -7,7 +7,7 @@
     The file module takes care of all the reading and writing to and from the file system
     */
 
-    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, list, myPicturesDir, pub, read, save, withFileSystem;
+    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, getFileExtension, list, myPicturesDir, pub, read, readSingleFile, save, withFileSystem;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
     fileSystem = null;
     myPicturesDir = {};
@@ -20,6 +20,9 @@
         return 1;
       }
       return 0;
+    };
+    getFileExtension = function(filename) {
+      return filename.split('.').pop();
     };
     errorHandler = function(e) {
       var msg;
@@ -115,10 +118,6 @@
       });
     };
     list = function() {
-      var getFileExtension;
-      getFileExtension = function(filename) {
-        return filename.split('.').pop();
-      };
       return withFileSystem(function(fs) {
         var dirReader;
         dirReader = fs.root.createReader();
@@ -144,6 +143,30 @@
               message: files
             }, "/file/listResult", []
           ]);
+        });
+      });
+    };
+    readSingleFile = function(filename) {
+      return withFileSystem(function() {
+        return fileSystem.root.getFile(filename, null, function(fileEntry) {
+          return fileEntry.file(function(file) {
+            var reader;
+            reader = new FileReader();
+            reader.onloadend = function(e) {
+              var result;
+              result = {
+                name: filename,
+                type: getFileExtension(filename),
+                file: this.result
+              };
+              return $.publish("/postman/deliver", [
+                {
+                  message: result
+                }, "/pictures/" + filename, []
+              ]);
+            };
+            return reader.readAsDataURL(file);
+          });
         });
       });
     };
@@ -226,8 +249,11 @@
         $.subscribe("/file/download", function(message) {
           return download(message.name, message.image);
         });
-        return $.subscribe("/file/list", function(message) {
+        $.subscribe("/file/list", function(message) {
           return list();
+        });
+        return $.subscribe("/file/readFile", function(message) {
+          return readSingleFile(message.name);
         });
       }
     };

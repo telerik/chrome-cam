@@ -90,6 +90,7 @@
     };
     return pub = {
       init: function(selector) {
+        var _this = this;
         el.container = $(selector);
         el.content = $(template);
         el.capture = el.content.find(".capture");

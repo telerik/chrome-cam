@@ -29,6 +29,9 @@ define([
   
     return 0
 
+  getFileExtension = (filename) ->
+      filename.split('.').pop()
+
   # generic error handler. called everytime there is an exception thrown here.
   errorHandler = (e) ->
 
@@ -138,9 +141,6 @@ define([
         fileWriter.write blob
 
   list = ->
-    getFileExtension = (filename) ->
-      filename.split('.').pop()
-
     withFileSystem (fs) ->
       dirReader = fs.root.createReader()
       dirReader.readEntries (results) ->
@@ -148,6 +148,24 @@ define([
         files.sort(compare)
 
         $.publish "/postman/deliver", [ { message: files }, "/file/listResult", [] ]
+
+  readSingleFile = (filename) ->
+    withFileSystem ->
+      fileSystem.root.getFile filename, null, (fileEntry) ->
+        fileEntry.file (file) ->
+          reader = new FileReader()
+
+          reader.onloadend = (e) ->
+            result =
+              name: filename
+              type: getFileExtension filename
+              file: this.result
+
+            # send it down to the app
+            $.publish "/postman/deliver", [ { message: result }, "/pictures/#{filename}", [] ]
+
+          reader.readAsDataURL file
+
 
   # reads all images from the "MyPictures" folder in the file system
   read = ->
@@ -254,8 +272,8 @@ define([
 
       $.subscribe "/file/list", (message) ->
         list()
-
-
-
+      
+      $.subscribe "/file/readFile", (message) ->
+        readSingleFile message.name
 
 )

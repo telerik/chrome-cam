@@ -137,7 +137,6 @@
         $container = $(selector);
         return loadImages().done(function(dataSource) {
           var changePage;
-          console.log("done loading images");
           $container.on("dblclick", ".thumbnail", function() {
             var $media;
             $media = $(this).children().first();

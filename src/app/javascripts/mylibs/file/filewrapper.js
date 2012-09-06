@@ -13,7 +13,7 @@
       $.publish("/postman/deliver", [data, requestMessage, []]);
       return deferred.promise();
     };
-    return pub = {
+    return pub = window.filewrapper = {
       list: function() {
         return asyncFileRequest("/file/list", "/file/listResult", {});
       },
@@ -32,7 +32,9 @@
         });
       },
       readFile: function(filename) {
-        throw "not implemented";
+        return asyncFileRequest("/file/readFile", "/pictures/" + filename, {
+          name: filename
+        });
       }
     };
   });

@@ -113,8 +113,6 @@ define [
 
             # after loading the images
             loadImages().done (dataSource) ->
-                console.log "done loading images"
-                
                 # set up the DOM events
                 $container.on "dblclick", ".thumbnail", ->
                     $media = $(this).children().first()
