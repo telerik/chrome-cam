@@ -207,7 +207,7 @@ define([
               entry = entries[i]
 
               # only process this file if it is in fact a file, and not a directory
-              if entry.isFile
+              if entry and entry.isFile
 
                 # store the name and type
                 name = entry.name

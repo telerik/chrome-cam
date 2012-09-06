@@ -192,7 +192,7 @@
               readFile = function(i) {
                 var name, type;
                 entry = entries[i];
-                if (entry.isFile) {
+                if (entry && entry.isFile) {
                   name = entry.name;
                   type = name.split(".").pop();
                   return entry.file(function(file) {

@@ -58,6 +58,11 @@ define([
 	pub = 
 		init: ->
 
+			# cue up the postman!
+			postman.init iframe.contentWindow
+
+			iframe.src = "app/index.html"
+
 			#initialize notifications
 			notify.init()
 
@@ -69,13 +74,6 @@ define([
 
 			# get the files
 			file.init()
-
-			# cue up the postman!
-			postman.init iframe.contentWindow
-
-			# get the currently saved files
-			$.publish "/file/read", []
-			$.publish "/file/list", []
 
 			# send embeded assets down to the app
 			# assets.init()
