@@ -49,12 +49,12 @@
     };
     return pub = {
       init: function() {
+        postman.init(iframe.contentWindow);
+        iframe.src = "app/index.html";
         notify.init();
         utils.init();
         intents.init();
         file.init();
-        postman.init(iframe.contentWindow);
-        $.publish("/file/read", []);
         face.init(0, 0, 0, 0);
         return navigator.webkitGetUserMedia({
           video: true

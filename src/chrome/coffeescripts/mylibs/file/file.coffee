@@ -14,7 +14,7 @@ define([
   window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem
 
   # object level vars
-  fileSystem = {}
+  fileSystem = null
   myPicturesDir = {}
   blobBuiler = {}
 
@@ -28,6 +28,9 @@ define([
       return 1
   
     return 0
+
+  getFileExtension = (filename) ->
+      filename.split('.').pop()
 
   # generic error handler. called everytime there is an exception thrown here.
   errorHandler = (e) ->
@@ -52,6 +55,18 @@ define([
 
     $.publish "/notify/show", [ "File Access Denied", "Access to the file system could not be obtained.", false ]
 
+  withFileSystem = (fn) ->
+    if fileSystem
+      fn fileSystem
+    else
+      # request storage. requested amount is 50 meg but storage is specified as unlimited in manifest?
+      window.webkitStorageInfo.requestQuota PERSISTENT, 5000 * 1024, (grantedBytes) ->
+        success = (fs) ->
+          fileSystem = fs
+          fn fs
+        # get a persistant storage grant
+        window.requestFileSystem PERSISTENT, grantedBytes, success, errorHandler
+
   # saves a file to the file system. overwrites the file if it exists.
   save = (name, blob) ->
 
@@ -59,44 +74,46 @@ define([
       blob = utils.toBlob blob
 
     # get the file from the file system, creating it if it doesn't exist
-    fileSystem.root.getFile name, create: true, (fileEntry) ->
+    withFileSystem ->
+      fileSystem.root.getFile name, create: true, (fileEntry) ->
 
-      # create a writer
-      fileEntry.createWriter (fileWriter) ->
+        # create a writer
+        fileEntry.createWriter (fileWriter) ->
 
-        # called when the write ends
-        fileWriter.onwrite = (e) ->
-          $.publish "/share/gdrive/upload", [ blob ]
-          $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
+          # called when the write ends
+          fileWriter.onwrite = (e) ->
+            $.publish "/share/gdrive/upload", [ blob ]
+            $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
 
-        # called when the write pukes
-        fileWriter.onerror = (e) ->
-            errorHandler e
+          # called when the write pukes
+          fileWriter.onerror = (e) ->
+              errorHandler e
 
-        # write the blob to the file system
-        fileWriter.write blob
-        
-    # we didn't get access to the file system for some reason
-    , errorHandler
+          # write the blob to the file system
+          fileWriter.write blob
+          
+      # we didn't get access to the file system for some reason
+      , errorHandler
 
   # deletes a file if it exists, throws an exception if it does not.
   destroy = (name) ->
 
       # get the file reference from the file system by name
-      fileSystem.root.getFile name, create: false, (fileEntry) ->
+      withFileSystem ->
+        fileSystem.root.getFile name, create: false, (fileEntry) ->
 
-        # kill it
-        fileEntry.remove ->
+          # kill it
+          fileEntry.remove ->
 
-            # dispatch events that we killed it
-            $.publish "/notify/show", [ "File Deleted!", "The picture was deleted successfully", false ]
-            $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
+              # dispatch events that we killed it
+              $.publish "/notify/show", [ "File Deleted!", "The picture was deleted successfully", false ]
+              $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
 
-        # file couldn't be deleted
+          # file couldn't be deleted
+          , errorHandler
+
+        # access to the file system could not be had
         , errorHandler
-
-      # access to the file system could not be had
-      , errorHandler
 
   # allows user to save the file to a specific place on their hard drive
   download = (name, dataURL) ->
@@ -123,17 +140,38 @@ define([
         # save the file to the user specified file and folder
         fileWriter.write blob
 
+  list = ->
+    withFileSystem (fs) ->
+      dirReader = fs.root.createReader()
+      dirReader.readEntries (results) ->
+        files = (name: entry.name, type: getFileExtension(entry.name) for entry in results when entry.isFile)
+        files.sort(compare)
+
+        $.publish "/postman/deliver", [ { message: files }, "/file/listResult", [] ]
+
+  readSingleFile = (filename) ->
+    withFileSystem ->
+      fileSystem.root.getFile filename, null, (fileEntry) ->
+        fileEntry.file (file) ->
+          reader = new FileReader()
+
+          reader.onloadend = (e) ->
+            result =
+              name: filename
+              type: getFileExtension filename
+              file: this.result
+
+            # send it down to the app
+            $.publish "/postman/deliver", [ { message: result }, "/pictures/#{filename}", [] ]
+
+          reader.readAsDataURL file
+
+
   # reads all images from the "MyPictures" folder in the file system
   read = ->
 
-    # request storage. requested amount is 50 meg but storage is specified as unlimited in manifest?
-    window.webkitStorageInfo.requestQuota PERSISTENT, 5000 * 1024, (grantedBytes) ->
-        
-        # get a persistant storage grant
-        window.requestFileSystem PERSISTENT, grantedBytes, success, errorHandler
-
     # we were granted storage
-    success = (fs) ->
+    withFileSystem (fs) ->
 
       # get the pictures directory. create it if it doesn't yet exist.
       fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
@@ -169,7 +207,7 @@ define([
               entry = entries[i]
 
               # only process this file if it is in fact a file, and not a directory
-              if entry.isFile
+              if entry and entry.isFile
 
                 # store the name and type
                 name = entry.name
@@ -215,9 +253,6 @@ define([
       # we did not get file system access
       , errorHandler
 
-      # cache a reference to the file system
-      fileSystem = fs
-
   pub = 
 
     init: (kb) ->
@@ -235,5 +270,10 @@ define([
       $.subscribe "/file/download", (message) ->
         download message.name, message.image
 
+      $.subscribe "/file/list", (message) ->
+        list()
+      
+      $.subscribe "/file/readFile", (message) ->
+        readSingleFile message.name
 
 )

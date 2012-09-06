@@ -1,9 +1,10 @@
 define [
     'Kendo'
-    'mylibs/utils/utils',
-    'text!mylibs/gallery/views/gallery.html',
+    'mylibs/utils/utils'
+    'mylibs/file/filewrapper'
+    'text!mylibs/gallery/views/gallery.html'
     'text!mylibs/gallery/views/details.html'
-], (kendo, utils, templateSource, detailsTemplateSource) ->
+], (kendo, utils, filewrapper, templateSource, detailsTemplateSource) ->
     template = kendo.template(templateSource)
     detailsTemplate = kendo.template(detailsTemplateSource)
 
@@ -13,13 +14,14 @@ define [
     loadImages = ->
         deferred = $.Deferred()
 
-        token = $.subscribe "/pictures/bulk", (result) ->
-            if result.message && result.message.length > 0
-                $.publish "/bar/preview/update", [thumbnailURL: result.message[result.message.length - 1].file]
+        $.publish "/bar/preview/update", [thumbnailURL: "derpderpin"]
 
-            $.unsubscribe token
+        filewrapper.list().done (files) ->
+            # if files && files.length > 0
+            #     $.publish "/bar/preview/update", [thumbnailURL: files[files.length - 1].file]
+
             dataSource = new kendo.data.DataSource
-                data: result.message
+                data: files
                 pageSize: rowLength * numberOfRows
                 change: ->
                     $.publish "/gallery/page", [ dataSource ]
@@ -38,18 +40,27 @@ define [
     createPage = (dataSource, $container) -> 
         rows = (dataSource.view()[i * rowLength ... (i+1) * rowLength] for i in [0 ... numberOfRows])
 
+        for file in dataSource.view()
+            filewrapper.readFile(file.name).done (file) ->
+                $container.find("[data-file-name='#{file.name}']").attr("src", file.file)
+
         $container.html template(rows: rows)
 
     createDetailsViewModel = (message) ->
         $.extend {}, message,
             deleteItem: ->
-                deleteToken = $.subscribe "/file/deleted/#{message.name}", =>
-                    $.unsubscribe deleteToken
+                filewrapper.deleteFile(message.name).done =>
                     this.close()
-                $.publish "/postman/deliver", [  name: message.name, "/file/delete", [] ]
             close: ->
                 $.publish "/gallery/details/hide"
-
+            canGoToNext: ->
+                true
+            canGoToPrevious: ->
+                true
+            goToNext: ->
+                console.log "Next"
+            goToPrevious: ->
+                console.log "Previous"
 
     setupSubscriptionEvents = ($container) ->
 
@@ -75,6 +86,8 @@ define [
                 show: true
 
         $.subscribe "/gallery/hide", ->
+            # HACK
+            $("#wrap").show()
             console.log "hide gallery"
 
             # TODO: Use kendoAnimate for this
@@ -96,6 +109,9 @@ define [
             $("#wrap").addClass "animate"
             $("#wrap").kendoAnimate { effects: "slide:up", duration: 500 }
             $("#wrap").css "height", 0
+
+            # HACK
+            setTimeout (-> wrap.hide()), 1000
 
             $.publish "/bar/gallerymode/show"
 

@@ -90,6 +90,7 @@
     };
     return pub = {
       init: function(selector) {
+        var _this = this;
         el.container = $(selector);
         el.content = $(template);
         el.capture = el.content.find(".capture");
@@ -124,6 +125,9 @@
           });
         };
         el.counters = el.content.find(".countdown > span");
+        el.content.on("click", ".galleryLink", function() {
+          return $.publish("/gallery/list");
+        });
         el.content.on("click", ".back", function() {
           return $.publish("/gallery/hide");
         });

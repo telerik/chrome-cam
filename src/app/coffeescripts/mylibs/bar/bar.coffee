@@ -134,7 +134,11 @@ define [
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"
 
-			el.content.on "click", ".back", ->
+			# link to show or hide the gallery
+			el.content.on "click", ".galleryLink", =>
+				$.publish "/gallery/list"
+
+			el.content.on "click", ".back", =>
 				$.publish "/gallery/hide"
 
 			# append it to the container

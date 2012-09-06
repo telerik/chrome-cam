@@ -1,26 +1,23 @@
 (function() {
 
-  define(['Kendo', 'mylibs/utils/utils', 'text!mylibs/gallery/views/gallery.html', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, templateSource, detailsTemplateSource) {
+  define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/gallery.html', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, templateSource, detailsTemplateSource) {
     var createDetailsViewModel, createPage, detailsTemplate, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
     template = kendo.template(templateSource);
     detailsTemplate = kendo.template(detailsTemplateSource);
     rowLength = 4;
     numberOfRows = 4;
     loadImages = function() {
-      var deferred, token;
+      var deferred;
       deferred = $.Deferred();
-      token = $.subscribe("/pictures/bulk", function(result) {
-        var dataSource;
-        if (result.message && result.message.length > 0) {
-          $.publish("/bar/preview/update", [
-            {
-              thumbnailURL: result.message[result.message.length - 1].file
-            }
-          ]);
+      $.publish("/bar/preview/update", [
+        {
+          thumbnailURL: "derpderpin"
         }
-        $.unsubscribe(token);
+      ]);
+      filewrapper.list().done(function(files) {
+        var dataSource;
         dataSource = new kendo.data.DataSource({
-          data: result.message,
+          data: files,
           pageSize: rowLength * numberOfRows,
           change: function() {
             return $.publish("/gallery/page", [dataSource]);
@@ -37,7 +34,7 @@
       return deferred.promise();
     };
     createPage = function(dataSource, $container) {
-      var i, rows;
+      var file, i, rows, _i, _len, _ref;
       rows = (function() {
         var _results;
         _results = [];
@@ -46,6 +43,13 @@
         }
         return _results;
       })();
+      _ref = dataSource.view();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        filewrapper.readFile(file.name).done(function(file) {
+          return $container.find("[data-file-name='" + file.name + "']").attr("src", file.file);
+        });
+      }
       return $container.html(template({
         rows: rows
       }));
@@ -53,20 +57,25 @@
     createDetailsViewModel = function(message) {
       return $.extend({}, message, {
         deleteItem: function() {
-          var deleteToken,
-            _this = this;
-          deleteToken = $.subscribe("/file/deleted/" + message.name, function() {
-            $.unsubscribe(deleteToken);
+          var _this = this;
+          return filewrapper.deleteFile(message.name).done(function() {
             return _this.close();
           });
-          return $.publish("/postman/deliver", [
-            {
-              name: message.name
-            }, "/file/delete", []
-          ]);
         },
         close: function() {
           return $.publish("/gallery/details/hide");
+        },
+        canGoToNext: function() {
+          return true;
+        },
+        canGoToPrevious: function() {
+          return true;
+        },
+        goToNext: function() {
+          return console.log("Next");
+        },
+        goToPrevious: function() {
+          return console.log("Previous");
         }
       });
     };
@@ -97,6 +106,7 @@
         });
       });
       $.subscribe("/gallery/hide", function() {
+        $("#wrap").show();
         console.log("hide gallery");
         $("#footer").animate({
           "margin-top": "-60px"
@@ -123,6 +133,9 @@
           duration: 500
         });
         $("#wrap").css("height", 0);
+        setTimeout((function() {
+          return wrap.hide();
+        }), 1000);
         return $.publish("/bar/gallerymode/show");
       });
       return $.subscribe("/gallery/page", function(dataSource) {
