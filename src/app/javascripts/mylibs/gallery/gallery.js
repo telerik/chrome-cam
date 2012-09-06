@@ -56,17 +56,10 @@
     createDetailsViewModel = function(message) {
       return $.extend({}, message, {
         deleteItem: function() {
-          var deleteToken,
-            _this = this;
-          deleteToken = $.subscribe("/file/deleted/" + message.name, function() {
-            $.unsubscribe(deleteToken);
+          var _this = this;
+          return filewrapper.deleteFile(message.name).done(function() {
             return _this.close();
           });
-          return $.publish("/postman/deliver", [
-            {
-              name: message.name
-            }, "/file/delete", []
-          ]);
         },
         close: function() {
           return $.publish("/gallery/details/hide");

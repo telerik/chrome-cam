@@ -45,10 +45,8 @@ define [
     createDetailsViewModel = (message) ->
         $.extend {}, message,
             deleteItem: ->
-                deleteToken = $.subscribe "/file/deleted/#{message.name}", =>
-                    $.unsubscribe deleteToken
+                filewrapper.deleteFile(message.name).done =>
                     this.close()
-                $.publish "/postman/deliver", [  name: message.name, "/file/delete", [] ]
             close: ->
                 $.publish "/gallery/details/hide"
 
