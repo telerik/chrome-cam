@@ -1,9 +1,10 @@
 define [
     'Kendo'
-    'mylibs/utils/utils',
-    'text!mylibs/gallery/views/gallery.html',
+    'mylibs/utils/utils'
+    'mylibs/file/filewrapper'
+    'text!mylibs/gallery/views/gallery.html'
     'text!mylibs/gallery/views/details.html'
-], (kendo, utils, templateSource, detailsTemplateSource) ->
+], (kendo, utils, filewrapper, templateSource, detailsTemplateSource) ->
     template = kendo.template(templateSource)
     detailsTemplate = kendo.template(detailsTemplateSource)
 
@@ -11,15 +12,15 @@ define [
     numberOfRows = 4
 
     loadImages = ->
+
         deferred = $.Deferred()
 
-        token = $.subscribe "/pictures/bulk", (result) ->
-            if result.message && result.message.length > 0
-                $.publish "/bar/preview/update", [thumbnailURL: result.message[result.message.length - 1].file]
+        filewrapper.readAll().done (files) ->
+            if files && files.length > 0
+                $.publish "/bar/preview/update", [thumbnailURL: files[files.length - 1].file]
 
-            $.unsubscribe token
             dataSource = new kendo.data.DataSource
-                data: result.message
+                data: files
                 pageSize: rowLength * numberOfRows
                 change: ->
                     $.publish "/gallery/page", [ dataSource ]
@@ -31,14 +32,8 @@ define [
 
             deferred.resolve dataSource
 
-        # Why is this not working?
-        # $.publish "/postman/deliver", [ {}, "/file/read", [] ]
-
         $.subscribe "/file/listResult", (files) =>
             console.log ["File list: ", files]
-
-        # Why is this not working?
-        # $.publish "/postman/deliver", [ {}, "/file/list", [] ]
 
         deferred.promise()
 

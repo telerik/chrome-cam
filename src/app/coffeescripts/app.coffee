@@ -9,9 +9,10 @@ define([
   'mylibs/utils/utils'
   'mylibs/gallery/gallery'
   'mylibs/events/events'
+  'mylibs/file/filewrapper'
   'libs/record/record'
   'text!intro.html'
-], (kendo, glfx, camera, bar, preview, full, postman, utils, gallery, events, record, intro) ->
+], (kendo, glfx, camera, bar, preview, full, postman, utils, gallery, events, filewrapper, record, intro) ->
 	
 	pub = 
 		    

@@ -69,7 +69,7 @@
             capture = function() {
               return $.publish("/capture/" + mode);
             };
-            if (e.ctrlKey) {
+            if (e.ctrlKey || e.metaKey) {
               return capture();
             } else {
               return countdown(0, capture);
