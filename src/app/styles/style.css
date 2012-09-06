@@ -24,9 +24,7 @@ body > #wrap { height: 100%;}
 
 /************ Animations ************/
 
-.animate {
-	-webkit-transition: all 0.5s ease-out;  
-}
+.animate { -webkit-transition: all 0.5s ease-out; }
 
 /************ Bar Styles ************/
 
@@ -76,21 +74,17 @@ body > #wrap { height: 100%;}
 /* Bar Contents */
 
 .mode { list-style-type: none; }
-
-.mode li {
-	float: left;
-}
-	.mode li:first-child a {
-		border-bottom-left-radius: 2px;
-		border-top-left-radius: 2px;
-		border-right: 0 solid transparent;
-	}
-
-	.mode li:last-child a {
-		border-bottom-right-radius: 2px;
-		border-top-right-radius: 2px;
-		border-left: 0 solid transparent;
-	}
+	.mode li { float: left; }
+		.mode li:first-child a {
+			border-bottom-left-radius: 2px;
+			border-top-left-radius: 2px;
+			border-right: 0 solid transparent;
+		}
+		.mode li:last-child a {
+			border-bottom-right-radius: 2px;
+			border-top-right-radius: 2px;
+			border-left: 0 solid transparent;
+		}
 
 .mode a {
 	display: block;
@@ -146,9 +140,7 @@ body > #wrap { height: 100%;}
 	-webkit-box-pack: center;
 	margin-top: 5px;	
 }
-	.countdown > span {
-		display: none;	
-	}
+	.countdown > span { display: none; }
 
 .red-dot {
 	position: relative;
@@ -170,9 +162,7 @@ body > #wrap { height: 100%;}
 	-webkit-box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
     box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
 }
-	.galleryLink.hidden {
-	    display: none;
-	}
+	.galleryLink.hidden { display: none; }
 
 .back { cursor: pointer; }
 	.back:hover { color: #ccc; }
@@ -187,9 +177,7 @@ body > #wrap { height: 100%;}
 	cursor: pointer;
 }
 
-	.bar button:hover {
-		background: #ccc;
-	}
+	.bar button:hover { background: #ccc; }
 
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;
@@ -228,9 +216,7 @@ body > #wrap { height: 100%;}
 
 /************ Preview Styles ************/
 
-#preview {
-	height: 100%;
-}
+#preview { height: 100%; }
 
 #select {
 	height: 92%;
@@ -346,9 +332,7 @@ body > #wrap { height: 100%;}
 	margin: auto;
 }
 
-#gallery .details .bar {
-	height: 60px;
-}
+#gallery .details .bar { height: 60px; }
 
 .details .previous, .details .next {
 	display: block;
@@ -359,18 +343,12 @@ body > #wrap { height: 100%;}
 	cursor: pointer;
 	color: #2d2d2d;
 }
-	.details .previous:hover, .details .next:hover {
-		color: #ccc;
+	.details .previous:hover, .details .next:hover { color: #ccc; }
+	.details .previous { margin-left: 20px; }
+	.details .next {
+		margin-right: 20px;
+		right: 0;
 	}
-
-.details .previous {
-	margin-left: 20px;
-}
-
-.details .next {
-	margin-right: 20px;
-	right: 0;
-}
 
 .preview-title {
 	text-align: center;
@@ -392,14 +370,8 @@ body > #wrap { height: 100%;}
 	left: 0;
 }
 
-	#full > div {
-		margin: auto;
-	}
-
-	#full canvas {
-		position: absolute;
-	}
-
+	#full > div { margin: auto; }
+	#full canvas { position: absolute; }
 	#full .flash {
 		position: absolute;
 		width: 100%;
@@ -437,46 +409,36 @@ body > #wrap { height: 100%;}
 
 /* Loader Styles */
 
-#circleG{
-width:149.33333333333334px;
+#circleG { width:149.33333333333334px; }
+
+.circleG {
+	background-color: #FFF;
+	float: left;
+	height: 32px;
+	margin-left: 17px;
+	width: 32px;
+	-webkit-animation-name: bounce_circleG;
+	-webkit-border-radius: 21px;
+	-webkit-animation-duration: 1.9500000000000002s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction: linear;
+	opacity: 0.3;
+	border-radius: 21px;
 }
 
-.circleG{
-background-color:#FFFFFF;
-float:left;
-height:32px;
-margin-left:17px;
-width:32px;
--webkit-animation-name:bounce_circleG;
--webkit-border-radius:21px;
--webkit-animation-duration:1.9500000000000002s;
--webkit-animation-iteration-count:infinite;
--webkit-animation-direction:linear;
-opacity:0.3;
-border-radius:21px;
-}
+#circleG_1{ -webkit-animation-delay:0.39s; }
 
-#circleG_1{
--webkit-animation-delay:0.39s;
-}
+#circleG_2{ -webkit-animation-delay:0.91s; }
 
-#circleG_2{
--webkit-animation-delay:0.91s;
-}
+#circleG_3{ -webkit-animation-delay:1.17s; }
 
-#circleG_3{
--webkit-animation-delay:1.17s;
-}
+@-webkit-keyframes bounce_circleG {
+	0% { opacity:0.3; }
 
-@-webkit-keyframes bounce_circleG{
-0%{
-opacity:0.3}
+	50% {
+		opacity:1;
+		background-color:#000000;
+	}
 
-50%{
-opacity:1;
-background-color:#000000}
-
-100%{
-opacity:0.3}
-
+	100% { opacity:0.3; }
 }
