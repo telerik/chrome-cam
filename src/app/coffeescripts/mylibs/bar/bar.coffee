@@ -1,4 +1,4 @@
-define([
+define [
   'Kendo'
   'text!mylibs/bar/views/bar.html'
 ], (kendo, template) ->
@@ -17,6 +17,51 @@ define([
 	kendo.fx.square =
 		setup: (element, options) ->
 			$.extend { borderRadius: 0 }, options.properties
+
+	viewModel = kendo.observable {
+
+		mode:
+			click: (e) ->
+				
+				div = $(e.target)
+
+				# we need to switch modes when clicking on the icons
+				mode = div.data("mode")
+				activeShape = div.data("shape")
+				captureShape = div.data("capture-shape")
+				updateCaptureDotShape activeShape
+
+		capture:
+			click: (e) ->
+
+				updateCaptureDotShape captureShape
+
+				if mode == "image"
+					# start the countdown
+					capture = -> $.publish "/capture/#{mode}"
+					if e.ctrlKey
+						capture()
+					else
+						countdown 0, capture
+				else
+
+					# set the start time to right now
+					startTime = Date.now()
+
+					token = $.subscribe "/capture/#{mode}/completed", ->
+						$.unsubscribe token
+						el.content.removeClass("recording")
+						updateCaptureDotShape activeShape
+
+					# publish the capture method
+					$.publish "/capture/#{mode}"
+
+					el.content.addClass("recording")
+
+		filters:
+			click: (e) ->
+
+	}
 	
 
 	# countdown
@@ -59,6 +104,7 @@ define([
 	pub = 
 
 		init: (selector) ->
+
 			# get a reference to the command bar container by it's selector
 			el.container = $(selector)
 
@@ -75,39 +121,6 @@ define([
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"
 
-			# we need to switch modes when clicking on the icons
-			el.content.find(".mode").on "click", "a", ->
-				mode = $(this).data("mode")
-				activeShape = $(this).data("shape")
-				captureShape = $(this).data("capture-shape")
-				updateCaptureDotShape activeShape
-
-			# bind the "capture" button
-			el.content.on "click", ".capture", (e) ->
-				updateCaptureDotShape captureShape
-
-				if mode == "image"
-					# start the countdown
-					capture = -> $.publish "/capture/#{mode}"
-					if e.ctrlKey
-						capture()
-					else
-						countdown 0, capture
-				else
-
-					# set the start time to right now
-					startTime = Date.now()
-
-					token = $.subscribe "/capture/#{mode}/completed", ->
-						$.unsubscribe token
-						el.content.removeClass("recording")
-						updateCaptureDotShape activeShape
-
-					# publish the capture method
-					$.publish "/capture/#{mode}"
-
-					el.content.addClass("recording")
-
 			# link to show or hide the gallery
 			el.content.on "click", ".galleryLink", ->
 				$.publish "/gallery/list"
@@ -117,6 +130,9 @@ define([
 
 			# append it to the container
 			el.container.append el.content
+
+			# bind the container to the view model
+			kendo.bind el.container, viewModel
 
 			$.subscribe "/bar/preview/update", (message) ->
 				image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
@@ -149,4 +165,5 @@ define([
 				$(".mode a", el.container).removeClass "active"
 				$(this).addClass "active"
 				recordMode = "video/record"
-)
+
+		

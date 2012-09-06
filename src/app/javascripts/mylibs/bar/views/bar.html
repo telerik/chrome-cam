@@ -1,16 +1,22 @@
 <div class="bar">
 	<div class="left">
 		<ul class="mode hidden">
-			<li><a href="#" data-mode="image" data-shape="circle" data-capture-shape="circle" class="photo active" alt="Photo Mode" title="Photo Mode"></a></li>
-			<li><a href="#" data-mode="video" data-shape="circle" data-capture-shape="square" class="video" alt="Video Mode" title="Video Mode"></a></li>
-			<li><a href="#" data-mode="paparazzi" data-shape="circle" data-capture-shape="circle" class="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a></li>
+			<li>
+				<a href="#" data-mode="image" data-bind="events: { click: mode.click }" data-shape="circle" data-capture-shape="circle"  class="photo active" alt="Photo Mode" title="Photo Mode"></a>
+			</li>
+			<li>
+				<a href="#" data-mode="video" data-bind="events: { click: mode.click }" data-shape="circle" data-capture-shape="square" class="video" alt="Video Mode" title="Video Mode"></a>
+			</li>
+			<li>
+				<a href="#" data-mode="paparazzi" data-bind="events: { click: mode.click }" data-shape="circle" data-capture-shape="circle" class="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a>
+			</li>
 		</ul>
 		<span class="back">&lsaquo; Camera</span>
 	</div>
 	<div class="center">
 		<div>
 			<div class="capture">
-				<div class="gray circle">
+				<div class="gray circle" data-bind="events: { click: capture.click } ">
 					<div class="red-dot circle"></div>
 				</div>
 			</div>
@@ -22,7 +28,7 @@
 		</div>
 	</div>
 	<div class="right">
-		<a href="#" class="galleryLink hidden" alt="Go to the Gallery" title="Go to the Gallery"></a>
+		<a href="#" data-bind="events: { click: gallery.click }" class="galleryLink hidden" alt="Go to the Gallery" title="Go to the Gallery"></a>
 		<span class="delete">Delete</span>
 		<button class="share">Share</button>
 	</div>
