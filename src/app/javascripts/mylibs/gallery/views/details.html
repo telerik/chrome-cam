@@ -14,6 +14,6 @@
 	# } else { #
 		<img src="#: src #">
 	# } #
-	<span class="previous">&lsaquo;</span>
-	<span class="next">&rsaquo;</span>
+	<span class="previous" data-bind="visible: canGoToPrevious, click: goToPrevious">&lsaquo;</span>
+	<span class="next" data-bind="visible: canGoToNext, click: goToNext">&rsaquo;</span>
 </div>

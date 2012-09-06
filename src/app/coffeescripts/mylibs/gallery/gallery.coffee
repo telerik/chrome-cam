@@ -49,7 +49,14 @@ define [
                     this.close()
             close: ->
                 $.publish "/gallery/details/hide"
-
+            canGoToNext: ->
+                true
+            canGoToPrevious: ->
+                true
+            goToNext: ->
+                console.log "Next"
+            goToPrevious: ->
+                console.log "Previous"
 
     setupSubscriptionEvents = ($container) ->
 

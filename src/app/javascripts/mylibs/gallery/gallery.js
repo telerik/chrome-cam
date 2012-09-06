@@ -63,6 +63,18 @@
         },
         close: function() {
           return $.publish("/gallery/details/hide");
+        },
+        canGoToNext: function() {
+          return true;
+        },
+        canGoToPrevious: function() {
+          return true;
+        },
+        goToNext: function() {
+          return console.log("Next");
+        },
+        goToPrevious: function() {
+          return console.log("Previous");
         }
       });
     };
