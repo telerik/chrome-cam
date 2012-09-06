@@ -86,8 +86,6 @@ define [
                 show: true
 
         $.subscribe "/gallery/hide", ->
-            # HACK
-            $("#wrap").show()
             console.log "hide gallery"
 
             # TODO: Use kendoAnimate for this
@@ -97,21 +95,16 @@ define [
 
             $.publish "/camera/pause", [false]
             $.publish "/bar/gallerymode/hide"
-            $container.hide()
 
         $.subscribe "/gallery/list", ->
             console.log "show gallery"
             $.publish "/camera/pause", [true]
-            $container.show()
             $("#footer").animate "margin-top": 0
 
             # TODO: Use kendoAnimate for this
             $("#wrap").addClass "animate"
             $("#wrap").kendoAnimate { effects: "slide:up", duration: 500 }
             $("#wrap").css "height", 0
-
-            # HACK
-            setTimeout (-> wrap.hide()), 1000
 
             $.publish "/bar/gallerymode/show"
 
