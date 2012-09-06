@@ -2,8 +2,9 @@ define([
   'Kendo'
   'mylibs/effects/effects'
   'mylibs/utils/utils'
+  'mylibs/file/filewrapper'
   'text!mylibs/full/views/full.html'
-], (kendo, effects, utils, fullTemplate) ->
+], (kendo, effects, utils, filewrapper, fullTemplate) ->
 	
 	canvas = {}
 	ctx = {}
@@ -64,7 +65,6 @@ define([
 
 			# attach to the /capture/image function
 			$.subscribe "/capture/image", ->
-
 				flash()
 
 				image = webgl.toDataURL()
@@ -72,17 +72,11 @@ define([
 				# set the name of this image to the current time string
 				name = new Date().getTime() + ".jpg"
 
-				# we'll respond after the image finishes saving
-				token = $.subscribe "/file/saved/#{name}", ->
+				filewrapper.save(name, image).done ->
 					# I may have it bouncing around too much, but I don't want the bar to
 					# just respond to *all* file saves, or have this module know about
 					# the bar's internals
 					$.publish "/bar/preview/update", [ thumbnailURL: image ]
-					$.unsubscribe token
-
-				# save the image to the file system. this is up to the extension
-				# to handle
-				$.publish "/postman/deliver", [  name: name, file: image, "/file/save" ]
 
 			$.subscribe "/capture/video", ->
 

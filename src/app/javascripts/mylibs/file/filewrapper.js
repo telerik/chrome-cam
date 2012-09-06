@@ -38,6 +38,21 @@
         ]);
         return deferred.promise();
       },
+      save: function(filename, blob) {
+        var deferred, token;
+        deferred = $.Deferred();
+        token = $.subscribe("/file/saved/" + filename, function() {
+          $.unsubscribe(token);
+          return deferred.resolve();
+        });
+        $.publish("/postman/deliver", [
+          {
+            name: filename,
+            file: blob
+          }, "/file/save"
+        ]);
+        return deferred.promise();
+      },
       readFile: function(filename) {
         throw "not implemented";
       }

@@ -36,5 +36,16 @@ define [], (file) ->
 
 			deferred.promise()
 
+		save: (filename, blob) ->
+			deferred = $.Deferred()
+
+			token = $.subscribe "/file/saved/#{filename}", ->
+				$.unsubscribe token
+				deferred.resolve()
+
+			$.publish "/postman/deliver", [  name: filename, file: blob, "/file/save" ]
+
+			deferred.promise()
+
 		readFile: (filename) ->
 			throw "not implemented"
