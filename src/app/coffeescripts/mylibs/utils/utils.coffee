@@ -1,5 +1,6 @@
 define([
-], () ->
+    'mylibs/file/filewrapper'
+], (filewrapper) ->
 
     ###     Utils
 
@@ -10,50 +11,50 @@ define([
 
     pub = 
 
-    	# normalizes webkitRequestAnimationFrame
-    	getAnimationFrame: ->
-	        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || (callback, element) ->
-	            return window.setTimeout(callback, 1000 / 60)
+        # normalizes webkitRequestAnimationFrame
+        getAnimationFrame: ->
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || (callback, element) ->
+                return window.setTimeout(callback, 1000 / 60)
 
-	    createVideo: (frames) ->
+        createVideo: (frames) ->
 
-	    	transcode = ->
+            transcode = ->
 
-	    		video = new Whammy.Video()
-	    		for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
-	    			video.add pair[0].imageData, pair[1].time - pair[0].time
+                video = new Whammy.Video()
+                for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
+                    video.add pair[0].imageData, pair[1].time - pair[0].time
 
-		    	blob = video.compile()
-		    	frames = []
-		    	
-		    	name = new Date().getTime() + ".webm"
+                blob = video.compile()
+                frames = []
+                
+                name = new Date().getTime() + ".webm"
 
-		    	# save the recording
-		    	$.publish "/postman/deliver", [  name: name, file: blob, "/file/save" ]
+                # save the recording
+                filewrapper.save(name, blob)
 
-		    	# hide the time
-		    	$.publish "/bar/time/hide"
+                # hide the time
+                $.publish "/bar/time/hide"
 
-		    	# enable capture controls
-		    	$.publish "/bar/capture/show"
+                # enable capture controls
+                $.publish "/bar/capture/show"
 
-	    	canvas = document.createElement("canvas")
-	    	canvas.width = 720
-	    	canvas.height = 480
-	    	ctx = canvas.getContext("2d")
+            canvas = document.createElement("canvas")
+            canvas.width = 720
+            canvas.height = 480
+            ctx = canvas.getContext("2d")
 
-	    	framesDone = 0;
+            framesDone = 0;
 
-	    	for i in [0...frames.length]
+            for i in [0...frames.length]
 
-	    		do (i) ->
-	    			
-	    			imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
-	    			videoData = new Uint8ClampedArray(frames[i].imageData)
-	    			imageData.data.set(videoData)
-	    			ctx.putImageData imageData, 0, 0
-	    			frames[i] = imageData: canvas.toDataURL('image/webp', 1), time: frames[i].time
-	    			++framesDone
-	    			if framesDone == frames.length
-	    				transcode()
+                do (i) ->
+                    
+                    imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
+                    videoData = new Uint8ClampedArray(frames[i].imageData)
+                    imageData.data.set(videoData)
+                    ctx.putImageData imageData, 0, 0
+                    frames[i] = imageData: canvas.toDataURL('image/webp', 1), time: frames[i].time
+                    ++framesDone
+                    if framesDone == frames.length
+                        transcode()
 )
