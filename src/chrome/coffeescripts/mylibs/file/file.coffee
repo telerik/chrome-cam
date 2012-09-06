@@ -123,6 +123,21 @@ define([
         # save the file to the user specified file and folder
         fileWriter.write blob
 
+  list = ->
+    getFileExtension = (filename) ->
+      filename.split('.').pop()
+
+    success = (fs) ->
+      dirReader = fs.root.createReader()
+      dirReader.readEntries (results) ->
+        files = (name: entry.name, type: getFileExtension(entry.name) for entry in results when entry.isFile)
+        files.sort(compare)
+
+        $.publish "/postman/deliver", [ { message: files }, "/file/listResult", [] ]
+
+    window.webkitStorageInfo.requestQuota PERSISTENT, 5000 * 1024, (grantedBytes) ->
+      window.requestFileSystem PERSISTENT, grantedBytes, success, errorHandler
+
   # reads all images from the "MyPictures" folder in the file system
   read = ->
 
@@ -131,6 +146,10 @@ define([
         
         # get a persistant storage grant
         window.requestFileSystem PERSISTENT, grantedBytes, success, errorHandler
+
+        #dirReader = fs.root.createReader()
+
+        #dirReader.readEntries (results)
 
     # we were granted storage
     success = (fs) ->
@@ -234,6 +253,9 @@ define([
 
       $.subscribe "/file/download", (message) ->
         download message.name, message.image
+
+      $.subscribe "/file/list", (message) ->
+        list()
 
 
 )

@@ -7,7 +7,7 @@
     The file module takes care of all the reading and writing to and from the file system
     */
 
-    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, myPicturesDir, pub, read, save;
+    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, list, myPicturesDir, pub, read, save;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
     fileSystem = {};
     myPicturesDir = {};
@@ -96,6 +96,42 @@
         });
       });
     };
+    list = function() {
+      var getFileExtension, success;
+      getFileExtension = function(filename) {
+        return filename.split('.').pop();
+      };
+      success = function(fs) {
+        var dirReader;
+        dirReader = fs.root.createReader();
+        return dirReader.readEntries(function(results) {
+          var entry, files;
+          files = (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = results.length; _i < _len; _i++) {
+              entry = results[_i];
+              if (entry.isFile) {
+                _results.push({
+                  name: entry.name,
+                  type: getFileExtension(entry.name)
+                });
+              }
+            }
+            return _results;
+          })();
+          files.sort(compare);
+          return $.publish("/postman/deliver", [
+            {
+              message: files
+            }, "/file/listResult", []
+          ]);
+        });
+      };
+      return window.webkitStorageInfo.requestQuota(PERSISTENT, 5000 * 1024, function(grantedBytes) {
+        return window.requestFileSystem(PERSISTENT, grantedBytes, success, errorHandler);
+      });
+    };
     read = function() {
       var success;
       window.webkitStorageInfo.requestQuota(PERSISTENT, 5000 * 1024, function(grantedBytes) {
@@ -177,8 +213,11 @@
         $.subscribe("/file/read", function(message) {
           return read();
         });
-        return $.subscribe("/file/download", function(message) {
+        $.subscribe("/file/download", function(message) {
           return download(message.name, message.image);
+        });
+        return $.subscribe("/file/list", function(message) {
+          return list();
         });
       }
     };

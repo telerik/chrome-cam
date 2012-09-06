@@ -75,6 +75,7 @@ define([
 
 			# get the currently saved files
 			$.publish "/file/read", []
+			$.publish "/file/list", []
 
 			# send embeded assets down to the app
 			# assets.init()

@@ -8,7 +8,8 @@
     rowLength = 4;
     numberOfRows = 4;
     loadImages = function() {
-      var deferred, token;
+      var deferred, token,
+        _this = this;
       deferred = $.Deferred();
       token = $.subscribe("/pictures/bulk", function(result) {
         var dataSource;
@@ -34,7 +35,9 @@
         dataSource.read();
         return deferred.resolve(dataSource);
       });
-      $.publish("/postman/deliver", [{}, "/file/read", []]);
+      $.subscribe("/file/listResult", function(files) {
+        return console.log(["File list: ", files]);
+      });
       return deferred.promise();
     };
     createPage = function(dataSource, $container) {

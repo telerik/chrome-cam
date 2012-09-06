@@ -31,7 +31,14 @@ define [
 
             deferred.resolve dataSource
 
-        $.publish "/postman/deliver", [ {}, "/file/read", [] ]
+        # Why is this not working?
+        # $.publish "/postman/deliver", [ {}, "/file/read", [] ]
+
+        $.subscribe "/file/listResult", (files) =>
+            console.log ["File list: ", files]
+
+        # Why is this not working?
+        # $.publish "/postman/deliver", [ {}, "/file/list", [] ]
 
         deferred.promise()
 
