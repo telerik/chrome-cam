@@ -48,8 +48,14 @@ task 'default', (params) ->
 		jake.cpR "src/app/javascripts/build/jquery.min.js", "#{folder}/app/javascripts/jquery.min.js"
 		jake.cpR "src/app/javascripts/build/kendo.all.min.js", "#{folder}/app/javascripts/kendo.all.min.js"
 
-		log "FINISHED!"
+		log "Building Extension"
+		jake.exec "'/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->
+			
+			log "FINISHED!"
+		, { printStdout: true }
 
 	, { printStdout: true }
+
+
 
 	
