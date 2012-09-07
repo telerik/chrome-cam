@@ -48,7 +48,7 @@ body > #wrap { height: 100%;}
 	position: relative;
 	overflow: hidden;
 }
-	.bar > div {
+	.bar > section {
 		height: 100%;
 		-webkit-flex: 1;
 		display: -webkit-box;
