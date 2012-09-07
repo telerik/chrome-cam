@@ -2,21 +2,18 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/gallery.html', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, templateSource, detailsTemplateSource) {
-    var createDetailsViewModel, createPage, detailsTemplate, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
+    var createDetailsViewModel, createPage, detailsTemplate, files, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
     template = kendo.template(templateSource);
     detailsTemplate = kendo.template(detailsTemplateSource);
     rowLength = 4;
     numberOfRows = 4;
+    files = [];
     loadImages = function() {
       var deferred;
       deferred = $.Deferred();
-      $.publish("/bar/preview/update", [
-        {
-          thumbnailURL: "derpderpin"
-        }
-      ]);
-      filewrapper.list().done(function(files) {
+      filewrapper.list().done(function(f) {
         var dataSource, file, photos;
+        files = f;
         if (files && files.length > 0) {
           photos = (function() {
             var _i, _len, _results;
@@ -78,10 +75,11 @@
       }));
     };
     createDetailsViewModel = function(message) {
-      return $.extend({}, message, {
+      var viewModel;
+      viewModel = {
         deleteItem: function() {
           var _this = this;
-          return filewrapper.deleteFile(message.name).done(function() {
+          return filewrapper.deleteFile(this.filename).done(function() {
             return _this.close();
           });
         },
@@ -89,19 +87,43 @@
           return $.publish("/gallery/details/hide");
         },
         canGoToNext: function() {
-          return true;
+          return this.get("indexInGallery") > 0;
         },
         canGoToPrevious: function() {
-          return true;
+          return this.get("indexInGallery") < files.length - 1;
         },
         goToNext: function() {
-          console.log(message);
-          return console.log("Next");
+          return this.init(files[this.get("indexInGallery") - 1]);
         },
         goToPrevious: function() {
-          return console.log("Previous");
+          return this.init(files[this.get("indexInGallery") + 1]);
+        },
+        getIndexInGallery: function() {
+          var i, _i, _ref;
+          for (i = _i = 0, _ref = files.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+            if (files[i].name === this.get("filename")) {
+              return i;
+            }
+          }
+        },
+        isVideo: function() {
+          return this.get("type") === "webm";
+        },
+        init: function(message) {
+          var _this = this;
+          this.set("filename", message.name);
+          this.set("src", message.file || "");
+          this.set("type", message.type);
+          this.set("indexInGallery", this.getIndexInGallery());
+          if (!message.file) {
+            filewrapper.readFile(this.get("filename")).done(function(file) {
+              return _this.set("src", file.file);
+            });
+          }
+          return this;
         }
-      });
+      };
+      return kendo.observable(viewModel).init(message);
     };
     setupSubscriptionEvents = function($container) {
       kendo.fx.hide = {

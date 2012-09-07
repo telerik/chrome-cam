@@ -11,12 +11,14 @@ define [
     rowLength = 4
     numberOfRows = 4
 
+    files = []
+
     loadImages = ->
         deferred = $.Deferred()
 
-        $.publish "/bar/preview/update", [thumbnailURL: "derpderpin"]
+        filewrapper.list().done (f) ->
+            files = f
 
-        filewrapper.list().done (files) ->
             if files and files.length > 0
                 photos = (file for file in files when file.type == 'jpg')
                 if photos.length > 0
@@ -51,21 +53,36 @@ define [
         $container.html template(rows: rows)
 
     createDetailsViewModel = (message) ->
-        $.extend {}, message,
+        # back and next seem ... backwards
+        viewModel =
             deleteItem: ->
-                filewrapper.deleteFile(message.name).done =>
-                    this.close()
+                filewrapper.deleteFile(@filename).done =>
+                    @close()
             close: ->
                 $.publish "/gallery/details/hide"
             canGoToNext: ->
-                true
+                @get("indexInGallery") > 0
             canGoToPrevious: ->
-                true
+                @get("indexInGallery") < files.length - 1
             goToNext: ->
-                console.log message
-                console.log "Next"
+                @init files[@get("indexInGallery") - 1]
             goToPrevious: ->
-                console.log "Previous"
+                @init files[@get("indexInGallery") + 1]
+            getIndexInGallery: ->
+                return i for i in [0...files.length] when files[i].name == @get("filename")
+            isVideo: ->
+                @get("type") == "webm"
+            init: (message) ->
+                @set "filename", message.name
+                @set "src", message.file || ""
+                @set "type", message.type
+                @set "indexInGallery", @getIndexInGallery()
+                if not message.file
+                    filewrapper.readFile(@get("filename")).done (file) =>
+                        @set "src", file.file
+                return this
+
+        kendo.observable(viewModel).init(message)
 
     setupSubscriptionEvents = ($container) ->
 
