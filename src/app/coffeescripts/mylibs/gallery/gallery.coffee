@@ -58,6 +58,7 @@ define [
             canGoToPrevious: ->
                 true
             goToNext: ->
+                console.log message
                 console.log "Next"
             goToPrevious: ->
                 console.log "Previous"
