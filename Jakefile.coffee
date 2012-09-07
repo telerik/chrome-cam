@@ -1,4 +1,9 @@
 util = require('util')
+system = do ->
+	try
+		require('system')
+	catch ex
+	    null
 
 folder = "chrome-cam"
 
@@ -49,8 +54,8 @@ task 'default', (params) ->
 		jake.cpR "src/app/javascripts/build/kendo.all.min.js", "#{folder}/app/javascripts/kendo.all.min.js"
 
 		log "Building Extension"
-		jake.exec "'/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->
-			
+		chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
+		jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->			
 			log "FINISHED!"
 		, { printStdout: true }
 
