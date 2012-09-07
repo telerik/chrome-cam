@@ -8,16 +8,16 @@
     most have been moved into the extension
     */
 
-    var canvas, ctx, framesDone, i, pub, _i, _ref, _results;
-    pub = {
+    var pub;
+    return pub = {
       getAnimationFrame: function() {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
           return window.setTimeout(callback, 1000 / 60);
         };
       },
       createVideo: function(frames) {
-        var transcode;
-        return transcode = function() {
+        var canvas, ctx, framesDone, i, transcode, _i, _ref, _results;
+        transcode = function() {
           var blob, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
           _ref = (function() {
@@ -38,32 +38,32 @@
           filewrapper.save(name, blob);
           return $.publish("/bar/time/hide");
         };
+        canvas = document.createElement("canvas");
+        canvas.width = 720;
+        canvas.height = 480;
+        ctx = canvas.getContext("2d");
+        framesDone = 0;
+        _results = [];
+        for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+          _results.push((function(i) {
+            var imageData, videoData;
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            videoData = new Uint8ClampedArray(frames[i].imageData);
+            imageData.data.set(videoData);
+            ctx.putImageData(imageData, 0, 0);
+            frames[i] = {
+              imageData: canvas.toDataURL('image/webp', 1),
+              time: frames[i].time
+            };
+            ++framesDone;
+            if (framesDone === frames.length) {
+              return transcode();
+            }
+          })(i));
+        }
+        return _results;
       }
     };
-    canvas = document.createElement("canvas");
-    canvas.width = 720;
-    canvas.height = 480;
-    ctx = canvas.getContext("2d");
-    framesDone = 0;
-    _results = [];
-    for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      _results.push((function(i) {
-        var imageData, videoData;
-        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        videoData = new Uint8ClampedArray(frames[i].imageData);
-        imageData.data.set(videoData);
-        ctx.putImageData(imageData, 0, 0);
-        frames[i] = {
-          imageData: canvas.toDataURL('image/webp', 1),
-          time: frames[i].time
-        };
-        ++framesDone;
-        if (framesDone === frames.length) {
-          return transcode();
-        }
-      })(i));
-    }
-    return _results;
   });
 
 }).call(this);
