@@ -53,19 +53,11 @@ task 'default', (params) ->
 
 	log "Transpiling App CoffeeScript Files"
 
-<<<<<<< HEAD
 	jake.exec "coffee -c -o #{app}coffeescripts #{app}javascripts", () ->
 
 		jake.exec "r.js -o src/app/javascripts/app.build.js", () -> 
 
 			log "Copying App Scripts"
-=======
-		log "Building Extension"
-		chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
-		jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->			
-			log "FINISHED!"
-		, { printStdout: true }
->>>>>>> 9b168737bda3a50924ebb0d34aa814a8e9b83f4d
 
 			jake.cpR "src/app/javascripts/build/main.js", "#{folder}/app/javascripts/main.js"
 			jake.cpR "src/app/javascripts/build/require.js", "#{folder}/app/javascripts/require.js"
