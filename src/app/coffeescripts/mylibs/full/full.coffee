@@ -78,6 +78,7 @@ define([
 					# just respond to *all* file saves, or have this module know about
 					# the bar's internals
 					$.publish "/bar/preview/update", [ thumbnailURL: image ]
+					$.publish "/bar/update", [ "full" ]
 
 			$.subscribe "/capture/video", ->
 
@@ -92,12 +93,15 @@ define([
 				$container.find(".timer").removeClass("hidden")
 
 				setTimeout (-> 
+					
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
 
 					$container.find(".timer").addClass("hidden")
-					$.publish "/capture/video/completed"
+					
+					$.publish "/bar/update", [ "full" ]
+
 				), 6000
 
 			# setup the shrink function - this most likely belongs in a widget file
@@ -130,7 +134,7 @@ define([
 			$(webgl).dblclick ->
 				
 				# hide the controls in the bar
-				$.publish "/bar/capture/hide"
+				$.publish "/bar/update", [ "preview" ]
 
 				# pause the camera
 				$.publish "/camera/pause", [ true ]
@@ -175,7 +179,7 @@ define([
 			$.subscribe "/full/show", (e) ->
 
 				# show the record controls in the footer
-				$.publish "/bar/capture/show"
+				$.publish "/bar/update", [ "full" ]
 
 				$.extend(preview, e)
 

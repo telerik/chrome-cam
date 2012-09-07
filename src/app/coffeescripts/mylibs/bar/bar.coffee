@@ -6,6 +6,26 @@ define [
 	el = {}
 	startTime = 0
 	mode = "photo"
+	
+	# the state object manages the many "states" that
+	# the bar can have. this is done by simply calling
+	# state.set() and passing in the string name. the bar
+	# then knows which UI state to show
+	state = 
+		full: () ->
+			el.mode.show()
+			el.capture.show()
+		preview: () ->
+			el.mode.hide()
+			el.capture.hide()
+		capture: () ->
+			el.mode.hide()
+		gallery: () ->
+			
+		current: "preview"
+		set: (sender) -> 
+			this.current = sender
+			this[sender]()
 
 	viewModel = kendo.observable {
 
@@ -26,6 +46,9 @@ define [
 		capture:
 			
 			click: (e) ->
+
+				# hide the mode buttons
+				state.set "capture"
 
 				if mode == "photo"
 					# start the countdown
@@ -56,10 +79,17 @@ define [
 
 		gallery:
 			click: (e) ->
+				# make sure the mode and capture buttons are hidden
+				el.mode.hide()
+				el.capture.hide()
+				# publish the gallery list event
 				$.publish "/gallery/list"
 
 		camera:
 			click: (e) ->
+				# are we still in capture mode?
+				el.mode.show()
+				if view == "full" then el.capture.show()
 				$.publish "/gallery/hide"
 
 		thumbnail: 
@@ -92,9 +122,6 @@ define [
 				else
 
 					callback()
-
-					# show the capture button
-					el.capture.show()
 
 					# hide the counters
 					el.counters.hide()
@@ -139,19 +166,11 @@ define [
 			# ******************************************
 
 			$.subscribe "/bar/preview/update", (message) ->
-				# image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
-				# el.content.find(".galleryLink").empty().append(image).removeClass("hidden")
 				viewModel.set "thumbnail.src", message.thumbnailURL
 				viewModel.set "thumbnail.display", "inline"
 
-			# subscribe to the show and hide events for the capture controls
-			$.subscribe "/bar/capture/show", ->
-				el.capture.show()
-				el.mode.show()
-
-			$.subscribe "/bar/capture/hide", ->
-				el.capture.hide()
-				el.mode.hide()
+			$.subscribe "/bar/update", (sender) ->
+				state.set sender
 
 			# TODO: The bar probably shouldn't have two different display modes
 			el.content.addClass "previewMode"

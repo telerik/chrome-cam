@@ -3,3 +3,5 @@ chrome-cam
 *.pem
 .DS_Store
 chrome-cam.crx
+src/chrome/javascripts
+src/app/javascripts

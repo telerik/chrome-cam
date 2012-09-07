@@ -64,7 +64,7 @@ define([
 			# start the camera
 			navigator.webkitGetUserMedia { video: true }, hollaback, errback
 
-			# iframe.src = "app/index.html"
+			iframe.src = "app/index.html"
 
 			# cue up the postman!
 			postman.init iframe.contentWindow
