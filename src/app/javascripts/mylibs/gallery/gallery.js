@@ -151,10 +151,6 @@
         $("#footer").animate({
           "margin-top": "-60px"
         });
-        $("#wrap").kendoAnimate({
-          effects: "slideIn:down",
-          duration: 500
-        });
         $("#wrap")[0].style.height = "100%";
         $.publish("/camera/pause", [false]);
         return $.publish("/bar/gallerymode/hide");
@@ -166,10 +162,6 @@
           "margin-top": 0
         });
         $("#wrap").addClass("animate");
-        $("#wrap").kendoAnimate({
-          effects: "slide:up",
-          duration: 500
-        });
         $("#wrap").css("height", 0);
         return $.publish("/bar/gallerymode/show");
       });

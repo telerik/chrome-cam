@@ -69,6 +69,8 @@ define([
 			# cue up the postman!
 			postman.init iframe.contentWindow
 
+			iframe.src = "app/index.html"
+
 			#initialize notifications
 			notify.init()
 
