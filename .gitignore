@@ -2,3 +2,4 @@ node_modules
 chrome-cam
 *.pem
 .DS_Store
+chrome-cam.crx

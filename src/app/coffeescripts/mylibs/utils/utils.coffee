@@ -1,6 +1,4 @@
-define([
-    'mylibs/file/filewrapper'
-], (filewrapper) ->
+define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
     ###     Utils
 
@@ -35,14 +33,14 @@ define([
                 # hide the time
                 $.publish "/bar/time/hide"
 
-	    	canvas = document.createElement("canvas")
-	    	canvas.width = 720
-	    	canvas.height = 480
-	    	ctx = canvas.getContext("2d")
+            canvas = document.createElement("canvas")
+            canvas.width = 720
+            canvas.height = 480
+            ctx = canvas.getContext("2d")
 
-	    	framesDone = 0;
+            framesDone = 0;
 
-	    	for i in [0...frames.length]
+            for i in [0...frames.length]
 
                 do (i) ->
                     
@@ -54,4 +52,3 @@ define([
                     ++framesDone
                     if framesDone == frames.length
                         transcode()
-)

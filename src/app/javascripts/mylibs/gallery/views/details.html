@@ -1,19 +1,18 @@
-<div class="details">
-	<div class="bar">
-		<div class="left">
+<section class="details">
+	<section class="bar">
+		<section class="left">
 			<span class="back" data-bind="click: close">&lsaquo; Gallery</span>
-		</div>
-		<div class="middle"></div>
-		<div class="right">
+		</section>
+		<section class="middle"></section>
+		<section class="right">
 			<span class="delete" data-bind="click: deleteItem">Delete</span>
 			<button class="share">Share</button>
-		</div>
-	</div>
-	# if (type === 'webm') { # 
-		<video src="#: src #" controls></video>
-	# } else { #
-		<img src="#: src #">
-	# } #
+		</section>
+	</section>
+	
+	<video data-bind="attr: { src: src }, visible: isVideo" controls></video>
+	<img data-bind="attr: { src: src }, invisible: isVideo">
+
 	<span class="previous" data-bind="visible: canGoToPrevious, click: goToPrevious">&lsaquo;</span>
 	<span class="next" data-bind="visible: canGoToNext, click: goToNext">&rsaquo;</span>
-</div>
+</section>

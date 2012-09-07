@@ -1,13 +1,13 @@
 # for (var row = 0; row < rows.length; ++row) { #
-	<div class="gallery-row">
+	<section class="gallery-row">
 		# for (var col = 0; col < rows[row].length; ++col) { #
-			<div class="thumbnail" draggable="true">
+			<article class="thumbnail" draggable="true">
 				# if (rows[row][col].type === 'webm') { # 
-					<video src="#: rows[row][col].file #" width="270" height="180" controls data-media-type="#: rows[row][col].type #" data-file-name="#: rows[row][col].name #"></video>
+					<video width="270" height="180" controls data-media-type="#: rows[row][col].type #" data-file-name="#: rows[row][col].name #"></video>
 				# } else { #
-					<img src="#: rows[row][col].file #" width="270" height="180" data-media-type="#: rows[row][col].type #" data-file-name="#: rows[row][col].name #">
+					<img src="styles/images/blank-photo.jpg" width="270" height="180" data-media-type="#: rows[row][col].type #" data-file-name="#: rows[row][col].name #">
 				# } #
-			</div>
+			</article>
 		# } #
-	</div>
+	</section>
 # } #
