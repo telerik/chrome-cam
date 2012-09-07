@@ -16,7 +16,29 @@
         }
       ]);
       filewrapper.list().done(function(files) {
-        var dataSource;
+        var dataSource, file, photos;
+        if (files && files.length > 0) {
+          photos = (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = files.length; _i < _len; _i++) {
+              file = files[_i];
+              if (file.type === 'jpg') {
+                _results.push(file);
+              }
+            }
+            return _results;
+          })();
+          if (photos.length > 0) {
+            filewrapper.readFile(photos[photos.length - 1].name).done(function(latestPhoto) {
+              return $.publish("/bar/preview/update", [
+                {
+                  thumbnailURL: latestPhoto.file
+                }
+              ]);
+            });
+          }
+        }
         dataSource = new kendo.data.DataSource({
           data: files,
           pageSize: rowLength * numberOfRows,

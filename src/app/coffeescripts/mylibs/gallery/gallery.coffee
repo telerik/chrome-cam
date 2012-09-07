@@ -17,8 +17,12 @@ define [
         $.publish "/bar/preview/update", [thumbnailURL: "derpderpin"]
 
         filewrapper.list().done (files) ->
-            # if files && files.length > 0
-            #     $.publish "/bar/preview/update", [thumbnailURL: files[files.length - 1].file]
+            if files and files.length > 0
+                photos = (file for file in files when file.type == 'jpg')
+                if photos.length > 0
+                    filewrapper.readFile(photos[photos.length - 1].name).done (latestPhoto) ->
+                        $.publish "/bar/preview/update", [thumbnailURL: latestPhoto.file]
+
 
             dataSource = new kendo.data.DataSource
                 data: files
