@@ -356,11 +356,13 @@ body > #wrap { height: 100%;}
 
 .preview-title {
 	text-align: center;
-	font-size: 30px;
 	font-family: 'Permanent Marker', cursive;
 	position: relative;
 	top: -5px;
 }
+	.preview-title h2 {
+		font-size: 30px;
+	}
 
 /************ Full Styles ************/
 
