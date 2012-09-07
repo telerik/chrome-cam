@@ -49,10 +49,6 @@
         navigator.webkitGetUserMedia({
           video: true
         }, hollaback, errback);
-<<<<<<< HEAD
-=======
-        postman.init(iframe.contentWindow);
->>>>>>> 7543b124c8911959323f592b9a770afbbdc98ff7
         iframe.src = "app/index.html";
         postman.init(iframe.contentWindow);
         notify.init();
