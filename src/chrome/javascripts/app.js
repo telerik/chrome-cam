@@ -49,16 +49,16 @@
     };
     return pub = {
       init: function() {
+        utils.init();
+        navigator.webkitGetUserMedia({
+          video: true
+        }, hollaback, errback);
         postman.init(iframe.contentWindow);
         iframe.src = "app/index.html";
         notify.init();
-        utils.init();
         intents.init();
         file.init();
-        face.init(0, 0, 0, 0);
-        return navigator.webkitGetUserMedia({
-          video: true
-        }, hollaback, errback);
+        return face.init(0, 0, 0, 0);
       }
     };
   });
