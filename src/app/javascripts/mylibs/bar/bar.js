@@ -5,20 +5,6 @@
     el = {};
     startTime = 0;
     mode = "photo";
-    kendo.fx.circle = {
-      setup: function(element, options) {
-        return $.extend({
-          borderRadius: 100
-        }, options.properties);
-      }
-    };
-    kendo.fx.square = {
-      setup: function(element, options) {
-        return $.extend({
-          borderRadius: 0
-        }, options.properties);
-      }
-    };
     viewModel = kendo.observable({
       mode: {
         click: function(e) {
@@ -64,8 +50,12 @@
       },
       camera: {
         click: function(e) {
-          return console.log("go back to the camera!");
+          return $.publish("/gallery/hide");
         }
+      },
+      thumbnail: {
+        src: null,
+        display: "none"
       }
     });
     countdown = function(position, callback) {
@@ -90,7 +80,6 @@
     };
     return pub = {
       init: function(selector) {
-        var _this = this;
         el.container = $(selector);
         el.content = $(template);
         el.capture = el.content.find(".capture");
@@ -125,22 +114,11 @@
           });
         };
         el.counters = el.content.find(".countdown > span");
-        el.content.on("click", ".galleryLink", function() {
-          return $.publish("/gallery/list");
-        });
-        el.content.on("click", ".back", function() {
-          return $.publish("/gallery/hide");
-        });
         el.container.append(el.content);
         kendo.bind(el.container, viewModel);
         $.subscribe("/bar/preview/update", function(message) {
-          var image;
-          image = $("<img />", {
-            src: message.thumbnailURL,
-            width: 72,
-            height: 48
-          });
-          return el.content.find(".galleryLink").empty().append(image).removeClass("hidden");
+          viewModel.set("thumbnail.src", message.thumbnailURL);
+          return viewModel.set("thumbnail.display", "inline");
         });
         $.subscribe("/bar/capture/show", function() {
           el.capture.show();

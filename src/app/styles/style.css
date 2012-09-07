@@ -164,7 +164,13 @@ body > #wrap { height: 100%;}
 	-webkit-box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
     box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
 }
-	.galleryLink.hidden { display: none; }
+
+.galleryLink.hidden { display: none; }
+
+.thumbnail {
+	width: 72px;
+	height: 48px;
+}
 
 .back { cursor: pointer; }
 	.back:hover { color: #ccc; }

@@ -58,16 +58,19 @@ define([
 	pub = 
 		init: ->
 
+			# initialize utils
+			utils.init()
+
+			# start the camera
+			navigator.webkitGetUserMedia { video: true }, hollaback, errback
+
+			# iframe.src = "app/index.html"
+
 			# cue up the postman!
 			postman.init iframe.contentWindow
 
-			iframe.src = "app/index.html"
-
 			#initialize notifications
 			notify.init()
-
-			# initialize utils
-			utils.init()
 
 			# intialize intents
 			intents.init()
@@ -80,7 +83,4 @@ define([
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
-
-			# start the camera
-			navigator.webkitGetUserMedia { video: true }, hollaback, errback
 )

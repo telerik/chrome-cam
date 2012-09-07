@@ -7,15 +7,6 @@ define [
 	startTime = 0
 	mode = "photo"
 
-	# create the box to square and back effect
-	kendo.fx.circle =
-		setup: (element, options) ->
-			$.extend { borderRadius: 100 }, options.properties
-
-	kendo.fx.square =
-		setup: (element, options) ->
-			$.extend { borderRadius: 0 }, options.properties
-
 	viewModel = kendo.observable {
 
 		mode:
@@ -69,7 +60,11 @@ define [
 
 		camera:
 			click: (e) ->
-				console.log "go back to the camera!"
+				$.publish "/gallery/hide"
+
+		thumbnail: 
+			src: null
+			display: "none"
 
 	}
 
@@ -134,13 +129,6 @@ define [
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"
 
-			# link to show or hide the gallery
-			el.content.on "click", ".galleryLink", =>
-				$.publish "/gallery/list"
-
-			el.content.on "click", ".back", =>
-				$.publish "/gallery/hide"
-
 			# append it to the container
 			el.container.append el.content
 
@@ -151,8 +139,10 @@ define [
 			# ******************************************
 
 			$.subscribe "/bar/preview/update", (message) ->
-				image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
-				el.content.find(".galleryLink").empty().append(image).removeClass("hidden")
+				# image = $("<img />", src: message.thumbnailURL, width: 72, height: 48)
+				# el.content.find(".galleryLink").empty().append(image).removeClass("hidden")
+				viewModel.set "thumbnail.src", message.thumbnailURL
+				viewModel.set "thumbnail.display", "inline"
 
 			# subscribe to the show and hide events for the capture controls
 			$.subscribe "/bar/capture/show", ->

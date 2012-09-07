@@ -1,4 +1,4 @@
-define([
+define [
   'mylibs/utils/utils'
 ], (utils) ->
 	
@@ -53,4 +53,3 @@ define([
 					# send the image data down in a post message
 					img.onload = ->
 						$.publish "/postman/deliver", [ { message: { name: asset.name, image: img.toDataURL() } }, "/assets/add" ]
-)

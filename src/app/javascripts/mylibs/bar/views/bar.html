@@ -28,7 +28,9 @@
 		</div>
 	</div>
 	<div class="right">
-		<a href="#" data-bind="click: gallery.click" class="galleryLink hidden" alt="Go to the Gallery" title="Go to the Gallery"></a>
+		<a href="#" data-bind="click: gallery.click" class="galleryLink" data-bind="style: { display: thumbnail.display }" alt="Go to the Gallery" title="Go to the Gallery">
+			<img class="thumbnail" data-bind="attr: { src: thumbnail.src }" />
+		</a>
 		<span class="delete">Delete</span>
 		<button class="share">Share</button>
 	</div>
