@@ -11,7 +11,7 @@ html, body, #wrap {
 
 body > #wrap { height: 100%;}
 
-.hidden { display: none; }
+.hidden { display: none }
 
 .circle { border-radius: 50%; }
 
@@ -196,8 +196,8 @@ body > #wrap { height: 100%;}
 .delete {
 	background-repeat: no-repeat;
 	background-size: 24px 140px;
-	display: block;
 	width: 24px;
+	height: 24px;
 	overflow: hidden;
 	text-indent: 999px;
 	direction: rtl;
@@ -205,6 +205,10 @@ body > #wrap { height: 100%;}
 	margin-right: 10px;
 	cursor: pointer;
 }
+	.delete.hidden {
+		dispay: none;
+	}
+
 	.delete:hover { opacity: .7; }
 
 /* Bar States */

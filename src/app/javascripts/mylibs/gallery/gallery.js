@@ -163,6 +163,7 @@
         });
         $("#wrap").addClass("animate");
         $("#wrap").css("height", 0);
+        $(".flip").css("position", "relative");
         return $.publish("/bar/gallerymode/show");
       });
       return $.subscribe("/gallery/page", function(dataSource) {

@@ -1,31 +1,18 @@
 define [
   'Kendo'
+  'mylibs/bar/state'
   'text!mylibs/bar/views/bar.html'
-], (kendo, template) ->
+], (kendo, state, template) ->
 
 	el = {}
 	startTime = 0
 	mode = "photo"
-	
+
 	# the state object manages the many "states" that
 	# the bar can have. this is done by simply calling
 	# state.set() and passing in the string name. the bar
 	# then knows which UI state to show
-	state = 
-		full: () ->
-			el.mode.show()
-			el.capture.show()
-		preview: () ->
-			el.mode.hide()
-			el.capture.hide()
-		capture: () ->
-			el.mode.hide()
-		gallery: () ->
-			
-		current: "preview"
-		set: (sender) -> 
-			this.current = sender
-			this[sender]()
+		
 
 	viewModel = kendo.observable {
 
@@ -47,10 +34,10 @@ define [
 			
 			click: (e) ->
 
-				# hide the mode buttons
-				state.set "capture"
-
 				if mode == "photo"
+
+					state.set "capture"
+
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
 					if e.ctrlKey
@@ -58,6 +45,8 @@ define [
 					else
 						countdown 0, capture
 				else
+
+					state.set "recording"
 
 					# set the start time to right now
 					startTime = Date.now()
@@ -80,16 +69,14 @@ define [
 		gallery:
 			click: (e) ->
 				# make sure the mode and capture buttons are hidden
-				el.mode.hide()
-				el.capture.hide()
+				state.set "gallery"
 				# publish the gallery list event
 				$.publish "/gallery/list"
 
 		camera:
 			click: (e) ->
 				# are we still in capture mode?
-				el.mode.show()
-				if view == "full" then el.capture.show()
+				state.set state.previous
 				$.publish "/gallery/hide"
 
 		thumbnail: 
@@ -102,8 +89,6 @@ define [
 
 	# countdown
 	countdown = (position, callback) ->
-
-		el.capture.hide()
 
 		$(el.counters[position]).kendoStop(true).kendoAnimate {
 			effects: "zoomIn fadeIn",
@@ -138,26 +123,32 @@ define [
 			# wrap the template as HTML with teh jQueries
 			el.content = $(template)
 
+			# TODO: this should be done with custom bindings
+
 			# get a reference to the "capture" button
 			el.capture = el.content.find ".capture"
-			el.capture.show = ->
-				this.kendoStop(true).kendoAnimate { effects: "slideIn:up", show: true, duration: 200 }
-			el.capture.hide = ->
-				this.kendoStop(true).kendoAnimate { effects: "slide:down", show: true, duration: 200 }
+			el.capture.in = { effects: "slideIn:up" }
+			el.capture.out = { effects: "slide:down" }
 
 			el.dot = el.capture.find("> div > div")
 
 			el.mode = el.content.find ".mode"
-			el.mode.show = ->
-				this.kendoStop(true).kendoAnimate { effects: "slideIn:right", show: true, duration: 200 }
-			el.mode.hide = ->
-				this.kendoStop(true).kendoAnimate { effects: "slide:left", hide: true, duration: 200 }
+			el.mode.in = { effects: "slideIn:right" }
+			el.mode.out = { effects: "slide:left" }
+
+			el.share = el.content.find ".share"
+			el.delete = el.content.find ".delete"
+			el.back = el.content.find ".back"
+			el.thumbnail = el.content.find ".galleryLink"
 
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"
 
 			# append it to the container
 			el.container.append el.content
+
+			# initialize the state manager
+			state = state.init el
 
 			# bind the container to the view model
 			kendo.bind el.container, viewModel
@@ -167,17 +158,9 @@ define [
 
 			$.subscribe "/bar/preview/update", (message) ->
 				viewModel.set "thumbnail.src", message.thumbnailURL
-				viewModel.set "thumbnail.display", "inline"
+				el.thumbnail.show()
 
 			$.subscribe "/bar/update", (sender) ->
 				state.set sender
-
-			# TODO: The bar probably shouldn't have two different display modes
-			el.content.addClass "previewMode"
-			$.subscribe "/bar/gallerymode/show", ->
-				el.content.removeClass("previewMode").addClass("galleryMode")
-
-			$.subscribe "/bar/gallerymode/hide", ->
-				el.content.removeClass("galleryMode").addClass("previewMode")
 
 		

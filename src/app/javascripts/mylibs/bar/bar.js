@@ -1,29 +1,10 @@
 (function() {
 
-  define(['Kendo', 'text!mylibs/bar/views/bar.html'], function(kendo, template) {
-    var countdown, el, mode, pub, startTime, state, viewModel;
+  define(['Kendo', 'mylibs/bar/state', 'text!mylibs/bar/views/bar.html'], function(kendo, state, template) {
+    var countdown, el, mode, pub, startTime, viewModel;
     el = {};
     startTime = 0;
     mode = "photo";
-    state = {
-      full: function() {
-        el.mode.show();
-        return el.capture.show();
-      },
-      preview: function() {
-        el.mode.hide();
-        return el.capture.hide();
-      },
-      capture: function() {
-        return el.mode.hide();
-      },
-      gallery: function() {},
-      current: "preview",
-      set: function(sender) {
-        this.current = sender;
-        return this[sender]();
-      }
-    };
     viewModel = kendo.observable({
       mode: {
         click: function(e) {
@@ -37,8 +18,8 @@
       capture: {
         click: function(e) {
           var capture, token;
-          state.set("capture");
           if (mode === "photo") {
+            state.set("capture");
             capture = function() {
               return $.publish("/capture/" + mode);
             };
@@ -48,6 +29,7 @@
               return countdown(0, capture);
             }
           } else {
+            state.set("recording");
             startTime = Date.now();
             token = $.subscribe("/capture/" + mode + "/completed", function() {
               $.unsubscribe(token);
@@ -65,15 +47,13 @@
       },
       gallery: {
         click: function(e) {
-          el.mode.hide();
-          el.capture.hide();
+          state.set("gallery");
           return $.publish("/gallery/list");
         }
       },
       camera: {
         click: function(e) {
-          el.mode.show();
-          if (view === "full") el.capture.show();
+          state.set(state.previous);
           return $.publish("/gallery/hide");
         }
       },
@@ -83,7 +63,6 @@
       }
     });
     countdown = function(position, callback) {
-      el.capture.hide();
       return $(el.counters[position]).kendoStop(true).kendoAnimate({
         effects: "zoomIn fadeIn",
         duration: 200,
@@ -106,52 +85,34 @@
         el.container = $(selector);
         el.content = $(template);
         el.capture = el.content.find(".capture");
-        el.capture.show = function() {
-          return this.kendoStop(true).kendoAnimate({
-            effects: "slideIn:up",
-            show: true,
-            duration: 200
-          });
+        el.capture["in"] = {
+          effects: "slideIn:up"
         };
-        el.capture.hide = function() {
-          return this.kendoStop(true).kendoAnimate({
-            effects: "slide:down",
-            show: true,
-            duration: 200
-          });
+        el.capture.out = {
+          effects: "slide:down"
         };
         el.dot = el.capture.find("> div > div");
         el.mode = el.content.find(".mode");
-        el.mode.show = function() {
-          return this.kendoStop(true).kendoAnimate({
-            effects: "slideIn:right",
-            show: true,
-            duration: 200
-          });
+        el.mode["in"] = {
+          effects: "slideIn:right"
         };
-        el.mode.hide = function() {
-          return this.kendoStop(true).kendoAnimate({
-            effects: "slide:left",
-            hide: true,
-            duration: 200
-          });
+        el.mode.out = {
+          effects: "slide:left"
         };
+        el.share = el.content.find(".share");
+        el["delete"] = el.content.find(".delete");
+        el.back = el.content.find(".back");
+        el.thumbnail = el.content.find(".galleryLink");
         el.counters = el.content.find(".countdown > span");
         el.container.append(el.content);
+        state = state.init(el);
         kendo.bind(el.container, viewModel);
         $.subscribe("/bar/preview/update", function(message) {
           viewModel.set("thumbnail.src", message.thumbnailURL);
-          return viewModel.set("thumbnail.display", "inline");
+          return el.thumbnail.show();
         });
-        $.subscribe("/bar/update", function(sender) {
+        return $.subscribe("/bar/update", function(sender) {
           return state.set(sender);
-        });
-        el.content.addClass("previewMode");
-        $.subscribe("/bar/gallerymode/show", function() {
-          return el.content.removeClass("previewMode").addClass("galleryMode");
-        });
-        return $.subscribe("/bar/gallerymode/hide", function() {
-          return el.content.removeClass("galleryMode").addClass("previewMode");
         });
       }
     };

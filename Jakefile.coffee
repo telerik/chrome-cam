@@ -72,6 +72,10 @@ task 'default', (params) ->
 			chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
 			jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->			
 				fatLog "FINISHED!"
+				# display a growl notification. this will fail pretty much everywhere
+				# but my machine
+				jake.exec "growlnotify Buildage -m 'Build Is Done Man'"
+
 			, { printStdout: true }
 
 		, { printStdout: true }
