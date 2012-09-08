@@ -10,15 +10,30 @@ define([
     timeStripsBuffer = []
     ghostBuffer = []
 
+    webgl = fx.canvas()
+
+    pox = new Image()
+    pox.src = "images/pox.png"
+
     draw = (canvas, element, effect) ->
 
-        texture = canvas.texture(element)
-        canvas.draw(texture)
+        ctx = canvas.getContext "2d"
 
-        effect(element)
+        texture = webgl.texture(element)
+        webgl.draw texture
+        # canvas.draw(texture)
 
-        canvas.update()
+        effect webgl, element
+
+        webgl.update()
         texture.destroy()
+
+        ctx.drawImage webgl, 0, 0, webgl.width, webgl.height
+
+    simple = (canvas, element, x, y, width, height) ->
+
+        ctx = canvas.getContext "2d"
+        ctx.drawImage element, x, y, width, height
 
     pub = 
 
@@ -29,13 +44,15 @@ define([
 
         init: ->
 
+            pox.src = "images/pox.png"
+
         data: [
 
                 {
 
                     name: "Normal"
                     filter: (canvas, element) ->
-                        effect = ->
+                        effect = (canvas) ->
                             canvas                            
                         draw(canvas, element, effect)
 
@@ -44,7 +61,7 @@ define([
                 {
                     name: "Bulge"
                     filter: (canvas, element) ->
-                        effect = -> 
+                        effect = (canvas) -> 
                             canvas.bulgePinch canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, .65 
                         draw(canvas, element, effect)
                 }
@@ -52,7 +69,7 @@ define([
                 {
                     name: "Pinch"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.bulgePinch canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, -.65
                         draw(canvas, element, effect)
                 }
@@ -60,7 +77,7 @@ define([
                 {
                     name: "Swirl"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.swirl canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, 3
                         draw(canvas, element, effect)
                 }
@@ -69,7 +86,7 @@ define([
                     name: "Dent"
                     kind: "webgl"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.bulgePinch canvas.width / 2 , canvas.height / 2, canvas.width / 4, -.4
                         draw(canvas, element, effect)
                 }
@@ -77,7 +94,7 @@ define([
                 {
                     name: "Zoom Blur"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.zoomBlur canvas.width / 2,  canvas.height / 2, 2, canvas.height / 5
                         draw(canvas, element, effect)
                 }
@@ -85,7 +102,7 @@ define([
                 {
                     name: "Blockhead"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.blockhead canvas.width / 2,  canvas.height / 2, 200, 300, 1
                         draw(canvas, element, effect)
                 }
@@ -93,7 +110,7 @@ define([
                 {
                     name: "Mirror Left"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.mirror 0
                         draw(canvas, element, effect)
                 }
@@ -101,7 +118,7 @@ define([
                 {
                     name: "Mirror Bottom"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.mirror Math.PI * 1.5
                         draw(canvas, element, effect)
                 }                
@@ -109,7 +126,7 @@ define([
                 {
                     name: "Mirror Tube"
                     filter: (canvas, element) ->
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.mirrorTube canvas.width / 2, canvas.height / 2, canvas.height / 4
                         draw(canvas, element, effect)
                 }
@@ -117,7 +134,7 @@ define([
                 {
                     name: "Quad"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.quadRotate 0, 0, 0, 0
                         draw(canvas, element, effect)
                 }
@@ -125,7 +142,7 @@ define([
                 {
                     name: "Sepia"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.sepia 120
                         draw(canvas, element, effect)
                 }
@@ -133,7 +150,7 @@ define([
                 {
                     name: "VHS"
                     filter: (canvas, element, frame) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.vhs frame
                         draw(canvas, element, effect)
                 }
@@ -141,7 +158,7 @@ define([
                 {
                     name: "Old Film"
                     filter: (canvas, element, frame) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.oldFilm frame
                         draw(canvas, element, effect)
                 }
@@ -149,7 +166,7 @@ define([
                 {
                     name: "Hope"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.hopePoster()
                         draw(canvas, element, effect)
                 }
@@ -158,7 +175,7 @@ define([
                     name: "Ghost"
                     filter: (canvas, element, frame) ->
 
-                        effect = ->
+                        effect = (canvas, element) ->
 
                             createBuffers = (length) ->
                                 while ghostBuffer.length < length
@@ -178,7 +195,7 @@ define([
                     name: "Kaleidoscope"
                     kind: "webgl"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.kaleidoscope canvas.width / 2,  canvas.height / 2, 200, 0
                         draw(canvas, element, effect)
                 }
@@ -187,7 +204,7 @@ define([
                     name: "Inverted"
                     kind: "webgl"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.invert()
                         draw(canvas, element, effect)
                 }
@@ -196,7 +213,7 @@ define([
                     name: "Comix"
                     kind: "webgl"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.quadRotate 0, 0, 0, 0
                             canvas.denoise 50
                             canvas.ink .5
@@ -208,7 +225,7 @@ define([
                     name: "Color Half Tone"
                     kind: "webgl"
                     filter: (canvas, element) -> 
-                        effect = ->
+                        effect = (canvas, element) ->
                             canvas.colorHalftone canvas.width / 2,  canvas.height / 2, .30, 3
                         draw(canvas, element, effect)
                 }
@@ -220,7 +237,7 @@ define([
                         if track.faces.length != 0
                             faces = track.faces
 
-                        effect = (element) ->
+                        effect = (canvas, element) ->
 
                             # the stream object holds a face object which contains
                             # face tracking data about this paticular canvas. the face
@@ -251,7 +268,7 @@ define([
                         if stream.faces.length != 0
                             faces = stream.faces
 
-                        effect = (element) ->
+                        effect = (canvas, element) ->
 
                             # the stream object holds a face object which contains
                             # face tracking data about this paticular canvas. the face
@@ -282,7 +299,7 @@ define([
                         if stream.faces.length != 0
                             faces = stream.faces
 
-                        effect = (element) ->
+                        effect = (canvas, element) ->
 
                             # the stream object holds a face object which contains
                             # face tracking data about this paticular canvas. the face
@@ -302,8 +319,29 @@ define([
 
                         draw(canvas, element, effect)
                 }    
+ 
+                { 
 
-                
+                    name: "Chicken Pox"
+                    filter: (canvas, element, frame, stream) ->
+
+                        if stream.faces.length != 0
+                            faces = stream.faces
+
+                        factor = element.width / stream.trackWidth
+
+                        # add the effect to each face we find
+                        for face in faces
+
+                            width = face.width * factor
+                            height = face.height * factor
+                            x = face.x * factor
+                            y = face.y * factor
+
+                            simple canvas, element, 0, 0, element.width, element.height
+                            simple canvas, pox, x, y, width, height
+
+                }
                 
         ]
             

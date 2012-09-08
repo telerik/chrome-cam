@@ -63,10 +63,10 @@ task 'default', (params) ->
 
 			fatLog "Copying App Scripts"
 
-			jake.cpR "src/app/javascripts/build/main.js", "#{folder}/app/javascripts/main.js"
-			jake.cpR "src/app/javascripts/build/require.js", "#{folder}/app/javascripts/require.js"
-			jake.cpR "src/app/javascripts/build/jquery.min.js", "#{folder}/app/javascripts/jquery.min.js"
-			jake.cpR "src/app/javascripts/build/kendo.all.min.js", "#{folder}/app/javascripts/kendo.all.min.js"
+			jake.cpR "#{app}javascripts/build/main.js", "#{folder}/app/javascripts/main.js"
+			jake.cpR "#{app}javascripts/build/require.js", "#{folder}/app/javascripts/require.js"
+			jake.cpR "#{app}javascripts/build/jquery.min.js", "#{folder}/app/javascripts/jquery.min.js"
+			jake.cpR "#{app}images", "#{folder}/app/images"
 
 			fatLog "Building Extension"
 			chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"

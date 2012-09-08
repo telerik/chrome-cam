@@ -19,11 +19,11 @@
         var time;
         if (!paused) {
           frame++;
-          preview.filter(webgl, stream.canvas, frame, stream.track);
+          preview.filter(canvas, stream.canvas, frame, stream.track);
           if (recording) {
             time = Date.now();
             frames.push({
-              imageData: webgl.getPixelArray(),
+              imageData: canvas.getPixelArray(),
               time: Date.now()
             });
             return $.publish("/full/timer/update");
@@ -35,7 +35,7 @@
       $flash.show();
       return $flash.kendoStop(true).kendoAnimate({
         effects: "fadeOut",
-        duration: 2000,
+        duration: 1500,
         hide: true
       });
     };
@@ -45,7 +45,7 @@
         $.subscribe("/capture/photo", function() {
           var image, name;
           flash();
-          image = webgl.toDataURL();
+          image = canvas.toDataURL();
           name = new Date().getTime() + ".jpg";
           return filewrapper.save(name, image).done(function() {
             $.publish("/bar/preview/update", [
@@ -82,11 +82,12 @@
         };
         $container = $(selector);
         canvas = document.createElement("canvas");
+        canvas.width = 720;
+        canvas.height = 480;
         ctx = canvas.getContext("2d");
         $content = $(fullTemplate).appendTo($container);
         $flash = $content.find(".flash");
-        webgl = fx.canvas();
-        $(webgl).dblclick(function() {
+        $(canvas).dblclick(function() {
           $.publish("/bar/update", ["preview"]);
           $.publish("/camera/pause", [true]);
           return $container.kendoStop(true).kendoAnimate({
@@ -99,15 +100,15 @@
             }
           });
         });
-        $content.prepend(webgl);
+        $content.prepend(canvas);
         $.subscribe("/full/show", function(e) {
           $.publish("/bar/update", ["full"]);
           $.extend(preview, e);
           $.publish("/camera/pause", [true]);
           $content.height($container.height() - 50);
           $content.width((3 / 2) * $content.height());
-          $(webgl).width($content.width());
-          $(webgl).height("height", $content.height());
+          $(canvas).width($content.width());
+          $(canvas).height("height", $content.height());
           return $container.kendoStop(true).kendoAnimate({
             effects: "zoomIn",
             show: "true",

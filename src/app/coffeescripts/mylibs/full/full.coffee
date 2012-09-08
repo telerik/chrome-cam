@@ -37,7 +37,7 @@ define([
 
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
-	            preview.filter(webgl, stream.canvas, frame, stream.track)
+	            preview.filter(canvas, stream.canvas, frame, stream.track)
 
 	            # if we are recording, dump this canvas to a pixel array
 	            if recording
@@ -45,7 +45,7 @@ define([
 	            	time = Date.now()
 
 	            	# push the current frame onto the buffer
-	            	frames.push imageData: webgl.getPixelArray(), time: Date.now()
+	            	frames.push imageData: canvas.getPixelArray(), time: Date.now()
 
 	            	# update the time in the view
 	            	$.publish "/full/timer/update"
@@ -55,7 +55,7 @@ define([
 		$flash.show()	
 		$flash.kendoStop(true).kendoAnimate({
 			effects: "fadeOut",
-			duration: 2000,
+			duration: 1500,
 			hide: true
 		})
 
@@ -68,7 +68,7 @@ define([
 
 				flash()
 
-				image = webgl.toDataURL()
+				image = canvas.toDataURL()
 
 				# set the name of this image to the current time string
 				name = new Date().getTime() + ".jpg"
@@ -119,6 +119,8 @@ define([
 
 			# create a new canvas for drawing
 			canvas = document.createElement "canvas"
+			canvas.width = 720
+			canvas.height = 480
 			ctx = canvas.getContext "2d"
 
 			# create a div to go inside the main content area
@@ -128,10 +130,10 @@ define([
 			$flash = $content.find ".flash"
 
 			# create a new webgl canvas
-			webgl = fx.canvas()
+			#  \webgl = fx.canvas()
 
 			# add the double-click event listener which closes the preview
-			$(webgl).dblclick ->
+			$(canvas).dblclick ->
 				
 				# hide the controls in the bar
 				$.publish "/bar/update", [ "preview" ]
@@ -173,7 +175,7 @@ define([
 				})
 
 			# append the webgl canvas
-			$content.prepend(webgl)
+			$content.prepend(canvas)
 
 			# subscribe to the show event
 			$.subscribe "/full/show", (e) ->
@@ -206,8 +208,8 @@ define([
 				# determine the width based on a 3:2 aspect ratio (.66 repeating)
 				$content.width (3 / 2) * $content.height()
 
-				$(webgl).width($content.width())
-				$(webgl).height("height", $content.height())
+				$(canvas).width($content.width())
+				$(canvas).height("height", $content.height())
 
 				$container.kendoStop(true).kendoAnimate({
 					effects: "zoomIn",

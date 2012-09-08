@@ -94,7 +94,7 @@
                 $template = kendo.template(previewTemplate);
                 preview = {};
                 $.extend(preview, item);
-                preview.canvas = fx.canvas();
+                preview.canvas = document.createElement("canvas");
                 preview.canvas.width = canvas.width;
                 preview.canvas.height = canvas.height;
                 content = $template({

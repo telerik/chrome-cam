@@ -50,7 +50,7 @@ define [
                     # like old movie and vhs. most effects simply ignore this
                     frame++
                
-                    preview.filter(preview.canvas, canvas, frame, stream.track)
+                    preview.filter preview.canvas, canvas, frame, stream.track
 
     keyboard = (enabled) ->
 
@@ -187,7 +187,7 @@ define [
                                 preview = {}
                                 $.extend(preview, item)
 
-                                preview.canvas = fx.canvas()   
+                                preview.canvas = document.createElement "canvas"
                                 preview.canvas.width = canvas.width
                                 preview.canvas.height = canvas.height      
 
