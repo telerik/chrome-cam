@@ -27,6 +27,10 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                 
                 name = new Date().getTime() + ".webm"
 
+                debug = $("<video src=#{blob}><video>")
+
+                console.log debug
+
                 # save the recording
                 filewrapper.save(name, blob)
 
@@ -45,7 +49,7 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                 do (i) ->
                     
                     imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
-                    videoData = new Uint8ClampedArray(frames[i].imageData)
+                    videoData = new Uint8ClampedArray(frames[i].imageData.data)
                     imageData.data.set(videoData)
                     ctx.putImageData imageData, 0, 0
                     frames[i] = imageData: canvas.toDataURL('image/webp', 1), time: frames[i].time

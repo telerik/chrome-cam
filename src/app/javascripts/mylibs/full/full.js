@@ -24,10 +24,10 @@
           if (recording) {
             time = Date.now();
             frames.push({
-              imageData: ctx.getImageData(0, 0, canvas.width, canvas.height),
+              imageData: ctx.getImageData(0, 0, 720, 480),
               time: Date.now()
             });
-            return $.publish("/full/timer/update");
+            return el.container.find(".timer").first().html(kendo.toString((Date.now() - startTime) / 1000, "0"));
           }
         }
       });
@@ -43,22 +43,17 @@
         }
       });
     };
-    capture = function(complete) {
-      var callback,
-        _this = this;
-      callback = function() {
-        var image, name;
-        image = canvas.toDataURL();
-        name = new Date().getTime() + ".jpg";
-        filewrapper.save(name, image).done(function() {
-          return $.publish("/bar/preview/update", [
-            {
-              thumbnailURL: image
-            }
-          ]);
-        });
-        if (complete) return complete();
-      };
+    capture = function(callback) {
+      var image, name;
+      image = canvas.toDataURL();
+      name = new Date().getTime() + ".jpg";
+      filewrapper.save(name, image).done(function() {
+        return $.publish("/bar/preview/update", [
+          {
+            thumbnailURL: image
+          }
+        ]);
+      });
       return flash(callback);
     };
     return pub = {
@@ -99,16 +94,16 @@
         $.subscribe("/capture/video", function() {
           console.log("Recording...");
           frames = [];
-          recording = true;
           startTime = Date.now();
           el.container.find(".timer").removeClass("hidden");
-          return setTimeout((function() {
+          setTimeout((function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
             recording = false;
             el.container.find(".timer").addClass("hidden");
             return $.publish("/recording/done", ["full"]);
           }), 6000);
+          return recording = true;
         });
         kendo.fx.grow = {
           setup: function(element, options) {
@@ -130,9 +125,6 @@
         el.content.prepend(canvas);
         $.subscribe("/full/flash", function() {
           return flash();
-        });
-        $.subscribe("/full/timer/update", function() {
-          return el.container.find(".timer").first().html(kendo.toString((Date.now() - startTime) / 1000, "00.00"));
         });
         return draw();
       }

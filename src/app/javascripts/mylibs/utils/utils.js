@@ -16,7 +16,7 @@
       createVideo: function(frames) {
         var canvas, ctx, framesDone, i, transcode, _ref, _results;
         transcode = function() {
-          var blob, i, name, pair, video, _i, _len, _ref;
+          var blob, debug, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
           _ref = (function() {
             var _ref, _results;
@@ -33,6 +33,8 @@
           blob = video.compile();
           frames = [];
           name = new Date().getTime() + ".webm";
+          debug = $("<video src=" + blob + "><video>");
+          console.log(debug);
           filewrapper.save(name, blob);
           return $.publish("/bar/time/hide");
         };
@@ -46,7 +48,7 @@
           _results.push((function(i) {
             var imageData, videoData;
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            videoData = new Uint8ClampedArray(frames[i].imageData);
+            videoData = new Uint8ClampedArray(frames[i].imageData.data);
             imageData.data.set(videoData);
             ctx.putImageData(imageData, 0, 0);
             frames[i] = {

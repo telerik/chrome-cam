@@ -46,10 +46,10 @@ define([
 	            	time = Date.now()
 
 	            	# push the current frame onto the buffer
-	            	frames.push imageData: ctx.getImageData(0, 0, canvas.width, canvas.height), time: Date.now()
+	            	frames.push imageData: ctx.getImageData(0, 0, 720, 480), time: Date.now()
 
 	            	# update the time in the view
-	            	$.publish "/full/timer/update"
+	            	el.container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "0")
 
 	flash = (callback) ->
 
@@ -62,23 +62,18 @@ define([
 				callback()
 		})
 
-	capture = (complete) ->
+	capture = (callback) ->
 
-		callback = =>
-		
-			image = canvas.toDataURL()
+		image = canvas.toDataURL()
 
-			# set the name of this image to the current time string
-			name = new Date().getTime() + ".jpg"
+		# set the name of this image to the current time string
+		name = new Date().getTime() + ".jpg"
 
-			filewrapper.save(name, image).done ->
-				# I may have it bouncing around too much, but I don't want the bar to
-				# just respond to *all* file saves, or have this module know about
-				# the bar's internals
-				$.publish "/bar/preview/update", [ thumbnailURL: image ]
-
-			if complete
-				complete()
+		filewrapper.save(name, image).done ->
+			# I may have it bouncing around too much, but I don't want the bar to
+			# just respond to *all* file saves, or have this module know about
+			# the bar's internals
+			$.publish "/bar/preview/update", [ thumbnailURL: image ]
 
 		flash(callback)
 
@@ -141,8 +136,6 @@ define([
 				console.log "Recording..."
 
 				frames = []
-
-				recording = true
 				
 				startTime = Date.now()
 
@@ -159,6 +152,8 @@ define([
 					$.publish "/recording/done", [ "full" ]
 
 				), 6000
+
+				recording = true
 
 			# setup the shrink function - this most likely belongs in a widget file
 			kendo.fx.grow =
@@ -218,13 +213,9 @@ define([
 			# 	}
 
 			# subscribe to the flash event
-			$.subscribe "/full/flash", ->
-				
+			$.subscribe "/full/flash", ->	
 				flash()
 
-			$.subscribe "/full/timer/update", ->
-				el.container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "00.00")
-			
 			draw()
 
 
