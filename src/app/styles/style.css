@@ -189,6 +189,7 @@ body > #wrap { height: 100%;}
 }
 
 	.bar button:hover, .button:hover { background: #ccc; }
+	button + button, .button + .button, button + .button, .button + button { margin-left: 10px; }
 
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;
