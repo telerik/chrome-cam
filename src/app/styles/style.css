@@ -262,17 +262,15 @@ body > #wrap { height: 100%;}
 }
 
 .half {
-	display: -webkit-box;
-	-webkit-box-align: center;
-	-webkit-box-pack: center;
-	-webkit-box-orient: horizontal;
+	margin: 0 auto;
 }
 
-.half + .half { margin-top: 27px; }
+.half + .half { margin-top: 26px; }
 .gallery-row + .gallery-row { margin-top: 17px; }
 
 .preview { 
-	margin-left: 27px;
+	margin-left: 26px;
+	float: left;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 }
 .thumbnail { margin-left: 17px; }
@@ -471,4 +469,27 @@ body > #wrap { height: 100%;}
 	}
 
 	100% { opacity:0.3; }
+}
+
+/* Clearfix */
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.clearfix {
+	display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+	display: block;
+}
+ 
+* html .clearfix {
+	height: 1%;
 }
