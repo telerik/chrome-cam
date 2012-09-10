@@ -67,7 +67,7 @@ define([
 		show: (e) ->
 
 			# show the record controls in the footer
-			$.publish "/bar/update", [ "full" ]
+			$.publish "/bottom/update", [ "full" ]
 
 			# $.extend(preview, e)
 			# find the function in the effects.data array
@@ -95,7 +95,7 @@ define([
 			# $(canvas).height("height", $content.height())
 			$(canvas).height(el.content.height())
 
-			$.publish "/bar/update", [ "full" ]
+			$.publish "/bottom/update", [ "full" ]
 			# $container.kendoStop(true).kendoAnimate({
 			# 	effects: "zoomIn",
 			# 	show: "true",
@@ -125,7 +125,8 @@ define([
 					# just respond to *all* file saves, or have this module know about
 					# the bar's internals
 					$.publish "/bar/preview/update", [ thumbnailURL: image ]
-					$.publish "/bar/update", [ "full" ]
+					
+				$.publish "/bottom/update", [ "full" ]
 
 			$.subscribe "/capture/video", ->
 
@@ -147,7 +148,7 @@ define([
 
 					el.container.find(".timer").addClass("hidden")
 					
-					$.publish "/bar/update", [ "full" ]
+					$.publish "/recording/done", [ "full" ]
 
 				), 6000
 

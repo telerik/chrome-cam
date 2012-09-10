@@ -12,6 +12,7 @@ define([
 	'order!libs/kendo/kendo.mobile.application'
 	'order!libs/kendo/kendo.userevents'
 	'order!libs/kendo/kendo.touch'
+	'order!libs/kendo/kendo.view'
 ], ->
   # Tell Require.js that this module returns a reference to jQuery
   return kendo

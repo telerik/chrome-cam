@@ -30,7 +30,7 @@
 			<div class="full"></div>
 		</div>	
 
-		<div data-role="view" id="gallery" data-show="APP.gallery.show" data-stretch="true" data-layout="top">
+		<div data-role="view" id="gallery" data-before-show="APP.gallery.view.before" data-show="APP.gallery.view.show" data-stretch="true" data-layout="top">
 			<div class="gallery">
 				<h1>Gallery Goes Here</h1>
 			</div>
@@ -38,13 +38,13 @@
 
 		<div data-role="layout" data-id="top">
 			<div data-role="header">
-				<div class="footer"></div>	
+				<div class="footer top"></div>	
 			</div>
 		</div>
 
 		<div data-role="layout" data-id="bottom">
 			<div data-role="footer">
-				<div class="footer"></div>	
+				<div class="footer bottom"></div>	
 			</div>
 		</div>
 

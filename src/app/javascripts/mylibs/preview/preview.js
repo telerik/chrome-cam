@@ -55,7 +55,7 @@
     };
     return pub = {
       show: function() {
-        return $.publish("/bar/update", ["preview"]);
+        return $.publish("/bottom/update", ["preview"]);
       },
       draw: function() {
         return draw();

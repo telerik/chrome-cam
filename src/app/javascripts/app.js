@@ -1,6 +1,6 @@
 (function() {
 
-  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bar', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/events/events', 'mylibs/file/filewrapper', 'libs/record/record', 'text!intro.html'], function(kendo, glfx, camera, bar, preview, full, postman, utils, gallery, events, filewrapper, record, intro) {
+  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/events/events', 'mylibs/file/filewrapper', 'libs/record/record', 'text!intro.html'], function(kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, events, filewrapper, record, intro) {
     var pub;
     return pub = {
       init: function() {
@@ -15,7 +15,8 @@
         });
         return camera.init("countdown", function() {
           var app;
-          bar.init(".footer");
+          window.APP.top = bottom.init(".bottom");
+          window.APP.bottom = top.init(".top");
           preview.init(".flip");
           full.init(".full");
           gallery.init(".gallery");

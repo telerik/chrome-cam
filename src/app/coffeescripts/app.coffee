@@ -2,7 +2,8 @@ define([
   'Kendo'
   'Glfx'
   'mylibs/camera/camera'
-  'mylibs/bar/bar'
+  'mylibs/bar/bottom'
+  'mylibs/bar/top'
   'mylibs/preview/preview'
   'mylibs/full/full'
   'mylibs/postman/postman'
@@ -12,7 +13,7 @@ define([
   'mylibs/file/filewrapper'
   'libs/record/record'
   'text!intro.html'
-], (kendo, glfx, camera, bar, preview, full, postman, utils, gallery, events, filewrapper, record, intro) ->
+], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, events, filewrapper, record, intro) ->
 	
 	pub = 
 		    
@@ -37,8 +38,12 @@ define([
 			# initialize the camera
 			camera.init "countdown", ->
 
+				# create the top and bottom bars
+				window.APP.top = bottom.init(".bottom")
+				window.APP.bottom = top.init(".top")
+
 				# initialize the command bar
-				bar.init ".footer"
+				# bar.init ".top", ".bottom"
 
 				# initialize the previews
 				preview.init ".flip"

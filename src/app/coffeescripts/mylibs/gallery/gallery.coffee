@@ -13,6 +13,8 @@ define [
 
     files = []
 
+    el = {}
+
     loadImages = ->
         deferred = $.Deferred()
 
@@ -134,12 +136,17 @@ define [
 
     pub =
 
-        show: ->
+        view: 
+            before: ->
+                el.container.height($(window).height)
 
-            $.publish "/bar/update", [ "gallery" ]
+            show: ->
+                $.publish "/bar/update", [ "gallery" ]
+                
 
         init: (selector) ->
-            $container = $(selector)            
+            $container = $(selector)  
+            el.container = $container          
 
             # after loading the images
             loadImages().done (dataSource) ->

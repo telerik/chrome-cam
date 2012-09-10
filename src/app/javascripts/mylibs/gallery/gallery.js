@@ -1,12 +1,13 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/gallery.html', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, templateSource, detailsTemplateSource) {
-    var createDetailsViewModel, createPage, detailsTemplate, files, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
+    var createDetailsViewModel, createPage, detailsTemplate, el, files, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
     template = kendo.template(templateSource);
     detailsTemplate = kendo.template(detailsTemplateSource);
     rowLength = 4;
     numberOfRows = 4;
     files = [];
+    el = {};
     loadImages = function() {
       var deferred;
       deferred = $.Deferred();
@@ -156,12 +157,18 @@
       });
     };
     return pub = {
-      show: function() {
-        return $.publish("/bar/update", ["gallery"]);
+      view: {
+        before: function() {
+          return el.container.height($(window).height);
+        },
+        show: function() {
+          return $.publish("/bar/update", ["gallery"]);
+        }
       },
       init: function(selector) {
         var $container;
         $container = $(selector);
+        el.container = $container;
         return loadImages().done(function(dataSource) {
           var changePage;
           console.log("done loading images");

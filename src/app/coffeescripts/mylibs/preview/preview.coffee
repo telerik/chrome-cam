@@ -100,7 +100,7 @@ define [
         # the show function that is called by the view on show
         show: ->
 
-            $.publish "/bar/update", [ "preview" ]
+            $.publish "/bottom/update", [ "preview" ]
 
         # makes the internal draw function publicly accessible
         draw: ->

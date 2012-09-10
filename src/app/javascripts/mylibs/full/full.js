@@ -43,7 +43,7 @@
     return pub = {
       show: function(e) {
         var match;
-        $.publish("/bar/update", ["full"]);
+        $.publish("/bottom/update", ["full"]);
         match = $.grep(effects.data, function(filters) {
           return filters.id === e.view.params.effect;
         });
@@ -52,7 +52,7 @@
         el.content.height(el.container.height()) - 50;
         el.content.width((3 / 2) * el.content.height());
         $(canvas).height(el.content.height());
-        return $.publish("/bar/update", ["full"]);
+        return $.publish("/bottom/update", ["full"]);
       },
       init: function(selector) {
         $.subscribe("/capture/photo", function() {
@@ -60,14 +60,14 @@
           flash();
           image = canvas.toDataURL();
           name = new Date().getTime() + ".jpg";
-          return filewrapper.save(name, image).done(function() {
-            $.publish("/bar/preview/update", [
+          filewrapper.save(name, image).done(function() {
+            return $.publish("/bar/preview/update", [
               {
                 thumbnailURL: image
               }
             ]);
-            return $.publish("/bar/update", ["full"]);
           });
+          return $.publish("/bottom/update", ["full"]);
         });
         $.subscribe("/capture/video", function() {
           console.log("Recording...");
@@ -80,7 +80,7 @@
             console.log("Recording Done!");
             recording = false;
             el.container.find(".timer").addClass("hidden");
-            return $.publish("/bar/update", ["full"]);
+            return $.publish("/recording/done", ["full"]);
           }), 6000);
         });
         kendo.fx.grow = {

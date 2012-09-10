@@ -1,6 +1,6 @@
 <section class="bar">
 	<section class="left">
-		<ul class="mode hidden">
+		<ul class="mode" data-bind="style: { display: mode.display }">
 			<li>
 				<a data-bind="click: mode.click" class="photo active" data-mode="photo" alt="Photo Mode" title="Photo Mode"></a>
 			</li>
@@ -11,19 +11,18 @@
 				<a data-mode="paparazzi" class="paparazzi" data-bind="click: mode.click" data-mode="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a>
 			</li>
 		</ul>
-		<a href="#home" class="back hidden">&lsaquo; Camera</a>
 	</section>
 	<section class="center">
 		<div>
-			<div class="capture">
+			<div class="capture" data-bind="style: { display: capture.display }">
 				<div class="gray circle" data-bind="events: { click: capture.click } ">
-					<div class="red-dot circle"></div>
+					<div class="red-dot circle stop"></div>
 				</div>
 			</div>
 			<div class="countdown">
-				<span class="red-dot circle"></span>
-				<span class="red-dot circle"></span>
-				<span class="red-dot circle"></span>
+				<span class="red-dot circle counter"></span>
+				<span class="red-dot circle counter"></span>
+				<span class="red-dot circle counter"></span>
 			</div>
 			<div class="saving hidden">
 				<h3>Omnom.</h3>
@@ -32,11 +31,9 @@
 		</div>
 	</section>
 	<section class="right">
-		<a href="#gallery" data-transition="overlay:up reverse" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
+		<a href="\#gallery" data-transition="overlay:up reverse" data-bind="style: { display: thumbnail.display }" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
 			<img class="thumbnail" data-bind="attr: { src: thumbnail.src }" />
 		</a>
-		<div class="delete hidden"></div>
-		<button class="share hidden">Share</button>
-		<a href="#home" class="button filters hidden">Filters</a>
+		<a href="\#home" class="button filters" data-bind="style: { display: filters.display }">Filters</a>
 	</section>
 </section>
