@@ -4,22 +4,29 @@
     var pub;
     return pub = {
       init: function() {
+        window.APP = {};
+        window.APP.full = full;
         events.init();
         postman.init(window.top);
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
         });
         return camera.init("countdown", function() {
-          bar.init("#footer");
+          var app;
+          bar.init(".footer");
           preview.init(".flip");
-          full.init("#full");
+          full.init(".full");
           gallery.init("#gallery");
           preview.draw();
-          return $.publish("/postman/deliver", [
+          $.publish("/postman/deliver", [
             {
               message: ""
             }, "/app/ready"
           ]);
+          return app = new kendo.mobile.Application(document.body, {
+            transition: "overlay:up",
+            platform: "blackberry"
+          });
         });
       }
     };

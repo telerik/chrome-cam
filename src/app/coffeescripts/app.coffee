@@ -18,6 +18,10 @@ define([
 		    
 		init: ->
 
+			window.APP = {}
+
+			window.APP.full = full
+
 			# bind document level events
 			events.init()
 			
@@ -32,13 +36,13 @@ define([
 			camera.init "countdown", ->
 
 				# initialize the command bar
-				bar.init "#footer"
+				bar.init ".footer"
 
 				# initialize the previews
 				preview.init ".flip"
 
 				# initialize the full screen capture mode
-				full.init "#full"
+				full.init ".full"
 
 				# initialize the thumbnail gallery
 				gallery.init "#gallery"
@@ -48,5 +52,7 @@ define([
 
 				# we are done loading the app. have the postman deliver that msg.
 				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
+
+				app = new kendo.mobile.Application document.body, { transition: "overlay:up", platform: "blackberry" }
 
 )

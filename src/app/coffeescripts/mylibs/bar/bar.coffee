@@ -65,6 +65,7 @@ define [
 
 		filters:
 			click: (e) ->
+				$.publish "/full/hide"
 
 		gallery:
 			click: (e) ->
@@ -80,7 +81,7 @@ define [
 				$.publish "/gallery/hide"
 
 		thumbnail: 
-			src: null
+			src: "broken.jpg"
 			display: "none"
 
 	}
@@ -136,10 +137,17 @@ define [
 			el.mode.in = { effects: "slideIn:right" }
 			el.mode.out = { effects: "slide:left" }
 
+			el.filters = el.content.find ".filters"
+			el.filters.in = { effects: "slideIn:left fadeIn" }
+			el.filters.out = { effects: "slide:right fadeOut" }
+
 			el.share = el.content.find ".share"
 			el.delete = el.content.find ".delete"
 			el.back = el.content.find ".back"
+
 			el.thumbnail = el.content.find ".galleryLink"
+			el.thumbnail.in = effects: "slideIn:left fadeIn"
+			el.thumbnail.out = effects: "slide:right fadeOut"
 
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"

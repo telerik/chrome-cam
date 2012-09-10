@@ -114,7 +114,7 @@ define [
 
             # subscribe to the pause and unpause events
             $.subscribe "/previews/pause", (isPaused) ->
-                paused = isPaused   
+                paused = isPaused 
 
             # create an internal canvas that contains a copy of the video. this
             # is so we can resize the video stream without resizing the original canvas
@@ -123,8 +123,8 @@ define [
             ctx = canvas.getContext("2d")
 
             # set the width and height of the previews
-            canvas.width = webgl.width = 360 
-            canvas.height= webgl.width = 240
+            canvas.width = 360 
+            canvas.height = 240
             
             # the container for this DOM fragment is passed in by the module
             # which calls it's init. grab it from the DOM and cache it.
@@ -181,36 +181,46 @@ define [
                             do ->
 
                                 # get the template for the current preview
-                                $template = kendo.template(previewTemplate)
+                                template = kendo.template(previewTemplate)
 
                                 # create a preview object which extends the current item in the dataset
-                                preview = {}
-                                $.extend(preview, item)
+                                # preview = {}
+                                # $.extend(preview, item)
 
-                                preview.canvas = document.createElement "canvas"
-                                preview.canvas.width = canvas.width
-                                preview.canvas.height = canvas.height      
+                                # preview.canvas = document.createElement "canvas"
+                                # preview.canvas.width = canvas.width
+                                # preview.canvas.height = canvas.height      
 
                                 # run the DOM template through a kendo ui template
-                                content = $template({ name: preview.name })
+                                preview = template { effect: item.id, name: item.name }
+                                
+                                thing = document.createElement "canvas"
+                                thing.width = canvas.width
+                                thing.height =canvas.height
 
-                                # wrap the template output in jQuery
-                                content = $(content)
+                                
+                                
+                                half.append $(preview).find("a").append(thing).end()
+
+                                previews.push { canvas: thing, filter: item.filter }
+
+                                # wrap the template output   in jQuery
+                                # content = $(content)
 
                                 # push the current effect onto the array
-                                previews.push(preview)
+                                # previews.push(preview)
 
                                 # add the videos to the page
-                                content.find("a").append(preview.canvas)
-                                                  .click ->
+                                # content.find("a").append(preview.canvas)
+                                #                   .click ->
 
-                                    # pause the effects
-                                    # paused = true
+                                #     # pause the effects
+                                #     # paused = true
 
-                                    # transition the new screen in 
-                                    $.publish("/full/show", [preview])
+                                #     # transition the new screen in 
+                                #     $.publish("/full/show", [preview])
 
-                                half.append(content)
+                                # half.append(content)
 
                         return half
 

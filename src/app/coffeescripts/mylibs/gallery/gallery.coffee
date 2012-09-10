@@ -111,21 +111,21 @@ define [
             console.log "hide gallery"
 
             # TODO: Use kendoAnimate for this
-            $("#footer").animate "margin-top": "-60px"
-            $("#wrap")[0].style.height = "100%";
+            # $("#footer").animate "margin-top": "-60px"
+            # $("#wrap")[0].style.height = "100%";
 
             $.publish "/camera/pause", [false]
             $.publish "/bar/gallerymode/hide"
 
         $.subscribe "/gallery/list", ->
             console.log "show gallery"
-            $.publish "/camera/pause", [true]
-            $("#footer").animate "margin-top": 0
+            # $.publish "/camera/pause", [true]
+            # $("#footer").animate "margin-top": 0
 
             # TODO: Use kendoAnimate for this
-            $("#wrap").addClass "animate"
-            $("#wrap").css "height", 0
-            $(".flip").css "position", "relative"
+            # $("#wrap").addClass "animate"
+            # $("#wrap").css "height", 0
+            # $(".flip").css "position", "relative"
 
             $.publish "/bar/gallerymode/show"
 

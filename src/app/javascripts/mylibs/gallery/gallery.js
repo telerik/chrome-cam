@@ -148,22 +148,11 @@
       });
       $.subscribe("/gallery/hide", function() {
         console.log("hide gallery");
-        $("#footer").animate({
-          "margin-top": "-60px"
-        });
-        $("#wrap")[0].style.height = "100%";
         $.publish("/camera/pause", [false]);
         return $.publish("/bar/gallerymode/hide");
       });
       $.subscribe("/gallery/list", function() {
         console.log("show gallery");
-        $.publish("/camera/pause", [true]);
-        $("#footer").animate({
-          "margin-top": 0
-        });
-        $("#wrap").addClass("animate");
-        $("#wrap").css("height", 0);
-        $(".flip").css("position", "relative");
         return $.publish("/bar/gallerymode/show");
       });
       return $.subscribe("/gallery/page", function(dataSource) {

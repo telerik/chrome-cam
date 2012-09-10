@@ -7,14 +7,48 @@
 		<title></title>
 		<link rel="stylesheet" type="text/css" href="styles/kendo.common.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/kendo.default.css">
+		<link rel="stylesheet" type="text/css" href="styles/kendo.mobile.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/style.css">
 		<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
 	
 	</head>
 	<body>
-	
-		<div id="wrap">
+
+		<div data-role="view" data-stretch="true" id="home" data-layout="bottom">
+			<div class="filters">
+				<!-- <section id="preview">
+					<div id="select"> -->
+						<div class="flip"></div>
+					<!-- </div>
+				</section> -->
+			</div>
+		</div>
+
+		<div data-role="view" data-stretch="true" id="full" data-layout="bottom" data-show="APP.full.show" 
+			 data-layout="main" data-transition="zoomIn">
+			<div class="full"></div>
+		</div>	
+
+		<div data-role="view" id="g" data-stretch="true" data-layout="top">
+			<div id="gallery">
+				<h1>Gallery Goes Here</h1>
+			</div>
+		</div>
+
+		<div data-role="layout" data-id="top">
+			<div data-role="header">
+				<div class="footer"></div>	
+			</div>
+		</div>
+
+		<div data-role="layout" data-id="bottom">
+			<div data-role="footer">
+				<div class="footer"></div>	
+			</div>
+		</div>
+
+		<!-- <div id="wrap">
 
 			<section id="preview">
 				<div id="select">
@@ -28,7 +62,7 @@
 		<nav id="footer"></nav>
 
 		<section id="gallery" class="hidden">
-		</section>
+		</section> -->
 
 		<script src="javascripts/jquery.min.js"></script>
 		<script src='javascripts/require.js' data-main='javascripts/main'></script>

@@ -34,6 +34,7 @@
       },
       data: [
         {
+          id: "normal",
           name: "Normal",
           filter: function(canvas, element) {
             var effect;
@@ -43,6 +44,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "bulge",
           name: "Bulge",
           filter: function(canvas, element) {
             var effect;
@@ -52,6 +54,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "pinch",
           name: "Pinch",
           filter: function(canvas, element) {
             var effect;
@@ -61,6 +64,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "swirl",
           name: "Swirl",
           filter: function(canvas, element) {
             var effect;
@@ -70,6 +74,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "dent",
           name: "Dent",
           kind: "webgl",
           filter: function(canvas, element) {
@@ -80,6 +85,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "zoomBlur",
           name: "Zoom Blur",
           filter: function(canvas, element) {
             var effect;
@@ -89,6 +95,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "blockhead",
           name: "Blockhead",
           filter: function(canvas, element) {
             var effect;
@@ -98,6 +105,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "mirrorLeft",
           name: "Mirror Left",
           filter: function(canvas, element) {
             var effect;
@@ -107,6 +115,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "mirrorBottom",
           name: "Mirror Bottom",
           filter: function(canvas, element) {
             var effect;
@@ -116,6 +125,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "mirrorTube",
           name: "Mirror Tube",
           filter: function(canvas, element) {
             var effect;
@@ -125,6 +135,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "quad",
           name: "Quad",
           filter: function(canvas, element) {
             var effect;
@@ -134,6 +145,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "sepia",
           name: "Sepia",
           filter: function(canvas, element) {
             var effect;
@@ -143,6 +155,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "vhs",
           name: "VHS",
           filter: function(canvas, element, frame) {
             var effect;
@@ -152,6 +165,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "oldFilm",
           name: "Old Film",
           filter: function(canvas, element, frame) {
             var effect;
@@ -161,6 +175,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "hope",
           name: "Hope",
           filter: function(canvas, element) {
             var effect;
@@ -170,6 +185,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "ghost",
           name: "Ghost",
           filter: function(canvas, element, frame) {
             var effect;
@@ -192,6 +208,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "kaleidoscope",
           name: "Kaleidoscope",
           kind: "webgl",
           filter: function(canvas, element) {
@@ -202,6 +219,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "inverted",
           name: "Inverted",
           kind: "webgl",
           filter: function(canvas, element) {
@@ -212,6 +230,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "comix",
           name: "Comix",
           kind: "webgl",
           filter: function(canvas, element) {
@@ -224,6 +243,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "colorHalfTone",
           name: "Color Half Tone",
           kind: "webgl",
           filter: function(canvas, element) {
@@ -234,6 +254,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "frogman",
           name: "Frogman",
           filter: function(canvas, element, frame, track) {
             var effect;
@@ -257,6 +278,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "chubbyBunny",
           name: "Chubby Bunny",
           filter: function(canvas, element, frame, stream) {
             var effect;
@@ -280,6 +302,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "giraffe",
           name: "Giraffe",
           filter: function(canvas, element, frame, stream) {
             var effect;
@@ -299,6 +322,7 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "chickenPox",
           name: "Chicken Pox",
           filter: function(canvas, element, frame, stream) {
             var face, factor, height, width, x, y, _i, _len, _results;

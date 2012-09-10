@@ -8,7 +8,7 @@ define([
 	
 	canvas = {}
 	ctx = {}
-	preview = {}
+	filter = {}
 	webgl = {}
 	preview = {}
 	paused = true
@@ -18,6 +18,7 @@ define([
 	$flash = {}
 	startTime = 0
 	$container = {}
+	el = {}
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -37,7 +38,7 @@ define([
 
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
-	            preview.filter(canvas, stream.canvas, frame, stream.track)
+	            filter(canvas, stream.canvas, frame, stream.track)
 
 	            # if we are recording, dump this canvas to a pixel array
 	            if recording
@@ -45,21 +46,67 @@ define([
 	            	time = Date.now()
 
 	            	# push the current frame onto the buffer
-	            	frames.push imageData: canvas.getPixelArray(), time: Date.now()
+	            	frames.push imageData: ctx.getImageData(0, 0, canvas.width, canvas.height), time: Date.now()
 
 	            	# update the time in the view
 	            	$.publish "/full/timer/update"
 
 	flash = ->
 
-		$flash.show()	
-		$flash.kendoStop(true).kendoAnimate({
+		el.flash.show()	
+		el.flash.kendoStop(true).kendoAnimate({
 			effects: "fadeOut",
 			duration: 1500,
 			hide: true
 		})
 
 	pub = 
+
+		# subscribe to the show event
+		# $.subscribe "/full/show", (e) ->
+		show: (e) ->
+
+			# show the record controls in the footer
+			$.publish "/bar/update", [ "full" ]
+
+			# $.extend(preview, e)
+			# find the function in the effects.data array
+			# that contains this effect
+			match = $.grep effects.data, (filters) ->
+				return filters.id == e.view.params.effect
+
+			filter = match[0].filter
+
+			# pause the camera
+			# $.publish "/camera/pause", [ true ]
+
+			paused = false
+			# $.publish "/camera/pause", [ false ]
+
+			# get the height of the container minus the footer
+			el.content.height(el.container.height()) - 50
+			# $content.height $container.height() - 50
+
+			# determine the width based on a 3:2 aspect ratio (.66 repeating)
+			# $content.width (3 / 2) * $content.height()
+			el.content.width (3 / 2) * el.content.height()
+
+			# $(canvas).width($content.width())
+			# $(canvas).height("height", $content.height())
+			$(canvas).height(el.content.height())
+
+
+			# $container.kendoStop(true).kendoAnimate({
+			# 	effects: "zoomIn",
+			# 	show: "true",
+			# 	complete: ->
+
+			# 		# unpause the camera
+			# 		$.publish "/camera/pause", [ false ]
+			
+			# 		# unpause the full screen
+			# 		paused = false
+			# })
 
 		init: (selector) ->
 
@@ -90,7 +137,7 @@ define([
 				
 				startTime = Date.now()
 
-				$container.find(".timer").removeClass("hidden")
+				el.container.find(".timer").removeClass("hidden")
 
 				setTimeout (-> 
 					
@@ -98,7 +145,7 @@ define([
 					console.log("Recording Done!")
 					recording = false
 
-					$container.find(".timer").addClass("hidden")
+					el.container.find(".timer").addClass("hidden")
 					
 					$.publish "/bar/update", [ "full" ]
 
@@ -115,7 +162,7 @@ define([
 				    }, options.properties)
 
 			# get a reference to the container of this element with the selector
-			$container = $(selector)
+			el.container = $(selector)
 
 			# create a new canvas for drawing
 			canvas = document.createElement "canvas"
@@ -124,122 +171,42 @@ define([
 			ctx = canvas.getContext "2d"
 
 			# create a div to go inside the main content area
-			$content = $(fullTemplate).appendTo($container)
+			el.content = $(fullTemplate).appendTo(el.container)
 
 			# get a reference to the flash
-			$flash = $content.find ".flash"
-
-			# create a new webgl canvas
-			#  \webgl = fx.canvas()
+			el.flash = el.content.find ".flash"
 
 			# add the double-click event listener which closes the preview
-			$(canvas).dblclick ->
+			# $.subscribe "/full/hide", ->
 				
-				# hide the controls in the bar
-				$.publish "/bar/update", [ "preview" ]
+			# 	# hide the controls in the bar
+			# 	$.publish "/bar/update", [ "preview" ]
 
-				# pause the camera
-				$.publish "/camera/pause", [ true ]
+			# 	# pause the camera
+			# 	$.publish "/camera/pause", [ true ]
 
-				# $container.kendoStop().kendoAnimate({
-				# 	effects: "grow"
-				# 	top: preview.canvas.offsetTop
-				# 	left: preview.canvas.offsetLeft
-				# 	width: preview.canvas.width
-				# 	height: preview.canvas.height
-				# 	complete: ->
-				#  		$container.hide()
-				#  })
+			# 	$container.kendoStop(true).kendoAnimate({
+			# 		effects: "zoomOut",
+			# 		hide: "true", 
+			# 		complete: ->
 
-				# $(webgl).kendoStop().kendoAnimate({
-				# 	effects: "grow"
-				# 	top: preview.canvas.offsetTop
-				# 	left: preview.canvas.offsetLeft
-				# 	width: preview.canvas.width
-				# 	height: preview.canvas.height
-				# })
+			# 			# pause the full screen
+			# 			paused = true
 
-				$container.kendoStop(true).kendoAnimate({
-					effects: "zoomOut",
-					hide: "true", 
-					complete: ->
+			# 			# unpause the camera
+			# 			$.publish "/camera/pause", [ false ]
 
-						# pause the full screen
-						paused = true
-
-						# unpause the camera
-						$.publish "/camera/pause", [ false ]
-
-						# unpause the previews
-						$.publish "/previews/pause", [ false ]
-				})
+			# 			# unpause the previews
+			# 			$.publish "/previews/pause", [ false ]
+			# 	})
 
 			# append the webgl canvas
-			$content.prepend(canvas)
+			el.content.prepend(canvas)
 
-			# subscribe to the show event
-			$.subscribe "/full/show", (e) ->
-
-				# show the record controls in the footer
-				$.publish "/bar/update", [ "full" ]
-
-				$.extend(preview, e)
-
-				# pause the camera
-				$.publish "/camera/pause", [ true ]
-
-				# y = preview.canvas.offsetTop
-				# x = preview.canvas.offsetLeft
-
-				# move the container to the x and y coordinates of the sending preview
-				# $container.css "top", y
-				# $container.css "left", x
-
-				# get the height based on the aspect ratio of 4:3
-				# fullWidth = $(document).width()
-				# fullHeight = $(document).height()
-
-				# $container.width(preview.canvas.width)
-				# $container.height(preview.canvas.height)
-
-				# get the height of the container minus the footer
-				$content.height $container.height() - 50
-
-				# determine the width based on a 3:2 aspect ratio (.66 repeating)
-				$content.width (3 / 2) * $content.height()
-
-				$(canvas).width($content.width())
-				$(canvas).height("height", $content.height())
-
-				$container.kendoStop(true).kendoAnimate({
-					effects: "zoomIn",
-					show: "true",
-					complete: ->
-
-						# unpause the camera
-						$.publish "/camera/pause", [ false ]
-				
-						# unpause the full screen
-						paused = false
-				})
-
-				# $container.kendoStop().kendoAnimate({
-				# 	effects: "grow"	
-				# 	top: 0
-				# 	left: 0
-				# 	width: fullWidth
-				# 	height: fullHeight
-				# })
-
-				# $(webgl).kendoStop().kendoAnimate({
-				# 	effects: "grow"	
-				# 	width: 983
-				# 	height: 655
-				# 	top: 0
-				# 	left: 0
-				# })
-	
-				# $container.kendoStop().kendoAnimate { effects: "zoomIn fadeIn", show: true, duration: 200 }
+			# $.subscribe "/full/mode", ->
+			# 	$container.kendoStop(true).kendoAnimate {
+			# 		effects: "slide:left"
+			# 	}
 
 			# subscribe to the flash event
 			$.subscribe "/full/flash", ->
@@ -247,7 +214,10 @@ define([
 				flash()
 
 			$.subscribe "/full/timer/update", ->
-				$container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "00.00")
+				el.container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "00.00")
+			
 			draw()
+
+
 				
 )

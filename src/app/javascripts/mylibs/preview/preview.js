@@ -66,8 +66,8 @@
         });
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
-        canvas.width = webgl.width = 360;
-        canvas.height = webgl.width = 240;
+        canvas.width = 360;
+        canvas.height = 240;
         el.container = $(selector).kendoTouch({
           enableSwipe: true,
           swipe: function(e) {
@@ -90,22 +90,20 @@
               var half, item, _fn, _i, _len;
               half = $(halfTemplate);
               _fn = function() {
-                var $template, content, preview;
-                $template = kendo.template(previewTemplate);
-                preview = {};
-                $.extend(preview, item);
-                preview.canvas = document.createElement("canvas");
-                preview.canvas.width = canvas.width;
-                preview.canvas.height = canvas.height;
-                content = $template({
-                  name: preview.name
+                var preview, template, thing;
+                template = kendo.template(previewTemplate);
+                preview = template({
+                  effect: item.id,
+                  name: item.name
                 });
-                content = $(content);
-                previews.push(preview);
-                content.find("a").append(preview.canvas).click(function() {
-                  return $.publish("/full/show", [preview]);
+                thing = document.createElement("canvas");
+                thing.width = canvas.width;
+                thing.height = canvas.height;
+                half.append($(preview).find("a").append(thing).end());
+                return previews.push({
+                  canvas: thing,
+                  filter: item.filter
                 });
-                return half.append(content);
               };
               for (_i = 0, _len = data.length; _i < _len; _i++) {
                 item = data[_i];
