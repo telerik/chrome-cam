@@ -11,6 +11,8 @@ html, body, #wrap {
 
 body > #wrap { height: 100%;}
 
+body div { padding-top: 0px; }
+
 .hidden { display: none }
 
 .circle { border-radius: 50%; }
@@ -239,6 +241,13 @@ body > #wrap { height: 100%;}
 	display: -webkit-box;
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
+}
+
+.filters {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
 }
 
 .flip {
