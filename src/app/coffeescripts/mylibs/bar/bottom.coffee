@@ -109,7 +109,7 @@ define [
 			viewModel.set("mode.display", "none")
 			viewModel.set("filters.display", "none")
 		full: ->
-			viewModel.set("thumbnail.display", "none")	
+			viewModel.set("thumbnail.display", null)	
 			viewModel.set("mode.display", null)
 			viewModel.set("capture.display", null)
 			viewModel.set("filters.display", null)
