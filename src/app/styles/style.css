@@ -199,7 +199,7 @@ body > #wrap { height: 100%;}
 .delete {
 	background-repeat: no-repeat;
 	background-size: 24px 140px;
-	width: 24px;
+	width: 21px;
 	height: 24px;
 	overflow: hidden;
 	text-indent: 999px;
@@ -207,11 +207,9 @@ body > #wrap { height: 100%;}
 	background-position: 0 -116px;
 	margin-right: 10px;
 	cursor: pointer;
+	display: block;
 }
-	.delete.hidden {
-		dispay: none;
-	}
-
+	.delete.hidden { display: none; }
 	.delete:hover { opacity: .7; }
 
 /* Bar States */
