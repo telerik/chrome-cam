@@ -157,7 +157,7 @@ body div { padding-top: 0px; }
 	-webkit-transition: border-radius 0.5s ease-out;
 }
 
-.galleryLink {
+.bar .galleryLink {
 	display: block;
 	background: white;
 	height: 48px;
@@ -165,8 +165,6 @@ body div { padding-top: 0px; }
 	-webkit-box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
     box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
 }
-
-.galleryLink.hidden { display: none; }
 
 .thumbnail {
 	width: 72px;
@@ -189,7 +187,10 @@ body div { padding-top: 0px; }
 	text-decoration: none;
 }
 
-	.bar button:hover, .button:hover { background: #ccc; }
+	.bar button:hover, .button:hover { 
+		background: #ccc;
+		color: #000;
+	}
 	button + button, .button + .button, button + .button, .button + button { margin-left: 10px; }
 
 .details .bar .right, .details .bar .left {
@@ -281,7 +282,7 @@ body div { padding-top: 0px; }
 	height: 280px;
 }
 
-.preview > div, .thumbnail {
+.preview > div, .gallery-row .thumbnail {
 	background: white;
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.75);
     border-radius: 2px;
@@ -313,11 +314,13 @@ body div { padding-top: 0px; }
 	-webkit-box-orient: vertical;
 	z-index: 200;
 	background-color: #f1f1f1;
+	width: 1155px;
+	margin: 0 auto;
 }
 
 .gallery .gallery-row {
 	display: -webkit-box;
-	-webkit-box-pack: center;
+	-webkit-box-pack: start;
 	-webkit-box-align: center;
 	-webkit-box-orient: horizontal;
 }
