@@ -20,8 +20,8 @@
         click: function(e) {
           var capture, mode, startTime, token;
           mode = this.get("mode.active");
-          if (mode === "photo") {
-            states.set("capture");
+          if (mode === "photo" || mode === "paparazzi") {
+            states.capture();
             capture = function() {
               return $.publish("/capture/" + mode);
             };
@@ -84,7 +84,8 @@
         return viewModel.set("filters.display", "none");
       },
       record: function() {
-        return viewModel.set("mode.display", "none");
+        viewModel.set("mode.display", "none");
+        return viewModel.set("filters.display", "none");
       },
       full: function() {
         viewModel.set("thumbnail.display", "none");

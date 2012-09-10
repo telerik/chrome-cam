@@ -51,25 +51,45 @@ define([
 	            	# update the time in the view
 	            	$.publish "/full/timer/update"
 
-	flash = ->
+	flash = (callback) ->
 
 		el.flash.show()	
 		el.flash.kendoStop(true).kendoAnimate({
 			effects: "fadeOut",
 			duration: 1500,
-			hide: true
+			hide: true,
+			complete: ->
+				callback()
 		})
+
+	capture = (complete) ->
+
+		callback = =>
+		
+			image = canvas.toDataURL()
+
+			# set the name of this image to the current time string
+			name = new Date().getTime() + ".jpg"
+
+			filewrapper.save(name, image).done ->
+				# I may have it bouncing around too much, but I don't want the bar to
+				# just respond to *all* file saves, or have this module know about
+				# the bar's internals
+				$.publish "/bar/preview/update", [ thumbnailURL: image ]
+
+			if complete
+				complete()
+
+		flash(callback)
 
 	pub = 
 
-		# subscribe to the show event
-		# $.subscribe "/full/show", (e) ->
+		# the show event is called by the view when it is loaded
 		show: (e) ->
 
 			# show the record controls in the footer
 			$.publish "/bottom/update", [ "full" ]
 
-			# $.extend(preview, e)
 			# find the function in the effects.data array
 			# that contains this effect
 			match = $.grep effects.data, (filters) ->
@@ -77,56 +97,44 @@ define([
 
 			filter = match[0].filter
 
-			# pause the camera
-			# $.publish "/camera/pause", [ true ]
-
 			paused = false
-			# $.publish "/camera/pause", [ false ]
 
 			# get the height of the container minus the footer
 			el.content.height(el.container.height()) - 50
-			# $content.height $container.height() - 50
 
 			# determine the width based on a 3:2 aspect ratio (.66 repeating)
 			# $content.width (3 / 2) * $content.height()
 			el.content.width (3 / 2) * el.content.height()
 
-			# $(canvas).width($content.width())
-			# $(canvas).height("height", $content.height())
 			$(canvas).height(el.content.height())
 
 			$.publish "/bottom/update", [ "full" ]
-			# $container.kendoStop(true).kendoAnimate({
-			# 	effects: "zoomIn",
-			# 	show: "true",
-			# 	complete: ->
-
-			# 		# unpause the camera
-			# 		$.publish "/camera/pause", [ false ]
-			
-			# 		# unpause the full screen
-			# 		paused = false
-			# })
 
 		init: (selector) ->
 
 			# attach to the /capture/image function
 			$.subscribe "/capture/photo", ->
+				
+				callback = ->
+					$.publish "/bottom/update", [ "full" ]
+				
+				capture(callback)
 
-				flash()
+			$.subscribe "/capture/paparazzi", ->
 
-				image = canvas.toDataURL()
-
-				# set the name of this image to the current time string
-				name = new Date().getTime() + ".jpg"
-
-				filewrapper.save(name, image).done ->
-					# I may have it bouncing around too much, but I don't want the bar to
-					# just respond to *all* file saves, or have this module know about
-					# the bar's internals
-					$.publish "/bar/preview/update", [ thumbnailURL: image ]
+				# build a gross callback tree and fling poo
+				callback = ->
 					
-				$.publish "/bottom/update", [ "full" ]
+					callback = ->
+
+						callback = ->
+							$.publish "/bottom/update", [ "full" ]
+						
+						capture(callback)
+
+					capture(callback)
+
+				capture(callback)
 
 			$.subscribe "/capture/video", ->
 

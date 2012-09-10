@@ -30,9 +30,9 @@ define [
 
 				mode = this.get("mode.active")
 
-				if mode == "photo"
+				if mode == "photo" or mode == "paparazzi"
 
-					states.set "capture"
+					states.capture()
 
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
@@ -107,6 +107,7 @@ define [
 			viewModel.set("filters.display", "none")
 		record: ->
 			viewModel.set("mode.display", "none")
+			viewModel.set("filters.display", "none")
 		full: ->
 			viewModel.set("thumbnail.display", "none")	
 			viewModel.set("mode.display", null)
