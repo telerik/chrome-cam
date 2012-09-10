@@ -187,7 +187,10 @@ body div { padding-top: 0px; }
 	text-decoration: none;
 }
 
-	.bar button:hover, .button:hover { background: #ccc; }
+	.bar button:hover, .button:hover { 
+		background: #ccc;
+		color: #000;
+	}
 	button + button, .button + .button, button + .button, .button + button { margin-left: 10px; }
 
 .details .bar .right, .details .bar .left {
