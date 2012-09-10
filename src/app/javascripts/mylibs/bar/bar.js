@@ -42,11 +42,6 @@
           }
         }
       },
-      filters: {
-        click: function(e) {
-          return $.publish("/full/hide");
-        }
-      },
       gallery: {
         click: function(e) {
           state.set("gallery");
@@ -87,37 +82,13 @@
         el.container = $(selector);
         el.content = $(template);
         el.capture = el.content.find(".capture");
-        el.capture["in"] = {
-          effects: "slideIn:up"
-        };
-        el.capture.out = {
-          effects: "slide:down"
-        };
         el.dot = el.capture.find("> div > div");
         el.mode = el.content.find(".mode");
-        el.mode["in"] = {
-          effects: "slideIn:right"
-        };
-        el.mode.out = {
-          effects: "slide:left"
-        };
         el.filters = el.content.find(".filters");
-        el.filters["in"] = {
-          effects: "slideIn:left fadeIn"
-        };
-        el.filters.out = {
-          effects: "slide:right fadeOut"
-        };
         el.share = el.content.find(".share");
         el["delete"] = el.content.find(".delete");
         el.back = el.content.find(".back");
         el.thumbnail = el.content.find(".galleryLink");
-        el.thumbnail["in"] = {
-          effects: "slideIn:left fadeIn"
-        };
-        el.thumbnail.out = {
-          effects: "slide:right fadeOut"
-        };
         el.counters = el.content.find(".countdown > span");
         el.container.append(el.content);
         state = state.init(el);

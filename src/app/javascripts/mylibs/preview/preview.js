@@ -54,6 +54,9 @@
       }
     };
     return pub = {
+      show: function() {
+        return $.publish("/bar/update", ["preview"]);
+      },
       draw: function() {
         return draw();
       },

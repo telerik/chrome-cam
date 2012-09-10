@@ -95,7 +95,7 @@ define([
 			# $(canvas).height("height", $content.height())
 			$(canvas).height(el.content.height())
 
-
+			$.publish "/bar/update", [ "full" ]
 			# $container.kendoStop(true).kendoAnimate({
 			# 	effects: "zoomIn",
 			# 	show: "true",

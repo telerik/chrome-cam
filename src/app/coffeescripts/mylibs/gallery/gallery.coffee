@@ -133,6 +133,7 @@ define [
             createPage dataSource, $container
 
     pub =
+
         init: (selector) ->
             $container = $(selector)            
 

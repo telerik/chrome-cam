@@ -6,6 +6,7 @@
       init: function() {
         window.APP = {};
         window.APP.full = full;
+        window.APP.preview = preview;
         events.init();
         postman.init(window.top);
         $.subscribe('/camera/unsupported', function() {

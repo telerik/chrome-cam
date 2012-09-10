@@ -51,7 +51,8 @@
         paused = false;
         el.content.height(el.container.height()) - 50;
         el.content.width((3 / 2) * el.content.height());
-        return $(canvas).height(el.content.height());
+        $(canvas).height(el.content.height());
+        return $.publish("/bar/update", ["full"]);
       },
       init: function(selector) {
         $.subscribe("/capture/photo", function() {

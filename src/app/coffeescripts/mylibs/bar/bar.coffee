@@ -63,10 +63,6 @@ define [
 
 					el.content.addClass "recording"
 
-		filters:
-			click: (e) ->
-				$.publish "/full/hide"
-
 		gallery:
 			click: (e) ->
 				# make sure the mode and capture buttons are hidden
@@ -128,26 +124,26 @@ define [
 
 			# get a reference to the "capture" button
 			el.capture = el.content.find ".capture"
-			el.capture.in = { effects: "slideIn:up" }
-			el.capture.out = { effects: "slide:down" }
+			# el.capture.in = { effects: "slideIn:up" }
+			# el.capture.out = { effects: "slide:down" }
 
 			el.dot = el.capture.find("> div > div")
 
 			el.mode = el.content.find ".mode"
-			el.mode.in = { effects: "slideIn:right" }
-			el.mode.out = { effects: "slide:left" }
+			# el.mode.in = { effects: "slideIn:right" }
+			# el.mode.out = { effects: "slide:left" }
 
 			el.filters = el.content.find ".filters"
-			el.filters.in = { effects: "slideIn:left fadeIn" }
-			el.filters.out = { effects: "slide:right fadeOut" }
+			# el.filters.in = { effects: "slideIn:left fadeIn" }
+			# el.filters.out = { effects: "slide:right fadeOut" }
 
 			el.share = el.content.find ".share"
 			el.delete = el.content.find ".delete"
 			el.back = el.content.find ".back"
 
 			el.thumbnail = el.content.find ".galleryLink"
-			el.thumbnail.in = effects: "slideIn:left fadeIn"
-			el.thumbnail.out = effects: "slide:right fadeOut"
+			# el.thumbnail.in = effects: "slideIn:left fadeIn"
+			# el.thumbnail.out = effects: "slide:right fadeOut"
 
 			# the countdown spans
 			el.counters = el.content.find ".countdown > span"

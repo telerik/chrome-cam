@@ -21,6 +21,7 @@ define([
 			window.APP = {}
 
 			window.APP.full = full
+			window.APP.preview = preview
 
 			# bind document level events
 			events.init()
