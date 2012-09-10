@@ -305,7 +305,7 @@ body > #wrap { height: 100%;}
 /************ Gallery styles ************/
 
 .gallery {
-	display: -webkit-box;
+	/*display: -webkit-box;*/
 	height: 800px;
 	padding: 17px 0 0;
 	-webkit-box-pack: center;
@@ -344,7 +344,7 @@ body > #wrap { height: 100%;}
 
 /* Details styles */
 
-#gallery .details {
+.details {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -353,13 +353,13 @@ body > #wrap { height: 100%;}
 	background-color: #f1f1f1;
 }
 
-#gallery .details img,
-#gallery .details video {
+.details img,
+.details video {
 	display: block;
 	margin: auto;
 }
 
-#gallery .details .bar { height: 60px; }
+.details .bar { height: 60px; }
 
 .details .previous, .details .next {
 	display: block;
