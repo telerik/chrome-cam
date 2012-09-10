@@ -22,6 +22,7 @@ define([
 
 			window.APP.full = full
 			window.APP.preview = preview
+			window.APP.gallery = gallery
 
 			# bind document level events
 			events.init()
@@ -46,7 +47,7 @@ define([
 				full.init ".full"
 
 				# initialize the thumbnail gallery
-				gallery.init "#gallery"
+				gallery.init ".gallery"
 
 				# start drawing some previews
 				preview.draw()

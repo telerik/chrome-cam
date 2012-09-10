@@ -69,7 +69,7 @@ define [
 				el.mode.hide()
 				el.capture.hide()
 				el.thumbnail.hide()
-				el.filters.hide
+				el.filters.hide()
 				
 				el.share.show()
 				el.delete.show()

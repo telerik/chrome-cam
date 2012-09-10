@@ -151,15 +151,14 @@
         $.publish("/camera/pause", [false]);
         return $.publish("/bar/gallerymode/hide");
       });
-      $.subscribe("/gallery/list", function() {
-        console.log("show gallery");
-        return $.publish("/bar/gallerymode/show");
-      });
       return $.subscribe("/gallery/page", function(dataSource) {
         return createPage(dataSource, $container);
       });
     };
     return pub = {
+      show: function() {
+        return $.publish("/bar/update", ["gallery"]);
+      },
       init: function(selector) {
         var $container;
         $container = $(selector);

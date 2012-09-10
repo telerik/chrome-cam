@@ -63,12 +63,12 @@ define [
 
 					el.content.addClass "recording"
 
-		gallery:
-			click: (e) ->
-				# make sure the mode and capture buttons are hidden
-				state.set "gallery"
-				# publish the gallery list event
-				$.publish "/gallery/list"
+		# gallery:
+		# 	click: (e) ->
+		# 		# make sure the mode and capture buttons are hidden
+		# 		state.set "gallery"
+		# 		# publish the gallery list event
+		# 		$.publish "/gallery/list"
 
 		camera:
 			click: (e) ->

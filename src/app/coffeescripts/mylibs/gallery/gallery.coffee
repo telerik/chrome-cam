@@ -117,22 +117,26 @@ define [
             $.publish "/camera/pause", [false]
             $.publish "/bar/gallerymode/hide"
 
-        $.subscribe "/gallery/list", ->
-            console.log "show gallery"
-            # $.publish "/camera/pause", [true]
-            # $("#footer").animate "margin-top": 0
+        # $.subscribe "/gallery/list", ->
+        #     console.log "show gallery"
+        #     # $.publish "/camera/pause", [true]
+        #     # $("#footer").animate "margin-top": 0
 
-            # TODO: Use kendoAnimate for this
-            # $("#wrap").addClass "animate"
-            # $("#wrap").css "height", 0
-            # $(".flip").css "position", "relative"
+        #     # TODO: Use kendoAnimate for this
+        #     # $("#wrap").addClass "animate"
+        #     # $("#wrap").css "height", 0
+        #     # $(".flip").css "position", "relative"
 
-            $.publish "/bar/gallerymode/show"
+        #     $.publish "/bar/gallerymode/show"
 
         $.subscribe "/gallery/page", (dataSource) ->
             createPage dataSource, $container
 
     pub =
+
+        show: ->
+
+            $.publish "/bar/update", [ "gallery" ]
 
         init: (selector) ->
             $container = $(selector)            

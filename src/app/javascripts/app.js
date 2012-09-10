@@ -7,6 +7,7 @@
         window.APP = {};
         window.APP.full = full;
         window.APP.preview = preview;
+        window.APP.gallery = gallery;
         events.init();
         postman.init(window.top);
         $.subscribe('/camera/unsupported', function() {
@@ -17,7 +18,7 @@
           bar.init(".footer");
           preview.init(".flip");
           full.init(".full");
-          gallery.init("#gallery");
+          gallery.init(".gallery");
           preview.draw();
           $.publish("/postman/deliver", [
             {

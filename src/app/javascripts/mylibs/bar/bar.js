@@ -42,12 +42,6 @@
           }
         }
       },
-      gallery: {
-        click: function(e) {
-          state.set("gallery");
-          return $.publish("/gallery/list");
-        }
-      },
       camera: {
         click: function(e) {
           state.set(state.previous);

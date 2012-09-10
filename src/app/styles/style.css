@@ -306,9 +306,9 @@ body > #wrap { height: 100%;}
 
 /************ Gallery styles ************/
 
-#gallery {
+.gallery {
 	display: -webkit-box;
-	height: 100%;
+	height: 800px;
 	padding: 17px 0 0;
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
@@ -317,14 +317,14 @@ body > #wrap { height: 100%;}
 	background-color: #f1f1f1;
 }
 
-#gallery .gallery-row {
+.gallery .gallery-row {
 	display: -webkit-box;
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
 	-webkit-box-orient: horizontal;
 }
 
-#gallery .thumbnail {
+.gallery .thumbnail {
 	text-align: center;
 	width: 270px;
 	height: 210px;
@@ -332,14 +332,14 @@ body > #wrap { height: 100%;}
 }
 
 	
-#gallery .thumbnail:hover, .preview:hover {
+.gallery .thumbnail:hover, .preview:hover {
 	cursor: pointer;
 	-webkit-transform: scale(1.02);
 	transform: scale(1.02);
 	box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.75);
 }
 
-#gallery .selected {
+.gallery .selected {
 	border: 2px solid magenta;
 	padding: 1px;
 }

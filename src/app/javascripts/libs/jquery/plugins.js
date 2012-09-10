@@ -1,5 +1,5 @@
 (function() {
 
-  define(['order!libs/jquery/pubsub', 'order!libs/jquery/bootstrap.min', 'order!libs/jquery/jquery.masonry.min'], function() {});
+  define(['order!libs/jquery/pubsub'], function() {});
 
 }).call(this);
