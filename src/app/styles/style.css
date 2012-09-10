@@ -314,11 +314,13 @@ body div { padding-top: 0px; }
 	-webkit-box-orient: vertical;
 	z-index: 200;
 	background-color: #f1f1f1;
+	width: 1155px;
+	margin: 0 auto;
 }
 
 .gallery .gallery-row {
 	display: -webkit-box;
-	-webkit-box-pack: center;
+	-webkit-box-pack: start;
 	-webkit-box-align: center;
 	-webkit-box-orient: horizontal;
 }
