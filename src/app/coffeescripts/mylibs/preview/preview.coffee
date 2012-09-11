@@ -161,6 +161,7 @@ define [
                     # create an array of previews for the current page
                     previews = []
 
+                    index = 0
                     for item in @.view()
 
                         # this is wrapped in a closure so that it doesn't step on itself during
@@ -171,7 +172,8 @@ define [
                             filter.width = canvas.width
                             filter.height =canvas.height
 
-                            data = { effect: item.id, name: item.name }
+                            data = { effect: item.id, name: item.name, col: index % 3, row: Math.floor index / 3 }
+                            index++
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
                             html = filters.render()
