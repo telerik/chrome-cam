@@ -45,21 +45,28 @@ define [
 
         deferred.promise()
 
-    createPage = (dataSource, $container) -> 
+    getElementForFile = (fileName) ->
+        el.container.find "[data-file-name='#{fileName}']"
+
+    createPage = (dataSource) -> 
         rows = (dataSource.view()[i * rowLength ... (i+1) * rowLength] for i in [0 ... numberOfRows])
 
         for file in dataSource.view()
             filewrapper.readFile(file.name).done (file) ->
-                $container.find("[data-file-name='#{file.name}']").attr("src", file.file)
+                getElementForFile(file.name).attr("src", file.file)
 
-        $container.html template(rows: rows)
+        el.container.html template(rows: rows)
+
+    deleteFile = (filename) ->
+        filewrapper.deleteFile(filename).done ->
+            $.publish "/gallery/remove", [ filename ]
 
     createDetailsViewModel = (message) ->
         # back and next seem ... backwards
         viewModel =
             deleteItem: ->
-                filewrapper.deleteFile(@filename).done =>
-                    @close()
+                @close()
+                deleteFile @filename
             close: ->
                 $.publish "/gallery/details/hide"
             canGoToNext: ->
@@ -86,32 +93,30 @@ define [
 
         kendo.observable(viewModel).init(message)
 
-    setupSubscriptionEvents = ($container) ->
+    setupSubscriptionEvents = ->
 
         kendo.fx.hide =
             setup: (element, options) ->
                 $.extend { height: 25 }, options.properties
 
         $.subscribe "/gallery/details/hide", ->
-            $container.find(".details").kendoStop(true).kendoAnimate
+            el.container.find(".details").kendoStop(true).kendoAnimate
                 effects: "zoomOut"
                 hide: true
 
         $.subscribe "/gallery/details/show", (message) ->
             model = createDetailsViewModel(message)
-            $container.find(".details").remove()
+            el.container.find(".details").remove()
             $details = $(detailsTemplate(model))
 
             kendo.bind($details, model)
-            $container.append $details
+            el.container.append $details
             
             $details.kendoStop(true).kendoAnimate
                 effects: "zoomIn"
                 show: true
 
         $.subscribe "/gallery/hide", ->
-            console.log "hide gallery"
-
             # TODO: Use kendoAnimate for this
             # $("#footer").animate "margin-top": "-60px"
             # $("#wrap")[0].style.height = "100%";
@@ -132,7 +137,7 @@ define [
         #     $.publish "/bar/gallerymode/show"
 
         $.subscribe "/gallery/page", (dataSource) ->
-            createPage dataSource, $container
+            createPage dataSource
 
     pub =
 
@@ -179,10 +184,17 @@ define [
                 $.subscribe "/events/key/arrow", (e) ->
                     changePage (e == "down") - (e == "up")
 
-                setupSubscriptionEvents $container
+                setupSubscriptionEvents()
                 
-                # TODO: trigger refresh of items in list
                 $.subscribe "/gallery/add", (file) ->
                     dataSource.add file
+
+                $.subscribe "/gallery/remove", (filename) ->
+                    getElementForFile(filename).kendoAnimate
+                        effects: "fadeOut"
+                        complete: ->
+                            # HACK: Don't access 'private' member
+                            deleted = file for file in dataSource._data when file.name == filename
+                            dataSource.remove deleted
 
                 $.publish "/gallery/page", [ dataSource ]

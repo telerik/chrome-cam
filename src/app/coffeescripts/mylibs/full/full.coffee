@@ -74,6 +74,7 @@ define([
 			# just respond to *all* file saves, or have this module know about
 			# the bar's internals
 			$.publish "/bar/preview/update", [ thumbnailURL: image ]
+			$.publish "/gallery/add", [ type: 'jpg', name: name ]
 
 		flash(callback)
 
