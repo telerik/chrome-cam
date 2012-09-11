@@ -482,6 +482,15 @@ body div { padding-top: 0px; }
 	100% { opacity:0.3; }
 }
 
+/* About Page */
+
+.about {
+	margin: 50px auto 0;
+	width: 500px;
+}
+	.about hgroup + hgroup {
+		margin-top: 20px;
+	}
 /* Clearfix */
 
 .clearfix:after {
