@@ -83,6 +83,9 @@
         $.subscribe("/capture/video", function() {
           return pub.video();
         });
+        $.subscribe("/keyboard/esc", function() {
+          return pub.hide();
+        });
         return draw();
       },
       show: function(item) {

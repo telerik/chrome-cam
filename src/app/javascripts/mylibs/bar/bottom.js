@@ -82,11 +82,13 @@
         return viewModel.set("thumbnail.display", null);
       },
       capture: function() {
+        viewModel.set("thumbnail.display", "none");
         viewModel.set("mode.display", "none");
         viewModel.set("capture.display", "none");
         return viewModel.set("filters.display", "none");
       },
       record: function() {
+        viewModel.set("thumbnail.display", "none");
         viewModel.set("mode.display", "none");
         return viewModel.set("filters.display", "none");
       },
@@ -106,6 +108,9 @@
         view.render(viewModel, true);
         $.subscribe("/bottom/update", function(state) {
           return states.set(state);
+        });
+        $.subscribe("/bottom/thumbnail", function(image) {
+          return viewModel.set("thumbnail.src", image);
         });
         view.find(".stop", "stop");
         view.find(".counter", "counters");

@@ -99,17 +99,19 @@ define [
 		}
 
 	states = 
-		
+
 		preview: ->
 			viewModel.set("mode.display", "none")
 			viewModel.set("capture.display", "none")
 			viewModel.set("filters.display", "none")
 			viewModel.set("thumbnail.display", null)
 		capture: ->
+			viewModel.set("thumbnail.display", "none")
 			viewModel.set("mode.display", "none")
 			viewModel.set("capture.display", "none")
 			viewModel.set("filters.display", "none")
 		record: ->
+			viewModel.set("thumbnail.display", "none")
 			viewModel.set("mode.display", "none")
 			viewModel.set("filters.display", "none")
 		full: ->
@@ -134,6 +136,9 @@ define [
 			# wire up events
 			$.subscribe "/bottom/update", (state) ->
 				states.set(state)
+
+			$.subscribe "/bottom/thumbnail", (image) ->
+				viewModel.set("thumbnail.src", image)
 
 			# get a reference to the dots.
 			# TODO: this sucks. fix it with custom

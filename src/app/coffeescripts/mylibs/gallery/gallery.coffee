@@ -25,7 +25,7 @@ define [
                 photos = (file for file in files when file.type == 'jpg')
                 if photos.length > 0
                     filewrapper.readFile(photos[photos.length - 1].name).done (latestPhoto) ->
-                        $.publish "/bar/preview/update", [thumbnailURL: latestPhoto.file]
+                        $.publish "/bottom/thumbnail", [latestPhoto.file]
 
 
             dataSource = new kendo.data.DataSource
@@ -147,7 +147,7 @@ define [
                 el.container.width($(window).width())
 
             show: ->
-                $.publish "/bar/update", [ "gallery" ]
+                # $.publish "/bar/update", [ "gallery" ]
                 
 
         init: (selector) ->
@@ -185,7 +185,7 @@ define [
                      #changePage (e.direction == "up") - (e.direction == "down")
                      changePage (e.direction == "right") - (e.direction == "left")
 
-                $.subscribe "/events/key/arrow", (e) ->
+                $.subscribe "/keyboard/arrow", (e) ->
                     changePage (e == "down") - (e == "up")
 
                 setupSubscriptionEvents()

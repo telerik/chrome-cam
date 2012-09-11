@@ -35,11 +35,11 @@
     };
     keyboard = function(enabled) {
       if (enabled) {
-        return $.subscribe("/events/key/arrow", function(e) {
+        return $.subscribe("/keyboard/arrow", function(e) {
           if (!flipping) return page(e);
         });
       } else {
-        return $.unsubcribe("/events/key/arrow");
+        return $.unsubcribe("/keyboard/arrow");
       }
     };
     page = function(direction) {

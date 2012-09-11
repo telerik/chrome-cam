@@ -26,11 +26,7 @@
           })();
           if (photos.length > 0) {
             filewrapper.readFile(photos[photos.length - 1].name).done(function(latestPhoto) {
-              return $.publish("/bar/preview/update", [
-                {
-                  thumbnailURL: latestPhoto.file
-                }
-              ]);
+              return $.publish("/bottom/thumbnail", [latestPhoto.file]);
             });
           }
         }
@@ -167,9 +163,7 @@
           el.container.height($(window).height());
           return el.container.width($(window).width());
         },
-        show: function() {
-          return $.publish("/bar/update", ["gallery"]);
-        }
+        show: function() {}
       },
       init: function(selector) {
         var $container;
@@ -214,7 +208,7 @@
           $container.kendoMobileSwipe(function(e) {
             return changePage((e.direction === "right") - (e.direction === "left"));
           });
-          $.subscribe("/events/key/arrow", function(e) {
+          $.subscribe("/keyboard/arrow", function(e) {
             return changePage((e === "down") - (e === "up"));
           });
           setupSubscriptionEvents();

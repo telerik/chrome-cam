@@ -56,7 +56,7 @@ define [
         if enabled
 
             # subscribe to the left arrow key
-            $.subscribe "/events/key/arrow", (e) ->
+            $.subscribe "/keyboard/arrow", (e) ->
 
                 if not flipping
                     page e
@@ -65,7 +65,7 @@ define [
         else
 
             # unsubscribe from events
-            $.unsubcribe "/events/key/arrow"
+            $.unsubcribe "/keyboard/arrow"
 
     page = (direction) ->
 
