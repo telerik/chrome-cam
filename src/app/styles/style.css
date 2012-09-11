@@ -485,13 +485,26 @@ a.button {
 
 /* About Page */
 
-.about {
-	margin: 50px auto 0;
-	width: 500px;
+.about hgroup:first-child {
+	background: url("images/icon_128.png");
+	padding: 30px;
+	background-position: 0 50%;
+	background-repeat: no-repeat;
 }
-	.about hgroup + hgroup {
-		margin-top: 20px;
-	}
+	.about hgroup:first-child > * { margin-left: 130px; }
+
+.about hgroup + hgroup {
+	margin-top: 20px;
+	background: url("images/kendoUILogo.png");
+	background-size: 100px 100px;
+	background-repeat: no-repeat;
+	background-color: #DDD;
+	padding: 40px;
+	background-position: 18px 50%;
+}
+	.about hgroup + hgroup > * { margin-left: 80px; }
+
+
 /* Clearfix */
 
 .clearfix:after {
