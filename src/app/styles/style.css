@@ -182,7 +182,7 @@ body div { padding-top: 0px; }
 .back { cursor: pointer; }
 	.back:hover { color: #ccc; }
 
-.bar button, .button {
+a.button {
 	display: block;
 	border: 0 solid;
 	border-radius: 3px;
@@ -195,7 +195,7 @@ body div { padding-top: 0px; }
 	text-decoration: none;
 }
 
-	.bar button:hover, .button:hover { 
+	a.button:hover { 
 		background: #ccc;
 		color: #000;
 	}

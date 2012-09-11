@@ -5,7 +5,12 @@
     
     Select preview shows pages of 6 live previews using webgl effects
     */
+<<<<<<< HEAD
     var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub;
+=======
+
+    var animation, canvas, ctx, draw, ds, el, flipping, frame, keyboard, page, paused, previews, pub, webgl;
+>>>>>>> Brought .button back to life. Set window.testing to false.
     paused = false;
     canvas = {};
     ctx = {};
@@ -36,7 +41,9 @@
     keyboard = function(enabled) {
       if (enabled) {
         return $.subscribe("/events/key/arrow", function(e) {
-          if (!flipping) return page(e);
+          if (!flipping) {
+            return page(e);
+          }
         });
       } else {
         return $.unsubcribe("/events/key/arrow");
