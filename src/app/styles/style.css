@@ -207,7 +207,7 @@ a.button {
 }
 	.details .bar .right { -webkit-box-pack: end; }
 
-.delete {
+.bar .delete {
 	background-repeat: no-repeat;
 	background-size: 24px 140px;
 	width: 21px;
