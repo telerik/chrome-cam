@@ -18,11 +18,8 @@ define [
     canvas = {}
     ctx = {}
     previews = []
-    el = {}
-    webgl = fx.canvas()
     frame = 0
     ds = {}
-    el = {}
     flipping = false
     
     # define the animations. we slide different directions depending on if we are going forward or back.
@@ -101,15 +98,17 @@ define [
         
         # the show function that is called by the view on show
         show: ->
-
             $.publish "/bottom/update", [ "preview" ]
 
         # makes the internal draw function publicly accessible
         draw: ->
-            
             draw()
+
+        swipe: (e) ->
+
+            # page in the direction of the swipe
+            page e.direction
             
-        
         init: (selector) ->
         
             # initialize effects
@@ -132,18 +131,6 @@ define [
             # set the width and height of the previews
             canvas.width = 360 
             canvas.height = 240
-            
-            # the container for this DOM fragment is passed in by the module
-            # which calls it's init. grab it from the DOM and cache it.
-            # attach a kendo mobile swipe event to the container. this is what
-            # will page through the effects
-            el.container = $(selector).kendoTouch {
-                enableSwipe: true,
-                swipe: (e) ->
-
-                    # page in the direction of the swipe
-                    page e.direction
-            }
 
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
@@ -174,15 +161,6 @@ define [
                     # create an array of previews for the current page
                     previews = []
 
-                    # w'e need these 6 items broken up into a top and bottom
-                    # set of images for the flexbox
-                    # top = this.view().slice(0,3)
-                    # bottom = this.view().slice(3,6)
-
-                    # create = (data) ->
-
-                        # half = $(halfTemplate)
-
                     for item in @.view()
 
                         # this is wrapped in a closure so that it doesn't step on itself during
@@ -197,7 +175,11 @@ define [
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
                             html = filters.render()
-                            html.find(".canvas").append(filter)
+                            html.find(".canvas").append(filter).click ->
+
+                                paused = true
+
+                                $.publish "/full/show", [ item ]
 
                             # nextPage.append $(preview).find("a").append(filter).end()
 
@@ -205,36 +187,10 @@ define [
 
                             previews.push { canvas: filter, filter: item.filter }
 
-                            # wrap the template output   in jQuery
-                            # content = $(content)
-
-                            # push the current effect onto the array
-                            # previews.push(preview)
-
-                            # add the videos to the page
-                            # content.find("a").append(preview.canvas)
-                            #                   .click ->
-
-                            #     # pause the effects
-                            #     # paused = true
-
-                            #     # transition the new screen in 
-                            #     $.publish("/full/show", [preview])
-
-                            # half.append(content)
-
-                        # return half
-
-                    # we want to append our two halves on to the next page
-                    # nextPage.append create(top)
-                    # nextPage.append create(bottom)
-
-                    # pause the camera. that will additionally pause
-                    # these previews so there is no need to pause this
-                    # as well. 
+                            
 
                     # move the current page out and the next page in
-                    el.container.kendoAnimate {
+                    page1.container.kendoAnimate {
                         effects: animation.effects
                         face: if animation.reverse then nextPage else previousPage
                         back: if animation.reverse then previousPage else nextPage
@@ -251,16 +207,6 @@ define [
 
                             flipping = false
                     }
-
-                    # move the next page in
-                    # nextPage.kendoStop(true).kendoAnimate({
-                    #     effects: animation.in(),
-                    #     duration: 200,
-                    #     show: true,
-                    #     complete: ->
-                    #         # unpause the camera
-                    #         $.publish "/camera/pause", false
-                    # })
 
 
             # read from the datasource

@@ -108,6 +108,34 @@ define([
 
 		init: (selector) ->
 
+			$.subscribe "/full/show", (filter) ->
+
+				# show the record controls in the footer
+				$.publish "/bottom/update", [ "full" ]
+
+				paused = false
+
+				# get the height of the container minus the footer
+				el.content.height(el.container.height()) - 50
+
+				# determine the width based on a 3:2 aspect ratio (.66 repeating)
+				# $content.width (3 / 2) * $content.height()
+				el.content.width (3 / 2) * el.content.height()
+
+				$(canvas).height(el.content.height())
+
+				el.container.kendoStop(true).kendoAnimate {
+					effects: "zoomIn fadeIn"
+					show: true
+				}
+
+			$.subscribe "/full/hide", ->		
+
+				el.container.kendoStop(true).kendoAnimate {
+					effects: "zoomOut fadeOut"
+					hide: true
+				}
+
 			# attach to the /capture/image function
 			$.subscribe "/capture/photo", ->
 				

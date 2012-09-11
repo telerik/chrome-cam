@@ -22,7 +22,7 @@ define([
 			window.APP = {}
 
 			window.APP.full = full
-			window.APP.preview = preview
+			window.APP.filters = preview
 			window.APP.gallery = gallery
 
 			# bind document level events

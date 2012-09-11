@@ -77,6 +77,23 @@
         return $.publish("/bottom/update", ["full"]);
       },
       init: function(selector) {
+        $.subscribe("/full/show", function(filter) {
+          $.publish("/bottom/update", ["full"]);
+          paused = false;
+          el.content.height(el.container.height()) - 50;
+          el.content.width((3 / 2) * el.content.height());
+          $(canvas).height(el.content.height());
+          return el.container.kendoStop(true).kendoAnimate({
+            effects: "zoomIn fadeIn",
+            show: true
+          });
+        });
+        $.subscribe("/full/hide", function() {
+          return el.container.kendoStop(true).kendoAnimate({
+            effects: "zoomOut fadeOut",
+            hide: true
+          });
+        });
         $.subscribe("/capture/photo", function() {
           var callback;
           callback = function() {
