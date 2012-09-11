@@ -275,22 +275,19 @@ a.button {
 }
 
 .half + .half { margin-top: 26px; }
-.gallery-row + .gallery-row { margin-top: 17px; }
+.gallery-row + .gallery-row { margin-top: 13px; }
 
 .preview { 
-	margin: 5px;
 	float: left;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 }
-.thumbnail { margin-left: 17px; }
-	.half .preview:first-child, .thumbnail:first-child { margin-left: 0; }
+	.preview[data-col="1"] { margin: 0 26px; }
+	.preview[data-row="0"] { margin-bottom: 26px; }
 
-.preview > div {
-	width: 360px;
-	height: 280px;
-}
+.thumbnail { margin-left: 13px; }
+	.thumbnail:first-child { margin-left: 0; }
 
-.preview > div, .gallery-row .thumbnail {
+.preview, .gallery-row .thumbnail {
 	background: white;
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.75);
     border-radius: 2px;
@@ -311,6 +308,8 @@ a.button {
 	height: 240px;
 }
 
+
+
 /************ Gallery styles ************/
 
 .gallery {
@@ -330,6 +329,8 @@ a.button {
 	-webkit-box-pack: start;
 	-webkit-box-align: center;
 	-webkit-box-orient: horizontal;
+	width: 1117px;
+	margin: 0 auto 13px;
 }
 
 .gallery .thumbnail {
