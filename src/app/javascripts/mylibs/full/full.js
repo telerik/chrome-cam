@@ -1,10 +1,9 @@
 (function() {
 
-  define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html'], function(kendo, effects, utils, filewrapper, fullTemplate) {
-    var $container, $flash, canvas, capture, ctx, draw, el, filter, flash, frame, frames, paused, preview, pub, recording, startTime, webgl;
+  define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html'], function(kendo, effects, utils, filewrapper, template) {
+    var $container, $flash, canvas, capture, ctx, draw, el, flash, frame, frames, paused, preview, pub, recording, startTime, webgl;
     canvas = {};
     ctx = {};
-    filter = {};
     webgl = {};
     preview = {};
     paused = true;
@@ -20,7 +19,7 @@
         var time;
         if (!paused) {
           frame++;
-          filter(canvas, stream.canvas, frame, stream.track);
+          this.thing(canvas, stream.canvas, frame, stream.track);
           if (recording) {
             time = Date.now();
             frames.push({
@@ -63,35 +62,36 @@
       return flash(callback);
     };
     return pub = {
-      show: function(e) {
-        var match;
-        $.publish("/bottom/update", ["full"]);
-        match = $.grep(effects.data, function(filters) {
-          return filters.id === e.view.params.effect;
-        });
-        filter = match[0].filter;
-        paused = false;
-        el.content.height(el.container.height()) - 50;
-        el.content.width((3 / 2) * el.content.height());
-        $(canvas).height(el.content.height());
-        return $.publish("/bottom/update", ["full"]);
-      },
       init: function(selector) {
-        $.subscribe("/full/show", function(filter) {
-          $.publish("/bottom/update", ["full"]);
+        var full;
+        full = new kendo.View(selector, template);
+        canvas = document.createElement("canvas");
+        canvas.width = 720;
+        canvas.height = 480;
+        ctx = canvas.getContext("2d");
+        full.render().prepend(canvas);
+        full.find(".flash", "flash");
+        $.subscribe("/full/show", function(item) {
+          this.thing = item.filter;
           paused = false;
-          el.content.height(el.container.height()) - 50;
-          el.content.width((3 / 2) * el.content.height());
-          $(canvas).height(el.content.height());
-          return el.container.kendoStop(true).kendoAnimate({
+          $.publish("/bottom/update", ["full"]);
+          full.content.height(full.container.height()) - 50;
+          full.content.width((3 / 2) * full.content.height());
+          $(canvas).height(full.content.height());
+          return full.container.kendoStop(true).kendoAnimate({
             effects: "zoomIn fadeIn",
             show: true
           });
         });
         $.subscribe("/full/hide", function() {
-          return el.container.kendoStop(true).kendoAnimate({
+          paused = true;
+          $.publish("/bottom/update", ["preview"]);
+          return full.container.kendoStop(true).kendoAnimate({
             effects: "zoomOut fadeOut",
-            hide: true
+            hide: true,
+            complete: function() {
+              return $.publish("/preview/pause", [false]);
+            }
           });
         });
         $.subscribe("/capture/photo", function() {
@@ -118,36 +118,15 @@
           console.log("Recording...");
           frames = [];
           startTime = Date.now();
-          el.container.find(".timer").removeClass("hidden");
+          full.container.find(".timer").removeClass("hidden");
           setTimeout((function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
             recording = false;
-            el.container.find(".timer").addClass("hidden");
+            full.container.find(".timer").addClass("hidden");
             return $.publish("/recording/done", ["full"]);
           }), 6000);
           return recording = true;
-        });
-        kendo.fx.grow = {
-          setup: function(element, options) {
-            return $.extend({
-              top: options.top,
-              left: options.left,
-              width: options.width,
-              height: options.height
-            }, options.properties);
-          }
-        };
-        el.container = $(selector);
-        canvas = document.createElement("canvas");
-        canvas.width = 720;
-        canvas.height = 480;
-        ctx = canvas.getContext("2d");
-        el.content = $(fullTemplate).appendTo(el.container);
-        el.flash = el.content.find(".flash");
-        el.content.prepend(canvas);
-        $.subscribe("/full/flash", function() {
-          return flash();
         });
         return draw();
       }

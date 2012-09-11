@@ -84,7 +84,7 @@
             flipping = true;
             previews = [];
             _ref = this.view();
-            _fn = function() {
+            _fn = function(item) {
               var data, filter, filters, html;
               filter = document.createElement("canvas");
               filter.width = canvas.width;
@@ -106,7 +106,7 @@
             };
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               item = _ref[_i];
-              _fn();
+              _fn(item);
             }
             return page1.container.kendoAnimate({
               effects: animation.effects,
@@ -125,7 +125,10 @@
             });
           }
         });
-        return ds.read();
+        ds.read();
+        return $.subscribe("/preview/pause", function(pause) {
+          return paused = pause;
+        });
       }
     };
   });

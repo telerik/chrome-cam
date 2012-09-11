@@ -165,7 +165,7 @@ define [
 
                         # this is wrapped in a closure so that it doesn't step on itself during
                         # the async loop
-                        do ->
+                        do (item) ->
 
                             filter = document.createElement "canvas"
                             filter.width = canvas.width
@@ -210,6 +210,9 @@ define [
 
 
             # read from the datasource
-            ds.read()    
+            ds.read()   
+
+            $.subscribe "/preview/pause", (pause) ->
+                paused = pause
     
 

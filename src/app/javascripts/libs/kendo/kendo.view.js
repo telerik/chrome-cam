@@ -23,7 +23,7 @@
           this.viewModel = viewModel;
           kendo.bind(this.container, this.viewModel);
         }
-        return html;
+        return this.content = html; 
       };
 
       View.prototype.bind = function(viewModel) {
