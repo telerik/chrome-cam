@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/gallery.html', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, templateSource, detailsTemplateSource) {
-    var createDetailsViewModel, createPage, detailsTemplate, el, files, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
+    var createDetailsViewModel, createPage, deleteFile, detailsTemplate, el, files, getElementForFile, loadImages, numberOfRows, pub, rowLength, setupSubscriptionEvents, template;
     template = kendo.template(templateSource);
     detailsTemplate = kendo.template(detailsTemplateSource);
     rowLength = 4;
@@ -54,7 +54,10 @@
       $.publish("/postman/deliver", [{}, "/file/read"]);
       return deferred.promise();
     };
-    createPage = function(dataSource, $container) {
+    getElementForFile = function(fileName) {
+      return el.container.find("[data-file-name='" + fileName + "']");
+    };
+    createPage = function(dataSource) {
       var file, i, rows, _i, _len, _ref;
       rows = (function() {
         var _i, _results;
@@ -68,21 +71,24 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         file = _ref[_i];
         filewrapper.readFile(file.name).done(function(file) {
-          return $container.find("[data-file-name='" + file.name + "']").attr("src", file.file);
+          return getElementForFile(file.name).attr("src", file.file);
         });
       }
-      return $container.html(template({
+      return el.container.html(template({
         rows: rows
       }));
+    };
+    deleteFile = function(filename) {
+      return filewrapper.deleteFile(filename).done(function() {
+        return $.publish("/gallery/remove", [filename]);
+      });
     };
     createDetailsViewModel = function(message) {
       var viewModel;
       viewModel = {
         deleteItem: function() {
-          var _this = this;
-          return filewrapper.deleteFile(this.filename).done(function() {
-            return _this.close();
-          });
+          this.close();
+          return deleteFile(this.filename);
         },
         close: function() {
           return $.publish("/gallery/details/hide");
@@ -126,7 +132,7 @@
       };
       return kendo.observable(viewModel).init(message);
     };
-    setupSubscriptionEvents = function($container) {
+    setupSubscriptionEvents = function() {
       kendo.fx.hide = {
         setup: function(element, options) {
           return $.extend({
@@ -135,7 +141,7 @@
         }
       };
       $.subscribe("/gallery/details/hide", function() {
-        return $container.find(".details").kendoStop(true).kendoAnimate({
+        return el.container.find(".details").kendoStop(true).kendoAnimate({
           effects: "zoomOut",
           hide: true
         });
@@ -143,22 +149,21 @@
       $.subscribe("/gallery/details/show", function(message) {
         var $details, model;
         model = createDetailsViewModel(message);
-        $container.find(".details").remove();
+        el.container.find(".details").remove();
         $details = $(detailsTemplate(model));
         kendo.bind($details, model);
-        $container.append($details);
+        el.container.append($details);
         return $details.kendoStop(true).kendoAnimate({
           effects: "zoomIn",
           show: true
         });
       });
       $.subscribe("/gallery/hide", function() {
-        console.log("hide gallery");
         $.publish("/camera/pause", [false]);
         return $.publish("/bar/gallerymode/hide");
       });
       return $.subscribe("/gallery/page", function(dataSource) {
-        return createPage(dataSource, $container);
+        return createPage(dataSource);
       });
     };
     return pub = {
@@ -208,9 +213,25 @@
           $.subscribe("/events/key/arrow", function(e) {
             return changePage((e === "down") - (e === "up"));
           });
-          setupSubscriptionEvents($container);
+          setupSubscriptionEvents();
           $.subscribe("/gallery/add", function(file) {
             return dataSource.add(file);
+          });
+          $.subscribe("/gallery/remove", function(filename) {
+            return getElementForFile(filename).kendoAnimate({
+              effects: "fadeOut",
+              complete: function() {
+                var deleted, file, _i, _len, _ref;
+                _ref = dataSource._data;
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  file = _ref[_i];
+                  if (file.name === filename) {
+                    deleted = file;
+                  }
+                }
+                return dataSource.remove(deleted);
+              }
+            });
           });
           return $.publish("/gallery/page", [dataSource]);
         });
