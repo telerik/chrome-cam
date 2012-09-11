@@ -169,6 +169,10 @@ define [
                         $(this).removeClass("selected")
 
                     $(this).addClass("selected")
+                    item = $(this).children()
+
+                    # gotta find out what image what clicked here
+                    $.publish "/item/selected", [ { name: item.data("file-name"), file: item.attr("src") }] 
 
                 changePage = (direction) ->
                     # TODO: add transition effect...

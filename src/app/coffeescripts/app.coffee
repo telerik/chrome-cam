@@ -9,11 +9,12 @@ define([
   'mylibs/postman/postman'
   'mylibs/utils/utils'
   'mylibs/gallery/gallery'
+  'mylibs/share/share'
   'mylibs/events/events'
   'mylibs/file/filewrapper'
   'libs/record/record'
   'text!intro.html'
-], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, events, filewrapper, record, intro) ->
+], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, share, events, filewrapper, record, intro) ->
 	
 	pub = 
 		    
@@ -53,6 +54,8 @@ define([
 
 				# initialize the thumbnail gallery
 				gallery.init ".gallery"
+
+				window.APP.share = share.init "#gallery"
 
 				# start drawing some previews
 				preview.draw()

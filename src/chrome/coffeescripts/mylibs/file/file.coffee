@@ -268,7 +268,7 @@ define([
         read()
 
       $.subscribe "/file/download", (message) ->
-        download message.name, message.image
+        download message.name, message.file
 
       $.subscribe "/file/list", (message) ->
         list()

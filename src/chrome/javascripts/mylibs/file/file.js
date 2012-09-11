@@ -237,7 +237,7 @@
           return read();
         });
         $.subscribe("/file/download", function(message) {
-          return download(message.name, message.image);
+          return download(message.name, message.file);
         });
         $.subscribe("/file/list", function(message) {
           return list();

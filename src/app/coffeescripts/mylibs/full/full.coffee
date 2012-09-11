@@ -8,16 +8,14 @@ define([
 	
 	canvas = {}
 	ctx = {}
-	webgl = {}
 	preview = {}
 	paused = true
 	frame = 0
 	frames = []
 	recording = false
-	$flash = {}
 	startTime = 0
-	$container = {}
-	el = {}
+	full = {}
+	effect = {}
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -27,17 +25,13 @@ define([
 
 			if not paused
 
-	            # get the 2d canvas context and draw the image
-	            # this happens at the curent framerate
-	            # ctx.drawImage(window.HTML5CAMERA.canvas, 0, 0, canvas.width, canvas.height)
-	            
 	            # increment the curent frame counter. this is used for animated effects
 	            # like old movie and vhs. most effects simply ignore this
 	            frame++
 
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
-	            @thing(canvas, stream.canvas, frame, stream.track)
+	            effect(canvas, stream.canvas, frame, stream.track)
 
 	            # if we are recording, dump this canvas to a pixel array
 	            if recording
@@ -52,8 +46,8 @@ define([
 
 	flash = (callback) ->
 
-		el.flash.show()	
-		el.flash.kendoStop(true).kendoAnimate({
+		full.el.flash.show()	
+		full.el.flash.kendoStop(true).kendoAnimate({
 			effects: "fadeOut",
 			duration: 1500,
 			hide: true,
@@ -91,95 +85,110 @@ define([
 
 			full.render().prepend(canvas)
 
-			# create a div to go inside the main content area
+			# find and cache the flash element
 			full.find(".flash", "flash")
 
+			# subscribe to external events an map them to internal
+			# functions
 			$.subscribe "/full/show", (item) ->
-
-				@thing = item.filter
-
-				paused = false
-
-				# show the record controls in the footer
-				$.publish "/bottom/update", [ "full" ]
-
-				# get the height of the container minus the footer
-				full.content.height(full.container.height()) - 50
-
-				# determine the width based on a 3:2 aspect ratio (.66 repeating)
-				# $content.width (3 / 2) * $content.height()
-				full.content.width (3 / 2) * full.content.height()
-
-				$(canvas).height(full.content.height())
-
-				full.container.kendoStop(true).kendoAnimate {
-					effects: "zoomIn fadeIn"
-					show: true
-				}
+				pub.show(item)
 
 			$.subscribe "/full/hide", ->		
-
-				paused = true
-
-				$.publish "/bottom/update", ["preview"]
-
-				full.container.kendoStop(true).kendoAnimate {
-					effects: "zoomOut fadeOut"
-					hide: true,
-					complete: ->
-						$.publish "/preview/pause", [false]
-				}
-
-			# attach to the /capture/image function
+				pub.hide()
+				
 			$.subscribe "/capture/photo", ->
-				
-				callback = ->
-					$.publish "/bottom/update", [ "full" ]
-				
-				capture(callback)
-
+				pub.photo()
+			
 			$.subscribe "/capture/paparazzi", ->
+				pub.paparazzi()
+				
+			$.subscribe "/capture/video", ->
+				pub.video()
 
-				# build a gross callback tree and fling poo
+			draw()
+
+		show: (item) ->
+
+			effect = item.filter
+
+			paused = false
+
+			# show the record controls in the footer
+			$.publish "/bottom/update", [ "full" ]
+
+			# get the height of the container minus the footer
+			full.content.height(full.container.height()) - 50
+
+			# determine the width based on a 3:2 aspect ratio (.66 repeating)
+			# $content.width (3 / 2) * $content.height()
+			full.content.width (3 / 2) * full.content.height()
+
+			$(canvas).height(full.content.height())
+
+			full.container.kendoStop(true).kendoAnimate {
+				effects: "zoomIn fadeIn"
+				show: true
+			}
+
+		hide: ->
+
+			paused = true
+
+			$.publish "/bottom/update", ["preview"]
+
+			full.container.kendoStop(true).kendoAnimate {
+				effects: "zoomOut fadeOut"
+				hide: true,
+				complete: ->
+					$.publish "/preview/pause", [false]
+			}
+
+		photo: ->
+
+			callback = ->
+				$.publish "/bottom/update", [ "full" ]
+				
+			capture(callback)
+
+		paparazzi: ->
+
+			# build a gross callback tree and fling poo
+			callback = ->
+				
 				callback = ->
-					
+
 					callback = ->
-
-						callback = ->
-							$.publish "/bottom/update", [ "full" ]
-						
-						capture(callback)
-
+						$.publish "/bottom/update", [ "full" ]
+					
 					capture(callback)
 
 				capture(callback)
 
-			$.subscribe "/capture/video", ->
+			capture(callback)
 
-				console.log "Recording..."
+		video: ->
 
-				frames = []
+			console.log "Recording..."
+
+			frames = []
+			
+			startTime = Date.now()
+
+			full.container.find(".timer").removeClass("hidden")
+
+			setTimeout (-> 
 				
-				startTime = Date.now()
+				utils.createVideo frames
+				console.log("Recording Done!")
+				recording = false
 
-				full.container.find(".timer").removeClass("hidden")
+				full.container.find(".timer").addClass("hidden")
+				
+				$.publish "/recording/done", [ "full" ]
 
-				setTimeout (-> 
-					
-					utils.createVideo frames
-					console.log("Recording Done!")
-					recording = false
+			), 6000
 
-					full.container.find(".timer").addClass("hidden")
-					
-					$.publish "/recording/done", [ "full" ]
-
-				), 6000
-
-				recording = true
-
-			draw()
-
+			recording = true
 
 				
 )

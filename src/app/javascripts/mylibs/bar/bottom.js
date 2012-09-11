@@ -103,7 +103,7 @@
     return pub = {
       init: function(container) {
         view = new kendo.View(container, template);
-        view.render(viewModel);
+        view.render(viewModel, true);
         $.subscribe("/bottom/update", function(state) {
           return states.set(state);
         });

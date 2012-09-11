@@ -105,7 +105,6 @@ define [
             draw()
 
         swipe: (e) ->
-
             # page in the direction of the swipe
             page e.direction
             

@@ -99,6 +99,7 @@ define [
 		}
 
 	states = 
+		
 		preview: ->
 			viewModel.set("mode.display", "none")
 			viewModel.set("capture.display", "none")
@@ -128,7 +129,7 @@ define [
 			view = new kendo.View(container, template)
 
 			# render the bar and binds it to the view model
-			view.render(viewModel)
+			view.render(viewModel, true)
 
 			# wire up events
 			$.subscribe "/bottom/update", (state) ->

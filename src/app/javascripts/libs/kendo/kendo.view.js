@@ -17,11 +17,13 @@
         this.el = {};
       };
 
-      View.prototype.render = function(viewModel) {
+      View.prototype.render = function(viewModel, bind) {
         var html = $(this.template(this.data)).appendTo(this.container);
         if (viewModel) {
           this.viewModel = viewModel;
-          kendo.bind(this.container, this.viewModel);
+            if (bind) {
+              kendo.bind(this.container, this.viewModel);
+            }
         }
         return this.content = html; 
       };
