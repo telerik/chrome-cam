@@ -138,7 +138,8 @@ define [
 
         view: 
             before: ->
-                el.container.height($(window).height)
+                el.container.height($(window).height())
+                el.container.width($(window).width())
 
             show: ->
                 $.publish "/bar/update", [ "gallery" ]

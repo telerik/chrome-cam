@@ -159,7 +159,8 @@
     return pub = {
       view: {
         before: function() {
-          return el.container.height($(window).height);
+          el.container.height($(window).height());
+          return el.container.width($(window).width());
         },
         show: function() {
           return $.publish("/bar/update", ["gallery"]);

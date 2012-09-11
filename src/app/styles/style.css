@@ -9,6 +9,14 @@ html, body, #wrap {
 	overflow: hidden;
 }
 
+/*  fix for the position: relative which is set
+	by the mobile framework and does not work in
+	chrome apps
+*/
+#static {
+	position: static;
+}
+
 body > #wrap { height: 100%;}
 
 body div { padding-top: 0px; }
@@ -312,7 +320,6 @@ body div { padding-top: 0px; }
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
 	-webkit-box-orient: vertical;
-	z-index: 200;
 	background-color: #f1f1f1;
 	width: 1155px;
 	margin: 0 auto;
