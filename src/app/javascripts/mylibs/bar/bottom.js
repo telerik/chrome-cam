@@ -50,7 +50,10 @@
         display: null
       },
       filters: {
-        display: "none"
+        display: "none",
+        click: function() {
+          return $.publish("/full/hide");
+        }
       }
     });
     countdown = function(position, callback) {

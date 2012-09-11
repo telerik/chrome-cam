@@ -23,6 +23,7 @@ define [
     frame = 0
     ds = {}
     el = {}
+    flipping = false
     
     # define the animations. we slide different directions depending on if we are going forward or back.
     animation = 
@@ -60,7 +61,8 @@ define [
             # subscribe to the left arrow key
             $.subscribe "/events/key/arrow", (e) ->
 
-                page e
+                if not flipping
+                    page e
 
         # otherwise
         else
@@ -145,11 +147,11 @@ define [
 
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
-            el.page1 = $(pageTemplate).appendTo(el.container)
-            el.page2 = $(pageTemplate).appendTo(el.container)
+            page1 = new kendo.View(selector, pageTemplate)
+            page2 = new kendo.View(selector, pageTemplate)
 
-            previousPage = el.page1
-            nextPage = el.page2
+            previousPage = page1.render()
+            nextPage = page2.render()
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -164,6 +166,8 @@ define [
                 # when the data source changes, this event will fire
                 change: ->
 
+                    flipping = true
+
                     # pause. we are changing pages so stop drawing.
                     #   paused = true
 
@@ -172,66 +176,58 @@ define [
 
                     # w'e need these 6 items broken up into a top and bottom
                     # set of images for the flexbox
-                    top = this.view().slice(0,3)
-                    bottom = this.view().slice(3,6)
+                    # top = this.view().slice(0,3)
+                    # bottom = this.view().slice(3,6)
 
-                    create = (data) ->
+                    # create = (data) ->
 
-                        half = $(halfTemplate)
+                        # half = $(halfTemplate)
 
-                        for item in data
+                    for item in @.view()
 
-                            # this is wrapped in a closure so that it doesn't step on itself during
-                            # the async loop
-                            do ->
+                        # this is wrapped in a closure so that it doesn't step on itself during
+                        # the async loop
+                        do ->
 
-                                # get the template for the current preview
-                                template = kendo.template(previewTemplate)
+                            filter = document.createElement "canvas"
+                            filter.width = canvas.width
+                            filter.height =canvas.height
 
-                                # create a preview object which extends the current item in the dataset
-                                # preview = {}
-                                # $.extend(preview, item)
+                            data = { effect: item.id, name: item.name }
 
-                                # preview.canvas = document.createElement "canvas"
-                                # preview.canvas.width = canvas.width
-                                # preview.canvas.height = canvas.height      
+                            filters = new kendo.View(nextPage, previewTemplate, data)
+                            html = filters.render()
+                            html.find(".canvas").append(filter)
 
-                                # run the DOM template through a kendo ui template
-                                preview = template { effect: item.id, name: item.name }
-                                
-                                thing = document.createElement "canvas"
-                                thing.width = canvas.width
-                                thing.height =canvas.height
+                            # nextPage.append $(preview).find("a").append(filter).end()
 
-                                
-                                
-                                half.append $(preview).find("a").append(thing).end()
+                            # half.append $(preview).find("a").append(thing).end()
 
-                                previews.push { canvas: thing, filter: item.filter }
+                            previews.push { canvas: filter, filter: item.filter }
 
-                                # wrap the template output   in jQuery
-                                # content = $(content)
+                            # wrap the template output   in jQuery
+                            # content = $(content)
 
-                                # push the current effect onto the array
-                                # previews.push(preview)
+                            # push the current effect onto the array
+                            # previews.push(preview)
 
-                                # add the videos to the page
-                                # content.find("a").append(preview.canvas)
-                                #                   .click ->
+                            # add the videos to the page
+                            # content.find("a").append(preview.canvas)
+                            #                   .click ->
 
-                                #     # pause the effects
-                                #     # paused = true
+                            #     # pause the effects
+                            #     # paused = true
 
-                                #     # transition the new screen in 
-                                #     $.publish("/full/show", [preview])
+                            #     # transition the new screen in 
+                            #     $.publish("/full/show", [preview])
 
-                                # half.append(content)
+                            # half.append(content)
 
-                        return half
+                        # return half
 
                     # we want to append our two halves on to the next page
-                    nextPage.append create(top)
-                    nextPage.append create(bottom)
+                    # nextPage.append create(top)
+                    # nextPage.append create(bottom)
 
                     # pause the camera. that will additionally pause
                     # these previews so there is no need to pause this
@@ -252,6 +248,8 @@ define [
                             nextPage = justPaged
 
                             justPaged.empty()
+
+                            flipping = false
                     }
 
                     # move the next page in

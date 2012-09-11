@@ -13,7 +13,7 @@
             40: "down"
           };
           if (e.keyCode in arrowKeys) {
-            return $.publish("/events/key/arrow", arrowKeys[e.keyCode]);
+            return $.publish("/events/key/arrow", [arrowKeys[e.keyCode]]);
           }
         });
       }

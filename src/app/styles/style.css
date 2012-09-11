@@ -278,7 +278,7 @@ body div { padding-top: 0px; }
 .gallery-row + .gallery-row { margin-top: 17px; }
 
 .preview { 
-	margin-left: 26px;
+	margin: 5px;
 	float: left;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 }
@@ -401,6 +401,7 @@ body div { padding-top: 0px; }
 
 .full {
 	background-color: #EDEDED;
+	display: none;
 	width: 100%;
 	height: 100%;
 	position: absolute;

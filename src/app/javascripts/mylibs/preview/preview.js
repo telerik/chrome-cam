@@ -5,7 +5,7 @@
     
     Select preview shows pages of 6 live previews using webgl effects
     */
-    var animation, canvas, ctx, draw, ds, el, frame, keyboard, page, paused, previews, pub, webgl;
+    var animation, canvas, ctx, draw, ds, el, flipping, frame, keyboard, page, paused, previews, pub, webgl;
     paused = false;
     canvas = {};
     ctx = {};
@@ -15,6 +15,7 @@
     frame = 0;
     ds = {};
     el = {};
+    flipping = false;
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
@@ -38,7 +39,7 @@
     keyboard = function(enabled) {
       if (enabled) {
         return $.subscribe("/events/key/arrow", function(e) {
-          return page(e);
+          if (!flipping) return page(e);
         });
       } else {
         return $.unsubcribe("/events/key/arrow");
@@ -61,7 +62,7 @@
         return draw();
       },
       init: function(selector) {
-        var nextPage, previousPage;
+        var nextPage, page1, page2, previousPage;
         effects.init();
         keyboard(true);
         $.subscribe("/previews/pause", function(isPaused) {
@@ -77,45 +78,39 @@
             return page(e.direction);
           }
         });
-        el.page1 = $(pageTemplate).appendTo(el.container);
-        el.page2 = $(pageTemplate).appendTo(el.container);
-        previousPage = el.page1;
-        nextPage = el.page2;
+        page1 = new kendo.View(selector, pageTemplate);
+        page2 = new kendo.View(selector, pageTemplate);
+        previousPage = page1.render();
+        nextPage = page2.render();
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var bottom, create, top;
+            var item, _fn, _i, _len, _ref;
+            flipping = true;
             previews = [];
-            top = this.view().slice(0, 3);
-            bottom = this.view().slice(3, 6);
-            create = function(data) {
-              var half, item, _fn, _i, _len;
-              half = $(halfTemplate);
-              _fn = function() {
-                var preview, template, thing;
-                template = kendo.template(previewTemplate);
-                preview = template({
-                  effect: item.id,
-                  name: item.name
-                });
-                thing = document.createElement("canvas");
-                thing.width = canvas.width;
-                thing.height = canvas.height;
-                half.append($(preview).find("a").append(thing).end());
-                return previews.push({
-                  canvas: thing,
-                  filter: item.filter
-                });
+            _ref = this.view();
+            _fn = function() {
+              var data, filter, filters, html;
+              filter = document.createElement("canvas");
+              filter.width = canvas.width;
+              filter.height = canvas.height;
+              data = {
+                effect: item.id,
+                name: item.name
               };
-              for (_i = 0, _len = data.length; _i < _len; _i++) {
-                item = data[_i];
-                _fn();
-              }
-              return half;
+              filters = new kendo.View(nextPage, previewTemplate, data);
+              html = filters.render();
+              html.find(".canvas").append(filter);
+              return previews.push({
+                canvas: filter,
+                filter: item.filter
+              });
             };
-            nextPage.append(create(top));
-            nextPage.append(create(bottom));
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              item = _ref[_i];
+              _fn();
+            }
             return el.container.kendoAnimate({
               effects: animation.effects,
               face: animation.reverse ? nextPage : previousPage,
@@ -127,7 +122,8 @@
                 justPaged = previousPage;
                 previousPage = nextPage;
                 nextPage = justPaged;
-                return justPaged.empty();
+                justPaged.empty();
+                return flipping = false;
               }
             });
           }

@@ -1574,7 +1574,7 @@ body:after {
 
 .km-blackberry,.km-blackberry .km-content {
     color: #000;
-    background: #fff
+    background: #f1f1f1
 }
 
 .km-blackberry .km-navbar,.km-blackberry .km-toolbar,.km-blackberry .km-button,.km-blackberry .km-buttongroup,.km-blackberry .km-tabstrip,.km-blackberry input[type=file],.km-blackberry li.km-actionsheet-cancel>a {

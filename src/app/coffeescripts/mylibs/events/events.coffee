@@ -15,5 +15,5 @@ define([
                     40: "down"
 
                 if e.keyCode of arrowKeys
-                    $.publish "/events/key/arrow", arrowKeys[e.keyCode]
+                    $.publish "/events/key/arrow", [arrowKeys[e.keyCode]]
 )

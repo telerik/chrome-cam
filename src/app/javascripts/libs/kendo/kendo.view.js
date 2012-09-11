@@ -1,21 +1,29 @@
-(function() {
+(function($) {
 
     var View;
     return kendo.View = (function() {
 
-      function View(container, template) {
-        this.container = $(container);
+      function View(container, template, data) {
+        
+        if (this.container instanceof $) {
+          this.container = container
+        }
+        else {
+          this.container = $(container);
+        }
+        
+        this.data = data || {};
         this.template = kendo.template(template);
         this.el = {};
       };
 
       View.prototype.render = function(viewModel) {
-        var html = this.template({});
-        this.container.html(html);
+        var html = $(this.template(this.data)).appendTo(this.container);
         if (viewModel) {
           this.viewModel = viewModel;
           kendo.bind(this.container, this.viewModel);
         }
+        return html;
       };
 
       View.prototype.bind = function(viewModel) {
@@ -35,4 +43,4 @@
 
     })();
 
-}).call(this);
+})(jQuery);

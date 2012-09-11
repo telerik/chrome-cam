@@ -9,6 +9,7 @@ define [
 	viewModel = kendo.observable {
 	
 		mode:
+
 			display: "none"
 			active: "photo"
 			click: (e) ->
@@ -67,6 +68,8 @@ define [
 
 		filters: 
 			display: "none"
+			click: ->
+				$.publish "/full/hide"
 
 	}
 
