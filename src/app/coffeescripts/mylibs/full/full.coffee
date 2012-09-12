@@ -116,9 +116,6 @@ define([
 
 			paused = false
 
-			# show the record controls in the footer
-			$.publish "/bottom/update", [ "full" ]
-
 			# get the height of the container minus the footer
 			full.content.height(full.container.height()) - 50
 
@@ -131,6 +128,9 @@ define([
 			full.container.kendoStop(true).kendoAnimate {
 				effects: "zoomIn fadeIn"
 				show: true
+				complete: ->
+					# show the record controls in the footer
+					$.publish "/bottom/update", [ "full" ]
 			}
 
 		hide: ->
