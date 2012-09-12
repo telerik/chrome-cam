@@ -3,6 +3,8 @@ define [
   'text!mylibs/bar/views/bottom.html'
 ], (kendo, template) ->
 
+	BROKEN_IMAGE = "images/broke.png"
+	
 	view = {}
 
 	# create a view model for the top bar
@@ -63,8 +65,10 @@ define [
 
 
 		thumbnail:
-			src: "images/broke.png"
+			src: BROKEN_IMAGE
 			display: null
+			displayMode: ->
+				if viewModel.get("thumbnail.src") == BROKEN_IMAGE then "none" else viewModel.get("thumbnail.display")
 
 		filters: 
 			display: "none"

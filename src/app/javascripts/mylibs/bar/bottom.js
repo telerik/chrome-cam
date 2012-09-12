@@ -2,7 +2,8 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/bar/views/bottom.html'], function(kendo, template) {
-    var countdown, pub, states, view, viewModel;
+    var BROKEN_IMAGE, countdown, pub, states, view, viewModel;
+    BROKEN_IMAGE = "images/broke.png";
     view = {};
     viewModel = kendo.observable({
       mode: {
@@ -47,8 +48,15 @@
         }
       },
       thumbnail: {
-        src: "images/broke.png",
-        display: null
+        src: BROKEN_IMAGE,
+        display: null,
+        displayMode: function() {
+          if (viewModel.get("thumbnail.src") === BROKEN_IMAGE) {
+            return "none";
+          } else {
+            return viewModel.get("thumbnail.display");
+          }
+        }
       },
       filters: {
         display: "none",
