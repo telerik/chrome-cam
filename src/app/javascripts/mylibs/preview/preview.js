@@ -52,9 +52,6 @@
       }
     };
     return pub = {
-      show: function() {
-        return $.publish("/bottom/update", ["preview"]);
-      },
       draw: function() {
         return draw();
       },
