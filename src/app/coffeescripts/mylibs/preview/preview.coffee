@@ -95,10 +95,6 @@ define [
 
     # anything under here is public
     pub = 
-        
-        # the show function that is called by the view on show
-        show: ->
-            $.publish "/bottom/update", [ "preview" ]
 
         # makes the internal draw function publicly accessible
         draw: ->
