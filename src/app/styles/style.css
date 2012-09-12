@@ -485,24 +485,59 @@ a.button {
 
 /* About Page */
 
+.about {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
+	background: #fff;
+	height: 100%;
+}
+
+.about a { color: #E15613; }
+
 .about hgroup:first-child {
 	background: url("images/icon_128.png");
-	padding: 30px;
-	background-position: 0 50%;
+	background-position: 0 0;
 	background-repeat: no-repeat;
+	background-size: 74px 74px;
+	margin-bottom: 30px;
 }
-	.about hgroup:first-child > * { margin-left: 130px; }
+	.about hgroup:first-child > * { margin-left: 85px; }
+	.about h1 { font-size: 65px; }
+	.about h2 {
+		padding-left: 10px;
+		font-size: 20px;
+		position: relative;
+		top: -13px;
+		color: #666;
+		font-weight: normal;
+	}
+	.about h3 { 
+		background: url("images/kendoUILogo.png") -12px 0 no-repeat;
+		padding: 15px 0 40px 60px;
+		background-size: 80px 80px;
+	}
+	.about h4 { 
+		font-weight: normal;
+		position: relative;
+		top: -40px;
+		left: -1px;
+		font-size: 13px; 
+	}
 
 .about hgroup + hgroup {
-	margin-top: 20px;
-	background: url("images/kendoUILogo.png");
-	background-size: 100px 100px;
+	background: url("images/kendoAboutBG.jpg");
 	background-repeat: no-repeat;
-	background-color: #DDD;
-	padding: 40px;
-	background-position: 18px 50%;
+	background-position: 50% 0;
+	background-size: 940px 72px;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
+	-webkit-box-orient: vertical;
+	width: 100%;
+	padding: 60px 0;
 }
-	.about hgroup + hgroup > * { margin-left: 80px; }
 
 
 /* Clearfix */
