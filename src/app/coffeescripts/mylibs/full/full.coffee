@@ -42,7 +42,7 @@ define([
 	            	frames.push imageData: ctx.getImageData(0, 0, 720, 480), time: Date.now()
 
 	            	# update the time in the view
-	            	el.container.find(".timer").first().html kendo.toString((Date.now() - startTime) / 1000, "0")
+	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
 
 	flash = (callback) ->
 
@@ -87,6 +87,7 @@ define([
 
 			# find and cache the flash element
 			full.find(".flash", "flash")
+			full.find(".timer", "timer")
 
 			# subscribe to external events an map them to internal
 			# functions
@@ -181,13 +182,17 @@ define([
 
 			setTimeout (-> 
 				
-				utils.createVideo frames
-				console.log("Recording Done!")
-				recording = false
+				$.publish "/bottom/update", ["processing"]
 
-				full.container.find(".timer").addClass("hidden")
-				
-				$.publish "/recording/done", [ "full" ]
+				setTimeout -> 
+					utils.createVideo frames
+					console.log("Recording Done!")
+					recording = false
+
+					full.container.find(".timer").addClass("hidden")
+					
+					$.publish "/recording/done", [ "full" ]
+				, 500
 
 			), 6000
 

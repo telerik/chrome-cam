@@ -63,6 +63,6 @@ define([
 				# we are done loading the app. have the postman deliver that msg.
 				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
 
-				app = new kendo.mobile.Application document.body, { transition: "overlay:up", platform: "blackberry" }
+				window.APP.app = new kendo.mobile.Application document.body, { transition: "overlay:up", platform: "blackberry" }
 
 )

@@ -24,7 +24,7 @@
               imageData: ctx.getImageData(0, 0, 720, 480),
               time: Date.now()
             });
-            return el.container.find(".timer").first().html(kendo.toString((Date.now() - startTime) / 1000, "0"));
+            return full.el.timer.first().html(kendo.toString((Date.now() - startTime) / 1000, "0"));
           }
         }
       });
@@ -64,6 +64,7 @@
         ctx = canvas.getContext("2d");
         full.render().prepend(canvas);
         full.find(".flash", "flash");
+        full.find(".timer", "timer");
         $.subscribe("/full/show", function(item) {
           return pub.show(item);
         });
@@ -135,11 +136,14 @@
         startTime = Date.now();
         full.container.find(".timer").removeClass("hidden");
         setTimeout((function() {
-          utils.createVideo(frames);
-          console.log("Recording Done!");
-          recording = false;
-          full.container.find(".timer").addClass("hidden");
-          return $.publish("/recording/done", ["full"]);
+          $.publish("/bottom/update", ["processing"]);
+          return setTimeout(function() {
+            utils.createVideo(frames);
+            console.log("Recording Done!");
+            recording = false;
+            full.container.find(".timer").addClass("hidden");
+            return $.publish("/recording/done", ["full"]);
+          }, 500);
         }), 6000);
         return recording = true;
       }

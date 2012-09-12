@@ -24,16 +24,15 @@
 				<span class="red-dot circle counter"></span>
 				<span class="red-dot circle counter"></span>
 			</div>
-			<div class="saving hidden">
-				<h3>Omnom.</h3>
-				<p>I'm crunching this sweet video. Just a moment please...</p>
+			<div class="saving" data-bind="style: { display: processing.display }">
+				<h3>Processing...</h3>
 			</div>
 		</div>
 	</section>
 	<section class="right">
+		<a data-role="button" class="button filters" data-bind="click: filters.click, style: { display: filters.display }">Filters</a>
 		<a href="\#gallery" data-transition="overlay:up reverse" data-bind="style: { display: thumbnail.displayMode }" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
 			<img class="thumbnail" data-bind="attr: { src: thumbnail.src }" />
 		</a>
-		<a data-role="button" class="button filters" data-bind="click: filters.click, style: { display: filters.display }">Filters</a>
 	</section>
 </section>

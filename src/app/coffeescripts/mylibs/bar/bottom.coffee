@@ -10,6 +10,9 @@ define [
 	# create a view model for the top bar
 	viewModel = kendo.observable {
 	
+		processing: 
+			display: "none"
+
 		mode:
 
 			display: "none"
@@ -52,8 +55,6 @@ define [
 
 					token = $.subscribe "/recording/done", ->
 						$.unsubscribe token
-						view.el.bar.removeClass("recording")
-						view.el.stop.css "border-radius", 100
 						states.full()
 
 					# publish the capture method
@@ -119,10 +120,16 @@ define [
 			viewModel.set("mode.display", "none")
 			viewModel.set("filters.display", "none")
 		full: ->
+			viewModel.set("processing.display", "none")
 			viewModel.set("thumbnail.display", null)	
 			viewModel.set("mode.display", null)
 			viewModel.set("capture.display", null)
 			viewModel.set("filters.display", null)
+		processing: ->
+			viewModel.set("processing.display", null)
+			viewModel.set("capture.display", "none")
+			view.el.bar.removeClass("recording")
+			view.el.stop.css "border-radius", 100
 		set: (state) ->
 			this[state]()
 
