@@ -27,6 +27,8 @@ body div { padding-top: 0px; }
 
 .square { border-radius: 0; }
 
+a { color: #E15613; }
+
 [draggable] {
   -webkit-user-select: none;
   user-select: none;
@@ -486,9 +488,9 @@ a.button {
 	100% { opacity:0.3; }
 }
 
-/* About Page */
+/* About and Settings Pages */
 
-.about {
+.about, .settings {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-box-pack: center;
@@ -497,18 +499,16 @@ a.button {
 	height: 100%;
 }
 
-.about a { color: #E15613; }
-
-.about hgroup:first-child {
+.appInfoHeader {
 	background: url("images/icon_128.png");
 	background-position: 0 0;
 	background-repeat: no-repeat;
 	background-size: 74px 74px;
 	margin-bottom: 30px;
 }
-	.about hgroup:first-child > * { margin-left: 85px; }
-	.about h1 { font-size: 65px; }
-	.about h2 {
+	.appInfoHeader > * { margin-left: 85px; }
+	.appInfoHeader h1 { font-size: 65px; }
+	.appInfoHeader h2 {
 		padding-left: 10px;
 		font-size: 20px;
 		position: relative;
@@ -529,7 +529,7 @@ a.button {
 		font-size: 13px; 
 	}
 
-.about hgroup + hgroup {
+.appInfoHeader + * {
 	background: url("images/kendoAboutBG.jpg");
 	background-repeat: no-repeat;
 	background-position: 50% 0;
@@ -541,6 +541,26 @@ a.button {
 	width: 100%;
 	padding: 60px 0;
 }
+	.settings .button {
+		background: #EEE;
+		margin-top: 30px;
+		font-size: 1em;
+		border: 1px solid #CCC;
+	}
+		.settings .button:hover, .settings .button:active {
+			background: #E15613;
+			color: #fff;
+			border: 1px solid #E15613;
+		}
+	.settings label {
+		position: relative;
+		top: -10px;
+		margin-right: 10px;
+	}
+
+	.settings .km-switch {
+		cursor: pointer;
+	}
 
 
 /* Clearfix */
