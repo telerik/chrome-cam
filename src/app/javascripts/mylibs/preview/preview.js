@@ -69,10 +69,10 @@
         ctx = canvas.getContext("2d");
         canvas.width = 360;
         canvas.height = 240;
-        page1 = new kendo.View(selector, pageTemplate);
-        page2 = new kendo.View(selector, pageTemplate);
-        previousPage = page1.render();
-        nextPage = page2.render();
+        page1 = new kendo.View(selector, null);
+        page2 = new kendo.View(selector, null);
+        previousPage = page1.render().addClass("page");
+        nextPage = page2.render().addClass("page");
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,

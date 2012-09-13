@@ -129,11 +129,11 @@ define [
 
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
-            page1 = new kendo.View(selector, pageTemplate)
-            page2 = new kendo.View(selector, pageTemplate)
+            page1 = new kendo.View(selector, null)
+            page2 = new kendo.View(selector, null)
 
-            previousPage = page1.render()
-            nextPage = page2.render()
+            previousPage = page1.render().addClass("page")
+            nextPage = page2.render().addClass("page")
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -178,13 +178,7 @@ define [
 
                                 $.publish "/full/show", [ item ]
 
-                            # nextPage.append $(preview).find("a").append(filter).end()
-
-                            # half.append $(preview).find("a").append(thing).end()
-
                             previews.push { canvas: filter, filter: item.filter }
-
-                            
 
                     # move the current page out and the next page in
                     page1.container.kendoAnimate {

@@ -269,6 +269,8 @@ a.button {
 .flip > .page {
 	position: absolute;
 	background-color: #f1f1f1;
+	width: 1150px;
+	height: 600px;
 }
 
 .half {

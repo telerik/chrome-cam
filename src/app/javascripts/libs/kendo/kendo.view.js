@@ -6,23 +6,31 @@
       // view constructor. takes in the container or selector
       // a template, and the data for the template if any
       function View(container, template, data) {
-        // if the container is a jquery object
-        if (this.container instanceof $) {
-          // set the internal reference
-          this.container = container
+        // if a container element is specified
+        if (container) {
+          // if the container is a jquery object
+          if (this.container instanceof $) {
+            // set the internal reference
+            this.container = container 
+          }
+          // otherwise
+          else {
+            // set the internal reference to a jQuery instance
+            // TODO: should probably check that this is a string
+            //       before trying to wrap it
+            this.container = $(container);
+          }
         }
-        // otherwise
-        else {
-          // set the internal reference to a jQuery instance
-          // TODO: should probably check that this is a string
-          //       before trying to wrap it
-          this.container = $(container);
-        }
+        // otherwise return an empty div as the container
+        else return this.container = $("<div></div>");
         
         // set the internal data object to the data passed in,
         // or an empty object if nothing was passed
         this.data = data || {};
-        // create the kendo template object
+        // check to make sure we passed in a template
+        // otherwise set it to an empty div
+        template = template || "<div></div>";
+        // create the kendo template object 
         this.template = kendo.template(template);
         // create an el object that will hold all references to 
         // DOM objects in the view as specified by the "find" method
