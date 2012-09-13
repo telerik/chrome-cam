@@ -313,8 +313,6 @@ a.button {
 	height: 240px;
 }
 
-
-
 /************ Gallery styles ************/
 
 .gallery {
@@ -345,7 +343,6 @@ a.button {
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 }
 
-	
 .gallery .thumbnail:hover, .preview:hover {
 	cursor: pointer;
 	-webkit-transform: scale(1.02);
@@ -399,9 +396,33 @@ a.button {
 	position: relative;
 	top: -5px;
 }
-	.preview-title h2 {
-		font-size: 30px;
-	}
+	.preview-title h2 { font-size: 30px; }
+
+/* Share Styles */
+
+.shareList li {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.shareList a {
+	overflow: hidden;
+	text-indent: 999px;
+	background-image: url('images/socialIcons.png');
+	background-size: 35px;
+	background-repeat: no-repeat;
+	width: 35px;
+	padding: 0 !important;
+	margin: 0 !important;
+	height: 35px;
+	cursor: pointer;
+	opacity: .85;
+}
+	.shareList a:hover { opacity: 1; }
+	.shareList .google { background-position: 0 -37px; }
+	.shareList .twitter { background-position: 0 -74px; }
+	.shareList .download { background-position: 0 100%; }
+
 
 /************ Full Styles ************/
 
@@ -451,6 +472,8 @@ a.button {
 		box-shadow: 0 0 4px 0 rgba(251, 247, 193, .5);
 		border-radius: 50%;
 	}
+
+
 
 /* Loader Styles */
 

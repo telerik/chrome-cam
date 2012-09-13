@@ -1,18 +1,18 @@
-<div data-role="popover" id="share" data-popup='{"height": 180, "width": 200}'>
+<div data-role="popover" id="share" data-popup='{"height": 151, "width": 43}'>
     <div data-role="view" data-model="APP.share.viewModel">
-        <ul data-role="listview" data-style="inset">
-        	<li>
-        		<a data-role="button">Google +</a>
-        	</li>
-        	<li>
-        		<a data-role="button">Twitter</a>
-        	</li>
-        	<li>
-        		<a data-role="button">Facebook</a>
-        	</li>
-        	<li>
-        		<a data-role="button" data-bind="click: download">Download</a>
-        	</li>
+        <ul data-role="listview" data-style="inset" class="shareList">
+            <li>
+                <a data-role="button" class="google">Google +</a>
+            </li>
+            <li>
+                <a data-role="button" class="twitter">Twitter</a>
+            </li>
+            <li>
+                <a data-role="button" class="facebook">Facebook</a>
+            </li>
+            <li>
+                <a data-role="button" class="download" data-bind="click: download">Download</a>
+            </li>
         </ul>
     </div>
 </div>
