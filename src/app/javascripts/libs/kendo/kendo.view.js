@@ -22,7 +22,7 @@
           }
         }
         // otherwise return an empty div as the container
-        else return this.container = $("<div></div>");
+        else this.container = $("<div></div>");
         
         // set the internal data object to the data passed in,
         // or an empty object if nothing was passed
@@ -42,7 +42,7 @@
       // not the container
       View.prototype.render = function(viewModel, bind) {
         // render the kendo template and append it to the container
-        var html = $(this.template(this.data)).appendTo(this.container);
+        this.content = $(this.template(this.data)).appendTo(this.container);
         // if a view model was passed in
         if (viewModel) {
           // set the viewModel variable equal to it
@@ -51,11 +51,11 @@
             // since mobile views don't bind this way
             if (bind) {
               // bind the container to the view model
-              kendo.bind(this.container, this.viewModel);
+              kendo.bind(this.content, this.viewModel);
             }
         }
         // return the template content as a DOM object
-        return this.content = html; 
+        return this.content; 
       };
 
       // binds the container to the view model

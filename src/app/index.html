@@ -18,11 +18,12 @@
 			<div class="filters" data-role="touch" data-swipe="APP.filters.swipe" data-enable-swipe="true">
 				<div class="flip"></div>
 			</div>
-			<div class="full"></div>
+			<div class="full" id="capture"></div>
 		</div>
 
-		<div data-role="view" id="gallery" data-before-show="APP.gallery.view.before" data-show="APP.gallery.view.show" data-layout="top">
-			<div class="gallery"></div>
+		<div data-role="view" id="gallery" data-before-show="APP.gallery.before" data-hide="APP.gallery.hide" data-layout="top">
+			<div id="thumbnails"></div>
+			<div id="details" class="full"></div>
 		</div>
 
 		<div data-role="view" id="about">
@@ -39,7 +40,7 @@
 		</div>
 
 		<div data-role="layout" data-id="top">
-			<div data-role="header">
+			<div data-role="header" data-model="APP.top.viewModel">
 				<div class="footer top"></div>
 			</div>
 		</div>

@@ -1,6 +1,9 @@
 <section class="bar">
 	<section class="left">
-		<a data-role="button" href="\#home" class="back button">&lsaquo; Camera</a>
+		<a data-role="backbutton" href="\#home" data-bind="invisible: back.details" 
+		id="back" class="back button">Camera</a>
+		<a data-role="button" data-bind="visible: back.details, click: back.click"
+		id="back" class="back button">Gallery</a>
 	</section>
 	<section class="center"></section>
 	<section class="right">

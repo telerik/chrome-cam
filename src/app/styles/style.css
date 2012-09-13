@@ -200,7 +200,7 @@ a.button {
 		background: #ccc;
 		color: #000;
 	}
-	button + button, .button + .button, button + .button, .button + button { margin-left: 10px; }
+	button + button, .button + .button, button + .button, .button + button { }
 
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;

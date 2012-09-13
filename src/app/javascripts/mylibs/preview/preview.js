@@ -55,6 +55,9 @@
       draw: function() {
         return draw();
       },
+      before: function() {
+        return $.publish("/camera/pause", [false]);
+      },
       swipe: function(e) {
         return page(e.direction);
       },
