@@ -41,8 +41,18 @@
       });
     };
     capture = function(callback) {
-      var image, name;
+      var image, name, transfer;
       image = canvas.toDataURL();
+      template = "<img src=" + image + ">";
+      transfer = new kendo.View(null, template);
+      transfer.render();
+      $(canvas).before(transfer.container);
+      transfer.container.kendoStop().kendoAnimate({
+        effects: "transfer",
+        target: $("#destination"),
+        duration: 2500,
+        ease: "ease-in"
+      });
       name = new Date().getTime() + ".jpg";
       filewrapper.save(name, image).done(function() {
         $.publish("/bottom/thumbnail", [image]);

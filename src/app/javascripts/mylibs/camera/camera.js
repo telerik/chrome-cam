@@ -12,7 +12,7 @@
     ctx = {};
     beep = document.createElement("audio");
     paused = false;
-    window.testing = false;
+    window.testing = true;
     turnOn = function(callback, testing) {
       var track;
       track = {};
