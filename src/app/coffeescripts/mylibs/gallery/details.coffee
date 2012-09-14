@@ -3,6 +3,8 @@ define [
   'text!mylibs/gallery/views/details.html'
 ], (kendo, template) ->
 
+    index = 0
+
     viewModel = kendo.observable {
         src: null
         type: "jpeg"
@@ -15,7 +17,7 @@ define [
         next: 
             visible: false
             click: (e) ->
-                console.log "next"
+                $.publish "/gallery/get", [index + 1]
     }
 
 	# viewModel = kendo.observable {
@@ -33,25 +35,30 @@ define [
  #            return i for i in [0...files.length] when files[i].name == @get("filename")
 	# }
 
-    hide = ->
-        details.container.kendoStop(true).kendoAnimate
+    hide = =>
+        @details.container.kendoStop(true).kendoAnimate
             effects: "zoomOut"
             hide: true
 
-    show = (message) ->
-        details.container.kendoStop(true).kendoAnimate
+    show = (message) =>
+        update(message)
+        @details.container.kendoStop(true).kendoAnimate
             effects: "zoomIn"
             show: true 	
             complete: ->
-                viewModel.set("src", message.src)
                 $.publish "/top/update", ["details"]
+
+    update = (message) ->
+        viewModel.set("src", message.src)
+        viewModel.set("next.visible", message.index < message.length)
+        index = message.length
 
     pub = 
 
         init: (selector) =>
 
             @details = new kendo.View(selector, template)
-            details.render(viewModel, true)
+            @details.render(viewModel, true)
 
             # subscribe to events
             $.subscribe "/details/hide", ->
@@ -59,3 +66,5 @@ define [
 
             $.subscribe "/details/show", (message) ->
                 show(message)
+
+            $.subscribe "/gallery/update", (message) ->

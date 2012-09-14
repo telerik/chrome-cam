@@ -7,7 +7,7 @@
 	</section>
 	<section class="center"></section>
 	<section class="right">
-		<div class="delete"></div>
-		<a href="\#share" data-role="button" data-rel="popover" class="button">Share</a>
+		<div class="delete" data-bind="visible: selected, click: destroy.click"></div>
+		<a href="\#share" data-role="button" data-bind="visible: selected" data-rel="popover" class="button">Share</a>
 	</section>
 </section>

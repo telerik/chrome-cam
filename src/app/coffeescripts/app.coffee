@@ -48,7 +48,7 @@ define([
 				# bar.init ".top", ".bottom"
 
 				# initialize the previews
-				preview.init ".flip"
+				preview.init "#filters"
 
 				# initialize the full screen capture mode
 				full.init "#capture"

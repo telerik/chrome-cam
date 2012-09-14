@@ -81,6 +81,10 @@
         return match;
       };
 
+      View.prototype.destroy = function() {
+        this.content.remove();
+      }
+
       return View;
 
     })();

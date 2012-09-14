@@ -7,61 +7,53 @@ define [
     
     dim =
         cols: 4
-        rows: 4
+        rows: 3
     ds = {}
     files = []
-    gallery = {}
+    container = {}
     el = {}
+    selected = {} 
+    total = 0
+    index = 0
 
-    viewModel = kendo.observable {
-        thumbnail:
-            click: (e) ->
-                gallery.container.find(".thumbnail").removeClass "selected"
-                $(e).addClass "selected"
-    }
-
-    deleteFile = (filename) ->
-        filewrapper.deleteFile(filename).done ->
-            $.publish "/gallery/remove", [ filename ]
-
-    # setupSubscriptionEvents = ->
-
-    #     kendo.fx.hide =
-    #         setup: (element, options) ->
-    #             $.extend { height: 25 }, options.properties
-
-    #     $.subscribe "/gallery/hide", ->
-    #         # TODO: Use kendoAnimate for this
-    #         # $("#footer").animate "margin-top": "-60px"
-    #         # $("#wrap")[0].style.height = "100%";
-
-    #         $.publish "/camera/pause", [false]
-    #         $.publish "/bar/gallerymode/hide"
-
-    #     $.subscribe "/gallery/page", (dataSource) ->
-    #         createPage dataSource
+    animation = 
+        effects: "pageturn:horizontal"
+        reverse: false
+        duration: 800      
 
     page = (direction) =>
         # TODO: add transition effect...
         if direction > 0 and @ds.page() > 1
+            animation.reverse = true
             @ds.page @ds.page() - 1
         if direction < 0 and @ds.page() < @ds.totalPages()
+            animation.reverse = false
             @ds.page @ds.page() + 1
 
-    destroy = ->
-        gallery.find("[data-file-name='#{fileName}']").kendoAnimate
-            effects: "fadeOut"
-            complete: ->
-                # HACK: Don't access 'private' member
-                deleted = file for file in @ds._data when file.name == filename
-                @ds.remove deleted
+    destroy = =>
+
+        name = selected.find("img").data("file-name")
+        
+        selected.kendoStop(true).kendoAnimate
+            effects: "zoomOut fadOut"
+            hide: true
+            complete: =>
+                filewrapper.deleteFile(name).done -> 
+                    selected.remove()
+                    # TODO: not sure how it helps to remove
+                    # the item from the datasource since its
+                    # not hooked up to anything
+                    # @ds.remove(@ds.get(name))
+
+    get = (name) => 
+        @ds.get(name)    
 
     pub =
 
         before: (e) ->
 
-            gallery.container.parent().height($(window).height())
-            gallery.container.parent().width($(window).width())
+            container.parent().height($(window).height() - 50)
+            container.parent().width($(window).width())
 
             # pause the camera. there is no need for it
             # right now.
@@ -70,48 +62,69 @@ define [
         hide: (e) ->
             $.publish "/camera/pause", [ false ]
 
+        swipe: (e) ->
+            page (e.direction == "right") - (e.direction == "left")
+
         init: (selector) =>
 
-            # create the gallery view
-            gallery = new kendo.View(selector)
-            gallery.render(viewModel).addClass("gallery")
+            # create the pages that hold the thumbnails
+            # in order to page through previews, we need to create two pages. the current
+            # page and the next page.
+            page1 = new kendo.View(selector, null)
+            page2 = new kendo.View(selector, null)
 
-            # delegate some events to the gallery
-            gallery.container.on "dblclick", ".thumbnail", ->
-                console.log "Double Down!"
+            # get a reference to the view container
+            container = page1.container
+
+            previousPage = page1.render().addClass("page gallery")
+            nextPage = page2.render().addClass("page gallery")
+
+            #delegate some events to the gallery
+            page1.container.on "dblclick", ".thumbnail", ->
                 media = $(this).children().first()
-                $.publish "/details/show", [{ src: media.attr("src"), type: media.data("media-type"), name: media.data("file-name") }]
+                index = get("#{media.data("file-name")}")
+                data = { src: media.attr("src"), type: media.data("media-type"), name: media.data("file-name"), length: files.length, index: index }
+                $.publish "/details/show", [data]
 
-            gallery.container.on "click", ".thumbnail", ->
-                gallery.find(".thumbnail").removeClass "selected"
-                $(@).addClass "selected"
+            page1.container.on "click", ".thumbnail", ->
+                $.publish "/top/update", ["selected"]
+                page1.find(".thumbnail").removeClass "selected"
+                selected = $(@).addClass "selected"
 
             # resolves the deffered from images that
             # are loading in from the file system
-            filewrapper.list().done (f) =>
+            # filewrapper.list().done (f) =>
             # TESTING
-            # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" }  ]
-            # do =>
+            f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
+            do =>
             # END TESTING
 
                 files = f
+                total = files.length
 
                 @ds = new kendo.data.DataSource
                     data: files
                     pageSize: dim.rows * dim.cols
                     change: ->
-                    
+
                         rows = (this.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
                         for row in rows
 
                             # create a new row
-                            line = new kendo.View(gallery.content)
+                            line = new kendo.View(nextPage)
                             line.render().addClass("gallery-row")
 
                             for item in row
@@ -119,25 +132,47 @@ define [
                                 # the item isn't actually here yet, we need to go and
                                 # get it
 
-                                do ->
-                                    filewrapper.readFile(item.name).done (file)->
-                                        thumbnail = new kendo.View(line.content, template, file)
-                                        thumbnail.render()
+                                # FOR TESTING
+                                thumbnail = new kendo.View(line.content, template, item)
+                                thumbnail.render()
 
+                                # do ->
+                                #     filewrapper.readFile(item.name).done (file)->
+                                #         thumbnail = new kendo.View(line.content, template, file)
+                                #         thumbnail.render()
+
+                        # move the current page out and the next page in
+                        container.kendoAnimate {
+                            effects: animation.effects
+                            face: if animation.reverse then nextPage else previousPage
+                            back: if animation.reverse then previousPage else nextPage
+                            duration: animation.duration
+                            reverse: animation.reverse
+                            complete: ->
+                                # the current page becomes the next page
+                                justPaged = previousPage
+
+                                previousPage = nextPage
+                                nextPage = justPaged
+
+                                justPaged.empty()
+
+                                flipping = false
+                        }
+
+                    schema: 
+                        model:
+                            id: "name"
                     sort:
                         dir: "desc" 
                         field: "name"         
                 
                 @ds.read()
 
-                # update the thumbnail
-                if files and files.length > 0
-                    photos = (file for file in files when file.type == 'jpg')
-                    if photos.length > 0
-                        filewrapper.readFile(photos[photos.length - 1].name).done (latestPhoto) ->
-                            $.publish "/bottom/thumbnail", [latestPhoto.file]
-
             $.publish "/postman/deliver", [ {}, "/file/read" ]
+
+            $.subscribe "/gallery/delete", ->
+                destroy()
 
                 # after loading the images
                 # load().done ->

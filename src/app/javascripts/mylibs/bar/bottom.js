@@ -49,7 +49,7 @@
       },
       thumbnail: {
         src: BROKEN_IMAGE,
-        display: null,
+        visible: true,
         displayMode: function() {
           if (viewModel.get("thumbnail.src") === BROKEN_IMAGE) {
             return "none";

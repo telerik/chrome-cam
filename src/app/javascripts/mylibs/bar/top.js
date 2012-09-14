@@ -4,16 +4,26 @@
     var pub, states, viewModel,
       _this = this;
     viewModel = kendo.observable({
+      selected: false,
       back: {
         details: false,
         text: "< Camera",
-        click: function() {
+        click: function(e) {
           $.publish("/details/hide");
-          return states.gallery();
+          states.gallery();
+          return e.preventDefault();
+        }
+      },
+      destroy: {
+        click: function() {
+          return $.publish("/gallery/delete");
         }
       }
     });
     states = {
+      selected: function() {
+        return viewModel.set("selected", true);
+      },
       details: function() {
         viewModel.set("back.text", "< Gallery");
         return viewModel.set("back.details", true);

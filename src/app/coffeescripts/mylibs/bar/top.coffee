@@ -6,16 +6,23 @@ define [
 	# create a view model for the top bar
 	# VIEW MODEL ISN'T WORKING. WHY NOT?
 	viewModel = kendo.observable {
+		selected: false
 		back:
 			details: false
 			text: "< Camera"
-			click: ->
+			click: (e) ->
 				$.publish "/details/hide"
 				states.gallery()
+				e.preventDefault()
+		destroy:
+			click: ->
+				$.publish "/gallery/delete"
 	}
 
 	# TODO: Refactor Once View Model Is Working
 	states = 
+		selected: ->
+			viewModel.set("selected", true)
 		details: =>
 			viewModel.set("back.text", "< Gallery")
 			viewModel.set("back.details", true)

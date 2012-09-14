@@ -1,7 +1,7 @@
 (function() {
 
-  define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html'], function(kendo, effects, utils, filewrapper, template) {
-    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, startTime;
+  define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, template, transferImg) {
+    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, startTime, transfer;
     canvas = {};
     ctx = {};
     preview = {};
@@ -11,6 +11,7 @@
     recording = false;
     startTime = 0;
     full = {};
+    transfer = {};
     effect = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
@@ -29,41 +30,46 @@
         }
       });
     };
-    flash = function(callback) {
+    flash = function(callback, image) {
       full.el.flash.show();
-      return full.el.flash.kendoStop(true).kendoAnimate({
-        effects: "fadeOut",
-        duration: 1500,
-        hide: true,
+      transfer.content.kendoStop().kendoAnimate({
+        effects: "transfer",
+        target: $("#destination"),
+        duration: 2002,
+        ease: "ease-in",
         complete: function() {
+          $.publish("/bottom/thumbnail", [image]);
+          transfer.destroy();
+          transfer = {};
           return callback();
         }
       });
+      return full.el.flash.hide();
     };
     capture = function(callback) {
-      var image, name, transfer;
+      var data, image;
       image = canvas.toDataURL();
-      template = "<img src=" + image + ">";
-      transfer = new kendo.View(null, template);
+      data = {
+        src: image,
+        height: full.content.height(),
+        width: full.content.width()
+      };
+      transfer = new kendo.View(full.content, transferImg, data);
       transfer.render();
-      $(canvas).before(transfer.container);
-      transfer.container.kendoStop().kendoAnimate({
-        effects: "transfer",
-        target: $("#destination"),
-        duration: 2500,
-        ease: "ease-in"
+      return transfer.find("img").load(function() {
+        var name;
+        name = new Date().getTime() + ".jpg";
+        filewrapper.save(name, image).done(function() {
+          $.publish("/bottom/thumbnail", [image]);
+          return $.publish("/gallery/add", [
+            {
+              type: 'jpg',
+              name: name
+            }
+          ]);
+        });
+        return flash(callback, image);
       });
-      name = new Date().getTime() + ".jpg";
-      filewrapper.save(name, image).done(function() {
-        $.publish("/bottom/thumbnail", [image]);
-        return $.publish("/gallery/add", [
-          {
-            type: 'jpg',
-            name: name
-          }
-        ]);
-      });
-      return flash(callback);
     };
     return pub = {
       init: function(selector) {
@@ -75,6 +81,8 @@
         full.render().prepend(canvas);
         full.find(".flash", "flash");
         full.find(".timer", "timer");
+        full.find(".transfer", "transfer");
+        full.find(".transfer img", "source");
         $.subscribe("/full/show", function(item) {
           return pub.show(item);
         });
@@ -99,7 +107,9 @@
         effect = item.filter;
         paused = false;
         full.content.height(full.container.height()) - 50;
+        full.el.transfer.height(full.content.height());
         full.content.width((3 / 2) * full.content.height());
+        full.el.transfer.width(full.content.width());
         $(canvas).height(full.content.height());
         return full.container.kendoStop(true).kendoAnimate({
           effects: "zoomIn fadeIn",

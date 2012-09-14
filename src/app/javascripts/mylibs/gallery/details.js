@@ -1,8 +1,9 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/gallery/views/details.html'], function(kendo, template) {
-    var hide, pub, show, viewModel,
+    var hide, index, pub, show, update, viewModel,
       _this = this;
+    index = 0;
     viewModel = kendo.observable({
       src: null,
       type: "jpeg",
@@ -18,36 +19,42 @@
       next: {
         visible: false,
         click: function(e) {
-          return console.log("next");
+          return $.publish("/gallery/get", [index + 1]);
         }
       }
     });
     hide = function() {
-      return details.container.kendoStop(true).kendoAnimate({
+      return _this.details.container.kendoStop(true).kendoAnimate({
         effects: "zoomOut",
         hide: true
       });
     };
     show = function(message) {
-      return details.container.kendoStop(true).kendoAnimate({
+      update(message);
+      return _this.details.container.kendoStop(true).kendoAnimate({
         effects: "zoomIn",
         show: true,
         complete: function() {
-          viewModel.set("src", message.src);
           return $.publish("/top/update", ["details"]);
         }
       });
     };
+    update = function(message) {
+      viewModel.set("src", message.src);
+      viewModel.set("next.visible", message.index < message.length);
+      return index = message.length;
+    };
     return pub = {
       init: function(selector) {
         _this.details = new kendo.View(selector, template);
-        details.render(viewModel, true);
+        _this.details.render(viewModel, true);
         $.subscribe("/details/hide", function() {
           return hide();
         });
-        return $.subscribe("/details/show", function(message) {
+        $.subscribe("/details/show", function(message) {
           return show(message);
         });
+        return $.subscribe("/gallery/update", function(message) {});
       }
     };
   });

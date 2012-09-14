@@ -16,7 +16,7 @@
         return camera.init("countdown", function() {
           window.APP.bottom = bottom.init(".bottom");
           window.APP.top = top.init(".top");
-          preview.init(".flip");
+          preview.init("#filters");
           full.init("#capture");
           details.init("#details");
           gallery.init("#thumbnails");
