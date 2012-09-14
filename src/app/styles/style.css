@@ -569,6 +569,7 @@ a.button {
 		margin-top: 30px;
 		font-size: 1em;
 		border: 1px solid #CCC;
+		text-align: center;
 	}
 		.settings .button:hover, .settings .button:active {
 			background: #E15613;
@@ -584,6 +585,9 @@ a.button {
 	.settings .km-switch {
 		cursor: pointer;
 	}
+
+	.settings .km-list { width: 250px; }
+		.settings .km-list li { border-bottom: 0px solid; }
 
 
 /* Clearfix */
