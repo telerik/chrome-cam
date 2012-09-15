@@ -10,14 +10,15 @@ define [
         type: "jpeg"
         isVideo: ->
             @get("type") == "webm"
-        previous:
-            visible: false
-            click: (e) ->
-                console.log "previous"
         next: 
             visible: false
             click: (e) ->
-                $.publish "/gallery/get", [index + 1]
+                $.publish "/gallery/at", [index + 1]
+        previous:
+            visible: false
+            click: (e) ->
+                $.publish "/gallery/at", [index - 1]
+
     }
 
 	# viewModel = kendo.observable {
@@ -49,9 +50,11 @@ define [
                 $.publish "/top/update", ["details"]
 
     update = (message) ->
-        viewModel.set("src", message.src)
+        viewModel.set("src", message.item.file)
         viewModel.set("next.visible", message.index < message.length)
-        index = message.length
+        viewModel.set("previous.visible", message.index > 0 and message.length > 1)
+        index = message.index
+        console.log message.index
 
     pub = 
 
@@ -67,4 +70,5 @@ define [
             $.subscribe "/details/show", (message) ->
                 show(message)
 
-            $.subscribe "/gallery/update", (message) ->
+            $.subscribe "/details/update", (message) ->
+                update(message)

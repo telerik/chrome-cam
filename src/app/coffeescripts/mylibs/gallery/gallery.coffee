@@ -46,7 +46,12 @@ define [
                     # @ds.remove(@ds.get(name))
 
     get = (name) => 
-        @ds.get(name)    
+        match = @ds.get(name)
+        return { length: @ds.view().length, index: @ds.view().indexOf(match), item: match }
+
+    at = (index) =>
+        match = { length: @ds.view().length, index: index, item: @ds.at(index) }
+        $.publish "/details/update", [match]
 
     pub =
 
@@ -82,9 +87,10 @@ define [
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
                 media = $(this).children().first()
-                index = get("#{media.data("file-name")}")
-                data = { src: media.attr("src"), type: media.data("media-type"), name: media.data("file-name"), length: files.length, index: index }
-                $.publish "/details/show", [data]
+
+                # YOU ARE WORKING ON GETTING THE INDEX OF AN OBJECT IN THE ARRAY
+                # OF FILES                
+                $.publish "/details/show", [ get("#{media.data("file-name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
                 $.publish "/top/update", ["selected"]
@@ -173,6 +179,9 @@ define [
 
             $.subscribe "/gallery/delete", ->
                 destroy()
+
+            $.subscribe "/gallery/at", (index) ->
+                at(index)
 
                 # after loading the images
                 # load().done ->

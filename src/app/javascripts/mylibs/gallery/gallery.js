@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/row.html'], function(kendo, utils, filewrapper, template) {
-    var animation, container, destroy, dim, ds, el, files, get, index, page, pub, selected, total,
+    var animation, at, container, destroy, dim, ds, el, files, get, index, page, pub, selected, total,
       _this = this;
     dim = {
       cols: 4,
@@ -43,7 +43,22 @@
       });
     };
     get = function(name) {
-      return _this.ds.get(name);
+      var match;
+      match = _this.ds.get(name);
+      return {
+        length: _this.ds.view().length,
+        index: _this.ds.view().indexOf(match),
+        item: match
+      };
+    };
+    at = function(index) {
+      var match;
+      match = {
+        length: _this.ds.view().length,
+        index: index,
+        item: _this.ds.at(index)
+      };
+      return $.publish("/details/update", [match]);
     };
     return pub = {
       before: function(e) {
@@ -65,17 +80,9 @@
         previousPage = page1.render().addClass("page gallery");
         nextPage = page2.render().addClass("page gallery");
         page1.container.on("dblclick", ".thumbnail", function() {
-          var data, media;
+          var media;
           media = $(this).children().first();
-          index = get("" + (media.data("file-name")));
-          data = {
-            src: media.attr("src"),
-            type: media.data("media-type"),
-            name: media.data("file-name"),
-            length: files.length,
-            index: index
-          };
-          return $.publish("/details/show", [data]);
+          return $.publish("/details/show", [get("" + (media.data("file-name")))]);
         });
         page1.container.on("click", ".thumbnail", function() {
           $.publish("/top/update", ["selected"]);
@@ -198,6 +205,9 @@
         $.publish("/postman/deliver", [{}, "/file/read"]);
         $.subscribe("/gallery/delete", function() {
           return destroy();
+        });
+        $.subscribe("/gallery/at", function(index) {
+          return at(index);
         });
         return gallery;
       }

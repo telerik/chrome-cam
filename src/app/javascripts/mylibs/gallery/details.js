@@ -10,16 +10,16 @@
       isVideo: function() {
         return this.get("type") === "webm";
       },
-      previous: {
-        visible: false,
-        click: function(e) {
-          return console.log("previous");
-        }
-      },
       next: {
         visible: false,
         click: function(e) {
-          return $.publish("/gallery/get", [index + 1]);
+          return $.publish("/gallery/at", [index + 1]);
+        }
+      },
+      previous: {
+        visible: false,
+        click: function(e) {
+          return $.publish("/gallery/at", [index - 1]);
         }
       }
     });
@@ -40,9 +40,11 @@
       });
     };
     update = function(message) {
-      viewModel.set("src", message.src);
+      viewModel.set("src", message.item.file);
       viewModel.set("next.visible", message.index < message.length);
-      return index = message.length;
+      viewModel.set("previous.visible", message.index > 0 && message.length > 1);
+      index = message.index;
+      return console.log(message.index);
     };
     return pub = {
       init: function(selector) {
@@ -54,7 +56,9 @@
         $.subscribe("/details/show", function(message) {
           return show(message);
         });
-        return $.subscribe("/gallery/update", function(message) {});
+        return $.subscribe("/details/update", function(message) {
+          return update(message);
+        });
       }
     };
   });
