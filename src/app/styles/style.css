@@ -4,9 +4,13 @@
 
 html, body, #wrap {
 	height: 100%;
-	background-color: #f1f1f1;
+	background-color: #f1f1f1 !important;
 	font-family: 'Droid Sans', sans-serif;
 	overflow: hidden;
+}
+
+.km-blackberry, .km-blackberry .km-content {
+	background-color: #f1f1f1 !important;
 }
 
 /*  fix for the position: relative which is set
@@ -341,8 +345,8 @@ a.button {
 .gallery .thumbnail {
 	float: left;
 	text-align: center;
-	width: 271px;
-	height: 188px;
+	width: 270px;
+	height: 180px;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 	background: #333;
 	margin: 0px 8px 16px 8px;
