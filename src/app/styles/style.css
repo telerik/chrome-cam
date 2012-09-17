@@ -612,3 +612,15 @@ html[xmlns] .clearfix {
 * html .clearfix {
 	height: 1%;
 }
+
+a.canvas img {
+	display: none;
+}
+
+.flipping a.canvas canvas {
+	display: none;
+}
+
+.flipping a.canvas img {
+	display: block;
+}

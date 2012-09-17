@@ -50,6 +50,17 @@ define [
                
                     preview.filter preview.canvas, canvas, frame, stream.track
 
+                    if not preview.upToDate
+                        preview.upToDate = true
+                        previewContext = preview.canvas.getContext("2d")
+                        imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height)
+                        eventData = 
+                            width: imageData.width
+                            height: imageData.height
+                            data: imageData.data
+                            key: preview.name
+                        $.publish "/postman/deliver", [ data: eventData, "/preview/thumbnail/request" ]
+
     keyboard = (enabled) ->
 
         # if we have enabled keyboard navigation
@@ -167,20 +178,29 @@ define [
                             filter.width = canvas.width
                             filter.height =canvas.height
 
+                            img = document.createElement "img"
+                            img.width = canvas.width
+                            img.height = canvas.height
+
                             data = { effect: item.id, name: item.name, col: index % 3, row: Math.floor index / 3 }
                             index++
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
                             html = filters.render()
-                            html.find(".canvas").append(filter).click ->
+                            html.find(".canvas").append(filter).append(img).click ->
 
                                 paused = true
 
                                 $.publish "/full/show", [ item ]
 
-                            previews.push { canvas: filter, filter: item.filter }
+                            $.subscribe "/preview/thumbnail/response/" + item.name, (e) ->
+                                console.log "Got a thumbnail update"
+                                img.src = e.src
+
+                            previews.push { canvas: filter, filter: item.filter, name: item.name }
 
                     # move the current page out and the next page in
+                    page1.container.addClass "flipping"
                     page1.container.kendoAnimate {
                         effects: animation.effects
                         face: if animation.reverse then nextPage else previousPage
@@ -188,6 +208,8 @@ define [
                         duration: animation.duration
                         reverse: animation.reverse
                         complete: ->
+                            page1.container.removeClass "flipping"
+
                             # the current page becomes the next page
                             justPaged = previousPage
                             

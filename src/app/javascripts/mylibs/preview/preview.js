@@ -22,14 +22,32 @@
     };
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var preview, _i, _len, _results;
+        var eventData, imageData, preview, previewContext, _i, _len, _results;
         if (!paused) {
           ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
           _results = [];
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
-            _results.push(preview.filter(preview.canvas, canvas, frame, stream.track));
+            preview.filter(preview.canvas, canvas, frame, stream.track);
+            if (!preview.upToDate) {
+              preview.upToDate = true;
+              previewContext = preview.canvas.getContext("2d");
+              imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height);
+              eventData = {
+                width: imageData.width,
+                height: imageData.height,
+                data: imageData.data,
+                key: preview.name
+              };
+              _results.push($.publish("/postman/deliver", [
+                {
+                  data: eventData
+                }, "/preview/thumbnail/request"
+              ]));
+            } else {
+              _results.push(void 0);
+            }
           }
           return _results;
         }
@@ -91,10 +109,13 @@
             index = 0;
             _ref = this.view();
             _fn = function(item) {
-              var data, filter, filters, html;
+              var data, filter, filters, html, img;
               filter = document.createElement("canvas");
               filter.width = canvas.width;
               filter.height = canvas.height;
+              img = document.createElement("img");
+              img.width = canvas.width;
+              img.height = canvas.height;
               data = {
                 effect: item.id,
                 name: item.name,
@@ -104,19 +125,25 @@
               index++;
               filters = new kendo.View(nextPage, previewTemplate, data);
               html = filters.render();
-              html.find(".canvas").append(filter).click(function() {
+              html.find(".canvas").append(filter).append(img).click(function() {
                 paused = true;
                 return $.publish("/full/show", [item]);
               });
+              $.subscribe("/preview/thumbnail/response/" + item.name, function(e) {
+                console.log("Got a thumbnail update");
+                return img.src = e.src;
+              });
               return previews.push({
                 canvas: filter,
-                filter: item.filter
+                filter: item.filter,
+                name: item.name
               });
             };
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               item = _ref[_i];
               _fn(item);
             }
+            page1.container.addClass("flipping");
             return page1.container.kendoAnimate({
               effects: animation.effects,
               face: animation.reverse ? nextPage : previousPage,
@@ -125,6 +152,7 @@
               reverse: animation.reverse,
               complete: function() {
                 var justPaged;
+                page1.container.removeClass("flipping");
                 justPaged = previousPage;
                 previousPage = nextPage;
                 nextPage = justPaged;
