@@ -1,18 +1,9 @@
 <section class="details">
-	<section class="bar">
-		<section class="left">
-			<span class="back" data-bind="click: close">&lsaquo; Gallery</span>
-		</section>
-		<section class="middle"></section>
-		<section class="right">
-			<span class="delete" data-bind="click: deleteItem">Delete</span>
-			<button class="share">Share</button>
-		</section>
-	</section>
 	
-	<video data-bind="attr: { src: src }, visible: isVideo" controls></video>
-	<img data-bind="attr: { src: src }, invisible: isVideo">
+	<video data-bind="visible: isVideo, attr: { src: src }" controls></video>
+	<img data-bind="invisible: isVideo, attr: { src: src }">
 
-	<span class="previous" data-bind="visible: canGoToPrevious, click: goToPrevious">&lsaquo;</span>
-	<span class="next" data-bind="visible: canGoToNext, click: goToNext">&rsaquo;</span>
+	<span class="previous" data-bind="visible: previous.visible, click: previous.click">&lsaquo;</span>
+	<span class="next" data-bind="visible: next.visible, click: next.click">&rsaquo;</span>
+
 </section>

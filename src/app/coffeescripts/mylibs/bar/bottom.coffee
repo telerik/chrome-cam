@@ -67,7 +67,7 @@ define [
 
 		thumbnail:
 			src: BROKEN_IMAGE
-			display: null
+			visible: true
 			displayMode: ->
 				if viewModel.get("thumbnail.src") == BROKEN_IMAGE then "none" else viewModel.get("thumbnail.display")
 

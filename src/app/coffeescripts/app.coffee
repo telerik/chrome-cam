@@ -9,12 +9,12 @@ define([
   'mylibs/postman/postman'
   'mylibs/utils/utils'
   'mylibs/gallery/gallery'
+  'mylibs/gallery/details'
   'mylibs/share/share'
   'mylibs/events/events'
   'mylibs/file/filewrapper'
   'libs/record/record'
-  'text!intro.html'
-], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, share, events, filewrapper, record, intro) ->
+], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, details, share, events, filewrapper, record ) ->
 	
 	pub = 
 		    
@@ -40,20 +40,23 @@ define([
 			camera.init "countdown", ->
 
 				# create the top and bottom bars
-				window.APP.top = bottom.init(".bottom")
-				window.APP.bottom = top.init(".top")
+				window.APP.bottom = bottom.init(".bottom")
+				window.APP.top = top.init(".top")
 
 				# initialize the command bar
 				# bar.init ".top", ".bottom"
 
 				# initialize the previews
-				preview.init ".flip"
+				preview.init "#filters"
 
 				# initialize the full screen capture mode
-				full.init ".full"
+				full.init "#capture"
+
+				# initialize gallery details view
+				details.init "#details"
 
 				# initialize the thumbnail gallery
-				gallery.init ".gallery"
+				gallery.init "#thumbnails"
 
 				window.APP.share = share.init "#gallery"
 

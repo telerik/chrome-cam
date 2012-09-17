@@ -4,7 +4,8 @@ define([
   'mylibs/utils/utils'
   'mylibs/file/filewrapper'
   'text!mylibs/full/views/full.html'
-], (kendo, effects, utils, filewrapper, template) ->
+  'text!mylibs/full/views/transfer.html'
+], (kendo, effects, utils, filewrapper, template, transferImg) ->
 	
 	canvas = {}
 	ctx = {}
@@ -15,6 +16,7 @@ define([
 	recording = false
 	startTime = 0
 	full = {}
+	transfer = {}
 	effect = {}
 
 	# the main draw loop which renders the live video effects      
@@ -44,32 +46,45 @@ define([
 	            	# update the time in the view
 	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
 
-	flash = (callback) ->
+	flash = (callback, image) ->
 
 		full.el.flash.show()	
-		full.el.flash.kendoStop(true).kendoAnimate({
-			effects: "fadeOut",
-			duration: 1500,
-			hide: true,
-			complete: ->
-				callback()
-		})
+		transfer.content.kendoStop().kendoAnimate 
+				effects: "transfer",  
+				target: $("#destination"), 
+				duration: 2002, 
+				ease: "ease-in",
+				complete: ->
+					$.publish "/bottom/thumbnail", [image]
+					transfer.destroy()
+					transfer = {}
+		
+					callback()
+
+		full.el.flash.hide()
+		
 
 	capture = (callback) ->
 
 		image = canvas.toDataURL()
 
-		# set the name of this image to the current time string
-		name = new Date().getTime() + ".jpg"
+		data = { src: image, height: full.content.height(), width: full.content.width() }
+		
+		transfer = new kendo.View(full.content, transferImg, data);
+		transfer.render()
+		
+		transfer.find("img").load ->
 
-		filewrapper.save(name, image).done ->
-			# I may have it bouncing around too much, but I don't want the bar to
-			# just respond to *all* file saves, or have this module know about
-			# the bar's internals
-			$.publish "/bottom/thumbnail", [ image ]
-			$.publish "/gallery/add", [ type: 'jpg', name: name ]
+			# set the name of this image to the current time string
+			name = new Date().getTime() + ".jpg"
 
-		flash(callback)
+			filewrapper.save(name, image).done ->
+				# I may have it bouncing around too much, but I don't want the bar to
+				# just respond to *all* file saves, or have this module know about
+				# the bar's internals
+				$.publish "/gallery/add", [ type: 'jpg', name: name, file: image ]
+
+			flash(callback, image)
 
 	pub = 
 
@@ -88,6 +103,8 @@ define([
 			# find and cache the flash element
 			full.find(".flash", "flash")
 			full.find(".timer", "timer")
+			full.find(".transfer", "transfer")
+			full.find(".transfer img", "source")
 
 			# subscribe to external events an map them to internal
 			# functions
@@ -119,10 +136,12 @@ define([
 
 			# get the height of the container minus the footer
 			full.content.height(full.container.height()) - 50
+			full.el.transfer.height(full.content.height())
 
 			# determine the width based on a 3:2 aspect ratio (.66 repeating)
 			# $content.width (3 / 2) * $content.height()
 			full.content.width (3 / 2) * full.content.height()
+			full.el.transfer.width(full.content.width())
 
 			$(canvas).height(full.content.height())
 
@@ -185,6 +204,7 @@ define([
 				$.publish "/bottom/update", ["processing"]
 
 				setTimeout -> 
+					
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
@@ -192,6 +212,7 @@ define([
 					full.container.find(".timer").addClass("hidden")
 					
 					$.publish "/recording/done", [ "full" ]
+				
 				, 500
 
 			), 6000

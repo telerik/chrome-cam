@@ -6,7 +6,8 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Camera</title>
 		<link rel="stylesheet" type="text/css" href="styles/style.css">
-		<link rel="stylesheet" type="text/css" href="styles/kendo.mobile.blackberry.min.css">
+		<link href="http://cdn.kendostatic.com/2012.2.710/styles/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
+		<!-- <link rel="stylesheet" type="text/css" href="styles/kendo.mobile.blackberry.min.css"> -->
 		<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
 	
@@ -16,13 +17,16 @@
 
 		<div data-role="view" data-stretch="true" id="home" data-layout="bottom">
 			<div class="filters" data-role="touch" data-swipe="APP.filters.swipe" data-enable-swipe="true">
-				<div class="flip"></div>
+				<div id="filters" class="flip"></div>
 			</div>
-			<div class="full"></div>
+			<div class="full" id="capture"></div>
 		</div>
 
-		<div data-role="view" id="gallery" data-before-show="APP.gallery.view.before" data-show="APP.gallery.view.show" data-layout="top">
-			<div class="gallery"></div>
+		<div data-role="view" id="gallery" data-before-show="APP.gallery.before" data-hide="APP.gallery.hide" data-layout="top">
+			<div data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
+				<div id="thumbnails" class="flip"></div>
+			</div>
+			<div id="details" class="full"></div>
 		</div>
 
 		<div data-role="view" id="about">
@@ -39,7 +43,7 @@
 		</div>
 
 		<div data-role="layout" data-id="top">
-			<div data-role="header">
+			<div data-role="header" data-model="APP.top.viewModel">
 				<div class="footer top"></div>
 			</div>
 		</div>

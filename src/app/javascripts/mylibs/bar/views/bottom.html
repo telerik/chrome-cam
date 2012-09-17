@@ -10,7 +10,7 @@
 			<li>
 				<a data-mode="paparazzi" class="paparazzi" data-bind="click: mode.click" data-mode="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a>
 			</li>
-		</ul>
+		</ul> 
 	</section>
 	<section class="center">
 		<div>
@@ -31,8 +31,8 @@
 	</section>
 	<section class="right">
 		<a data-role="button" class="button filters" data-bind="click: filters.click, style: { display: filters.display }">Filters</a>
-		<a href="\#gallery" data-transition="overlay:up reverse" data-bind="style: { display: thumbnail.displayMode }" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
-			<img class="thumbnail" data-bind="attr: { src: thumbnail.src }" />
+		<a href="\#gallery" data-transition="overlay:up reverse" data-bind="visible: thumbnail.visible" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
+			<img class="thumbnail" id="destination" data-bind="attr: { src: thumbnail.src }" />
 		</a>
 	</section>
 </section>
