@@ -132,7 +132,7 @@ var createBMP = function(width, height, data) {
 	var iWidth = width;
 	var iHeight = height;
 
-	var header = headers[width + " " + height] || (headers[width + " " + height] = getBMPHeader(width, height));
+	var header = headers[width + " " + height] || (headers[width + " " + height] = encodeData(getBMPHeader(width, height)));
 
 	var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
 	var strPadding = iPadding == 0 ? "" : new Array(iPadding).join(String.fromCharCode(0));
@@ -156,7 +156,7 @@ var createBMP = function(width, height, data) {
 		aPixelData.push(aPixelRow.join(""));
 	} while (--y);
 
-	var strEncoded = "data:image/bmp;base64," + encodeData(header) + encodeData(aPixelData.join(""));
+	var strEncoded = "data:image/bmp;base64," + header + encodeData(aPixelData.join(""));
 
 	return strEncoded;
 };
