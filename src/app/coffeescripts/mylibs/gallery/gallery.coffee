@@ -40,18 +40,18 @@ define [
             complete: =>
                 filewrapper.deleteFile(name).done -> 
                     selected.remove()
-                    # TODO: not sure how it helps to remove
-                    # the item from the datasource since its
-                    # not hooked up to anything
-                    # @ds.remove(@ds.get(name))
+                    @ds.remove(@ds.get(name))
 
     get = (name) => 
         match = @ds.get(name)
         return { length: @ds.view().length, index: @ds.view().indexOf(match), item: match }
 
     at = (index) =>
-        match = { length: @ds.view().length, index: index, item: @ds.at(index) }
+        match = { length: @ds.view().length, index: index, item: @ds.view()[index] }
         $.publish "/details/update", [match]
+
+    add = (item) =>
+        @ds.add(name: item.name, file: item.file, type: item.type)
 
     pub =
 
@@ -86,10 +86,7 @@ define [
 
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
-                media = $(this).children().first()
-
-                # YOU ARE WORKING ON GETTING THE INDEX OF AN OBJECT IN THE ARRAY
-                # OF FILES                
+                media = $(this).children().first()             
                 $.publish "/details/show", [ get("#{media.data("file-name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
@@ -99,23 +96,23 @@ define [
 
             # resolves the deffered from images that
             # are loading in from the file system
-            # filewrapper.list().done (f) =>
+            filewrapper.list().done (f) =>
             # TESTING
-            f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
-            do =>
+            # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
+            # do =>
             # END TESTING
 
                 files = f
@@ -126,7 +123,7 @@ define [
                     pageSize: dim.rows * dim.cols
                     change: ->
 
-                        rows = (this.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
+                        rows = (@.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
                         for row in rows
 
                             # create a new row
@@ -139,13 +136,17 @@ define [
                                 # get it
 
                                 # FOR TESTING
-                                thumbnail = new kendo.View(line.content, template, item)
-                                thumbnail.render()
+                                # thumbnail = new kendo.View(line.content, template, item)
+                                # thumbnail.render()
 
-                                # do ->
-                                #     filewrapper.readFile(item.name).done (file)->
-                                #         thumbnail = new kendo.View(line.content, template, file)
-                                #         thumbnail.render()
+                                do =>
+                                    filewrapper.readFile(item.name).done (file) =>
+                                        
+                                        # set the datasource objects missing file property
+                                        @.get(file.name).file = file.file
+                                        
+                                        thumbnail = new kendo.View(line.content, template, file)
+                                        thumbnail.render()
 
                         # move the current page out and the next page in
                         container.kendoAnimate {
@@ -180,45 +181,10 @@ define [
             $.subscribe "/gallery/delete", ->
                 destroy()
 
+            $.subscribe "/gallery/add", (item) ->
+                add(item)
+
             $.subscribe "/gallery/at", (index) ->
                 at(index)
-
-                # after loading the images
-                # load().done ->
-
-                #     console.log "done loading images"
-                    
-                #     # set up the DOM events
-                #     gallery.container.on "dblclick", ".thumbnail", ->
-                #         media = $(this).children().first()
-                #         $.publish "/gallery/details/show", [{ src: media.attr("src"), type: media.data("media-type"), name: media.data("file-name") }]
-
-                #     gallery.container.on "click", ".thumbnail", ->
-                #         gallery.el.thumbnail.each ->
-                #             $(this).removeClass("selected")
-
-                #         $(this).addClass("selected")
-                #         item = $(this).children().first()
-
-                #         # gotta find out what image what clicked here
-                #         $.publish "/item/selected", [ { name: item.data("file-name"), file: item.attr("src") }] 
-                        
-                #     gallery.container.kendoMobileSwipe (e) ->
-                #          page (e.direction == "right") - (e.direction == "left")
-
-                #     # subscribe to events
-                #     $.subscribe "/keyboard/arrow", (e) ->
-                #         page (e == "down") - (e == "up")
-
-                #     $.subscribe "/gallery/add", (file) ->
-                #         ds.add file
-
-                #     setupSubscriptionEvents()
-                    
-
-                #     $.subscribe "/gallery/remove", (filename) ->
-                #         destroy();
-
-                #     ds.read()
 
             return gallery

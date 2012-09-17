@@ -41,7 +41,7 @@
     };
     update = function(message) {
       viewModel.set("src", message.item.file);
-      viewModel.set("next.visible", message.index < message.length);
+      viewModel.set("next.visible", message.index < message.length - 1);
       viewModel.set("previous.visible", message.index > 0 && message.length > 1);
       index = message.index;
       return console.log(message.index);

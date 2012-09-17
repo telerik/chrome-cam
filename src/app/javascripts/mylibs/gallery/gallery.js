@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/row.html'], function(kendo, utils, filewrapper, template) {
-    var animation, at, container, destroy, dim, ds, el, files, get, index, page, pub, selected, total,
+    var add, animation, at, container, destroy, dim, ds, el, files, get, index, page, pub, selected, total,
       _this = this;
     dim = {
       cols: 4,
@@ -37,7 +37,8 @@
         hide: true,
         complete: function() {
           return filewrapper.deleteFile(name).done(function() {
-            return selected.remove();
+            selected.remove();
+            return this.ds.remove(this.ds.get(name));
           });
         }
       });
@@ -56,9 +57,16 @@
       match = {
         length: _this.ds.view().length,
         index: index,
-        item: _this.ds.at(index)
+        item: _this.ds.view()[index]
       };
       return $.publish("/details/update", [match]);
+    };
+    add = function(item) {
+      return _this.ds.add({
+        name: item.name,
+        file: item.file,
+        type: item.type
+      });
     };
     return pub = {
       before: function(e) {
@@ -73,7 +81,7 @@
         return page((e.direction === "right") - (e.direction === "left"));
       },
       init: function(selector) {
-        var f, nextPage, page1, page2, previousPage;
+        var nextPage, page1, page2, previousPage;
         page1 = new kendo.View(selector, null);
         page2 = new kendo.View(selector, null);
         container = page1.container;
@@ -89,73 +97,15 @@
           page1.find(".thumbnail").removeClass("selected");
           return selected = $(this).addClass("selected");
         });
-        f = [
-          {
-            name: "123456",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "1",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "2",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "3",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "4",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "5",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "6",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "7",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "8",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "9",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "10",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "11",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "12",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "13",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }
-        ];
-        (function() {
+        filewrapper.list().done(function(f) {
           files = f;
           total = files.length;
           _this.ds = new kendo.data.DataSource({
             data: files,
             pageSize: dim.rows * dim.cols,
             change: function() {
-              var i, item, line, row, rows, thumbnail, _i, _j, _len, _len2;
+              var i, item, line, row, rows, _fn, _i, _j, _len, _len2,
+                _this = this;
               rows = (function() {
                 var _ref, _results;
                 _results = [];
@@ -168,10 +118,17 @@
                 row = rows[_i];
                 line = new kendo.View(nextPage);
                 line.render().addClass("gallery-row");
+                _fn = function() {
+                  return filewrapper.readFile(item.name).done(function(file) {
+                    var thumbnail;
+                    _this.get(file.name).file = file.file;
+                    thumbnail = new kendo.View(line.content, template, file);
+                    return thumbnail.render();
+                  });
+                };
                 for (_j = 0, _len2 = row.length; _j < _len2; _j++) {
                   item = row[_j];
-                  thumbnail = new kendo.View(line.content, template, item);
-                  thumbnail.render();
+                  _fn();
                 }
               }
               return container.kendoAnimate({
@@ -201,10 +158,13 @@
             }
           });
           return _this.ds.read();
-        })();
+        });
         $.publish("/postman/deliver", [{}, "/file/read"]);
         $.subscribe("/gallery/delete", function() {
           return destroy();
+        });
+        $.subscribe("/gallery/add", function(item) {
+          return add(item);
         });
         $.subscribe("/gallery/at", function(index) {
           return at(index);

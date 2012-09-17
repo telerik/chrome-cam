@@ -1,6 +1,6 @@
 (function() {
 
-  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/share/share', 'mylibs/events/events', 'mylibs/file/filewrapper', 'libs/record/record', 'text!intro.html'], function(kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, details, share, events, filewrapper, record, intro) {
+  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/share/share', 'mylibs/events/events', 'mylibs/file/filewrapper', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, details, share, events, filewrapper, record) {
     var pub;
     return pub = {
       init: function() {

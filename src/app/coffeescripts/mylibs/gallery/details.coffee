@@ -21,21 +21,6 @@ define [
 
     }
 
-	# viewModel = kendo.observable {
-	# 	close: ->
- #            $.publish "/gallery/details/hide"
- #        canGoToNext: ->
- #            @get("indexInGallery") > 0
- #        canGoToPrevious: ->
- #            @get("indexInGallery") < files.length - 1
- #        goToNext: ->
- #            @init files[@get("indexInGallery") - 1]
- #        goToPrevious: ->
- #            @init files[@get("indexInGallery") + 1]
- #        getIndexInGallery: ->
- #            return i for i in [0...files.length] when files[i].name == @get("filename")
-	# }
-
     hide = =>
         @details.container.kendoStop(true).kendoAnimate
             effects: "zoomOut"
@@ -51,7 +36,7 @@ define [
 
     update = (message) ->
         viewModel.set("src", message.item.file)
-        viewModel.set("next.visible", message.index < message.length)
+        viewModel.set("next.visible", message.index < message.length - 1)
         viewModel.set("previous.visible", message.index > 0 and message.length > 1)
         index = message.index
         console.log message.index
@@ -72,3 +57,6 @@ define [
 
             $.subscribe "/details/update", (message) ->
                 update(message)
+
+
+

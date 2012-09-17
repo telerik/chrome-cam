@@ -69,8 +69,10 @@ define([
 		image = canvas.toDataURL()
 
 		data = { src: image, height: full.content.height(), width: full.content.width() }
+		
 		transfer = new kendo.View(full.content, transferImg, data);
 		transfer.render()
+		
 		transfer.find("img").load ->
 
 			# set the name of this image to the current time string
@@ -80,8 +82,7 @@ define([
 				# I may have it bouncing around too much, but I don't want the bar to
 				# just respond to *all* file saves, or have this module know about
 				# the bar's internals
-				$.publish "/bottom/thumbnail", [ image ]
-				$.publish "/gallery/add", [ type: 'jpg', name: name ]
+				$.publish "/gallery/add", [ type: 'jpg', name: name, file: image ]
 
 			flash(callback, image)
 
@@ -203,6 +204,7 @@ define([
 				$.publish "/bottom/update", ["processing"]
 
 				setTimeout -> 
+					
 					utils.createVideo frames
 					console.log("Recording Done!")
 					recording = false
@@ -210,6 +212,7 @@ define([
 					full.container.find(".timer").addClass("hidden")
 					
 					$.publish "/recording/done", [ "full" ]
+				
 				, 500
 
 			), 6000

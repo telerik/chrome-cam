@@ -14,8 +14,7 @@ define([
   'mylibs/events/events'
   'mylibs/file/filewrapper'
   'libs/record/record'
-  'text!intro.html'
-], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, details, share, events, filewrapper, record, intro) ->
+], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, details, share, events, filewrapper, record ) ->
 	
 	pub = 
 		    

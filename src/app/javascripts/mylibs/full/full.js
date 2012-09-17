@@ -60,11 +60,11 @@
         var name;
         name = new Date().getTime() + ".jpg";
         filewrapper.save(name, image).done(function() {
-          $.publish("/bottom/thumbnail", [image]);
           return $.publish("/gallery/add", [
             {
               type: 'jpg',
-              name: name
+              name: name,
+              file: image
             }
           ]);
         });

@@ -15,7 +15,7 @@ define [
 	#'order!libs/kendo/kendo.fx'
 	# 'order!libs/kendo/kendo.touch.min'
 	# 'order!libs/kendo/kendo.userevents.min'
-	'order!libs/kendo/kendo.all'
+	'order!libs/kendo/kendo.all.min'
 	'order!libs/kendo/kendo.view'
 ], ->
   # Tell Require.js that this module returns a reference to jQuery
