@@ -150,5 +150,8 @@ var createBMP = function(width, height, data) {
 };
 
 self.onmessage = function(e) {
-	self.postMessage(createBMP(e.data.width, e.data.height, e.data.data));
+	self.postMessage({
+		src: createBMP(e.data.width, e.data.height, e.data.data),
+		key: e.data.key
+	});
 };

@@ -25,9 +25,8 @@
 			}
 
 			var worker = new Worker("experimentWorker.js");
-			worker.onmessage = function(src) {
-				document.getElementById("out").src = src.data;
-				document.getElementById("txt").innerText = src.data;
+			worker.onmessage = function(e) {
+				document.getElementById(e.data.key).src = e.data.src;
 			};
 
 			console.log(timeTaken(function(){ 
@@ -35,7 +34,8 @@
 					worker.postMessage({
 					width: imageData.width,
 					height: imageData.height,
-					data: imageData.data
+					data: imageData.data,
+					key: "out"
 				});
 			}));
 			
