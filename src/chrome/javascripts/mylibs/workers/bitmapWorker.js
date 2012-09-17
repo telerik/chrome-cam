@@ -125,12 +125,14 @@ var getBMPHeader = function(iWidth, iHeight) {
 	return aHeader.concat(aInfoHeader);
 };
 
+var headers = {};
+
 // Adapted from http://www.nihilogic.dk/labs/canvas2image/canvas2image.js - sped up a fair bit
 var createBMP = function(width, height, data) {
 	var iWidth = width;
 	var iHeight = height;
 
-	var header = getBMPHeader(width, height);
+	var header = headers[width + " " + height] || (headers[width + " " + height] = getBMPHeader(width, height));
 
 	var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
 	var strPadding = iPadding == 0 ? "" : new Array(iPadding).join(String.fromCharCode(0));
