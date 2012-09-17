@@ -339,6 +339,7 @@ a.button {
 }
 
 .gallery .thumbnail {
+	float: left;
 	text-align: center;
 	width: 250px;
 	height: 167px;

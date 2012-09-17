@@ -5,6 +5,7 @@ define [
     'text!mylibs/gallery/views/row.html'
 ], (kendo, utils, filewrapper, template) ->
     
+    pageSize = 8
     dim =
         cols: 4
         rows: 3
@@ -44,10 +45,20 @@ define [
 
     get = (name) => 
         match = @ds.get(name)
-        return { length: @ds.view().length, index: @ds.view().indexOf(match), item: match }
+        return { length: @ds.data().length, index: @ds.view().indexOf(match), item: match }
 
     at = (index) =>
-        match = { length: @ds.view().length, index: index, item: @ds.view()[index] }
+        # we may need to page the data before grabbing the item.
+        # to get the current page, divide the index by the pageSize
+        page = Math.ceil(index / pageSize)
+        # page the datasource to this page
+        @ds.page(page)
+        # the actual index of the item within the page has to be recalculated if
+        # the current page is greater than 1
+        if (page > 1)
+            index = index - pageSize
+        # now we can search the current datasource view for the item at the correct index
+        match = { length: @ds.data().length, index: index, item: @ds.view()[index] }
         $.publish "/details/update", [match]
 
     add = (item) =>
@@ -96,23 +107,23 @@ define [
 
             # resolves the deffered from images that
             # are loading in from the file system
-            filewrapper.list().done (f) =>
+            # filewrapper.list().done (f) =>
             # TESTING
-            # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
-            # do =>
+            f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
+            do =>
             # END TESTING
 
                 files = f
@@ -120,33 +131,35 @@ define [
 
                 @ds = new kendo.data.DataSource
                     data: files
-                    pageSize: dim.rows * dim.cols
+                    pageSize: 8
                     change: ->
 
-                        rows = (@.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
-                        for row in rows
+                        for item in this.view()
+
+                        # rows = (@.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
+                        # for row in rows
 
                             # create a new row
-                            line = new kendo.View(nextPage)
-                            line.render().addClass("gallery-row")
+                            # line = new kendo.View(nextPage)
+                            # line.render().addClass("gallery-row")
 
-                            for item in row
+                            # for item in row
 
                                 # the item isn't actually here yet, we need to go and
                                 # get it
 
                                 # FOR TESTING
-                                # thumbnail = new kendo.View(line.content, template, item)
-                                # thumbnail.render()
+                                thumbnail = new kendo.View(nextPage, template, item)
+                                thumbnail.render()
 
-                                do =>
-                                    filewrapper.readFile(item.name).done (file) =>
+                                # do =>
+                                #     filewrapper.readFile(item.name).done (file) =>
                                         
-                                        # set the datasource objects missing file property
-                                        @.get(file.name).file = file.file
+                                #         # set the datasource objects missing file property
+                                #         @.get(file.name).file = file.file
                                         
-                                        thumbnail = new kendo.View(line.content, template, file)
-                                        thumbnail.render()
+                                #         thumbnail = new kendo.View(line.content, template, file)
+                                #         thumbnail.render()
 
                         # move the current page out and the next page in
                         container.kendoAnimate {
