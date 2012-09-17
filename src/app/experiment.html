@@ -22,11 +22,11 @@
 		};
 
 		// Adapted from http://www.nihilogic.dk/labs/canvas2image/canvas2image.js - sped up a fair bit...
-		var createBMP = function(oData) {
+		var createBMP = function(width, height, data) {
 			var aHeader = [];
 		
-			var iWidth = oData.width;
-			var iHeight = oData.height;
+			var iWidth = width;
+			var iHeight = height;
 
 			aHeader.push(0x42); // magic 1
 			aHeader.push(0x4D); 
@@ -89,7 +89,7 @@
 			var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
 			var strPadding = new Array(iPadding).join(String.fromCharCode(0));
 
-			var aImgData = oData.data;
+			var aImgData = data;
 
 			var aPixelData = [];
 			var aPixelRow = new Array(iWidth + 1);
@@ -131,7 +131,8 @@
 
 			var src;
 			console.log(timeTaken(function(){ 
-				src = "data:image/bmp;base64," + createBMP(ctx.getImageData(0, 0, foo.width, foo.height));
+				var imageData = ctx.getImageData(0, 0, foo.width, foo.height);
+				src = "data:image/bmp;base64," + createBMP(imageData.width, imageData.height, imageData.data);
 			}));
 			document.getElementById("out").src = src;
 			document.getElementById("txt").innerText = src;
