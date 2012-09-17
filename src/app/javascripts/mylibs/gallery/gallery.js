@@ -54,14 +54,14 @@
       };
     };
     at = function(index) {
-      var match;
-      page = Math.ceil(index / pageSize);
+      var match, position;
+      page = Math.ceil((index + 1) / pageSize);
       _this.ds.page(page);
-      if (page > 1) index = index - pageSize;
+      position = page > 1 ? index - pageSize : index;
       match = {
         length: _this.ds.data().length,
         index: index,
-        item: _this.ds.view()[index]
+        item: _this.ds.view()[position]
       };
       return $.publish("/details/update", [match]);
     };
