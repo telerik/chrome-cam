@@ -7,13 +7,12 @@
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub, tokens;
+    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub;
     paused = false;
     canvas = {};
     ctx = {};
     previews = [];
     frame = 0;
-    tokens = [];
     ds = {};
     flipping = false;
     animation = {
@@ -104,13 +103,9 @@
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var index, item, token, _fn, _i, _j, _len, _len1, _ref;
+            var index, item, _fn, _i, _len, _ref;
             flipping = true;
             previews = [];
-            for (_i = 0, _len = tokens.length; _i < _len; _i++) {
-              token = tokens[_i];
-              $.unsubscribe(token);
-            }
             index = 0;
             _ref = this.view();
             _fn = function(item) {
@@ -134,19 +129,14 @@
                 paused = true;
                 return $.publish("/full/show", [item]);
               });
-              token = $.subscribe("/preview/thumbnail/response/" + item.name, function(e) {
-                console.log("Got a thumbnail update");
-                return img.src = e.src;
-              });
-              tokens.push(token);
               return previews.push({
                 canvas: filter,
                 filter: item.filter,
                 name: item.name
               });
             };
-            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-              item = _ref[_j];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              item = _ref[_i];
               _fn(item);
             }
             $("canvas").hide();
@@ -159,7 +149,6 @@
               reverse: animation.reverse,
               complete: function() {
                 var justPaged;
-                page1.container.removeClass("flipping");
                 $("img").hide();
                 $("canvas").show();
                 justPaged = previousPage;
@@ -172,6 +161,9 @@
           }
         });
         ds.read();
+        $.subscribe("/preview/thumbnail/response/", function(e) {
+          return $("[data-filter-name='" + e.key + "']", selector).find("img").attr("src", e.src);
+        });
         return $.subscribe("/preview/pause", function(pause) {
           return paused = pause;
         });

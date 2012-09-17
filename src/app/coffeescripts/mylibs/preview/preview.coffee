@@ -19,7 +19,6 @@ define [
     ctx = {}
     previews = []
     frame = 0
-    tokens = []
     ds = {}
     flipping = false
     
@@ -167,8 +166,6 @@ define [
 
                     # create an array of previews for the current page
                     previews = []
-                    for token in tokens
-                        $.unsubscribe token
 
                     index = 0
                     for item in @.view()
@@ -196,11 +193,6 @@ define [
 
                                 $.publish "/full/show", [ item ]
 
-                            token = $.subscribe "/preview/thumbnail/response/" + item.name, (e) ->
-                                console.log "Got a thumbnail update"
-                                img.src = e.src
-                            tokens.push token
-
                             previews.push { canvas: filter, filter: item.filter, name: item.name }
 
                     # move the current page out and the next page in
@@ -213,7 +205,6 @@ define [
                         duration: animation.duration
                         reverse: animation.reverse
                         complete: ->
-                            page1.container.removeClass "flipping"
                             $("img").hide()
                             $("canvas").show()
 
@@ -231,6 +222,9 @@ define [
 
             # read from the datasource
             ds.read()   
+
+            $.subscribe "/preview/thumbnail/response/", (e) ->
+                $("[data-filter-name='#{e.key}']", selector).find("img").attr("src", e.src)
 
             $.subscribe "/preview/pause", (pause) ->
                 paused = pause
