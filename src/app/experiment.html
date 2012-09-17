@@ -129,11 +129,12 @@
 				ctx.fillRect(Math.random()*640, Math.random()*480, Math.random()*480, Math.random()*480);
 			}
 
+			var src;
 			console.log(timeTaken(function(){ 
-				var src = "data:image/bmp;base64," + createBMP(ctx.getImageData(0, 0, foo.width, foo.height));
-				document.getElementById("out").src = src;
-				document.getElementById("txt").innerText = src;
+				src = "data:image/bmp;base64," + createBMP(ctx.getImageData(0, 0, foo.width, foo.height));
 			}));
+			document.getElementById("out").src = src;
+			document.getElementById("txt").innerText = src;
 		})();
 	</script>
 </body>
