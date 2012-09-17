@@ -4,6 +4,7 @@
     var pub, states, viewModel,
       _this = this;
     viewModel = kendo.observable({
+      current: null,
       selected: false,
       back: {
         details: false,
@@ -17,6 +18,18 @@
       destroy: {
         click: function() {
           return $.publish("/gallery/delete");
+        }
+      },
+      share: {
+        save: function(e) {
+          var file;
+          file = this.get("current");
+          return $.publish("/postman/deliver", [
+            {
+              name: file.name,
+              file: file.file
+            }, "/file/download"
+          ]);
         }
       }
     });
@@ -44,6 +57,9 @@
         _this.view.find("#back", "back");
         $.subscribe("/top/update", function(state) {
           return states.set(state);
+        });
+        $.subscribe("/item/selected", function(message) {
+          return viewModel.set("current", message.item);
         });
         return _this.view;
       }

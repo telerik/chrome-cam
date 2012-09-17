@@ -6,6 +6,7 @@ define [
 	# create a view model for the top bar
 	# VIEW MODEL ISN'T WORKING. WHY NOT?
 	viewModel = kendo.observable {
+		current: null
 		selected: false
 		back:
 			details: false
@@ -17,6 +18,10 @@ define [
 		destroy:
 			click: ->
 				$.publish "/gallery/delete"
+		share:
+			save: (e) ->
+				file = @.get("current")
+				$.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
 	}
 
 	# TODO: Refactor Once View Model Is Working
@@ -50,11 +55,8 @@ define [
 			$.subscribe "/top/update", (state) ->
 				states.set state
 
-				# topBar.state:
-				# 	preview: ->
-				# 	capture: ->
-				# 	full: ->	
-				# 	set: ->
+			$.subscribe "/item/selected", (message) ->
+				viewModel.set("current", message.item)
 
 			return @view
 

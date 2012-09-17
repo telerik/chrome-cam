@@ -31,15 +31,15 @@ define [
             animation.reverse = false
             @ds.page @ds.page() + 1
 
-    destroy = =>
+    destroy = ->
 
-        name = selected.find("img").data("file-name")
+        name = selected.children(":first").data("file-name")
         
         selected.kendoStop(true).kendoAnimate
             effects: "zoomOut fadOut"
             hide: true
-            complete: =>
-                filewrapper.deleteFile(name).done -> 
+            complete: ->
+                filewrapper.deleteFile(name).done => 
                     selected.remove()
                     @ds.remove(@ds.get(name))
 
@@ -79,10 +79,10 @@ define [
 
             # pause the camera. there is no need for it
             # right now.
-            $.publish "/camera/pause", [ true ]
+            $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
         hide: (e) ->
-            $.publish "/camera/pause", [ false ]
+            $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
 
         swipe: (e) ->
             page (e.direction == "right") - (e.direction == "left")
@@ -103,33 +103,35 @@ define [
 
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
-                media = $(this).children().first()             
-                $.publish "/details/show", [ get("#{media.data("file-name")}") ]
+                thumb = $(this).children(":first")            
+                $.publish "/details/show", [ get("#{thumb.data("file-name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
+                thumb = $(this).children(":first")            
                 $.publish "/top/update", ["selected"]
                 page1.find(".thumbnail").removeClass "selected"
                 selected = $(@).addClass "selected"
+                $.publish "/item/selected", [get("#{thumb.data("file-name")}")]
 
             # resolves the deffered from images that
             # are loading in from the file system
-            # filewrapper.list().done (f) =>
+            filewrapper.list().done (f) =>
             # TESTING
-            f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
-            do =>
+            # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
+            # do =>
             # END TESTING
 
                 files = f
@@ -140,7 +142,7 @@ define [
                     pageSize: 8
                     change: ->
 
-                        for item in this.view()
+                        for item in @.view()
 
                         # rows = (@.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
                         # for row in rows
@@ -155,17 +157,28 @@ define [
                                 # get it
 
                                 # FOR TESTING
-                                thumbnail = new kendo.View(nextPage, template, item)
-                                thumbnail.render()
+                                # thumbnail = new kendo.View(nextPage, template, item)
+                                # thumbnail.render()
 
-                                # do =>
-                                #     filewrapper.readFile(item.name).done (file) =>
-                                        
-                                #         # set the datasource objects missing file property
-                                #         @.get(file.name).file = file.file
-                                        
-                                #         thumbnail = new kendo.View(line.content, template, file)
-                                #         thumbnail.render()
+                                do =>
+
+                                    filewrapper.readFile(item.name).done (file) =>
+
+                                        # get a reference to the current model object
+                                        model = @.get(file.name)
+
+                                        # the easiest way to update the thumbnail in the bar is to 
+                                        # check and see if the current page is the first page and
+                                        # then just grab the first item
+                                        if @.page() == 1 and @.view().indexOf(model) == 0
+                                            $.publish "/thumbnail/update", file.file
+
+                                        # add the file url onto the object because it's currently
+                                        # missing
+                                        model.file = file.file
+
+                                        thumbnail = new kendo.View(nextPage, template, file)
+                                        thumbnail.render()
 
                         # move the current page out and the next page in
                         container.kendoAnimate {

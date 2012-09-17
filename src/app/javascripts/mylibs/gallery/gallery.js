@@ -32,14 +32,15 @@
     };
     destroy = function() {
       var name;
-      name = selected.find("img").data("file-name");
+      name = selected.children(":first").data("file-name");
       return selected.kendoStop(true).kendoAnimate({
         effects: "zoomOut fadOut",
         hide: true,
         complete: function() {
+          var _this = this;
           return filewrapper.deleteFile(name).done(function() {
             selected.remove();
-            return this.ds.remove(this.ds.get(name));
+            return _this.ds.remove(_this.ds.get(name));
           });
         }
       });
@@ -78,103 +79,67 @@
       before: function(e) {
         container.parent().height($(window).height() - 50);
         container.parent().width($(window).width());
-        return $.publish("/camera/pause", [true]);
+        return $.publish("/postman/deliver", [
+          {
+            paused: true
+          }, "/camera/pause"
+        ]);
       },
       hide: function(e) {
-        return $.publish("/camera/pause", [false]);
+        return $.publish("/postman/deliver", [
+          {
+            paused: false
+          }, "/camera/pause"
+        ]);
       },
       swipe: function(e) {
         return page((e.direction === "right") - (e.direction === "left"));
       },
       init: function(selector) {
-        var f, nextPage, page1, page2, previousPage;
+        var nextPage, page1, page2, previousPage;
         page1 = new kendo.View(selector, null);
         page2 = new kendo.View(selector, null);
         container = page1.container;
         previousPage = page1.render().addClass("page gallery");
         nextPage = page2.render().addClass("page gallery");
         page1.container.on("dblclick", ".thumbnail", function() {
-          var media;
-          media = $(this).children().first();
-          return $.publish("/details/show", [get("" + (media.data("file-name")))]);
+          var thumb;
+          thumb = $(this).children(":first");
+          return $.publish("/details/show", [get("" + (thumb.data("file-name")))]);
         });
         page1.container.on("click", ".thumbnail", function() {
+          var thumb;
+          thumb = $(this).children(":first");
           $.publish("/top/update", ["selected"]);
           page1.find(".thumbnail").removeClass("selected");
-          return selected = $(this).addClass("selected");
+          selected = $(this).addClass("selected");
+          return $.publish("/item/selected", [get("" + (thumb.data("file-name")))]);
         });
-        f = [
-          {
-            name: "123456",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "1",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "2",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "3",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "4",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "5",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "6",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "7",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "8",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "9",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "10",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "11",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "12",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }, {
-            name: "13",
-            file: "http://mantle.me/me.jpeg",
-            type: "jpeg"
-          }
-        ];
-        (function() {
+        filewrapper.list().done(function(f) {
           files = f;
           total = files.length;
           _this.ds = new kendo.data.DataSource({
             data: files,
             pageSize: 8,
             change: function() {
-              var item, thumbnail, _i, _len, _ref;
+              var item, _fn, _i, _len, _ref,
+                _this = this;
               _ref = this.view();
+              _fn = function() {
+                return filewrapper.readFile(item.name).done(function(file) {
+                  var model, thumbnail;
+                  model = _this.get(file.name);
+                  if (_this.page() === 1 && _this.view().indexOf(model) === 0) {
+                    $.publish("/thumbnail/update", file.file);
+                  }
+                  model.file = file.file;
+                  thumbnail = new kendo.View(nextPage, template, file);
+                  return thumbnail.render();
+                });
+              };
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 item = _ref[_i];
-                thumbnail = new kendo.View(nextPage, template, item);
-                thumbnail.render();
+                _fn();
               }
               return container.kendoAnimate({
                 effects: animation.effects,
@@ -203,7 +168,7 @@
             }
           });
           return _this.ds.read();
-        })();
+        });
         $.publish("/postman/deliver", [{}, "/file/read"]);
         $.subscribe("/gallery/delete", function() {
           return destroy();
