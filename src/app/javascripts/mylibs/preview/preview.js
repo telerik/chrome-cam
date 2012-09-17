@@ -7,12 +7,13 @@
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub;
+    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub, tokens;
     paused = false;
     canvas = {};
     ctx = {};
     previews = [];
     frame = 0;
+    tokens = [];
     ds = {};
     flipping = false;
     animation = {
@@ -103,9 +104,13 @@
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var index, item, _fn, _i, _len, _ref;
+            var index, item, token, _fn, _i, _j, _len, _len1, _ref;
             flipping = true;
             previews = [];
+            for (_i = 0, _len = tokens.length; _i < _len; _i++) {
+              token = tokens[_i];
+              $.unsubscribe(token);
+            }
             index = 0;
             _ref = this.view();
             _fn = function(item) {
@@ -129,21 +134,23 @@
                 paused = true;
                 return $.publish("/full/show", [item]);
               });
-              $.subscribe("/preview/thumbnail/response/" + item.name, function(e) {
+              token = $.subscribe("/preview/thumbnail/response/" + item.name, function(e) {
                 console.log("Got a thumbnail update");
                 return img.src = e.src;
               });
+              tokens.push(token);
               return previews.push({
                 canvas: filter,
                 filter: item.filter,
                 name: item.name
               });
             };
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              item = _ref[_i];
+            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+              item = _ref[_j];
               _fn(item);
             }
-            page1.container.addClass("flipping");
+            $("canvas").hide();
+            $("img").show();
             return page1.container.kendoAnimate({
               effects: animation.effects,
               face: animation.reverse ? nextPage : previousPage,
@@ -153,6 +160,8 @@
               complete: function() {
                 var justPaged;
                 page1.container.removeClass("flipping");
+                $("img").hide();
+                $("canvas").show();
                 justPaged = previousPage;
                 previousPage = nextPage;
                 nextPage = justPaged;
