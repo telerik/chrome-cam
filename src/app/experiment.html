@@ -8,111 +8,6 @@
 	<img id="out" width="640" height="480"></canvas>
 	<div id="txt"></div>
 	<script foo="bar">
-		var encodeData = function(data) {
-			var strData = "";
-			if (typeof data == "string") {
-				strData = data;
-			} else {
-				var aData = data;
-				for (var i=0;i<aData.length;i++) {
-					strData += String.fromCharCode(aData[i]);
-				}
-			}
-			return btoa(strData);
-		};
-
-		// Adapted from http://www.nihilogic.dk/labs/canvas2image/canvas2image.js - sped up a fair bit...
-		var createBMP = function(width, height, data) {
-			var aHeader = [];
-		
-			var iWidth = width;
-			var iHeight = height;
-
-			aHeader.push(0x42); // magic 1
-			aHeader.push(0x4D); 
-		
-			var iFileSize = iWidth*iHeight*3 + 54; // total header size = 54 bytes
-			aHeader.push(iFileSize & 0xff); iFileSize = (iFileSize >> 8);
-			aHeader.push(iFileSize & 0xff); iFileSize = (iFileSize >> 8);
-			aHeader.push(iFileSize & 0xff); iFileSize = (iFileSize >> 8);
-			aHeader.push(iFileSize & 0xff);
-
-			aHeader.push(0); // reserved
-			aHeader.push(0);
-			aHeader.push(0); // reserved
-			aHeader.push(0);
-
-			aHeader.push(54); // dataoffset
-			aHeader.push(0);
-			aHeader.push(0);
-			aHeader.push(0);
-
-			var aInfoHeader = [];
-			aInfoHeader.push(40); // info header size
-			aInfoHeader.push(0);
-			aInfoHeader.push(0);
-			aInfoHeader.push(0);
-
-			var iImageWidth = iWidth;
-			aInfoHeader.push(iImageWidth & 0xff); iImageWidth = (iImageWidth >> 8);
-			aInfoHeader.push(iImageWidth & 0xff); iImageWidth = (iImageWidth >> 8);
-			aInfoHeader.push(iImageWidth & 0xff); iImageWidth = (iImageWidth >> 8);
-			aInfoHeader.push(iImageWidth & 0xff);
-		
-			var iImageHeight = iHeight;
-			aInfoHeader.push(iImageHeight & 0xff); iImageHeight = (iImageHeight >> 8);
-			aInfoHeader.push(iImageHeight & 0xff); iImageHeight = (iImageHeight >> 8);
-			aInfoHeader.push(iImageHeight & 0xff); iImageHeight = (iImageHeight >> 8);
-			aInfoHeader.push(iImageHeight & 0xff);
-		
-			aInfoHeader.push(1); // num of planes
-			aInfoHeader.push(0);
-		
-			aInfoHeader.push(24); // num of bits per pixel
-			aInfoHeader.push(0);
-		
-			aInfoHeader.push(0); // compression = none
-			aInfoHeader.push(0);
-			aInfoHeader.push(0);
-			aInfoHeader.push(0);
-		
-			var iDataSize = iWidth*iHeight*3; 
-			aInfoHeader.push(iDataSize & 0xff); iDataSize = (iDataSize >> 8);
-			aInfoHeader.push(iDataSize & 0xff); iDataSize = (iDataSize >> 8);
-			aInfoHeader.push(iDataSize & 0xff); iDataSize = (iDataSize >> 8);
-			aInfoHeader.push(iDataSize & 0xff); 
-		
-			for (var i=0;i<16;i++) {
-				aInfoHeader.push(0);	// these bytes not used
-			}
-		
-			var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
-			var strPadding = new Array(iPadding).join(String.fromCharCode(0));
-
-			var aImgData = data;
-
-			var aPixelData = [];
-			var aPixelRow = new Array(iWidth + 1);
-			var y = iHeight;
-			do {
-				var iOffsetY = iWidth*(y-1)*4;
-				var poke = 0;
-				for (var x=0;x<iWidth;x++) {
-					var iOffsetX = 4*x;
-
-					aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+2]);
-					aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+1]);
-					aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX]);
-				}
-				aPixelRow[poke++] = strPadding;
-				aPixelData.push(aPixelRow.join(""));
-			} while (--y);
-
-			var strEncoded = encodeData(aHeader.concat(aInfoHeader)) + encodeData(aPixelData.join(""));
-
-			return strEncoded;
-		};
-
 		(function(){
 			var foo = document.getElementById("foo"),
 				ctx = foo.getContext("2d"), i;
@@ -129,13 +24,21 @@
 				ctx.fillRect(Math.random()*640, Math.random()*480, Math.random()*480, Math.random()*480);
 			}
 
-			var src;
+			var worker = new Worker("experimentWorker.js");
+			worker.onmessage = function(src) {
+				document.getElementById("out").src = src.data;
+				document.getElementById("txt").innerText = src.data;
+			};
+
 			console.log(timeTaken(function(){ 
 				var imageData = ctx.getImageData(0, 0, foo.width, foo.height);
-				src = "data:image/bmp;base64," + createBMP(imageData.width, imageData.height, imageData.data);
+					worker.postMessage({
+					width: imageData.width,
+					height: imageData.height,
+					data: imageData.data
+				});
 			}));
-			document.getElementById("out").src = src;
-			document.getElementById("txt").innerText = src;
+			
 		})();
 	</script>
 </body>
