@@ -1,13 +1,17 @@
+// https://gist.github.com/2661137
 var base64 = {};
 base64.PADCHAR = '=';
 base64.ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
+
 base64.getbyte = function(s,i) {
-    var x = s.charCodeAt(i) & 0xFF;
-    return x;
-}
+    return s.charCodeAt(i);
+};
 
 base64.encode = function(s) {
+    if (arguments.length !== 1) {
+        throw new SyntaxError("Not enough arguments");
+    }
     var padchar = base64.PADCHAR;
     var alpha   = base64.ALPHA;
     var getbyte = base64.getbyte;
@@ -43,7 +47,7 @@ base64.encode = function(s) {
         break;
     }
     return x.join('');
-}
+};
 
 var toBase64 = base64.encode;//(undefined === btoa) ? base64.encode : btoa;
 
