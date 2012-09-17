@@ -204,7 +204,6 @@ a.button {
 		background: #ccc;
 		color: #000;
 	}
-	button + button, .button + .button, button + .button, .button + button { }
 
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;
@@ -347,7 +346,7 @@ a.button {
 	height: 180px;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 	background: #333;
-	margin: 0px 8px 16px 8px;
+	margin: 0 8px 16px 8px;
 }
 
 .gallery .thumbnail:hover, .preview:hover {
@@ -599,7 +598,7 @@ a.button {
 	}
 
 	.settings .km-list { width: 250px; }
-		.settings .km-list li { border-bottom: 0px solid; }
+		.settings .km-list li { border-bottom: 0 solid; }
 
 
 /* Clearfix */
