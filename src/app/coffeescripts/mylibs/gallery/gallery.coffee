@@ -119,7 +119,7 @@ define [
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource
                     data: message.message
-                    pageSize: 12
+                    pageSize: 1
                     change: ->
 
                         for item in @.view()

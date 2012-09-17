@@ -4,9 +4,13 @@
 
 html, body, #wrap {
 	height: 100%;
-	background-color: #f1f1f1;
+	background-color: #f1f1f1 !important;
 	font-family: 'Droid Sans', sans-serif;
 	overflow: hidden;
+}
+
+.km-blackberry, .km-blackberry .km-content {
+	background-color: #f1f1f1 !important;
 }
 
 /*  fix for the position: relative which is set
@@ -190,10 +194,8 @@ a.button {
 	border: 0 solid;
 	border-radius: 3px;
 	background: white;
-	color: black;
 	padding: 7px 14px;
 	font-size: 14px;
-	cursor: pointer;
 	line-height: 16px;
 	text-decoration: none;
 }
@@ -202,7 +204,6 @@ a.button {
 		background: #ccc;
 		color: #000;
 	}
-	button + button, .button + .button, button + .button, .button + button { }
 
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;
@@ -341,11 +342,11 @@ a.button {
 .gallery .thumbnail {
 	float: left;
 	text-align: center;
-	width: 271px;
-	height: 188px;
+	width: 270px;
+	height: 180px;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 	background: #333;
-	margin: 0px 8px 16px 8px;
+	margin: 0 8px 16px 8px;
 }
 
 .gallery .thumbnail:hover, .preview:hover {
@@ -357,7 +358,7 @@ a.button {
 
 .gallery .selected {
 	border: 2px solid magenta;
-	margin: 0px 6px 12px 6px;
+	margin: 0 6px 12px 6px;
 }
 
 /* Details styles */
@@ -597,7 +598,7 @@ a.button {
 	}
 
 	.settings .km-list { width: 250px; }
-		.settings .km-list li { border-bottom: 0px solid; }
+		.settings .km-list li { border-bottom: 0 solid; }
 
 
 /* Clearfix */

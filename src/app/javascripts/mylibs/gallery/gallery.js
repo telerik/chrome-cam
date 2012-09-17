@@ -119,7 +119,7 @@
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = new kendo.data.DataSource({
             data: message.message,
-            pageSize: 12,
+            pageSize: 1,
             change: function() {
               var item, thumbnail, _i, _len, _ref,
                 _this = this;
