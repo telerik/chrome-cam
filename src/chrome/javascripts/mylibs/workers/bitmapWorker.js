@@ -61,12 +61,8 @@ var encodeData = function(data) {
 	return toBase64(strData);
 };
 
-// Adapted from http://www.nihilogic.dk/labs/canvas2image/canvas2image.js - sped up a fair bit
-var createBMP = function(width, height, data) {
+var getBMPHeader = function(iWidth, iHeight) {
 	var aHeader = [];
-
-	var iWidth = width;
-	var iHeight = height;
 
 	aHeader.push(0x42); // magic 1
 	aHeader.push(0x4D); 
@@ -126,6 +122,16 @@ var createBMP = function(width, height, data) {
 		aInfoHeader.push(0);	// these bytes not used
 	}
 
+	return aHeader.concat(aInfoHeader);
+};
+
+// Adapted from http://www.nihilogic.dk/labs/canvas2image/canvas2image.js - sped up a fair bit
+var createBMP = function(width, height, data) {
+	var iWidth = width;
+	var iHeight = height;
+
+	var header = getBMPHeader(width, height);
+
 	var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
 	var strPadding = iPadding == 0 ? "" : new Array(iPadding).join(String.fromCharCode(0));
 
@@ -148,7 +154,7 @@ var createBMP = function(width, height, data) {
 		aPixelData.push(aPixelRow.join(""));
 	} while (--y);
 
-	var strEncoded = "data:image/bmp;base64," + encodeData(aHeader.concat(aInfoHeader)) + encodeData(aPixelData.join(""));
+	var strEncoded = "data:image/bmp;base64," + encodeData(header) + encodeData(aPixelData.join(""));
 
 	return strEncoded;
 };
