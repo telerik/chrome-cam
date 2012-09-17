@@ -194,10 +194,8 @@ a.button {
 	border: 0 solid;
 	border-radius: 3px;
 	background: white;
-	color: black;
 	padding: 7px 14px;
 	font-size: 14px;
-	cursor: pointer;
 	line-height: 16px;
 	text-decoration: none;
 }
@@ -361,7 +359,7 @@ a.button {
 
 .gallery .selected {
 	border: 2px solid magenta;
-	margin: 0px 6px 12px 6px;
+	margin: 0 6px 12px 6px;
 }
 
 /* Details styles */
