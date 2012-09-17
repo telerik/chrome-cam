@@ -92,19 +92,19 @@
 			var aImgData = oData.data;
 
 			var aPixelData = [];
+			var aPixelRow = new Array(iWidth + 1);
 			var y = iHeight;
 			do {
 				var iOffsetY = iWidth*(y-1)*4;
-				var aPixelRow = [];
-				var strPixelRow = "";
+				var poke = 0;
 				for (var x=0;x<iWidth;x++) {
 					var iOffsetX = 4*x;
 
-					aPixelRow.push(String.fromCharCode(aImgData[iOffsetY+iOffsetX+2]));
-					aPixelRow.push(String.fromCharCode(aImgData[iOffsetY+iOffsetX+1]));
-					aPixelRow.push(String.fromCharCode(aImgData[iOffsetY+iOffsetX]));
+					aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+2]);
+					aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+1]);
+					aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX]);
 				}
-				aPixelRow.push(strPadding);
+				aPixelRow[poke++] = strPadding;
 				aPixelData.push(aPixelRow.join(""));
 			} while (--y);
 
