@@ -119,7 +119,8 @@ define [
 
         swipe: (e) ->
             # page in the direction of the swipe
-            page e.direction
+            if not flipping
+                page e.direction
             
         init: (selector) ->
         

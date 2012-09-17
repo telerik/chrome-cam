@@ -85,7 +85,9 @@
         return draw();
       },
       swipe: function(e) {
-        return page(e.direction);
+        if (!flipping) {
+          return page(e.direction);
+        }
       },
       init: function(selector) {
         var nextPage, page1, page2, previousPage;
