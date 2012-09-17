@@ -341,9 +341,11 @@ a.button {
 .gallery .thumbnail {
 	float: left;
 	text-align: center;
-	width: 250px;
-	height: 167px;
+	width: 271px;
+	height: 188px;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
+	background: #333;
+	margin: 0px 8px 16px 8px;
 }
 
 .gallery .thumbnail:hover, .preview:hover {
@@ -355,7 +357,7 @@ a.button {
 
 .gallery .selected {
 	border: 2px solid magenta;
-	padding: 1px;
+	margin: 0px 6px 12px 6px;
 }
 
 /* Details styles */
