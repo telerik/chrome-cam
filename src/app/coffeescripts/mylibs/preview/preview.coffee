@@ -198,26 +198,27 @@ define [
                     # move the current page out and the next page in
                     $("canvas").hide()
                     $("img").show()
-                    page1.container.kendoAnimate {
-                        effects: animation.effects
-                        face: if animation.reverse then nextPage else previousPage
-                        back: if animation.reverse then previousPage else nextPage
-                        duration: animation.duration
-                        reverse: animation.reverse
-                        complete: ->
-                            $("img").hide()
-                            $("canvas").show()
+                    flippy = ->
+                        page1.container.kendoAnimate
+                            effects: animation.effects
+                            face: if animation.reverse then nextPage else previousPage
+                            back: if animation.reverse then previousPage else nextPage
+                            duration: animation.duration
+                            reverse: animation.reverse
+                            complete: ->
+                                $("img").hide()
+                                $("canvas").show()
 
-                            # the current page becomes the next page
-                            justPaged = previousPage
-                            
-                            previousPage = nextPage
-                            nextPage = justPaged
+                                # the current page becomes the next page
+                                justPaged = previousPage
+                                
+                                previousPage = nextPage
+                                nextPage = justPaged
 
-                            justPaged.empty()
+                                justPaged.empty()
 
-                            flipping = false
-                    }
+                                flipping = false
+                    setTimeout flippy, 100
 
 
             # read from the datasource

@@ -103,7 +103,7 @@
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var index, item, _fn, _i, _len, _ref;
+            var flippy, index, item, _fn, _i, _len, _ref;
             flipping = true;
             previews = [];
             index = 0;
@@ -141,23 +141,26 @@
             }
             $("canvas").hide();
             $("img").show();
-            return page1.container.kendoAnimate({
-              effects: animation.effects,
-              face: animation.reverse ? nextPage : previousPage,
-              back: animation.reverse ? previousPage : nextPage,
-              duration: animation.duration,
-              reverse: animation.reverse,
-              complete: function() {
-                var justPaged;
-                $("img").hide();
-                $("canvas").show();
-                justPaged = previousPage;
-                previousPage = nextPage;
-                nextPage = justPaged;
-                justPaged.empty();
-                return flipping = false;
-              }
-            });
+            flippy = function() {
+              return page1.container.kendoAnimate({
+                effects: animation.effects,
+                face: animation.reverse ? nextPage : previousPage,
+                back: animation.reverse ? previousPage : nextPage,
+                duration: animation.duration,
+                reverse: animation.reverse,
+                complete: function() {
+                  var justPaged;
+                  $("img").hide();
+                  $("canvas").show();
+                  justPaged = previousPage;
+                  previousPage = nextPage;
+                  nextPage = justPaged;
+                  justPaged.empty();
+                  return flipping = false;
+                }
+              });
+            };
+            return setTimeout(flippy, 100);
           }
         });
         ds.read();
