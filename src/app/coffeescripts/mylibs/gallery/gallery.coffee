@@ -44,18 +44,25 @@ define [
                     @ds.remove(@ds.get(name))
 
     get = (name) => 
+        # find the match in the data source
         match = @ds.get(name)
-        return { length: @ds.data().length, index: @ds.view().indexOf(match), item: match }
+        # now get its index in the current view
+        index = @ds.view().indexOf(match)
+        # the actual index of this item in relation to the whole set
+        # of data is the page number times. it's zero based so we have to do
+        # some funky calculations
+        position = if @ds.page() > 1 then pageSize * (@ds.page() - 1) + index else index 
+        return { length: @ds.data().length, index: position, item: match }
 
     at = (index) =>
         # we may need to page the data before grabbing the item.
-        # to get the current page, divide the index by the pageSize
-        page = Math.ceil((index + 1) / pageSize)
-        # page the datasource to this page
-        @ds.page(page)
+        # to get the current page, divide the index by the pageSize. then
+        target = Math.ceil((index + 1) / pageSize)
+        # go ahead and go to that page if needed
+        if (target != @ds.page()) then @ds.page(target)
         # the actual index of the item within the page has to be recalculated if
         # the current page is greater than 1
-        position = if page > 1 then index - pageSize else index
+        position = if target > 1 then index - pageSize else index
         # now we can search the current datasource view for the item at the correct index
         match = { length: @ds.data().length, index: index, item: @ds.view()[position] }
         $.publish "/details/update", [match]

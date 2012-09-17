@@ -45,19 +45,21 @@
       });
     };
     get = function(name) {
-      var match;
+      var match, position;
       match = _this.ds.get(name);
+      index = _this.ds.view().indexOf(match);
+      position = _this.ds.page() > 1 ? pageSize * (_this.ds.page() - 1) + index : index;
       return {
         length: _this.ds.data().length,
-        index: _this.ds.view().indexOf(match),
+        index: position,
         item: match
       };
     };
     at = function(index) {
-      var match, position;
-      page = Math.ceil((index + 1) / pageSize);
-      _this.ds.page(page);
-      position = page > 1 ? index - pageSize : index;
+      var match, position, target;
+      target = Math.ceil((index + 1) / pageSize);
+      if (target !== _this.ds.page()) _this.ds.page(target);
+      position = target > 1 ? index - pageSize : index;
       match = {
         length: _this.ds.data().length,
         index: index,
