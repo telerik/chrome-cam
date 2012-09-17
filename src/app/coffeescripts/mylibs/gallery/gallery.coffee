@@ -5,17 +5,18 @@ define [
     'text!mylibs/gallery/views/row.html'
 ], (kendo, utils, filewrapper, template) ->
     
-    pageSize = 8
-    dim =
-        cols: 4
-        rows: 3
+    pageSize = 12
     ds = {}
-    files = []
+    data = []
     container = {}
     el = {}
     selected = {} 
     total = 0
     index = 0
+    flipping = false
+    pages = 
+        previous: {}
+        next: {}
 
     animation = 
         effects: "pageturn:horizontal"
@@ -23,6 +24,7 @@ define [
         duration: 800      
 
     page = (direction) =>
+
         # TODO: add transition effect...
         if direction > 0 and @ds.page() > 1
             animation.reverse = true
@@ -85,6 +87,7 @@ define [
             $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
 
         swipe: (e) ->
+            
             page (e.direction == "right") - (e.direction == "left")
 
         init: (selector) =>
@@ -98,8 +101,8 @@ define [
             # get a reference to the view container
             container = page1.container
 
-            previousPage = page1.render().addClass("page gallery")
-            nextPage = page2.render().addClass("page gallery")
+            pages.previous = page1.render().addClass("page gallery")
+            pages.next = page2.render().addClass("page gallery")
 
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
@@ -113,11 +116,63 @@ define [
                 selected = $(@).addClass "selected"
                 $.publish "/item/selected", [get("#{thumb.data("file-name")}")]
 
+            $.subscribe "/pictures/bulk", (message) =>
+                @ds = new kendo.data.DataSource
+                    data: message.message
+                    pageSize: 12
+                    change: ->
+
+                        for item in @.view()
+
+                            thumbnail = new kendo.View(pages.next, template, item)
+                            thumbnail.render()
+
+                        # move the current page out and the next page in
+                        container.kendoAnimate {
+                            effects: animation.effects
+                            face: if animation.reverse then pages.next else pages.previous
+                            back: if animation.reverse then pages.previous else pages.next
+                            duration: animation.duration
+                            reverse: animation.reverse
+                            complete: =>
+
+                                # the current page becomes the next page
+                                justPaged = pages.previous
+
+                                pages.previous = pages.next
+                                pages.next = justPaged
+
+                                justPaged.empty()
+
+                                flipping = false
+
+                        }
+
+                                            
+                    sort:
+                        dir: "desc" 
+                        field: "name"   
+
+                @ds.read()      
+
             # resolves the deffered from images that
             # are loading in from the file system
-            filewrapper.list().done (f) =>
-            # TESTING
+            # filewrapper.list().done (f) =>
+            # # TESTING
             # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
+            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" },
             # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
             # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
             # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
@@ -132,83 +187,24 @@ define [
             # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
             # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
             # do =>
-            # END TESTING
+            # # END TESTING
 
-                files = f
-                total = files.length
-
-                @ds = new kendo.data.DataSource
-                    data: files
-                    pageSize: 8
-                    change: ->
-
-                        for item in @.view()
-
-                        # rows = (@.view()[i * dim.cols ... (i+1) * dim.cols] for i in [0 ... dim.rows])
-                        # for row in rows
-
-                            # create a new row
-                            # line = new kendo.View(nextPage)
-                            # line.render().addClass("gallery-row")
-
-                            # for item in row
-
-                                # the item isn't actually here yet, we need to go and
-                                # get it
-
-                                # FOR TESTING
-                                # thumbnail = new kendo.View(nextPage, template, item)
-                                # thumbnail.render()
-
-                                do =>
-
-                                    filewrapper.readFile(item.name).done (file) =>
-
-                                        # get a reference to the current model object
-                                        model = @.get(file.name)
-
-                                        # the easiest way to update the thumbnail in the bar is to 
-                                        # check and see if the current page is the first page and
-                                        # then just grab the first item
-                                        if @.page() == 1 and @.view().indexOf(model) == 0
-                                            $.publish "/thumbnail/update", file.file
-
-                                        # add the file url onto the object because it's currently
-                                        # missing
-                                        model.file = file.file
-
-                                        thumbnail = new kendo.View(nextPage, template, file)
-                                        thumbnail.render()
-
-                        # move the current page out and the next page in
-                        container.kendoAnimate {
-                            effects: animation.effects
-                            face: if animation.reverse then nextPage else previousPage
-                            back: if animation.reverse then previousPage else nextPage
-                            duration: animation.duration
-                            reverse: animation.reverse
-                            complete: ->
-                                # the current page becomes the next page
-                                justPaged = previousPage
-
-                                previousPage = nextPage
-                                nextPage = justPaged
-
-                                justPaged.empty()
-
-                                flipping = false
-                        }
-
-                    schema: 
-                        model:
-                            id: "name"
-                    sort:
-                        dir: "desc" 
-                        field: "name"         
+            #     files = f
+            #     total = files.length
                 
-                @ds.read()
+            #     # read from the datasource
+            #     @ds.read()
+                
+            #     # get the second page
+            #     justPaged = pages.previous
 
-            $.publish "/postman/deliver", [ {}, "/file/read" ]
+            #     pages.previous = pages.next
+            #     pages.next = justPaged
+                
+            #     @ds.page(2)
+            #     pages.cache = 2
+
+            # $.publish "/postman/deliver", [ {}, "/file/read" ]
 
             $.subscribe "/gallery/delete", ->
                 destroy()
@@ -218,5 +214,7 @@ define [
 
             $.subscribe "/gallery/at", (index) ->
                 at(index)
+
+            $.publish "/postman/deliver", [ {}, "/file/read" ]
 
             return gallery
