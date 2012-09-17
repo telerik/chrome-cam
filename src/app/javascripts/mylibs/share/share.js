@@ -18,13 +18,9 @@
     });
     return pub = {
       init: function(selector) {
-        var share,
-          _this = this;
+        var share;
         share = new kendo.View(selector, template);
         share.render(viewModel);
-        $.subscribe("/item/selected", function(item) {
-          return viewModel.set("selected", item);
-        });
         return share;
       }
     };

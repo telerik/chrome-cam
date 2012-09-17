@@ -12,7 +12,9 @@
 	
 	</head>
 	<body>
+
 		<section class="settings km-blackberry">
+
 			<hgroup class="appInfoHeader">
 				<h1>Camera</h1>
 				<h2>Settings</h2>
@@ -29,12 +31,18 @@
 					</li>
 				</ul>
 			</div>
+
+			<section>
+				<label>Camera flash:</label> <input id="wink-switch" data-role="switch" />
+				<a class="button" data-role="button" ref="#button-home">Clear Gallery</a>
+			</section>
+
 		</section>
 
 	<script src="javascripts/libs/jquery/jquery.min.js"></script>
 	<script src="javascripts/libs/kendo/kendo.all.min.js"></script>
-<script>
-	$("#wink-switch").kendoMobileSwitch();
-</script>
+	<script>
+		$("#wink-switch").kendoMobileSwitch();
+	</script>
 	</body>
 </html>

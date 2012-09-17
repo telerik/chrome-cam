@@ -84,6 +84,9 @@
       draw: function() {
         return draw();
       },
+      before: function() {
+        return $.publish("/camera/pause", [false]);
+      },
       swipe: function(e) {
         if (!flipping) {
           return page(e.direction);

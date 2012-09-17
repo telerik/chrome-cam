@@ -18,8 +18,8 @@ define [
 			share.render(viewModel)
 
 			# subscribe to external events
-			$.subscribe ("/item/selected"), (item) =>
-				viewModel.set("selected", item)
+			# $.subscribe ("/item/selected"), (item) =>
+			# 	viewModel.set("selected", item)
 
 			return share
 			

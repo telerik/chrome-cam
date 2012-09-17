@@ -4,9 +4,13 @@
 
 html, body, #wrap {
 	height: 100%;
-	background-color: #f1f1f1;
+	background-color: #f1f1f1 !important;
 	font-family: 'Droid Sans', sans-serif;
 	overflow: hidden;
+}
+
+.km-blackberry, .km-blackberry .km-content {
+	background-color: #f1f1f1 !important;
 }
 
 /*  fix for the position: relative which is set
@@ -202,7 +206,7 @@ a.button {
 		background: #ccc;
 		color: #000;
 	}
-	button + button, .button + .button, button + .button, .button + button { margin-left: 10px; }
+	button + button, .button + .button, button + .button, .button + button { }
 
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;
@@ -228,7 +232,7 @@ a.button {
 
 /* Bar States */
 
-.galleryMode .mode, .galleryMode .galleryLink,
+.galleryMode .mode, .galleryMode
 .previewMode .back, .previewMode .delete, .previewMode .share,
 .recording .mode, .recording .galleryLink { display: none; }
 
@@ -315,6 +319,8 @@ a.button {
 
 /************ Gallery styles ************/
 
+/************ Gallery styles ************/
+
 .gallery {
 	/*display: -webkit-box;*/
 	height: 800px;
@@ -337,10 +343,13 @@ a.button {
 }
 
 .gallery .thumbnail {
+	float: left;
 	text-align: center;
 	width: 270px;
-	height: 210px;
+	height: 180px;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
+	background: #333;
+	margin: 0px 8px 16px 8px;
 }
 
 .gallery .thumbnail:hover, .preview:hover {
@@ -352,7 +361,7 @@ a.button {
 
 .gallery .selected {
 	border: 2px solid magenta;
-	padding: 1px;
+	margin: 0px 6px 12px 6px;
 }
 
 /* Details styles */
@@ -442,6 +451,11 @@ a.button {
 		position: absolute;
 		width: 100%;
 		height: 100%;
+		background-color: #EDEDED;
+	}
+
+	.full .transfer {
+		position: absolute;
 		background-color: #EDEDED;
 	}
 

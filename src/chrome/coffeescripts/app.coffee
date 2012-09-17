@@ -14,6 +14,7 @@ define([
 	canvas = document.getElementById("canvas")	
 	ctx = canvas.getContext("2d")
 	track = {}
+	paused = false
 
 	# skip frames for face detection. grasping at straws.
 	skip = false
@@ -27,19 +28,22 @@ define([
 
 	update = ->
 
-		if skipBit == 0
-			track = face.track video
+		# the camera is paused when it isn't being used to increase app performance
+		if not paused
 
-		ctx.drawImage(video, 0, 0, video.width, video.height)
-		img = ctx.getImageData(0, 0, canvas.width, canvas.height)
-		buffer = img.data.buffer
+			if skipBit == 0
+				track = face.track video
 
-		$.publish "/postman/deliver", [ image: img.data.buffer, track: track, "/camera/update", [ buffer ]]
+			ctx.drawImage(video, 0, 0, video.width, video.height)
+			img = ctx.getImageData(0, 0, canvas.width, canvas.height)
+			buffer = img.data.buffer
 
-		if skipBit < 4
-			skipBit++
-		else
-			skipBit = 0
+			$.publish "/postman/deliver", [ image: img.data.buffer, track: track, "/camera/update", [ buffer ]]
+
+			if skipBit < 4
+				skipBit++
+			else
+				skipBit = 0
 
 		setTimeout update, 1000 / 30
 
@@ -60,6 +64,10 @@ define([
 
 			# initialize utils
 			utils.init()
+
+			# subscribe to the pause event
+			$.subscribe "/camera/pause", (message) ->
+				paused = message.paused
 
 			# start the camera
 			navigator.webkitGetUserMedia { video: true }, hollaback, errback

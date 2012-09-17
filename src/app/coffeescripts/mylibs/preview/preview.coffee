@@ -117,6 +117,10 @@ define [
         draw: ->
             draw()
 
+        before: ->
+            # make sure the camera isn't paused cause we need it now
+            $.publish "/camera/pause", [ false ]
+
         swipe: (e) ->
             # page in the direction of the swipe
             if not flipping
