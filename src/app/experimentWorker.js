@@ -49,13 +49,10 @@ var toBase64 = base64.encode;//(undefined === btoa) ? base64.encode : btoa;
 
 var encodeData = function(data) {
 	var strData = "";
-	if (typeof data == "string") {
+	if (typeof data === "string") {
 		strData = data;
 	} else {
-		var aData = data;
-		for (var i=0;i<aData.length;i++) {
-			strData += String.fromCharCode(aData[i]);
-		}
+		strData = String.fromCharCode.apply(null, data);
 	}
 	return toBase64(strData);
 };
