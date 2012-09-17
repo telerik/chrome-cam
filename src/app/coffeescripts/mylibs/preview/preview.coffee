@@ -21,6 +21,11 @@ define [
     frame = 0
     ds = {}
     flipping = false
+
+    shouldUpdateThumbnails = true
+    setThumbnailsToBeUpdated = ->
+        shouldUpdateThumbnails = true if not flipping
+    setInterval setThumbnailsToBeUpdated, 1000
     
     # define the animations. we slide different directions depending on if we are going forward or back.
     animation = 
@@ -50,8 +55,7 @@ define [
                
                     preview.filter preview.canvas, canvas, frame, stream.track
 
-                    if not preview.upToDate
-                        preview.upToDate = true
+                    if shouldUpdateThumbnails
                         previewContext = preview.canvas.getContext("2d")
                         imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height)
                         eventData = 
@@ -60,6 +64,8 @@ define [
                             data: imageData.data
                             key: preview.name
                         $.publish "/postman/deliver", [ data: eventData, "/preview/thumbnail/request" ]
+
+                shouldUpdateThumbnails = false
 
     keyboard = (enabled) ->
 
@@ -198,6 +204,7 @@ define [
                     # move the current page out and the next page in
                     $("canvas").hide()
                     $("img").show()
+                    shouldUpdateThumbnails = true
                     flippy = ->
                         page1.container.kendoAnimate
                             effects: animation.effects

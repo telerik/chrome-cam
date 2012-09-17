@@ -7,7 +7,7 @@
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub;
+    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
     paused = false;
     canvas = {};
     ctx = {};
@@ -15,6 +15,13 @@
     frame = 0;
     ds = {};
     flipping = false;
+    shouldUpdateThumbnails = true;
+    setThumbnailsToBeUpdated = function() {
+      if (!flipping) {
+        return shouldUpdateThumbnails = true;
+      }
+    };
+    setInterval(setThumbnailsToBeUpdated, 1000);
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
@@ -22,16 +29,14 @@
     };
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var eventData, imageData, preview, previewContext, _i, _len, _results;
+        var eventData, imageData, preview, previewContext, _i, _len;
         if (!paused) {
           ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
-          _results = [];
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
             preview.filter(preview.canvas, canvas, frame, stream.track);
-            if (!preview.upToDate) {
-              preview.upToDate = true;
+            if (shouldUpdateThumbnails) {
               previewContext = preview.canvas.getContext("2d");
               imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height);
               eventData = {
@@ -40,16 +45,14 @@
                 data: imageData.data,
                 key: preview.name
               };
-              _results.push($.publish("/postman/deliver", [
+              $.publish("/postman/deliver", [
                 {
                   data: eventData
                 }, "/preview/thumbnail/request"
-              ]));
-            } else {
-              _results.push(void 0);
+              ]);
             }
           }
-          return _results;
+          return shouldUpdateThumbnails = false;
         }
       });
     };
@@ -141,6 +144,7 @@
             }
             $("canvas").hide();
             $("img").show();
+            shouldUpdateThumbnails = true;
             flippy = function() {
               return page1.container.kendoAnimate({
                 effects: animation.effects,
