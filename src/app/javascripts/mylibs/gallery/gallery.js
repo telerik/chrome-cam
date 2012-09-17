@@ -58,23 +58,12 @@
       };
     };
     at = function(index) {
-<<<<<<< HEAD
       var match, position, target;
       target = Math.ceil((index + 1) / pageSize);
-      if (target !== _this.ds.page()) _this.ds.page(target);
-      position = target > 1 ? index - pageSize : index;
-=======
-      var match, position;
-      page = Math.ceil((index + 1) / pageSize);
-      _this.ds.page(page);
-<<<<<<< HEAD
-      position = page > 1 ? index - pageSize : index;
-=======
-      if (page > 1) {
-        index = index - pageSize;
+      if (target !== _this.ds.page()) {
+        _this.ds.page(target);
       }
->>>>>>> More auto-gen files. Yaaaay.
->>>>>>> More auto-gen files. Yaaaay.
+      position = target > 1 ? index - pageSize : index;
       match = {
         length: _this.ds.data().length,
         index: index,
