@@ -57,10 +57,23 @@
       };
     };
     at = function(index) {
+<<<<<<< HEAD
       var match, position, target;
       target = Math.ceil((index + 1) / pageSize);
       if (target !== _this.ds.page()) _this.ds.page(target);
       position = target > 1 ? index - pageSize : index;
+=======
+      var match, position;
+      page = Math.ceil((index + 1) / pageSize);
+      _this.ds.page(page);
+<<<<<<< HEAD
+      position = page > 1 ? index - pageSize : index;
+=======
+      if (page > 1) {
+        index = index - pageSize;
+      }
+>>>>>>> More auto-gen files. Yaaaay.
+>>>>>>> More auto-gen files. Yaaaay.
       match = {
         length: _this.ds.data().length,
         index: index,
@@ -170,41 +183,12 @@
             data: files,
             pageSize: 8,
             change: function() {
-<<<<<<< HEAD
               var item, thumbnail, _i, _len, _ref;
               _ref = this.view();
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 item = _ref[_i];
                 thumbnail = new kendo.View(nextPage, template, item);
                 thumbnail.render();
-=======
-              var i, item, line, row, rows, _fn, _i, _j, _len, _len1,
-                _this = this;
-              rows = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 0, _ref = dim.rows; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-                  _results.push(this.view().slice(i * dim.cols, (i + 1) * dim.cols));
-                }
-                return _results;
-              }).call(this);
-              for (_i = 0, _len = rows.length; _i < _len; _i++) {
-                row = rows[_i];
-                line = new kendo.View(nextPage);
-                line.render().addClass("gallery-row");
-                _fn = function() {
-                  return filewrapper.readFile(item.name).done(function(file) {
-                    var thumbnail;
-                    _this.get(file.name).file = file.file;
-                    thumbnail = new kendo.View(line.content, template, file);
-                    return thumbnail.render();
-                  });
-                };
-                for (_j = 0, _len1 = row.length; _j < _len1; _j++) {
-                  item = row[_j];
-                  _fn();
-                }
->>>>>>> auto-gen files
               }
               return container.kendoAnimate({
                 effects: animation.effects,
