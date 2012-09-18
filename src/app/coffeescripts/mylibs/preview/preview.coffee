@@ -207,8 +207,8 @@ define [
                             previews.push { canvas: filter, filter: item.filter, name: item.name }
 
                     # move the current page out and the next page in
-                    $("canvas").hide()
-                    $("img").show()
+                    page1.container.find("canvas").hide()
+                    page1.container.find("img").show()
                     shouldUpdateThumbnails = true
                     flippy = ->
                         page1.container.kendoAnimate
@@ -218,8 +218,8 @@ define [
                             duration: animation.duration
                             reverse: animation.reverse
                             complete: ->
-                                $("img").hide()
-                                $("canvas").show()
+                                page1.container.find("img").hide()
+                                page1.container.find("canvas").show()
 
                                 # the current page becomes the next page
                                 justPaged = previousPage

@@ -135,8 +135,8 @@
               item = _ref[_i];
               _fn(item);
             }
-            $("canvas").hide();
-            $("img").show();
+            page1.container.find("canvas").hide();
+            page1.container.find("img").show();
             shouldUpdateThumbnails = true;
             flippy = function() {
               return page1.container.kendoAnimate({
@@ -147,8 +147,8 @@
                 reverse: animation.reverse,
                 complete: function() {
                   var justPaged;
-                  $("img").hide();
-                  $("canvas").show();
+                  page1.container.find("img").hide();
+                  page1.container.find("canvas").show();
                   justPaged = previousPage;
                   previousPage = nextPage;
                   nextPage = justPaged;

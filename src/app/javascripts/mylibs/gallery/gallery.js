@@ -71,7 +71,10 @@
     at = function(index) {
       var match, position, target;
       target = Math.ceil((index + 1) / pageSize);
-      if (target !== _this.ds.page()) _this.ds.page(target);
+      if (target !== _this.ds.page()) {
+        _this.ds.page(target);
+        render();
+      }
       position = target > 1 ? index - pageSize : index;
       match = {
         length: _this.ds.data().length,

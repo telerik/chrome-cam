@@ -7,29 +7,38 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
     ###
 
+    # the image data of each frame is put into this buffer canvas so we can call
+    # toDataURL
+    bufferCanvas = document.createElement("canvas")
+    bufferCanvas.width = 720 / 2
+    bufferCanvas.height = 480 / 2
+    bufferContext = bufferCanvas.getContext("2d")
+
     pub = 
 
         # normalizes webkitRequestAnimationFrame
         getAnimationFrame: ->
-            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || (callback, element) ->
-                return window.setTimeout(callback, 1000 / 60)
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame
 
         createVideo: (frames) ->
 
             transcode = ->
-
                 video = new Whammy.Video()
-                for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
+                
+                # step through frames in pairs of two
+                # this is so that each frame can be added with the appropriate duration,
+                # since we know how long of a gap there is between frames
+                for pair in (frames[i .. i + 1] for i in [0 .. frames.length - 2])
+                    # at this point, imageData is really a data URL
                     video.add pair[0].imageData, pair[1].time - pair[0].time
 
                 blob = video.compile()
-                frames = []
                 
                 name = new Date().getTime() + ".webm"
 
-                debug = $("<video src=#{blob}><video>")
+                blobUrl = window.URL.createObjectURL(blob)
 
-                console.log debug
+                console.log blobUrl
 
                 # save the recording
                 filewrapper.save(name, blob)
@@ -37,22 +46,8 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                 # hide the time
                 $.publish "/bar/time/hide"
 
-            canvas = document.createElement("canvas")
-            canvas.width = 720
-            canvas.height = 480
-            ctx = canvas.getContext("2d")
-
-            framesDone = 0;
-
             for i in [0...frames.length]
+                bufferContext.putImageData frames[i].imageData, 0, 0
+                frames[i] = imageData: bufferCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
 
-                do (i) ->
-                    
-                    imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
-                    videoData = new Uint8ClampedArray(frames[i].imageData.data)
-                    imageData.data.set(videoData)
-                    ctx.putImageData imageData, 0, 0
-                    frames[i] = imageData: canvas.toDataURL('image/webp', 1), time: frames[i].time
-                    ++framesDone
-                    if framesDone == frames.length
-                        transcode()
+            transcode()

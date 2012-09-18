@@ -6,23 +6,25 @@
     This file contains utility functions and normalizations. this used to contain more functions, but
     most have been moved into the extension
     */
-    var pub;
+    var bufferCanvas, bufferContext, pub;
+    bufferCanvas = document.createElement("canvas");
+    bufferCanvas.width = 720 / 2;
+    bufferCanvas.height = 480 / 2;
+    bufferContext = bufferCanvas.getContext("2d");
     return pub = {
       getAnimationFrame: function() {
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
-          return window.setTimeout(callback, 1000 / 60);
-        };
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame;
       },
       createVideo: function(frames) {
-        var canvas, ctx, framesDone, i, transcode, _ref, _results;
+        var i, transcode, _ref;
         transcode = function() {
-          var blob, debug, i, name, pair, video, _i, _len, _ref;
+          var blob, blobUrl, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
           _ref = (function() {
             var _ref, _results;
             _results = [];
             for (i = 0, _ref = frames.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-              _results.push(frames.slice(i, (i + 2)));
+              _results.push(frames.slice(i, (i + 1) + 1 || 9e9));
             }
             return _results;
           })();
@@ -31,35 +33,20 @@
             video.add(pair[0].imageData, pair[1].time - pair[0].time);
           }
           blob = video.compile();
-          frames = [];
           name = new Date().getTime() + ".webm";
-          debug = $("<video src=" + blob + "><video>");
-          console.log(debug);
+          blobUrl = window.URL.createObjectURL(blob);
+          console.log(blobUrl);
           filewrapper.save(name, blob);
           return $.publish("/bar/time/hide");
         };
-        canvas = document.createElement("canvas");
-        canvas.width = 720;
-        canvas.height = 480;
-        ctx = canvas.getContext("2d");
-        framesDone = 0;
-        _results = [];
         for (i = 0, _ref = frames.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-          _results.push((function(i) {
-            var imageData, videoData;
-            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            videoData = new Uint8ClampedArray(frames[i].imageData.data);
-            imageData.data.set(videoData);
-            ctx.putImageData(imageData, 0, 0);
-            frames[i] = {
-              imageData: canvas.toDataURL('image/webp', 1),
-              time: frames[i].time
-            };
-            ++framesDone;
-            if (framesDone === frames.length) return transcode();
-          })(i));
+          bufferContext.putImageData(frames[i].imageData, 0, 0);
+          frames[i] = {
+            imageData: bufferCanvas.toDataURL('image/webp', 0.8),
+            time: frames[i].time
+          };
         }
-        return _results;
+        return transcode();
       }
     };
   });

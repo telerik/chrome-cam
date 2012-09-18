@@ -6,7 +6,8 @@ define([
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
 ], (kendo, effects, utils, filewrapper, template, transferImg) ->
-	
+	SECONDS_TO_RECORD = 6
+
 	canvas = {}
 	ctx = {}
 	video = {}
@@ -20,6 +21,8 @@ define([
 	full = {}
 	transfer = {}
 	effect = {}
+
+	scaleCanvas = {}
 
 	# the main draw loop which renders the live video effects      
 	draw = ->
@@ -44,11 +47,12 @@ define([
 
 	            	# push the current frame onto the buffer
 	            	# scale the video down to 360 x 240
-	            	#videoCtx.drawImage(canvas, 0, 0, video.width, video.height)
-	            	frames.push imageData: ctx.getImageData(0, 0, 360, 240), time: Date.now()
+	            	videoCtx.drawImage canvas, 0, 0
+	            	frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: time
 
 	            	# update the time in the view
-	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
+	            	secondsRecorded = (Date.now() - startTime) / 1000
+	            	full.el.timer.first().html kendo.toString(SECONDS_TO_RECORD - secondsRecorded, "0")
 
 	flash = (callback, image) ->
 
@@ -105,6 +109,7 @@ define([
 			canvas.height = 480
 			ctx = canvas.getContext "2d"
 			videoCtx = video.getContext "2d"
+			videoCtx.scale 0.5, 0.5
 
 			full.render().prepend(canvas)
 
@@ -208,22 +213,21 @@ define([
 			full.container.find(".timer").removeClass("hidden")
 
 			setTimeout (-> 
-				
+				recording = false
 				$.publish "/bottom/update", ["processing"]
 
 				setTimeout -> 
-					
 					utils.createVideo frames
 					console.log("Recording Done!")
-					recording = false
+					frames = []
 
 					full.container.find(".timer").addClass("hidden")
 					
 					$.publish "/recording/done", [ "full" ]
 				
-				, 500
+				, 0
 
-			), 6000
+			), SECONDS_TO_RECORD * 1000
 
 			recording = true
 

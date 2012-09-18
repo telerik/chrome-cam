@@ -523,13 +523,13 @@ a.button {
 }
 
 .appInfoHeader {
-	background: url("images/icon_128.png");
-	background-position: 0 0;
+	background: url("images/icon_256.png");
+	background-position: -14px -19px;
 	background-repeat: no-repeat;
-	background-size: 74px 74px;
-	margin-bottom: 30px;
+	background-size: 134px 134px;
+	margin-bottom: 80px;
 }
-	.appInfoHeader > * { margin-left: 85px; }
+	.appInfoHeader > * { margin-left: 115px; }
 	.appInfoHeader h1 { font-size: 65px; }
 	.appInfoHeader h2 {
 		padding-left: 10px;

@@ -1,7 +1,8 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, template, transferImg) {
-    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, startTime, transfer, video, videoCtx;
+    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
+    SECONDS_TO_RECORD = 6;
     canvas = {};
     ctx = {};
     video = {};
@@ -15,19 +16,22 @@
     full = {};
     transfer = {};
     effect = {};
+    scaleCanvas = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var time;
+        var secondsRecorded, time;
         if (!paused) {
           frame++;
           effect(canvas, stream.canvas, frame, stream.track);
           if (recording) {
             time = Date.now();
+            videoCtx.drawImage(canvas, 0, 0);
             frames.push({
-              imageData: ctx.getImageData(0, 0, 360, 240),
-              time: Date.now()
+              imageData: videoCtx.getImageData(0, 0, video.width, video.height),
+              time: time
             });
-            return full.el.timer.first().html(kendo.toString((Date.now() - startTime) / 1000, "0"));
+            secondsRecorded = (Date.now() - startTime) / 1000;
+            return full.el.timer.first().html(kendo.toString(SECONDS_TO_RECORD - secondsRecorded, "0"));
           }
         }
       });
@@ -84,6 +88,7 @@
         canvas.height = 480;
         ctx = canvas.getContext("2d");
         videoCtx = video.getContext("2d");
+        videoCtx.scale(0.5, 0.5);
         full.render().prepend(canvas);
         full.find(".flash", "flash");
         full.find(".timer", "timer");
@@ -162,15 +167,16 @@
         startTime = Date.now();
         full.container.find(".timer").removeClass("hidden");
         setTimeout((function() {
+          recording = false;
           $.publish("/bottom/update", ["processing"]);
           return setTimeout(function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
-            recording = false;
+            frames = [];
             full.container.find(".timer").addClass("hidden");
             return $.publish("/recording/done", ["full"]);
-          }, 500);
-        }), 6000);
+          }, 0);
+        }), SECONDS_TO_RECORD * 1000);
         return recording = true;
       }
     };

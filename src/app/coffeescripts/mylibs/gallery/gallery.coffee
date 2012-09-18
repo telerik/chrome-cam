@@ -76,7 +76,9 @@ define [
         # to get the current page, divide the index by the pageSize. then
         target = Math.ceil((index + 1) / pageSize)
         # go ahead and go to that page if needed
-        if (target != @ds.page()) then @ds.page(target)
+        if (target != @ds.page()) 
+            @ds.page(target)
+            render()
         # the actual index of the item within the page has to be recalculated if
         # the current page is greater than 1
         position = if target > 1 then index - pageSize else index
