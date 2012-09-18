@@ -141,6 +141,7 @@ define [
                             complete: =>
 
                                 for item in thumbs
+
                                     do ->
                                         element = {}
                                         if item.data.type == "webm"

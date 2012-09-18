@@ -319,7 +319,6 @@ a.button {
 /************ Gallery styles ************/
 
 .gallery {
-	/*display: -webkit-box;*/
 	height: 800px;
 	padding: 17px 0 0;
 	-webkit-box-pack: center;
@@ -330,22 +329,14 @@ a.button {
 	margin: 0 auto;
 }
 
-.gallery .gallery-row {
-	display: -webkit-box;
-	-webkit-box-pack: start;
-	-webkit-box-align: center;
-	-webkit-box-orient: horizontal;
-	width: 1117px;
-	margin: 0 auto 13px;
-}
-
 .gallery .thumbnail {
 	float: left;
 	text-align: center;
 	width: 270px;
 	height: 180px;
 	-webkit-transition: -webkit-transform .08s ease-in-out;
-	background: #333;
+	background: url('images/photoPlaceholder.png');
+	background-size: 270px 180px;
 	margin: 0 8px 16px 8px;
 }
 
