@@ -28,7 +28,7 @@
             var _j, _ref, _results;
             _results = [];
             for (i = _j = 0, _ref = frames.length - 2; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
-              _results.push(frames.slice(i, i + 2));
+              _results.push(frames.slice(i, (i + 1) + 1 || 9e9));
             }
             return _results;
           })();

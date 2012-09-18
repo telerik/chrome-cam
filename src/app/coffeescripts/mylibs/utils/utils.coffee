@@ -24,7 +24,7 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
             transcode = ->
 
                 video = new Whammy.Video()
-                for pair in (frames[i ... i + 2] for i in [0 .. frames.length - 2])
+                for pair in (frames[i .. i + 1] for i in [0 .. frames.length - 2])
                     video.add pair[0].imageData, pair[1].time - pair[0].time
 
                 blob = video.compile()

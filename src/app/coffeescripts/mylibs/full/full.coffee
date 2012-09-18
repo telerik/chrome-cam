@@ -6,7 +6,8 @@ define([
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
 ], (kendo, effects, utils, filewrapper, template, transferImg) ->
-	
+	SECONDS_TO_RECORD = 6
+
 	canvas = {}
 	ctx = {}
 	video = {}
@@ -47,10 +48,11 @@ define([
 	            	# push the current frame onto the buffer
 	            	# scale the video down to 360 x 240
 	            	videoCtx.drawImage canvas, 0, 0
-	            	frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: Date.now()
+	            	frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: time
 
 	            	# update the time in the view
-	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
+	            	secondsRecorded = (Date.now() - startTime) / 1000
+	            	full.el.timer.first().html kendo.toString(SECONDS_TO_RECORD - secondsRecorded, "0")
 
 	flash = (callback, image) ->
 
@@ -223,9 +225,9 @@ define([
 					
 					$.publish "/recording/done", [ "full" ]
 				
-				, 500
+				, 0
 
-			), 6000
+			), SECONDS_TO_RECORD * 1000
 
 			recording = true
 
