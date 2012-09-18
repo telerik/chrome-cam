@@ -38,7 +38,7 @@ define [
 
     destroy = ->
 
-        name = selected.children(":first").data("file-name")
+        name = selected.children(":first").attr("name")
         
         selected.kendoStop(true).kendoAnimate
             effects: "zoomOut fadOut"
@@ -136,6 +136,12 @@ define [
                         loaded = 0
                         thumbs = []
 
+                        # check to see if we need to update the thumbnail. The easiest
+                        # way is just to check and see if this is the first page and 
+                        # then publish the first item
+                        if @.page() == 1 
+                            $.publish "/bottom/thumbnail", [@.view()[0].file]
+
                         for item in @.view()
                             thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
                             thumbs.push(dom: thumbnail.render(), data: item)
@@ -152,6 +158,7 @@ define [
                                 for item in thumbs
 
                                     do ->
+
                                         element = {}
                                         if item.data.type == "webm"
                                             element = document.createElement "video"

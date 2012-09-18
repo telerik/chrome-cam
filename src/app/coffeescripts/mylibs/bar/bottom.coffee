@@ -3,7 +3,7 @@ define [
   'text!mylibs/bar/views/bottom.html'
 ], (kendo, template) ->
 
-	BROKEN_IMAGE = "images/broke.png"
+	BROKEN_IMAGE = "images/photoPlaceholder.png"
 	
 	view = {}
 

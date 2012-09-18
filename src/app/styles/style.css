@@ -332,6 +332,7 @@ a.button {
 	text-align: center;
 	width: 270px;
 	height: 180px;
+	background: url('images/photoPlaceholder.png');
 	-webkit-transition: -webkit-transform .08s ease-in-out;
 	margin: 0 8px 16px 8px;
 }

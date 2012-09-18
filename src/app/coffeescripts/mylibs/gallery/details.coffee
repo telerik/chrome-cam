@@ -6,7 +6,7 @@ define [
     index = 0
 
     viewModel = kendo.observable {
-        src: null
+        src: "images/photoPlaceholder.png"
         type: "jpeg"
         isVideo: ->
             @get("type") == "webm"
