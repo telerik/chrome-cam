@@ -1,6 +1,6 @@
 (function() {
 
-  define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/row.html'], function(kendo, utils, filewrapper, template) {
+  define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
     var add, animation, at, container, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, selected, total,
       _this = this;
     pageSize = 12;
@@ -128,12 +128,11 @@
               _ref = this.view();
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 item = _ref[_i];
-                thumbnail = $("<div class='thumbnail'></div>");
+                thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>");
                 thumbs.push({
-                  thumbnail: thumbnail,
+                  dom: thumbnail.render(),
                   data: item
                 });
-                pages.next.append(thumbnail);
               }
               return container.kendoAnimate({
                 effects: animation.effects,
@@ -153,16 +152,17 @@
                     }
                     element.src = item.data.file;
                     element.name = item.data.name;
-                    element.width = 250;
-                    element.height = 167;
+                    element.width = 270;
+                    element.height = 180;
                     element.setAttribute("class", "hidden");
                     element.onload = function() {
                       return $(element).kendoAnimate({
                         effects: "fadeIn",
-                        show: true
+                        show: true,
+                        complete: function() {}
                       });
                     };
-                    return item.thumbnail.append(element);
+                    return item.dom.append(element);
                   };
                   for (_j = 0, _len2 = thumbs.length; _j < _len2; _j++) {
                     item = thumbs[_j];
