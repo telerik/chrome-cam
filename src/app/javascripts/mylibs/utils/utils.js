@@ -20,7 +20,7 @@
         };
       },
       createVideo: function(frames) {
-        var framesDone, i, transcode, _i, _ref;
+        var i, transcode, _i, _ref;
         transcode = function() {
           var blob, blobUrl, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
@@ -37,14 +37,12 @@
             video.add(pair[0].imageData, pair[1].time - pair[0].time);
           }
           blob = video.compile();
-          frames = [];
           name = new Date().getTime() + ".webm";
           blobUrl = window.URL.createObjectURL(blob);
           console.log(blobUrl);
           filewrapper.save(name, blob);
           return $.publish("/bar/time/hide");
         };
-        framesDone = 0;
         for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
           bufferContext.putImageData(frames[i].imageData, 0, 0);
           frames[i] = {

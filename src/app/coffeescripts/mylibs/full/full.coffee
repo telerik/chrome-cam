@@ -217,9 +217,9 @@ define([
 				$.publish "/bottom/update", ["processing"]
 
 				setTimeout -> 
-					
 					utils.createVideo frames
 					console.log("Recording Done!")
+					frames = []
 
 					full.container.find(".timer").addClass("hidden")
 					

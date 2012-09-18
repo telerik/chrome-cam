@@ -173,6 +173,7 @@
           return setTimeout(function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
+            frames = [];
             full.container.find(".timer").addClass("hidden");
             return $.publish("/recording/done", ["full"]);
           }, 0);

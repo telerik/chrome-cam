@@ -7,6 +7,8 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
     ###
 
+    # the image data of each frame is put into this buffer canvas so we can call
+    # toDataURL
     bufferCanvas = document.createElement("canvas")
     bufferCanvas.width = 720 / 2
     bufferCanvas.height = 480 / 2
@@ -22,13 +24,16 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
         createVideo: (frames) ->
 
             transcode = ->
-
                 video = new Whammy.Video()
+                
+                # step through frames in pairs of two
+                # this is so that each frame can be added with the appropriate duration,
+                # since we know how long of a gap there is between frames
                 for pair in (frames[i .. i + 1] for i in [0 .. frames.length - 2])
+                    # at this point, imageData is really a data URL
                     video.add pair[0].imageData, pair[1].time - pair[0].time
 
                 blob = video.compile()
-                frames = []
                 
                 name = new Date().getTime() + ".webm"
 
@@ -41,8 +46,6 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
                 # hide the time
                 $.publish "/bar/time/hide"
-
-            framesDone = 0;
 
             for i in [0...frames.length]
                 bufferContext.putImageData frames[i].imageData, 0, 0
