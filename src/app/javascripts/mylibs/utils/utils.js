@@ -8,7 +8,16 @@
     most have been moved into the extension
     */
 
-    var pub;
+    var bufferCanvas, bufferContext, pub, scaleCanvas, scaleContext;
+    bufferCanvas = document.createElement("canvas");
+    bufferCanvas.width = 720;
+    bufferCanvas.height = 480;
+    bufferContext = bufferCanvas.getContext("2d");
+    scaleCanvas = document.createElement("canvas");
+    scaleCanvas.width = bufferCanvas.width / 2;
+    scaleCanvas.height = bufferCanvas.height / 2;
+    scaleContext = scaleCanvas.getContext("2d");
+    scaleContext.scale(0.5, 0.5);
     return pub = {
       getAnimationFrame: function() {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
@@ -18,7 +27,7 @@
       createVideo: function(frames) {
         var canvas, ctx, framesDone, i, transcode, _i, _ref, _results;
         transcode = function() {
-          var blob, debug, i, name, pair, video, _i, _len, _ref;
+          var blob, blobUrl, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
           _ref = (function() {
             var _j, _ref, _results;
@@ -35,8 +44,8 @@
           blob = video.compile();
           frames = [];
           name = new Date().getTime() + ".webm";
-          debug = $("<video src=" + blob + "><video>");
-          console.log(debug);
+          blobUrl = window.URL.createObjectURL(blob);
+          console.log(blobUrl);
           filewrapper.save(name, blob);
           return $.publish("/bar/time/hide");
         };
@@ -48,13 +57,10 @@
         _results = [];
         for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
           _results.push((function(i) {
-            var imageData, videoData;
-            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            videoData = new Uint8ClampedArray(frames[i].imageData.data);
-            imageData.data.set(videoData);
-            ctx.putImageData(imageData, 0, 0);
+            bufferContext.putImageData(frames[i].imageData, 0, 0);
+            scaleContext.drawImage(bufferCanvas, 0, 0);
             frames[i] = {
-              imageData: canvas.toDataURL('image/webp', 1),
+              imageData: scaleCanvas.toDataURL('image/webp', 0.8),
               time: frames[i].time
             };
             ++framesDone;

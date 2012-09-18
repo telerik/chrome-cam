@@ -25,7 +25,7 @@
           if (recording) {
             time = Date.now();
             frames.push({
-              imageData: ctx.getImageData(0, 0, 360, 240),
+              imageData: ctx.getImageData(0, 0, 720, 480),
               time: Date.now()
             });
             return full.el.timer.first().html(kendo.toString((Date.now() - startTime) / 1000, "0"));
@@ -163,11 +163,11 @@
         startTime = Date.now();
         full.container.find(".timer").removeClass("hidden");
         setTimeout((function() {
+          recording = false;
           $.publish("/bottom/update", ["processing"]);
           return setTimeout(function() {
             utils.createVideo(frames);
             console.log("Recording Done!");
-            recording = false;
             full.container.find(".timer").addClass("hidden");
             return $.publish("/recording/done", ["full"]);
           }, 500);

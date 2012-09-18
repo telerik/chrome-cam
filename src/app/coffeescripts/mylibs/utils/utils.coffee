@@ -7,6 +7,17 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
     ###
 
+    bufferCanvas = document.createElement("canvas")
+    bufferCanvas.width = 720
+    bufferCanvas.height = 480
+    bufferContext = bufferCanvas.getContext("2d")
+
+    scaleCanvas = document.createElement("canvas")
+    scaleCanvas.width = bufferCanvas.width / 2
+    scaleCanvas.height = bufferCanvas.height / 2
+    scaleContext = scaleCanvas.getContext("2d")
+    scaleContext.scale 0.5, 0.5
+
     pub = 
 
         # normalizes webkitRequestAnimationFrame
@@ -27,9 +38,9 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                 
                 name = new Date().getTime() + ".webm"
 
-                debug = $("<video src=#{blob}><video>")
+                blobUrl = window.URL.createObjectURL(blob)
 
-                console.log debug
+                console.log blobUrl
 
                 # save the recording
                 filewrapper.save(name, blob)
@@ -48,11 +59,13 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
                 do (i) ->
                     
-                    imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
-                    videoData = new Uint8ClampedArray(frames[i].imageData.data)
-                    imageData.data.set(videoData)
-                    ctx.putImageData imageData, 0, 0
-                    frames[i] = imageData: canvas.toDataURL('image/webp', 1), time: frames[i].time
+                    #imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
+                    #videoData = new Uint8ClampedArray(frames[i].imageData.data)
+                    #imageData.data.set(videoData)
+                    bufferContext.putImageData frames[i].imageData, 0, 0
+                    scaleContext.drawImage bufferCanvas, 0, 0
+
+                    frames[i] = imageData: scaleCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
                     ++framesDone
                     if framesDone == frames.length
                         transcode()

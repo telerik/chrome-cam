@@ -45,7 +45,7 @@ define([
 	            	# push the current frame onto the buffer
 	            	# scale the video down to 360 x 240
 	            	#videoCtx.drawImage(canvas, 0, 0, video.width, video.height)
-	            	frames.push imageData: ctx.getImageData(0, 0, 360, 240), time: Date.now()
+	            	frames.push imageData: ctx.getImageData(0, 0, 720, 480), time: Date.now()
 
 	            	# update the time in the view
 	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
@@ -208,14 +208,13 @@ define([
 			full.container.find(".timer").removeClass("hidden")
 
 			setTimeout (-> 
-				
+				recording = false
 				$.publish "/bottom/update", ["processing"]
 
 				setTimeout -> 
 					
 					utils.createVideo frames
 					console.log("Recording Done!")
-					recording = false
 
 					full.container.find(".timer").addClass("hidden")
 					
