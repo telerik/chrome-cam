@@ -107,14 +107,14 @@ define [
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
                 thumb = $(this).children(":first")            
-                $.publish "/details/show", [ get("#{thumb.data("file-name")}") ]
+                $.publish "/details/show", [ get("#{thumb.attr("name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
                 thumb = $(this).children(":first")            
                 $.publish "/top/update", ["selected"]
                 page1.find(".thumbnail").removeClass "selected"
                 selected = $(@).addClass "selected"
-                $.publish "/item/selected", [get("#{thumb.data("file-name")}")]
+                $.publish "/item/selected", [get("#{thumb.attr("name")}")]
 
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource
@@ -131,14 +131,6 @@ define [
 
                             pages.next.append(thumbnail)
 
-                            # img = new Image()
-                            # img.src = item.file
-                            # img.width = 250
-                            # img.height = 167
-                            # thumbnail.content.append(img)
-                            # img.onload = =>
-                            #     $(img).fadeIn()
-
                         # move the current page out and the next page in
                         container.kendoAnimate {
                             effects: animation.effects
@@ -149,11 +141,26 @@ define [
                             complete: =>
 
                                 for item in thumbs
-                                    img = new Image()
-                                    img.src = item.data.file
-                                    img.width = 250
-                                    img.height = 167
-                                    item.thumbnail.append(img)
+                                    do ->
+                                        element = {}
+                                        if item.data.type == "webm"
+                                            element = document.createElement "video"
+                                        else 
+                                            element = new Image()
+                                        
+                                        element.src = item.data.file
+                                        element.name = item.data.name
+                                        element.width = 250
+                                        element.height = 167
+                                        
+                                        element.setAttribute("class", "hidden")
+                                        element.onload = ->
+                                            $(element).kendoAnimate {
+                                                effects: "fadeIn",
+                                                show: true
+                                            }
+
+                                        item.thumbnail.append(element)
 
                                 # the current page becomes the next page
                                 justPaged = pages.previous
@@ -171,60 +178,12 @@ define [
                                             
                     sort:
                         dir: "desc" 
-                        field: "name"   
+                        field: "name"  
+                    schema: 
+                        model:
+                            id: "name" 
 
-                @ds.read()      
-
-            # resolves the deffered from images that
-            # are loading in from the file system
-            # filewrapper.list().done (f) =>
-            # # TESTING
-            # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
-            # do =>
-            # # END TESTING
-
-            #     files = f
-            #     total = files.length
-                
-            #     # read from the datasource
-            #     @ds.read()
-                
-            #     # get the second page
-            #     justPaged = pages.previous
-
-            #     pages.previous = pages.next
-            #     pages.next = justPaged
-                
-            #     @ds.page(2)
-            #     pages.cache = 2
-
-            # $.publish "/postman/deliver", [ {}, "/file/read" ]
+                @ds.read()
 
             $.subscribe "/gallery/delete", ->
                 destroy()

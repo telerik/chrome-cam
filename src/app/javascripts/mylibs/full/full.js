@@ -1,9 +1,11 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, template, transferImg) {
-    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, startTime, transfer;
+    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, startTime, transfer, video, videoCtx;
     canvas = {};
     ctx = {};
+    video = {};
+    videoCtx = {};
     preview = {};
     paused = true;
     frame = 0;
@@ -22,7 +24,7 @@
           if (recording) {
             time = Date.now();
             frames.push({
-              imageData: ctx.getImageData(0, 0, 720, 480),
+              imageData: ctx.getImageData(0, 0, 360, 240),
               time: Date.now()
             });
             return full.el.timer.first().html(kendo.toString((Date.now() - startTime) / 1000, "0"));
@@ -75,9 +77,13 @@
       init: function(selector) {
         full = new kendo.View(selector, template);
         canvas = document.createElement("canvas");
+        video = document.createElement("canvas");
+        video.width = 360;
+        video.height = 240;
         canvas.width = 720;
         canvas.height = 480;
         ctx = canvas.getContext("2d");
+        videoCtx = video.getContext("2d");
         full.render().prepend(canvas);
         full.find(".flash", "flash");
         full.find(".timer", "timer");

@@ -106,7 +106,7 @@
         page1.container.on("dblclick", ".thumbnail", function() {
           var thumb;
           thumb = $(this).children(":first");
-          return $.publish("/details/show", [get("" + (thumb.data("file-name")))]);
+          return $.publish("/details/show", [get("" + (thumb.attr("name")))]);
         });
         page1.container.on("click", ".thumbnail", function() {
           var thumb;
@@ -114,7 +114,7 @@
           $.publish("/top/update", ["selected"]);
           page1.find(".thumbnail").removeClass("selected");
           selected = $(this).addClass("selected");
-          return $.publish("/item/selected", [get("" + (thumb.data("file-name")))]);
+          return $.publish("/item/selected", [get("" + (thumb.attr("name")))]);
         });
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = new kendo.data.DataSource({
@@ -142,14 +142,31 @@
                 duration: animation.duration,
                 reverse: animation.reverse,
                 complete: function() {
-                  var img, item, justPaged, _j, _len2;
+                  var item, justPaged, _fn, _j, _len2;
+                  _fn = function() {
+                    var element;
+                    element = {};
+                    if (item.data.type === "webm") {
+                      element = document.createElement("video");
+                    } else {
+                      element = new Image();
+                    }
+                    element.src = item.data.file;
+                    element.name = item.data.name;
+                    element.width = 250;
+                    element.height = 167;
+                    element.setAttribute("class", "hidden");
+                    element.onload = function() {
+                      return $(element).kendoAnimate({
+                        effects: "fadeIn",
+                        show: true
+                      });
+                    };
+                    return item.thumbnail.append(element);
+                  };
                   for (_j = 0, _len2 = thumbs.length; _j < _len2; _j++) {
                     item = thumbs[_j];
-                    img = new Image();
-                    img.src = item.data.file;
-                    img.width = 250;
-                    img.height = 167;
-                    item.thumbnail.append(img);
+                    _fn();
                   }
                   justPaged = pages.previous;
                   pages.previous = pages.next;
@@ -162,6 +179,11 @@
             sort: {
               dir: "desc",
               field: "name"
+            },
+            schema: {
+              model: {
+                id: "name"
+              }
             }
           });
           return _this.ds.read();
