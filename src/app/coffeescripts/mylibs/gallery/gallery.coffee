@@ -119,13 +119,25 @@ define [
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource
                     data: message.message
-                    pageSize: 1
+                    pageSize: 12
                     change: ->
 
-                        for item in @.view()
+                        loaded = 0
+                        thumbs = []
 
-                            thumbnail = new kendo.View(pages.next, template, item)
-                            thumbnail.render()
+                        for item in @.view()
+                            thumbnail = $("<div class='thumbnail'></div>")
+                            thumbs.push({ thumbnail: thumbnail, data: item })
+
+                            pages.next.append(thumbnail)
+
+                            # img = new Image()
+                            # img.src = item.file
+                            # img.width = 250
+                            # img.height = 167
+                            # thumbnail.content.append(img)
+                            # img.onload = =>
+                            #     $(img).fadeIn()
 
                         # move the current page out and the next page in
                         container.kendoAnimate {
@@ -136,6 +148,13 @@ define [
                             reverse: animation.reverse
                             complete: =>
 
+                                for item in thumbs
+                                    img = new Image()
+                                    img.src = item.data.file
+                                    img.width = 250
+                                    img.height = 167
+                                    item.thumbnail.append(img)
+
                                 # the current page becomes the next page
                                 justPaged = pages.previous
 
@@ -145,6 +164,7 @@ define [
                                 justPaged.empty()
 
                                 flipping = false
+
 
                         }
 

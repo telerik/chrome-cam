@@ -119,15 +119,21 @@
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = new kendo.data.DataSource({
             data: message.message,
-            pageSize: 1,
+            pageSize: 12,
             change: function() {
-              var item, thumbnail, _i, _len, _ref,
+              var item, loaded, thumbnail, thumbs, _i, _len, _ref,
                 _this = this;
+              loaded = 0;
+              thumbs = [];
               _ref = this.view();
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 item = _ref[_i];
-                thumbnail = new kendo.View(pages.next, template, item);
-                thumbnail.render();
+                thumbnail = $("<div class='thumbnail'></div>");
+                thumbs.push({
+                  thumbnail: thumbnail,
+                  data: item
+                });
+                pages.next.append(thumbnail);
               }
               return container.kendoAnimate({
                 effects: animation.effects,
@@ -136,7 +142,15 @@
                 duration: animation.duration,
                 reverse: animation.reverse,
                 complete: function() {
-                  var justPaged;
+                  var img, item, justPaged, _j, _len2;
+                  for (_j = 0, _len2 = thumbs.length; _j < _len2; _j++) {
+                    item = thumbs[_j];
+                    img = new Image();
+                    img.src = item.data.file;
+                    img.width = 250;
+                    img.height = 167;
+                    item.thumbnail.append(img);
+                  }
                   justPaged = pages.previous;
                   pages.previous = pages.next;
                   pages.next = justPaged;

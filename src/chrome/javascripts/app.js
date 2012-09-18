@@ -2,10 +2,6 @@
 
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/intents/intents', 'mylibs/notify/notify', 'mylibs/assets/assets', 'libs/face/track'], function(postman, utils, file, intents, notify, assets, face) {
     'use strict';
-<<<<<<< HEAD
-=======
-
->>>>>>> b4787fd3e0329991d64d207a5b58bc5a7cf80046
     var canvas, ctx, draw, errback, hollaback, iframe, paused, pub, skip, skipBit, skipMax, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
@@ -21,9 +17,7 @@
     update = function() {
       var buffer, img;
       if (!paused) {
-        if (skipBit === 0) {
-          track = face.track(video);
-        }
+        if (skipBit === 0) track = face.track(video);
         ctx.drawImage(video, 0, 0, video.width, video.height);
         img = ctx.getImageData(0, 0, canvas.width, canvas.height);
         buffer = img.data.buffer;

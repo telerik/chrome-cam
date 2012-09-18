@@ -1,7 +1,9 @@
-<article class="thumbnail" draggable="true">
-	# if (type === 'webm') { # 
-		<video src="#: file #" width="250" height="167" controls data-media-type="#: type #" data-file-name="#: name #"></video>
-	# } else { #
-		<img width="250" height="167" data-media-type="#: type #" data-file-name="#: name #">
-	# } #
-</section>
+$.each(data, function() {
+	<div class="thumbnail" draggable="true">
+		# if (type === 'webm') { # 
+			<video src="#: file #" width="250" height="167" controls data-media-type="#: type #" data-file-name="#: name #"></video>
+		# } else { #
+			<img src="#: file #" width="250" height="167" data-media-type="#: type #" data-file-name="#: name #">
+		# } #
+	</div>	
+})
