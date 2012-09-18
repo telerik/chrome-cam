@@ -62,7 +62,6 @@
         }, hollaback, errback);
         iframe.src = "app/index.html";
         postman.init(iframe.contentWindow);
-        console.log("Creating worker...");
         thumbnailWorker = new Worker("chrome/javascripts/mylibs/workers/bitmapWorker.js");
         thumbnailWorker.onmessage = function(e) {
           return $.publish("/postman/deliver", [e.data, "/preview/thumbnail/response/"]);

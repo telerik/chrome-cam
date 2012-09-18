@@ -174,7 +174,6 @@
         });
         ds.read();
         $.subscribe("/preview/thumbnail/response/", function(e) {
-          console.log(e.latency);
           return $("[data-filter-name='" + e.key + "']", selector).find("img").attr("src", e.src);
         });
         return $.subscribe("/preview/pause", function(pause) {

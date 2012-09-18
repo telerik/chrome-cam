@@ -237,7 +237,6 @@ define [
             ds.read()   
 
             $.subscribe "/preview/thumbnail/response/", (e) ->
-                console.log e.latency
                 $("[data-filter-name='#{e.key}']", selector).find("img").attr("src", e.src)
 
             $.subscribe "/preview/pause", (pause) ->
