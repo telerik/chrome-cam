@@ -81,11 +81,9 @@ define([
 			
 			thumbnailWorker = new Worker("chrome/javascripts/mylibs/workers/bitmapWorker.js")
 			thumbnailWorker.onmessage = (e) ->
-				console.log "Sending a thumbnail update..."
 				$.publish "/postman/deliver", [e.data, "/preview/thumbnail/response/"]
 				
 			$.subscribe "/preview/thumbnail/request", (e) ->
-				console.log "Requested a thumbnail update..."
 				thumbnailWorker.postMessage
 					width: e.data.width
 					height: e.data.height
