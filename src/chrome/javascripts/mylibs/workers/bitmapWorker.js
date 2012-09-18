@@ -142,12 +142,11 @@ var createBMP = function(width, height, data) {
 	var aPixelData = [];
 	var aPixelRow = new Array(iWidth + 1);
 	var y = iHeight;
+	var iWidth4 = 4 * iWidth;
 	do {
-		var iOffsetY = iWidth*(y-1)*4;
+		var iOffsetY = iWidth4*(y-1);
 		var poke = 0;
-		for (var x=0;x<iWidth;x++) {
-			var iOffsetX = 4*x;
-
+		for (var iOffsetX=0;iOffsetX<iWidth4;iOffsetX += 4) {
 			aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+2]);
 			aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+1]);
 			aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX]);
