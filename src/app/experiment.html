@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+	<title>Testing something horrible...</title>
+</head>
+<body>
+	<canvas id="foo" width="640" height="480"></canvas>
+	<img id="out" width="640" height="480"></canvas>
+	<div id="txt"></div>
+	<script foo="bar">
+		(function(){
+			var foo = document.getElementById("foo"),
+				ctx = foo.getContext("2d"), i;
+			
+			var timeTaken = function(fn) {
+				var startDate = Date.now();
+				fn();
+				return Date.now() - startDate;
+			};
+
+			for (i = 0; i < 20; ++i) {
+				ctx.fillStyle = "rgb(" + [ Math.floor(Math.random()*256), Math.floor(Math.random()*256), Math.floor(Math.random()*256) ].join(",") + ")";
+
+				ctx.fillRect(Math.random()*640, Math.random()*480, Math.random()*480, Math.random()*480);
+			}
+
+			var worker = new Worker("experimentWorker.js");
+			worker.onmessage = function(e) {
+				document.getElementById(e.data.key).src = e.data.src;
+			};
+
+			console.log(timeTaken(function(){ 
+				var imageData = ctx.getImageData(0, 0, foo.width, foo.height);
+					worker.postMessage({
+					width: imageData.width,
+					height: imageData.height,
+					data: imageData.data,
+					key: "out"
+				});
+			}));
+			
+		})();
+	</script>
+</body>
+</html>

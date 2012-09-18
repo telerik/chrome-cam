@@ -21,6 +21,11 @@ define [
     frame = 0
     ds = {}
     flipping = false
+
+    shouldUpdateThumbnails = true
+    setThumbnailsToBeUpdated = ->
+        shouldUpdateThumbnails = true if not flipping
+    setInterval setThumbnailsToBeUpdated, 1000
     
     # define the animations. we slide different directions depending on if we are going forward or back.
     animation = 
@@ -49,6 +54,18 @@ define [
                     frame++
                
                     preview.filter preview.canvas, canvas, frame, stream.track
+
+                    if shouldUpdateThumbnails
+                        previewContext = preview.canvas.getContext("2d")
+                        imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height)
+                        eventData = 
+                            width: imageData.width
+                            height: imageData.height
+                            data: imageData.data
+                            key: preview.name
+                        $.publish "/postman/deliver", [ data: eventData, "/preview/thumbnail/request" ]
+
+                shouldUpdateThumbnails = false
 
     keyboard = (enabled) ->
 
@@ -106,7 +123,8 @@ define [
 
         swipe: (e) ->
             # page in the direction of the swipe
-            page e.direction
+            if not flipping
+                page e.direction
             
         init: (selector) ->
         
@@ -171,41 +189,55 @@ define [
                             filter.width = canvas.width
                             filter.height =canvas.height
 
+                            img = document.createElement "img"
+                            img.width = canvas.width
+                            img.height = canvas.height
+
                             data = { effect: item.id, name: item.name, col: index % 3, row: Math.floor index / 3 }
                             index++
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
                             html = filters.render()
-                            html.find(".canvas").append(filter).click ->
+                            html.find(".canvas").append(filter).append(img).click ->
 
                                 paused = true
 
                                 $.publish "/full/show", [ item ]
 
-                            previews.push { canvas: filter, filter: item.filter }
+                            previews.push { canvas: filter, filter: item.filter, name: item.name }
 
                     # move the current page out and the next page in
-                    page1.container.kendoAnimate {
-                        effects: animation.effects
-                        face: if animation.reverse then nextPage else previousPage
-                        back: if animation.reverse then previousPage else nextPage
-                        duration: animation.duration
-                        reverse: animation.reverse
-                        complete: ->
-                            # the current page becomes the next page
-                            justPaged = previousPage
-                            
-                            previousPage = nextPage
-                            nextPage = justPaged
+                    $("canvas").hide()
+                    $("img").show()
+                    shouldUpdateThumbnails = true
+                    flippy = ->
+                        page1.container.kendoAnimate
+                            effects: animation.effects
+                            face: if animation.reverse then nextPage else previousPage
+                            back: if animation.reverse then previousPage else nextPage
+                            duration: animation.duration
+                            reverse: animation.reverse
+                            complete: ->
+                                $("img").hide()
+                                $("canvas").show()
 
-                            justPaged.empty()
+                                # the current page becomes the next page
+                                justPaged = previousPage
+                                
+                                previousPage = nextPage
+                                nextPage = justPaged
 
-                            flipping = false
-                    }
+                                justPaged.empty()
+
+                                flipping = false
+                    setTimeout flippy, 100
 
 
             # read from the datasource
             ds.read()   
+
+            $.subscribe "/preview/thumbnail/response/", (e) ->
+                $("[data-filter-name='#{e.key}']", selector).find("img").attr("src", e.src)
 
             $.subscribe "/preview/pause", (pause) ->
                 paused = pause

@@ -77,6 +77,18 @@ define([
 			# cue up the postman!
 			postman.init iframe.contentWindow
 
+			# TODO: move to own file
+			thumbnailWorker = new Worker("chrome/javascripts/mylibs/workers/bitmapWorker.js")
+			thumbnailWorker.onmessage = (e) ->
+				$.publish "/postman/deliver", [e.data, "/preview/thumbnail/response/"]
+				
+			$.subscribe "/preview/thumbnail/request", (e) ->
+				thumbnailWorker.postMessage
+					width: e.data.width
+					height: e.data.height
+					data: e.data.data
+					key: e.data.key
+
 			#initialize notifications
 			notify.init()
 
