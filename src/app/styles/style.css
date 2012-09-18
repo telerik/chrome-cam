@@ -334,6 +334,8 @@ a.button {
 	height: 180px;
 	background: url('images/photoPlaceholder.png');
 	-webkit-transition: -webkit-transform .08s ease-in-out;
+	background: url('../images/photoPlaceholder.png');
+	background-size: 270px 180px;
 	margin: 0 8px 16px 8px;
 }
 
