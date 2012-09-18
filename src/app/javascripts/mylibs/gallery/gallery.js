@@ -42,16 +42,17 @@
       }
     };
     destroy = function() {
-      var name;
+      var name,
+        _this = this;
       name = selected.children(":first").attr("name");
       return selected.kendoStop(true).kendoAnimate({
         effects: "zoomOut fadOut",
         hide: true,
         complete: function() {
-          var _this = this;
           return filewrapper.deleteFile(name).done(function() {
             selected.remove();
-            return _this.ds.remove(_this.ds.get(name));
+            _this.ds.remove(_this.ds.get(name));
+            return render();
           });
         }
       });
@@ -116,9 +117,6 @@
     render = function(flip) {
       var complete, item, thumbnail, thumbs, _i, _len, _ref;
       thumbs = [];
-      if (_this.ds.page() === 1) {
-        $.publish("/bottom/thumbnail", [_this.ds.view()[0].file]);
-      }
       _ref = _this.ds.view();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
@@ -216,6 +214,11 @@
           _this.ds = new kendo.data.DataSource({
             data: message.message,
             pageSize: 12,
+            change: function() {
+              if (this.page() === 1) {
+                return $.publish("/bottom/thumbnail", [this.view()[0].file]);
+              }
+            },
             sort: {
               dir: "desc",
               field: "name"

@@ -53,10 +53,11 @@ define [
         selected.kendoStop(true).kendoAnimate
             effects: "zoomOut fadOut"
             hide: true
-            complete: ->
+            complete: =>
                 filewrapper.deleteFile(name).done => 
                     selected.remove()
                     @ds.remove(@ds.get(name))
+                    render()
 
     get = (name) => 
         # find the match in the data source
@@ -119,12 +120,6 @@ define [
     render = (flip) =>
 
         thumbs = []
-
-        # check to see if we need to update the thumbnail. The easiest
-        # way is just to check and see if this is the first page and 
-        # then publish the first item
-        if @ds.page() == 1 
-            $.publish "/bottom/thumbnail", [@ds.view()[0].file]
 
         for item in @ds.view()
             thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
@@ -233,12 +228,19 @@ define [
                 @ds = new kendo.data.DataSource
                     data: message.message
                     pageSize: 12                    
+                    change: ->
+                        # check to see if we need to update the thumbnail. The easiest
+                        # way is just to check and see if this is the first page and 
+                        # then publish the first item
+                        if @.page() == 1 
+                            $.publish "/bottom/thumbnail", [@.view()[0].file]
                     sort:
                         dir: "desc" 
                         field: "name"  
                     schema: 
                         model:
                             id: "name" 
+
 
                 @ds.read()
 
