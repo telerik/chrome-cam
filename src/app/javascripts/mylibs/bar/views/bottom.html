@@ -1,6 +1,6 @@
 <section class="bar">
 	<section class="left">
-		<ul class="mode" data-bind="style: { display: mode.display }">
+		<ul class="mode" data-bind="visible: mode.visible">
 			<li>
 				<a data-bind="click: mode.click" class="photo active" data-mode="photo" alt="Photo Mode" title="Photo Mode"></a>
 			</li>
@@ -14,7 +14,7 @@
 	</section>
 	<section class="center">
 		<div>
-			<div class="capture" data-bind="style: { display: capture.display }">
+			<div class="capture" data-bind="visible: capture.visible">
 				<div class="gray circle" data-bind="events: { click: capture.click } ">
 					<div class="red-dot circle stop"></div>
 				</div>
@@ -24,13 +24,13 @@
 				<span class="red-dot circle counter"></span>
 				<span class="red-dot circle counter"></span>
 			</div>
-			<div class="saving" data-bind="style: { display: processing.display }">
+			<div class="saving" data-bind="visible: processing.visible">
 				<h3>Processing...</h3>
 			</div>
 		</div>
 	</section>
 	<section class="right">
-		<a data-role="button" class="button filters" data-bind="click: filters.click, style: { display: filters.display }">Filters</a>
+		<a data-role="button" class="button filters" data-bind="click: filters.click, visible: filters.visible">Filters</a>
 		<a href="\#gallery" data-transition="overlay:up reverse" data-bind="visible: thumbnail.visible" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
 			<img class="thumbnail" id="destination" data-bind="attr: { src: thumbnail.src }" />
 		</a>

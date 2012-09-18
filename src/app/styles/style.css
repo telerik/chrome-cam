@@ -229,9 +229,9 @@ a.button {
 
 /* Bar States */
 
-.galleryMode .mode, .galleryMode
+/*.galleryMode .mode, .galleryMode
 .previewMode .back, .previewMode .delete, .previewMode .share,
-.recording .mode, .recording .galleryLink { display: none; }
+.recording .mode, .recording .galleryLink { display: none; }*/
 
 .galleryMode, .details .bar {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(15%,rgba(46,46,46,1)), color-stop(100%,rgba(130,130,130,1)));

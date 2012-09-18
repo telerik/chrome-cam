@@ -17,6 +17,7 @@ define [
     pages = 
         previous: {}
         next: {}
+    active = {}
 
     animation = 
         effects: "pageturn:horizontal"
@@ -42,6 +43,8 @@ define [
             if direction < 0 and @ds.page() < @ds.totalPages()
                 animation.reverse = false
                 @ds.page @ds.page() + 1
+
+            render(true)
 
     destroy = ->
 
@@ -84,7 +87,84 @@ define [
         select match.item.name
 
     add = (item) =>
-        @ds.add(name: item.name, file: item.file, type: item.type)
+        item = { name: item.name, file: item.file, type: item.type }
+        # add the item to the datasource
+        @ds.add(item)
+
+    create = (item) ->
+
+        element = {}
+        if item.type == "webm"
+            element = document.createElement "video"
+        else 
+            element = new Image()
+        
+        element.src = item.file
+        element.name = item.name
+        element.width = 270
+        element.height = 180
+        
+        element.setAttribute("class", "hidden")
+        element.onload = ->
+
+            $(element).kendoAnimate {
+                effects: "fadeIn",
+                show: true
+            }
+
+        return element
+
+    render = (flip) =>
+
+        thumbs = []
+
+        # check to see if we need to update the thumbnail. The easiest
+        # way is just to check and see if this is the first page and 
+        # then publish the first item
+        if @ds.page() == 1 
+            $.publish "/bottom/thumbnail", [@ds.view()[0].file]
+
+        for item in @ds.view()
+            thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
+            thumbs.push(dom: thumbnail.render(), data: item)
+
+        complete = =>
+
+            setTimeout(->
+                for item in thumbs
+
+                    do ->
+                        element = create(item.data)
+                        item.dom.append(element)
+            , 50)
+
+            # the current page becomes the next page
+            pages.next.show()
+
+            justPaged = pages.previous
+            justPaged.hide()
+            justPaged.empty()
+
+            pages.previous = pages.next
+            pages.next = justPaged
+            
+
+
+            flipping = false
+
+        if flip
+
+            # move the current page out and the next page in
+            container.kendoAnimate {
+                effects: animation.effects
+                face: if animation.reverse then pages.next else pages.previous
+                back: if animation.reverse then pages.previous else pages.next
+                duration: animation.duration
+                reverse: animation.reverse
+                complete: complete
+            }
+
+        else complete()
 
     pub =
 
@@ -108,8 +188,18 @@ define [
 
             # don't respond to the keyboard events anymore
             $.unsubscribe "/keyboard/arrow"
-        swipe: (e) ->
-            
+
+            pages.next.empty()
+            pages.previous.empty()
+
+        show: (e) =>
+            setTimeout(->
+                render()
+                # pages.previous.kendoAnimate { effects: "fadeIn", show: true }
+                # pages.next.kendoAnimate { effects: "fadeIn", show: true }
+            , 420)
+        
+        swipe: (e) ->    
             page (e.direction == "right") - (e.direction == "left")
 
         init: (selector) =>
@@ -124,7 +214,7 @@ define [
             container = page1.container
 
             pages.previous = page1.render().addClass("page gallery")
-            pages.next = page2.render().addClass("page gallery")
+            active = pages.next = page2.render().addClass("page gallery")
 
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
@@ -140,71 +230,7 @@ define [
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource
                     data: message.message
-                    pageSize: 12
-                    change: ->
-
-                        loaded = 0
-                        thumbs = []
-
-                        # check to see if we need to update the thumbnail. The easiest
-                        # way is just to check and see if this is the first page and 
-                        # then publish the first item
-                        if @.page() == 1 
-                            $.publish "/bottom/thumbnail", [@.view()[0].file]
-
-                        for item in @.view()
-                            thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
-                            thumbs.push(dom: thumbnail.render(), data: item)
-
-                        # move the current page out and the next page in
-                        container.kendoAnimate {
-                            effects: animation.effects
-                            face: if animation.reverse then pages.next else pages.previous
-                            back: if animation.reverse then pages.previous else pages.next
-                            duration: animation.duration
-                            reverse: animation.reverse
-                            complete: =>
-
-                                for item in thumbs
-
-                                    do ->
-
-                                        element = {}
-                                        if item.data.type == "webm"
-                                            element = document.createElement "video"
-                                        else 
-                                            element = new Image()
-                                        
-                                        element.src = item.data.file
-                                        element.name = item.data.name
-                                        element.width = 270
-                                        element.height = 180
-                                        
-                                        element.setAttribute("class", "hidden")
-                                        element.onload = ->
-
-                                            $(element).kendoAnimate {
-                                                effects: "fadeIn",
-                                                show: true
-                                                complete: ->
-
-                                            }
-
-                                        item.dom.append(element)
-
-                                # the current page becomes the next page
-                                justPaged = pages.previous
-
-                                pages.previous = pages.next
-                                pages.next = justPaged
-
-                                justPaged.empty()
-
-                                flipping = false
-
-                        }
-
-                                            
+                    pageSize: 12                    
                     sort:
                         dir: "desc" 
                         field: "name"  

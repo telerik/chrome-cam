@@ -11,11 +11,11 @@ define [
 	viewModel = kendo.observable {
 	
 		processing: 
-			display: "none"
+			visible: false
 
 		mode:
 
-			display: "none"
+			visible: false
 			active: "photo"
 			click: (e) ->
 				
@@ -31,7 +31,7 @@ define [
 
 		capture:
 
-			display: "none"
+			visible: false
 			click: (e) ->
 
 				mode = this.get("mode.active")
@@ -68,11 +68,9 @@ define [
 		thumbnail:
 			src: BROKEN_IMAGE
 			visible: true
-			displayMode: ->
-				if viewModel.get("thumbnail.src") == BROKEN_IMAGE then "none" else viewModel.get("thumbnail.display")
 
 		filters: 
-			display: "none"
+			visible: false
 			click: ->
 				$.publish "/full/hide"
 
@@ -106,28 +104,28 @@ define [
 	states = 
 
 		preview: ->
-			viewModel.set("mode.display", "none")
-			viewModel.set("capture.display", "none")
-			viewModel.set("filters.display", "none")
-			viewModel.set("thumbnail.display", null)
+			viewModel.set("mode.visible", false)
+			viewModel.set("capture.visible", false)
+			viewModel.set("filters.visible", false)
+			viewModel.set("thumbnail.visible", true)
 		capture: ->
-			viewModel.set("thumbnail.display", "none")
-			viewModel.set("mode.display", "none")
-			viewModel.set("capture.display", "none")
-			viewModel.set("filters.display", "none")
+			viewModel.set("thumbnail.visible", true)
+			viewModel.set("mode.visible", false)
+			viewModel.set("capture.visible", false)
+			viewModel.set("filters.visible", false)
 		record: ->
-			viewModel.set("thumbnail.display", "none")
-			viewModel.set("mode.display", "none")
-			viewModel.set("filters.display", "none")
+			viewModel.set("thumbnail.visible", false)
+			viewModel.set("mode.visible", false)
+			viewModel.set("filters.visible", false)
 		full: ->
-			viewModel.set("processing.display", "none")
-			viewModel.set("thumbnail.display", null)	
-			viewModel.set("mode.display", null)
-			viewModel.set("capture.display", null)
-			viewModel.set("filters.display", null)
+			viewModel.set("processing.visible", false)
+			viewModel.set("thumbnail.visible", true)	
+			viewModel.set("mode.visible", true)
+			viewModel.set("capture.visible", true)
+			viewModel.set("filters.visible", true)
 		processing: ->
-			viewModel.set("processing.display", null)
-			viewModel.set("capture.display", "none")
+			viewModel.set("processing.visible", true)
+			viewModel.set("capture.visible", false)
 			view.el.bar.removeClass("recording")
 			view.el.stop.css "border-radius", 100
 		set: (state) ->

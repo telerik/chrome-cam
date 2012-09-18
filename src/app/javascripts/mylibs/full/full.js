@@ -37,7 +37,7 @@
       transfer.content.kendoStop().kendoAnimate({
         effects: "transfer",
         target: $("#destination"),
-        duration: 2002,
+        duration: 1000,
         ease: "ease-in",
         complete: function() {
           $.publish("/bottom/thumbnail", [image]);

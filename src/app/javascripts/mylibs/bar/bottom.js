@@ -6,10 +6,10 @@
     view = {};
     viewModel = kendo.observable({
       processing: {
-        display: "none"
+        visible: false
       },
       mode: {
-        display: "none",
+        visible: false,
         active: "photo",
         click: function(e) {
           var a;
@@ -20,7 +20,7 @@
         }
       },
       capture: {
-        display: "none",
+        visible: false,
         click: function(e) {
           var capture, mode, startTime, token;
           mode = this.get("mode.active");
@@ -49,17 +49,10 @@
       },
       thumbnail: {
         src: BROKEN_IMAGE,
-        visible: true,
-        displayMode: function() {
-          if (viewModel.get("thumbnail.src") === BROKEN_IMAGE) {
-            return "none";
-          } else {
-            return viewModel.get("thumbnail.display");
-          }
-        }
+        visible: true
       },
       filters: {
-        display: "none",
+        visible: false,
         click: function() {
           return $.publish("/full/hide");
         }
@@ -85,32 +78,32 @@
     };
     states = {
       preview: function() {
-        viewModel.set("mode.display", "none");
-        viewModel.set("capture.display", "none");
-        viewModel.set("filters.display", "none");
-        return viewModel.set("thumbnail.display", null);
+        viewModel.set("mode.visible", false);
+        viewModel.set("capture.visible", false);
+        viewModel.set("filters.visible", false);
+        return viewModel.set("thumbnail.visible", true);
       },
       capture: function() {
-        viewModel.set("thumbnail.display", "none");
-        viewModel.set("mode.display", "none");
-        viewModel.set("capture.display", "none");
-        return viewModel.set("filters.display", "none");
+        viewModel.set("thumbnail.visible", true);
+        viewModel.set("mode.visible", false);
+        viewModel.set("capture.visible", false);
+        return viewModel.set("filters.visible", false);
       },
       record: function() {
-        viewModel.set("thumbnail.display", "none");
-        viewModel.set("mode.display", "none");
-        return viewModel.set("filters.display", "none");
+        viewModel.set("thumbnail.visible", false);
+        viewModel.set("mode.visible", false);
+        return viewModel.set("filters.visible", false);
       },
       full: function() {
-        viewModel.set("processing.display", "none");
-        viewModel.set("thumbnail.display", null);
-        viewModel.set("mode.display", null);
-        viewModel.set("capture.display", null);
-        return viewModel.set("filters.display", null);
+        viewModel.set("processing.visible", false);
+        viewModel.set("thumbnail.visible", true);
+        viewModel.set("mode.visible", true);
+        viewModel.set("capture.visible", true);
+        return viewModel.set("filters.visible", true);
       },
       processing: function() {
-        viewModel.set("processing.display", null);
-        viewModel.set("capture.display", "none");
+        viewModel.set("processing.visible", true);
+        viewModel.set("capture.visible", false);
         view.el.bar.removeClass("recording");
         return view.el.stop.css("border-radius", 100);
       },

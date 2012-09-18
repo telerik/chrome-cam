@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var add, animation, at, container, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, select, selected, total,
+    var active, add, animation, at, container, create, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, render, select, selected, total,
       _this = this;
     pageSize = 12;
     ds = {};
@@ -16,6 +16,7 @@
       previous: {},
       next: {}
     };
+    active = {};
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
@@ -35,8 +36,9 @@
         }
         if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
           animation.reverse = false;
-          return _this.ds.page(_this.ds.page() + 1);
+          _this.ds.page(_this.ds.page() + 1);
         }
+        return render(true);
       }
     };
     destroy = function() {
@@ -80,11 +82,84 @@
       return select(match.item.name);
     };
     add = function(item) {
-      return _this.ds.add({
+      item = {
         name: item.name,
         file: item.file,
         type: item.type
-      });
+      };
+      return _this.ds.add(item);
+    };
+    create = function(item) {
+      var element;
+      element = {};
+      if (item.type === "webm") {
+        element = document.createElement("video");
+      } else {
+        element = new Image();
+      }
+      element.src = item.file;
+      element.name = item.name;
+      element.width = 270;
+      element.height = 180;
+      element.setAttribute("class", "hidden");
+      element.onload = function() {
+        return $(element).kendoAnimate({
+          effects: "fadeIn",
+          show: true
+        });
+      };
+      return element;
+    };
+    render = function(flip) {
+      var complete, item, thumbnail, thumbs, _i, _len, _ref;
+      thumbs = [];
+      if (_this.ds.page() === 1) {
+        $.publish("/bottom/thumbnail", [_this.ds.view()[0].file]);
+      }
+      _ref = _this.ds.view();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>");
+        thumbs.push({
+          dom: thumbnail.render(),
+          data: item
+        });
+      }
+      complete = function() {
+        var justPaged;
+        setTimeout(function() {
+          var item, _j, _len2, _results;
+          _results = [];
+          for (_j = 0, _len2 = thumbs.length; _j < _len2; _j++) {
+            item = thumbs[_j];
+            _results.push((function() {
+              var element;
+              element = create(item.data);
+              return item.dom.append(element);
+            })());
+          }
+          return _results;
+        }, 50);
+        pages.next.show();
+        justPaged = pages.previous;
+        justPaged.hide();
+        justPaged.empty();
+        pages.previous = pages.next;
+        pages.next = justPaged;
+        return flipping = false;
+      };
+      if (flip) {
+        return container.kendoAnimate({
+          effects: animation.effects,
+          face: animation.reverse ? pages.next : pages.previous,
+          back: animation.reverse ? pages.previous : pages.next,
+          duration: animation.duration,
+          reverse: animation.reverse,
+          complete: complete
+        });
+      } else {
+        return complete();
+      }
     };
     return pub = {
       before: function(e) {
@@ -103,7 +178,14 @@
             paused: false
           }, "/camera/pause"
         ]);
-        return $.unsubscribe("/keyboard/arrow");
+        $.unsubscribe("/keyboard/arrow");
+        pages.next.empty();
+        return pages.previous.empty();
+      },
+      show: function(e) {
+        return setTimeout(function() {
+          return render();
+        }, 420);
       },
       swipe: function(e) {
         return page((e.direction === "right") - (e.direction === "left"));
@@ -114,7 +196,7 @@
         page2 = new kendo.View(selector, null);
         container = page1.container;
         pages.previous = page1.render().addClass("page gallery");
-        pages.next = page2.render().addClass("page gallery");
+        active = pages.next = page2.render().addClass("page gallery");
         page1.container.on("dblclick", ".thumbnail", function() {
           var thumb;
           thumb = $(this).children(":first");
@@ -131,65 +213,6 @@
           _this.ds = new kendo.data.DataSource({
             data: message.message,
             pageSize: 12,
-            change: function() {
-              var item, loaded, thumbnail, thumbs, _i, _len, _ref,
-                _this = this;
-              loaded = 0;
-              thumbs = [];
-              if (this.page() === 1) {
-                $.publish("/bottom/thumbnail", [this.view()[0].file]);
-              }
-              _ref = this.view();
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                item = _ref[_i];
-                thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>");
-                thumbs.push({
-                  dom: thumbnail.render(),
-                  data: item
-                });
-              }
-              return container.kendoAnimate({
-                effects: animation.effects,
-                face: animation.reverse ? pages.next : pages.previous,
-                back: animation.reverse ? pages.previous : pages.next,
-                duration: animation.duration,
-                reverse: animation.reverse,
-                complete: function() {
-                  var item, justPaged, _fn, _j, _len2;
-                  _fn = function() {
-                    var element;
-                    element = {};
-                    if (item.data.type === "webm") {
-                      element = document.createElement("video");
-                    } else {
-                      element = new Image();
-                    }
-                    element.src = item.data.file;
-                    element.name = item.data.name;
-                    element.width = 270;
-                    element.height = 180;
-                    element.setAttribute("class", "hidden");
-                    element.onload = function() {
-                      return $(element).kendoAnimate({
-                        effects: "fadeIn",
-                        show: true,
-                        complete: function() {}
-                      });
-                    };
-                    return item.dom.append(element);
-                  };
-                  for (_j = 0, _len2 = thumbs.length; _j < _len2; _j++) {
-                    item = thumbs[_j];
-                    _fn();
-                  }
-                  justPaged = pages.previous;
-                  pages.previous = pages.next;
-                  pages.next = justPaged;
-                  justPaged.empty();
-                  return flipping = false;
-                }
-              });
-            },
             sort: {
               dir: "desc",
               field: "name"
