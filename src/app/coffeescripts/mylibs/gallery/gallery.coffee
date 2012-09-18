@@ -2,7 +2,7 @@ define [
     'Kendo'
     'mylibs/utils/utils'
     'mylibs/file/filewrapper'
-    'text!mylibs/gallery/views/row.html'
+    'text!mylibs/gallery/views/thumb.html'
 ], (kendo, utils, filewrapper, template) ->
     
     pageSize = 12
@@ -25,13 +25,16 @@ define [
 
     page = (direction) =>
 
-        # TODO: add transition effect...
-        if direction > 0 and @ds.page() > 1
-            animation.reverse = true
-            @ds.page @ds.page() - 1
-        if direction < 0 and @ds.page() < @ds.totalPages()
-            animation.reverse = false
-            @ds.page @ds.page() + 1
+        if not flipping
+            
+            flipping = true
+
+            if direction > 0 and @ds.page() > 1
+                animation.reverse = true
+                @ds.page @ds.page() - 1
+            if direction < 0 and @ds.page() < @ds.totalPages()
+                animation.reverse = false
+                @ds.page @ds.page() + 1
 
     destroy = ->
 
@@ -76,16 +79,24 @@ define [
 
         before: (e) ->
 
-            container.parent().height($(window).height() - 50)
-            container.parent().width($(window).width())
+            # container.parent().height($(window).height() - 50)
+            # container.parent().width($(window).width())
 
             # pause the camera. there is no need for it
             # right now.
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
+            # listen to keyboard events
+            $.subscribe "/keyboard/arrow", (e) ->
+                if not flipping
+                    page (e == "right") - (e == "left")
+
         hide: (e) ->
+            # unpause the camera
             $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
 
+            # don't respond to the keyboard events anymore
+            $.unsubscribe "/keyboard/arrow"
         swipe: (e) ->
             
             page (e.direction == "right") - (e.direction == "left")
@@ -107,14 +118,14 @@ define [
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
                 thumb = $(this).children(":first")            
-                $.publish "/details/show", [ get("#{thumb.data("file-name")}") ]
+                $.publish "/details/show", [ get("#{thumb.attr("name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
                 thumb = $(this).children(":first")            
                 $.publish "/top/update", ["selected"]
                 page1.find(".thumbnail").removeClass "selected"
                 selected = $(@).addClass "selected"
-                $.publish "/item/selected", [get("#{thumb.data("file-name")}")]
+                $.publish "/item/selected", [get("#{thumb.attr("name")}")]
 
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource
@@ -126,18 +137,8 @@ define [
                         thumbs = []
 
                         for item in @.view()
-                            thumbnail = $("<div class='thumbnail'></div>")
-                            thumbs.push({ thumbnail: thumbnail, data: item })
-
-                            pages.next.append(thumbnail)
-
-                            # img = new Image()
-                            # img.src = item.file
-                            # img.width = 250
-                            # img.height = 167
-                            # thumbnail.content.append(img)
-                            # img.onload = =>
-                            #     $(img).fadeIn()
+                            thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
+                            thumbs.push(dom: thumbnail.render(), data: item)
 
                         # move the current page out and the next page in
                         container.kendoAnimate {
@@ -149,11 +150,30 @@ define [
                             complete: =>
 
                                 for item in thumbs
-                                    img = new Image()
-                                    img.src = item.data.file
-                                    img.width = 250
-                                    img.height = 167
-                                    item.thumbnail.append(img)
+
+                                    do ->
+                                        element = {}
+                                        if item.data.type == "webm"
+                                            element = document.createElement "video"
+                                        else 
+                                            element = new Image()
+                                        
+                                        element.src = item.data.file
+                                        element.name = item.data.name
+                                        element.width = 270
+                                        element.height = 180
+                                        
+                                        element.setAttribute("class", "hidden")
+                                        element.onload = ->
+
+                                            $(element).kendoAnimate {
+                                                effects: "fadeIn",
+                                                show: true
+                                                complete: ->
+
+                                            }
+
+                                        item.dom.append(element)
 
                                 # the current page becomes the next page
                                 justPaged = pages.previous
@@ -165,66 +185,17 @@ define [
 
                                 flipping = false
 
-
                         }
 
                                             
                     sort:
                         dir: "desc" 
-                        field: "name"   
+                        field: "name"  
+                    schema: 
+                        model:
+                            id: "name" 
 
-                @ds.read()      
-
-            # resolves the deffered from images that
-            # are loading in from the file system
-            # filewrapper.list().done (f) =>
-            # # TESTING
-            # f = [{ name: "123456", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "1", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "2", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "3", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "4", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "5", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "6", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "7", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "8", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "9", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "10", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "11", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "12", file: "http://mantle.me/me.jpeg", type: "jpeg" },
-            # { name: "13", file: "http://mantle.me/me.jpeg", type: "jpeg" } ]
-            # do =>
-            # # END TESTING
-
-            #     files = f
-            #     total = files.length
-                
-            #     # read from the datasource
-            #     @ds.read()
-                
-            #     # get the second page
-            #     justPaged = pages.previous
-
-            #     pages.previous = pages.next
-            #     pages.next = justPaged
-                
-            #     @ds.page(2)
-            #     pages.cache = 2
-
-            # $.publish "/postman/deliver", [ {}, "/file/read" ]
+                @ds.read()
 
             $.subscribe "/gallery/delete", ->
                 destroy()

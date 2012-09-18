@@ -9,6 +9,8 @@ define([
 	
 	canvas = {}
 	ctx = {}
+	video = {}
+	videoCtx = {}
 	preview = {}
 	paused = true
 	frame = 0
@@ -41,7 +43,9 @@ define([
 	            	time = Date.now()
 
 	            	# push the current frame onto the buffer
-	            	frames.push imageData: ctx.getImageData(0, 0, 720, 480), time: Date.now()
+	            	# scale the video down to 360 x 240
+	            	#videoCtx.drawImage(canvas, 0, 0, video.width, video.height)
+	            	frames.push imageData: ctx.getImageData(0, 0, 360, 240), time: Date.now()
 
 	            	# update the time in the view
 	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
@@ -94,9 +98,13 @@ define([
 
 			# create a new canvas for drawing
 			canvas = document.createElement "canvas"
+			video = document.createElement "canvas"
+			video.width = 360
+			video.height = 240
 			canvas.width = 720
 			canvas.height = 480
 			ctx = canvas.getContext "2d"
+			videoCtx = video.getContext "2d"
 
 			full.render().prepend(canvas)
 
