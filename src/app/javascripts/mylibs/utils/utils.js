@@ -8,16 +8,11 @@
     most have been moved into the extension
     */
 
-    var bufferCanvas, bufferContext, pub, scaleCanvas, scaleContext;
+    var bufferCanvas, bufferContext, pub;
     bufferCanvas = document.createElement("canvas");
-    bufferCanvas.width = 720;
-    bufferCanvas.height = 480;
+    bufferCanvas.width = 720 / 2;
+    bufferCanvas.height = 480 / 2;
     bufferContext = bufferCanvas.getContext("2d");
-    scaleCanvas = document.createElement("canvas");
-    scaleCanvas.width = bufferCanvas.width / 2;
-    scaleCanvas.height = bufferCanvas.height / 2;
-    scaleContext = scaleCanvas.getContext("2d");
-    scaleContext.scale(0.5, 0.5);
     return pub = {
       getAnimationFrame: function() {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
@@ -25,7 +20,7 @@
         };
       },
       createVideo: function(frames) {
-        var canvas, ctx, framesDone, i, transcode, _i, _ref, _results;
+        var framesDone, i, transcode, _i, _ref, _results;
         transcode = function() {
           var blob, blobUrl, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
@@ -49,18 +44,13 @@
           filewrapper.save(name, blob);
           return $.publish("/bar/time/hide");
         };
-        canvas = document.createElement("canvas");
-        canvas.width = 720;
-        canvas.height = 480;
-        ctx = canvas.getContext("2d");
         framesDone = 0;
         _results = [];
         for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
           _results.push((function(i) {
             bufferContext.putImageData(frames[i].imageData, 0, 0);
-            scaleContext.drawImage(bufferCanvas, 0, 0);
             frames[i] = {
-              imageData: scaleCanvas.toDataURL('image/webp', 0.8),
+              imageData: bufferCanvas.toDataURL('image/webp', 0.8),
               time: frames[i].time
             };
             ++framesDone;

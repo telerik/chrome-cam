@@ -8,15 +8,9 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
     ###
 
     bufferCanvas = document.createElement("canvas")
-    bufferCanvas.width = 720
-    bufferCanvas.height = 480
+    bufferCanvas.width = 720 / 2
+    bufferCanvas.height = 480 / 2
     bufferContext = bufferCanvas.getContext("2d")
-
-    scaleCanvas = document.createElement("canvas")
-    scaleCanvas.width = bufferCanvas.width / 2
-    scaleCanvas.height = bufferCanvas.height / 2
-    scaleContext = scaleCanvas.getContext("2d")
-    scaleContext.scale 0.5, 0.5
 
     pub = 
 
@@ -48,11 +42,6 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                 # hide the time
                 $.publish "/bar/time/hide"
 
-            canvas = document.createElement("canvas")
-            canvas.width = 720
-            canvas.height = 480
-            ctx = canvas.getContext("2d")
-
             framesDone = 0;
 
             for i in [0...frames.length]
@@ -63,9 +52,8 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                     #videoData = new Uint8ClampedArray(frames[i].imageData.data)
                     #imageData.data.set(videoData)
                     bufferContext.putImageData frames[i].imageData, 0, 0
-                    scaleContext.drawImage bufferCanvas, 0, 0
 
-                    frames[i] = imageData: scaleCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
+                    frames[i] = imageData: bufferCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
                     ++framesDone
                     if framesDone == frames.length
                         transcode()

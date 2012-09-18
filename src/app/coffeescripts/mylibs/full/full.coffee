@@ -21,6 +21,8 @@ define([
 	transfer = {}
 	effect = {}
 
+	scaleCanvas = {}
+
 	# the main draw loop which renders the live video effects      
 	draw = ->
 
@@ -44,8 +46,8 @@ define([
 
 	            	# push the current frame onto the buffer
 	            	# scale the video down to 360 x 240
-	            	#videoCtx.drawImage(canvas, 0, 0, video.width, video.height)
-	            	frames.push imageData: ctx.getImageData(0, 0, 720, 480), time: Date.now()
+	            	videoCtx.drawImage canvas, 0, 0
+	            	frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: Date.now()
 
 	            	# update the time in the view
 	            	full.el.timer.first().html kendo.toString((Date.now() - startTime) / 1000, "0")
@@ -105,6 +107,7 @@ define([
 			canvas.height = 480
 			ctx = canvas.getContext "2d"
 			videoCtx = video.getContext "2d"
+			videoCtx.scale 0.5, 0.5
 
 			full.render().prepend(canvas)
 
