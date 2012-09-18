@@ -20,7 +20,7 @@
         };
       },
       createVideo: function(frames) {
-        var framesDone, i, transcode, _i, _ref, _results;
+        var framesDone, i, transcode, _i, _ref;
         transcode = function() {
           var blob, blobUrl, i, name, pair, video, _i, _len, _ref;
           video = new Whammy.Video();
@@ -45,21 +45,14 @@
           return $.publish("/bar/time/hide");
         };
         framesDone = 0;
-        _results = [];
         for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          _results.push((function(i) {
-            bufferContext.putImageData(frames[i].imageData, 0, 0);
-            frames[i] = {
-              imageData: bufferCanvas.toDataURL('image/webp', 0.8),
-              time: frames[i].time
-            };
-            ++framesDone;
-            if (framesDone === frames.length) {
-              return transcode();
-            }
-          })(i));
+          bufferContext.putImageData(frames[i].imageData, 0, 0);
+          frames[i] = {
+            imageData: bufferCanvas.toDataURL('image/webp', 0.8),
+            time: frames[i].time
+          };
         }
-        return _results;
+        return transcode();
       }
     };
   });

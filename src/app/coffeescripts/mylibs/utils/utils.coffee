@@ -45,15 +45,7 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
             framesDone = 0;
 
             for i in [0...frames.length]
+                bufferContext.putImageData frames[i].imageData, 0, 0
+                frames[i] = imageData: bufferCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
 
-                do (i) ->
-                    
-                    #imageData = ctx.getImageData 0, 0, canvas.width, canvas.height
-                    #videoData = new Uint8ClampedArray(frames[i].imageData.data)
-                    #imageData.data.set(videoData)
-                    bufferContext.putImageData frames[i].imageData, 0, 0
-
-                    frames[i] = imageData: bufferCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
-                    ++framesDone
-                    if framesDone == frames.length
-                        transcode()
+            transcode()
