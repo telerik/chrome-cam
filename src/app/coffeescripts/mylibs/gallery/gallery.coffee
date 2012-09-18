@@ -151,8 +151,8 @@ define [
                                 for item in thumbs
                                     img = new Image()
                                     img.src = item.data.file
-                                    img.width = 250
-                                    img.height = 167
+                                    img.width = 270
+                                    img.height = 180
                                     item.thumbnail.append(img)
 
                                 # the current page becomes the next page

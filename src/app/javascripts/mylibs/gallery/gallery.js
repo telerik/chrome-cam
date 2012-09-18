@@ -150,8 +150,8 @@
                     item = thumbs[_j];
                     img = new Image();
                     img.src = item.data.file;
-                    img.width = 250;
-                    img.height = 167;
+                    img.width = 270;
+                    img.height = 180;
                     item.thumbnail.append(img);
                   }
                   justPaged = pages.previous;
