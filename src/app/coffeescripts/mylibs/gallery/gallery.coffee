@@ -25,13 +25,16 @@ define [
 
     page = (direction) =>
 
-        # TODO: add transition effect...
-        if direction > 0 and @ds.page() > 1
-            animation.reverse = true
-            @ds.page @ds.page() - 1
-        if direction < 0 and @ds.page() < @ds.totalPages()
-            animation.reverse = false
-            @ds.page @ds.page() + 1
+        if not flipping
+            
+            flipping = true
+
+            if direction > 0 and @ds.page() > 1
+                animation.reverse = true
+                @ds.page @ds.page() - 1
+            if direction < 0 and @ds.page() < @ds.totalPages()
+                animation.reverse = false
+                @ds.page @ds.page() + 1
 
     destroy = ->
 
@@ -76,16 +79,24 @@ define [
 
         before: (e) ->
 
-            container.parent().height($(window).height() - 50)
-            container.parent().width($(window).width())
+            # container.parent().height($(window).height() - 50)
+            # container.parent().width($(window).width())
 
             # pause the camera. there is no need for it
             # right now.
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
+            # listen to keyboard events
+            $.subscribe "/keyboard/arrow", (e) ->
+                if not flipping
+                    page (e == "right") - (e == "left")
+
         hide: (e) ->
+            # unpause the camera
             $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
 
+            # don't respond to the keyboard events anymore
+            $.unsubscribe "/keyboard/arrow"
         swipe: (e) ->
             
             page (e.direction == "right") - (e.direction == "left")
@@ -173,7 +184,6 @@ define [
                                 justPaged.empty()
 
                                 flipping = false
-
 
                         }
 

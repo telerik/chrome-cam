@@ -22,13 +22,16 @@
       duration: 800
     };
     page = function(direction) {
-      if (direction > 0 && _this.ds.page() > 1) {
-        animation.reverse = true;
-        _this.ds.page(_this.ds.page() - 1);
-      }
-      if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
-        animation.reverse = false;
-        return _this.ds.page(_this.ds.page() + 1);
+      if (!flipping) {
+        flipping = true;
+        if (direction > 0 && _this.ds.page() > 1) {
+          animation.reverse = true;
+          _this.ds.page(_this.ds.page() - 1);
+        }
+        if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
+          animation.reverse = false;
+          return _this.ds.page(_this.ds.page() + 1);
+        }
       }
     };
     destroy = function() {
@@ -78,20 +81,22 @@
     };
     return pub = {
       before: function(e) {
-        container.parent().height($(window).height() - 50);
-        container.parent().width($(window).width());
-        return $.publish("/postman/deliver", [
+        $.publish("/postman/deliver", [
           {
             paused: true
           }, "/camera/pause"
         ]);
+        return $.subscribe("/keyboard/arrow", function(e) {
+          if (!flipping) return page((e === "right") - (e === "left"));
+        });
       },
       hide: function(e) {
-        return $.publish("/postman/deliver", [
+        $.publish("/postman/deliver", [
           {
             paused: false
           }, "/camera/pause"
         ]);
+        return $.unsubscribe("/keyboard/arrow");
       },
       swipe: function(e) {
         return page((e.direction === "right") - (e.direction === "left"));
