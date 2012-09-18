@@ -61,108 +61,96 @@ var encodeData = function(data) {
 	return toBase64(strData);
 };
 
-var getBMPHeader = function(iWidth, iHeight) {
-	var aHeader = [];
+var pushInt32 = function(array, value) {
+	array.push(value & 0xff); value = (value >> 8);
+	array.push(value & 0xff); value = (value >> 8);
+	array.push(value & 0xff); value = (value >> 8);
+	array.push(value & 0xff);
+};
 
-	aHeader.push(0x42); // magic 1
-	aHeader.push(0x4D); 
+var getBMPHeader = function(width, height) {
+	var header = [];
+	var infoHeader = [];
+	var fileSize = width*height*3 + 54; // total header size = 54 bytes
 
-	var iFileSize = iWidth*iHeight*3 + 54; // total header size = 54 bytes
-	aHeader.push(iFileSize & 0xff); iFileSize = (iFileSize >> 8);
-	aHeader.push(iFileSize & 0xff); iFileSize = (iFileSize >> 8);
-	aHeader.push(iFileSize & 0xff); iFileSize = (iFileSize >> 8);
-	aHeader.push(iFileSize & 0xff);
+	header.push(0x42); // magic 1
+	header.push(0x4D); 
 
-	aHeader.push(0); // reserved
-	aHeader.push(0);
-	aHeader.push(0); // reserved
-	aHeader.push(0);
+	pushInt32(header, fileSize);
 
-	aHeader.push(54); // dataoffset
-	aHeader.push(0);
-	aHeader.push(0);
-	aHeader.push(0);
+	header.push(0); // reserved
+	header.push(0);
+	header.push(0); // reserved
+	header.push(0);
 
-	var aInfoHeader = [];
-	aInfoHeader.push(40); // info header size
-	aInfoHeader.push(0);
-	aInfoHeader.push(0);
-	aInfoHeader.push(0);
+	header.push(54); // dataoffset
+	header.push(0);
+	header.push(0);
+	header.push(0);
 
-	var iImageWidth = iWidth;
-	aInfoHeader.push(iImageWidth & 0xff); iImageWidth = (iImageWidth >> 8);
-	aInfoHeader.push(iImageWidth & 0xff); iImageWidth = (iImageWidth >> 8);
-	aInfoHeader.push(iImageWidth & 0xff); iImageWidth = (iImageWidth >> 8);
-	aInfoHeader.push(iImageWidth & 0xff);
+	infoHeader.push(40); // info header size
+	infoHeader.push(0);
+	infoHeader.push(0);
+	infoHeader.push(0);
 
-	var iImageHeight = iHeight;
-	aInfoHeader.push(iImageHeight & 0xff); iImageHeight = (iImageHeight >> 8);
-	aInfoHeader.push(iImageHeight & 0xff); iImageHeight = (iImageHeight >> 8);
-	aInfoHeader.push(iImageHeight & 0xff); iImageHeight = (iImageHeight >> 8);
-	aInfoHeader.push(iImageHeight & 0xff);
+	pushInt32(infoHeader, width);
+	pushInt32(infoHeader, height);
 
-	aInfoHeader.push(1); // num of planes
-	aInfoHeader.push(0);
+	infoHeader.push(1); // num of planes
+	infoHeader.push(0);
 
-	aInfoHeader.push(24); // num of bits per pixel
-	aInfoHeader.push(0);
+	infoHeader.push(24); // num of bits per pixel
+	infoHeader.push(0);
 
-	aInfoHeader.push(0); // compression = none
-	aInfoHeader.push(0);
-	aInfoHeader.push(0);
-	aInfoHeader.push(0);
+	infoHeader.push(0); // compression = none
+	infoHeader.push(0);
+	infoHeader.push(0);
+	infoHeader.push(0);
 
-	var iDataSize = iWidth*iHeight*3; 
-	aInfoHeader.push(iDataSize & 0xff); iDataSize = (iDataSize >> 8);
-	aInfoHeader.push(iDataSize & 0xff); iDataSize = (iDataSize >> 8);
-	aInfoHeader.push(iDataSize & 0xff); iDataSize = (iDataSize >> 8);
-	aInfoHeader.push(iDataSize & 0xff); 
+	pushInt32(infoHeader, width*height*3);
 
 	for (var i=0;i<16;i++) {
-		aInfoHeader.push(0);	// these bytes not used
+		infoHeader.push(0);	// these bytes not used
 	}
 
-	return aHeader.concat(aInfoHeader);
+	return header.concat(infoHeader);
 };
 
 var headers = {};
 
 // Adapted from http://www.nihilogic.dk/labs/canvas2image/canvas2image.js - sped up a fair bit
-var createBMP = function(width, height, data) {
-	var iWidth = width;
-	var iHeight = height;
-
+var createBMP = function(width, height, rawImageData) {
 	var header = headers[width + " " + height] || (headers[width + " " + height] = encodeData(getBMPHeader(width, height)));
 
-	var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
-	var strPadding = iPadding == 0 ? "" : new Array(iPadding).join(String.fromCharCode(0));
+	var paddingLength = (4 - ((width * 3) % 4)) % 4;
+	var padding = paddingLength == 0 ? "" : new Array(paddingLength).join(String.fromCharCode(0));
 
-	var aImgData = data;
+	var pixelRows = [];
+	var pixelRow = new Array(width + 1);
+	var y = height;
+	var width4 = 4 * width;
+	var offsetX, offsetY, poke;
 
-	var aPixelData = [];
-	var aPixelRow = new Array(iWidth + 1);
-	var y = iHeight;
-	var iWidth4 = 4 * iWidth;
 	do {
-		var iOffsetY = iWidth4*(y-1);
-		var poke = 0;
-		for (var iOffsetX=0;iOffsetX<iWidth4;iOffsetX += 4) {
-			aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+2]);
-			aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX+1]);
-			aPixelRow[poke++] = String.fromCharCode(aImgData[iOffsetY+iOffsetX]);
+		offsetY = width4*(y-1);
+		poke = 0;
+		for (var offsetX=0;offsetX<width4;offsetX += 4) {
+			pixelRow[poke++] = String.fromCharCode(rawImageData[offsetY+offsetX+2]);
+			pixelRow[poke++] = String.fromCharCode(rawImageData[offsetY+offsetX+1]);
+			pixelRow[poke++] = String.fromCharCode(rawImageData[offsetY+offsetX]);
 		}
-		aPixelRow[poke++] = strPadding;
-		aPixelData.push(aPixelRow.join(""));
+		pixelRow[poke++] = padding;
+		pixelRows.push(pixelRow.join(""));
 	} while (--y);
 
-	var strEncoded = "data:image/bmp;base64," + header + encodeData(aPixelData.join(""));
-
-	return strEncoded;
+	return "data:image/bmp;base64," + header + encodeData(pixelRows.join(""));
 };
 
 self.onmessage = function(e) {
+	var startTime = Date.now();
 	self.postMessage({
 		src: createBMP(e.data.width, e.data.height, e.data.data),
-		key: e.data.key
+		key: e.data.key,
+		latency: Date.now() - startTime
 	});
 };
