@@ -2,20 +2,21 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/row.html'], function(kendo, utils, filewrapper, template) {
-    var add, animation, at, container, destroy, dim, ds, el, files, get, index, page, pageSize, pub, selected, total,
+    var add, animation, at, container, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, selected, total,
       _this = this;
-    pageSize = 8;
-    dim = {
-      cols: 4,
-      rows: 3
-    };
+    pageSize = 12;
     ds = {};
-    files = [];
+    data = [];
     container = {};
     el = {};
     selected = {};
     total = 0;
     index = 0;
+    flipping = false;
+    pages = {
+      previous: {},
+      next: {}
+    };
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
@@ -99,12 +100,12 @@
         return page((e.direction === "right") - (e.direction === "left"));
       },
       init: function(selector) {
-        var nextPage, page1, page2, previousPage;
+        var page1, page2;
         page1 = new kendo.View(selector, null);
         page2 = new kendo.View(selector, null);
         container = page1.container;
-        previousPage = page1.render().addClass("page gallery");
-        nextPage = page2.render().addClass("page gallery");
+        pages.previous = page1.render().addClass("page gallery");
+        pages.next = page2.render().addClass("page gallery");
         page1.container.on("dblclick", ".thumbnail", function() {
           var thumb;
           thumb = $(this).children(":first");
@@ -118,52 +119,48 @@
           selected = $(this).addClass("selected");
           return $.publish("/item/selected", [get("" + (thumb.data("file-name")))]);
         });
-        filewrapper.list().done(function(f) {
-          files = f;
-          total = files.length;
+        $.subscribe("/pictures/bulk", function(message) {
           _this.ds = new kendo.data.DataSource({
-            data: files,
-            pageSize: 8,
+            data: message.message,
+            pageSize: 12,
             change: function() {
-              var item, _fn, _i, _len, _ref,
+              var item, loaded, thumbnail, thumbs, _i, _len, _ref,
                 _this = this;
+              loaded = 0;
+              thumbs = [];
               _ref = this.view();
-              _fn = function() {
-                return filewrapper.readFile(item.name).done(function(file) {
-                  var model, thumbnail;
-                  model = _this.get(file.name);
-                  if (_this.page() === 1 && _this.view().indexOf(model) === 0) {
-                    $.publish("/thumbnail/update", file.file);
-                  }
-                  model.file = file.file;
-                  thumbnail = new kendo.View(nextPage, template, file);
-                  return thumbnail.render();
-                });
-              };
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 item = _ref[_i];
-                _fn();
+                thumbnail = $("<div class='thumbnail'></div>");
+                thumbs.push({
+                  thumbnail: thumbnail,
+                  data: item
+                });
+                pages.next.append(thumbnail);
               }
               return container.kendoAnimate({
                 effects: animation.effects,
-                face: animation.reverse ? nextPage : previousPage,
-                back: animation.reverse ? previousPage : nextPage,
+                face: animation.reverse ? pages.next : pages.previous,
+                back: animation.reverse ? pages.previous : pages.next,
                 duration: animation.duration,
                 reverse: animation.reverse,
                 complete: function() {
-                  var flipping, justPaged;
-                  justPaged = previousPage;
-                  previousPage = nextPage;
-                  nextPage = justPaged;
+                  var img, justPaged, _j, _len1;
+                  for (_j = 0, _len1 = thumbs.length; _j < _len1; _j++) {
+                    item = thumbs[_j];
+                    img = new Image();
+                    img.src = item.data.file;
+                    img.width = 250;
+                    img.height = 167;
+                    item.thumbnail.append(img);
+                  }
+                  justPaged = pages.previous;
+                  pages.previous = pages.next;
+                  pages.next = justPaged;
                   justPaged.empty();
                   return flipping = false;
                 }
               });
-            },
-            schema: {
-              model: {
-                id: "name"
-              }
             },
             sort: {
               dir: "desc",
@@ -172,7 +169,6 @@
           });
           return _this.ds.read();
         });
-        $.publish("/postman/deliver", [{}, "/file/read"]);
         $.subscribe("/gallery/delete", function() {
           return destroy();
         });
@@ -182,6 +178,7 @@
         $.subscribe("/gallery/at", function(index) {
           return at(index);
         });
+        $.publish("/postman/deliver", [{}, "/file/read"]);
         return gallery;
       }
     };
