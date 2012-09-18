@@ -97,23 +97,27 @@ define [
     create = (item) ->
 
         element = {}
+        fadeIn = (e) ->
+            $(e).kendoAnimate {
+                effects: "fadeIn",
+                show: true
+            }
+
         if item.type == "webm"
             element = document.createElement "video"
+            element.setAttribute("controls", "")
+            element.loadeddata = fadeIn(element)
         else 
             element = new Image()
+            element.onload = fadeIn(element)
         
         element.src = item.file
-        element.name = item.name
+        element.setAttribute("data-name", item.name)
+
         element.width = 270
         element.height = 180
         
         element.setAttribute("class", "hidden")
-        element.onload = ->
-
-            $(element).kendoAnimate {
-                effects: "fadeIn",
-                show: true
-            }
 
         return element
 
@@ -216,12 +220,12 @@ define [
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
                 thumb = $(@).children(":first")            
-                $.publish "/details/show", [ get("#{thumb.attr("name")}") ]
+                $.publish "/details/show", [ get("#{thumb.attr("data-name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
                 thumb = $(@).children(":first")            
                 $.publish "/top/update", ["selected"]
-                $.publish "/item/selected", [get("#{thumb.attr("name")}")]
+                $.publish "/item/selected", [get("#{thumb.attr("data-name")}")]
                 select thumb.attr("name")
 
             $.subscribe "/pictures/bulk", (message) =>
