@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var add, animation, at, container, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, selected, total,
+    var add, animation, at, container, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, select, selected, total,
       _this = this;
     pageSize = 12;
     ds = {};
@@ -20,6 +20,11 @@
       effects: "pageturn:horizontal",
       reverse: false,
       duration: 800
+    };
+    select = function(name) {
+      selected = container.find("[name='" + name + "']").parent(":first");
+      container.find(".thumbnail").removeClass("selected");
+      return selected.addClass("selected");
     };
     page = function(direction) {
       if (!flipping) {
@@ -59,6 +64,7 @@
         index: position,
         item: match
       };
+      return select(name);
     };
     at = function(index) {
       var match, position, target;
@@ -70,7 +76,8 @@
         index: index,
         item: _this.ds.view()[position]
       };
-      return $.publish("/details/update", [match]);
+      $.publish("/details/update", [match]);
+      return select(match.item.name);
     };
     add = function(item) {
       return _this.ds.add({
@@ -87,9 +94,7 @@
           }, "/camera/pause"
         ]);
         return $.subscribe("/keyboard/arrow", function(e) {
-          if (!flipping) {
-            return page((e === "right") - (e === "left"));
-          }
+          if (!flipping) return page((e === "right") - (e === "left"));
         });
       },
       hide: function(e) {
@@ -119,9 +124,8 @@
           var thumb;
           thumb = $(this).children(":first");
           $.publish("/top/update", ["selected"]);
-          page1.find(".thumbnail").removeClass("selected");
-          selected = $(this).addClass("selected");
-          return $.publish("/item/selected", [get("" + (thumb.attr("name")))]);
+          $.publish("/item/selected", [get("" + (thumb.attr("name")))]);
+          return select(thumb.attr("name"));
         });
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = new kendo.data.DataSource({

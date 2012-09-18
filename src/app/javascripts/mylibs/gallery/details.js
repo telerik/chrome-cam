@@ -5,7 +5,7 @@
       _this = this;
     index = 0;
     viewModel = kendo.observable({
-      src: "images/photoPlaceholder.png",
+      src: "styles/images/photoPlaceholder.png",
       type: "jpeg",
       isVideo: function() {
         return this.get("type") === "webm";
@@ -41,6 +41,7 @@
     };
     update = function(message) {
       viewModel.set("src", message.item.file);
+      viewModel.set("type", message.item.type);
       viewModel.set("next.visible", message.index < message.length - 1);
       viewModel.set("previous.visible", message.index > 0 && message.length > 1);
       index = message.index;

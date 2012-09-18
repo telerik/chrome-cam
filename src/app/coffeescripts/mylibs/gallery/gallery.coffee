@@ -23,6 +23,13 @@ define [
         reverse: false
         duration: 800      
 
+    select = (name) =>
+
+        # find the item with the specified name
+        selected = container.find("[name='#{name}']").parent(":first")
+        container.find(".thumbnail").removeClass "selected"
+        selected.addClass "selected"
+
     page = (direction) =>
 
         if not flipping
@@ -59,6 +66,8 @@ define [
         position = if @ds.page() > 1 then pageSize * (@ds.page() - 1) + index else index 
         return { length: @ds.data().length, index: position, item: match }
 
+        select name
+
     at = (index) =>
         # we may need to page the data before grabbing the item.
         # to get the current page, divide the index by the pageSize. then
@@ -71,6 +80,8 @@ define [
         # now we can search the current datasource view for the item at the correct index
         match = { length: @ds.data().length, index: index, item: @ds.view()[position] }
         $.publish "/details/update", [match]
+        
+        select match.item.name
 
     add = (item) =>
         @ds.add(name: item.name, file: item.file, type: item.type)
@@ -117,15 +128,14 @@ define [
 
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
-                thumb = $(this).children(":first")            
+                thumb = $(@).children(":first")            
                 $.publish "/details/show", [ get("#{thumb.attr("name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
-                thumb = $(this).children(":first")            
+                thumb = $(@).children(":first")            
                 $.publish "/top/update", ["selected"]
-                page1.find(".thumbnail").removeClass "selected"
-                selected = $(@).addClass "selected"
                 $.publish "/item/selected", [get("#{thumb.attr("name")}")]
+                select thumb.attr("name")
 
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource

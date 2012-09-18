@@ -2,7 +2,7 @@
 
   define(['Kendo', 'text!mylibs/bar/views/bottom.html'], function(kendo, template) {
     var BROKEN_IMAGE, countdown, pub, states, view, viewModel;
-    BROKEN_IMAGE = "images/photoPlaceholder.png";
+    BROKEN_IMAGE = "styles/images/photoPlaceholder.png";
     view = {};
     viewModel = kendo.observable({
       processing: {
