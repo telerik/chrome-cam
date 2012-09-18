@@ -65,11 +65,9 @@
         console.log("Creating worker...");
         thumbnailWorker = new Worker("chrome/javascripts/mylibs/workers/bitmapWorker.js");
         thumbnailWorker.onmessage = function(e) {
-          console.log("Sending a thumbnail update...");
           return $.publish("/postman/deliver", [e.data, "/preview/thumbnail/response/"]);
         };
         $.subscribe("/preview/thumbnail/request", function(e) {
-          console.log("Requested a thumbnail update...");
           return thumbnailWorker.postMessage({
             width: e.data.width,
             height: e.data.height,

@@ -123,10 +123,11 @@ var createBMP = function(width, height, rawImageData) {
 	var header = headers[width + " " + height] || (headers[width + " " + height] = encodeData(getBMPHeader(width, height)));
 
 	var paddingLength = (4 - ((width * 3) % 4)) % 4;
-	var padding = paddingLength == 0 ? "" : new Array(paddingLength).join(String.fromCharCode(0));
 
 	var pixelRows = [];
-	var pixelRow = new Array(width + 1);
+	var pixelRow = new Array(width + paddingLength);
+	var i = pixelRow.length;
+	while (i--) { pixelRow[i] = 0; }
 	var y = height;
 	var width4 = 4 * width;
 	var offsetX, offsetY, poke;
@@ -135,12 +136,11 @@ var createBMP = function(width, height, rawImageData) {
 		offsetY = width4*(y-1);
 		poke = 0;
 		for (var offsetX=0;offsetX<width4;offsetX += 4) {
-			pixelRow[poke++] = String.fromCharCode(rawImageData[offsetY+offsetX+2]);
-			pixelRow[poke++] = String.fromCharCode(rawImageData[offsetY+offsetX+1]);
-			pixelRow[poke++] = String.fromCharCode(rawImageData[offsetY+offsetX]);
+			pixelRow[poke++] = rawImageData[offsetY+offsetX+2];
+			pixelRow[poke++] = rawImageData[offsetY+offsetX+1];
+			pixelRow[poke++] = rawImageData[offsetY+offsetX];
 		}
-		pixelRow[poke++] = padding;
-		pixelRows.push(pixelRow.join(""));
+		pixelRows.push(String.fromCharCode.apply(null, pixelRow));
 	} while (--y);
 
 	return "data:image/bmp;base64," + header + encodeData(pixelRows.join(""));
