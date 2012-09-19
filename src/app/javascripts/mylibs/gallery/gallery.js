@@ -222,7 +222,7 @@
             pageSize: 12,
             change: function() {
               if (this.page() === 1) {
-                return $.publish("/bottom/thumbnail", [this.view()[0].file]);
+                return $.publish("/bottom/thumbnail", [this.view()[0]]);
               }
             },
             sort: {

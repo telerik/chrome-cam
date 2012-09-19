@@ -196,8 +196,6 @@ define [
         show: (e) =>
             setTimeout(->
                 render()
-                # pages.previous.kendoAnimate { effects: "fadeIn", show: true }
-                # pages.next.kendoAnimate { effects: "fadeIn", show: true }
             , 420)
         
         swipe: (e) ->    
@@ -237,7 +235,7 @@ define [
                         # way is just to check and see if this is the first page and 
                         # then publish the first item
                         if @.page() == 1 
-                            $.publish "/bottom/thumbnail", [@.view()[0].file]
+                            $.publish "/bottom/thumbnail", [@.view()[0]]
                     sort:
                         dir: "desc" 
                         field: "name"  
