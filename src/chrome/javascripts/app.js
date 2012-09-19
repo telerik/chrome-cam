@@ -52,7 +52,7 @@
     };
     createContextMenu = function() {
       return chrome.contextMenus.onClicked.addListener(function(info, tab) {
-        return console.log([info, tab]);
+        return $.publish("/postman/deliver", [{}, "/settings/show"]);
       });
     };
     return pub = {

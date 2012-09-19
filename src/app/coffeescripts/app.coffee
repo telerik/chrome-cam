@@ -57,6 +57,9 @@ define([
 				# initialize the thumbnail gallery
 				gallery.init "#thumbnails"
 
+				# initialize the settings view
+				settings.init "#settings"
+
 				# start drawing some previews
 				preview.draw()
 

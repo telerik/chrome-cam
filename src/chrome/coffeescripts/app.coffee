@@ -61,7 +61,8 @@ define([
 
 	createContextMenu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
-			console.log [info, tab]
+			# todo: differentiate between what's clicked in the menu when we have more than one option...
+			$.publish "/postman/deliver", [ {}, "/settings/show" ]
 
 	pub = 
 		init: ->

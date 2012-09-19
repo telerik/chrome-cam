@@ -2,13 +2,20 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/settings/views/settings.html'], function(kendo, template) {
-    var pub, viewModel;
+    var pub, show, view, viewModel;
+    view = null;
     viewModel = {};
+    show = function() {
+      return view.container.kendoStop(true).kendoAnimate({
+        effects: "zoomIn",
+        show: true
+      });
+    };
     return pub = {
       init: function(selector) {
-        var view;
         view = new kendo.View(selector, template);
-        return view.render(viewModel, true);
+        view.render(viewModel, true);
+        return $.subscribe("/settings/show", show);
       }
     };
   });

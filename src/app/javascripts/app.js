@@ -22,6 +22,7 @@
           full.init("#capture");
           details.init("#details");
           gallery.init("#thumbnails");
+          settings.init("#settings");
           preview.draw();
           $.publish("/postman/deliver", [
             {
