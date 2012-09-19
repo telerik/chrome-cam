@@ -59,6 +59,9 @@ define [
             $.subscribe "/details/hide", ->
                 hide()
 
+            $.subscribe "/keyboard/esc", ->
+                $.publish "/details/hide"
+
             $.subscribe "/details/show", (message) ->
                 show(message)
 
