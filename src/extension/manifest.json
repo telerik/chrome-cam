@@ -19,7 +19,7 @@
    "experimental",
    "unlimitedStorage",
    "videoCapture",
-   "fileSystem",
+   { "fileSystem": ["write"] },
    "notifications",
    "contextMenus"
  ],

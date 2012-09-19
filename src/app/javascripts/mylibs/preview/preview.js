@@ -5,7 +5,7 @@
     
     Select preview shows pages of 6 live previews using webgl effects
     */
-    var animation, canvas, ctx, draw, ds, flipping, frame, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
+    var animation, canvas, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
     paused = false;
     canvas = {};
     ctx = {};
@@ -23,6 +23,7 @@
       reverse: false,
       duration: 800
     };
+    isFirstChange = true;
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         var eventData, imageData, preview, previewContext, _i, _len;
@@ -99,7 +100,7 @@
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var flippy, index, item, _fn, _i, _len, _ref;
+            var flipCompleted, flippy, index, item, _fn, _i, _len, _ref;
             flipping = true;
             previews = [];
             index = 0;
@@ -138,6 +139,16 @@
             page1.container.find("canvas").hide();
             page1.container.find("img").show();
             shouldUpdateThumbnails = true;
+            flipCompleted = function() {
+              var justPaged;
+              page1.container.find("img").hide();
+              page1.container.find("canvas").show();
+              justPaged = previousPage;
+              previousPage = nextPage;
+              nextPage = justPaged;
+              justPaged.empty();
+              return flipping = false;
+            };
             flippy = function() {
               return page1.container.kendoAnimate({
                 effects: animation.effects,
@@ -145,19 +156,15 @@
                 back: animation.reverse ? previousPage : nextPage,
                 duration: animation.duration,
                 reverse: animation.reverse,
-                complete: function() {
-                  var justPaged;
-                  page1.container.find("img").hide();
-                  page1.container.find("canvas").show();
-                  justPaged = previousPage;
-                  previousPage = nextPage;
-                  nextPage = justPaged;
-                  justPaged.empty();
-                  return flipping = false;
-                }
+                complete: flipCompleted
               });
             };
-            return setTimeout(flippy, 100);
+            if (isFirstChange) {
+              setTimeout(flipCompleted, 100);
+              return isFirstChange = false;
+            } else {
+              return setTimeout(flippy, 100);
+            }
           }
         });
         ds.read();
