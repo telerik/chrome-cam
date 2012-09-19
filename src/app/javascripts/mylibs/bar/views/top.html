@@ -7,7 +7,9 @@
 	</section>
 	<section class="center"></section>
 	<section class="right">
-		<div class="delete" data-bind="visible: selected, click: destroy.click"></div>
+		<a class="delete" data-bind="click: destroy.click, visible: selected" data-rel="popover" ></a>
 		<a data-role="button" data-bind="visible: selected, click: share.save" class="button">Save</a>
 	</section>
 </section>
+
+

@@ -6,7 +6,10 @@ define [
     index = 0
 
     viewModel = kendo.observable {
-        src: "styles/images/photoPlaceholder.png"
+        video: 
+            src: -> "styles/images/photoPlaceholder.png"
+        img:
+            src: -> "styles/images/photoPlaceholder.png"
         type: "jpeg"
         isVideo: ->
             @get("type") == "webm"
@@ -35,8 +38,11 @@ define [
                 $.publish "/top/update", ["details"]
 
     update = (message) ->
-        viewModel.set("src", message.item.file)
         viewModel.set("type", message.item.type)
+        if viewModel.get("type") == "webm"
+            viewModel.set("video.src", message.item.file)
+        else
+            viewModel.set("img.src", message.item.file)
         viewModel.set("next.visible", message.index < message.length - 1)
         viewModel.set("previous.visible", message.index > 0 and message.length > 1)
         index = message.index

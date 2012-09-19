@@ -54,7 +54,7 @@ define([
 	            	secondsRecorded = (Date.now() - startTime) / 1000
 	            	full.el.timer.first().html kendo.toString(SECONDS_TO_RECORD - secondsRecorded, "0")
 
-	flash = (callback, image) ->
+	flash = (callback, file) ->
 
 		full.el.flash.show()	
 		transfer.content.kendoStop().kendoAnimate 
@@ -63,7 +63,7 @@ define([
 				duration: 1000, 
 				ease: "ease-in",
 				complete: ->
-					$.publish "/bottom/thumbnail", [image]
+					$.publish "/bottom/thumbnail", [file]
 					transfer.destroy()
 					transfer = {}
 		
@@ -75,24 +75,26 @@ define([
 	capture = (callback) ->
 
 		image = canvas.toDataURL()
+		name = new Date().getTime()
 
 		data = { src: image, height: full.content.height(), width: full.content.width() }
-		
-		transfer = new kendo.View(full.content, transferImg, data);
+
+		transfer = new kendo.View(full.content, transferImg, data)
 		transfer.render()
 		
 		transfer.find("img").load ->
 
 			# set the name of this image to the current time string
-			name = new Date().getTime() + ".jpg"
+			
+			file = { type: "jpeg", name: "#{name}.jpeg", file: image }
 
-			filewrapper.save(name, image).done ->
+			filewrapper.save(name, image)
 				# I may have it bouncing around too much, but I don't want the bar to
 				# just respond to *all* file saves, or have this module know about
 				# the bar's internals
-				$.publish "/gallery/add", [ type: 'jpg', name: name, file: image ]
+			$.publish "/gallery/add", [file]
 
-			flash(callback, image)
+			flash(callback, file)
 
 	pub = 
 
@@ -213,17 +215,44 @@ define([
 			full.container.find(".timer").removeClass("hidden")
 
 			setTimeout (-> 
+				
 				recording = false
 				$.publish "/bottom/update", ["processing"]
 
 				setTimeout -> 
-					utils.createVideo frames
+					
+					result = utils.createVideo frames
+
 					console.log("Recording Done!")
+
 					frames = []
 
 					full.container.find(".timer").addClass("hidden")
 					
-					$.publish "/recording/done", [ "full" ]
+					image = canvas.toDataURL()
+
+					file = { type: "webm", name: result.name, file: result.url }
+					data = { src: image, height: full.content.height(), width: full.content.width() }
+					
+					transfer = new kendo.View(full.content, transferImg, data)
+					transfer.render()
+
+					transfer.find("img").load ->	
+						
+						transfer.content.kendoStop().kendoAnimate 
+							effects: "transfer",  
+							target: $("#destination"), 
+							duration: 1000, 
+							ease: "ease-in",
+							complete: ->
+								$.publish "/bottom/thumbnail", [file]
+								$.publish "/gallery/add", [file]
+								transfer.destroy()
+								transfer = {}
+
+					$.publish "/bottom/update", ["full"]
+
+					# $.publish "/recording/done", [ "full" ]
 				
 				, 0
 
