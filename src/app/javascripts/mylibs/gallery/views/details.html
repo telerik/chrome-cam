@@ -1,0 +1,9 @@
+<section class="details">
+	
+	<video width="720" height="480" data-bind="visible: isVideo, attr: { src: src }" controls></video>
+	<img data-bind="invisible: isVideo, attr: { src: src }" width="720" height="480">
+
+	<span class="previous" data-bind="visible: previous.visible, click: previous.click">&lsaquo;</span>
+	<span class="next" data-bind="visible: next.visible, click: next.click">&rsaquo;</span>
+
+</section>
