@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/intents/intents', 'mylibs/notify/notify', 'mylibs/assets/assets', 'libs/face/track'], function(postman, utils, file, intents, notify, assets, face) {
     'use strict';
 
-    var canvas, ctx, draw, errback, hollaback, iframe, paused, pub, skip, skipBit, skipMax, track, update;
+    var canvas, createContextMenu, ctx, draw, errback, hollaback, iframe, paused, pub, skip, skipBit, skipMax, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -50,6 +50,11 @@
     errback = function() {
       return console.log("Couldn't Get The Video");
     };
+    createContextMenu = function() {
+      return chrome.contextMenus.onClicked.addListener(function(info, tab) {
+        return console.log([info, tab]);
+      });
+    };
     return pub = {
       init: function() {
         var thumbnailWorker;
@@ -77,7 +82,8 @@
         notify.init();
         intents.init();
         file.init();
-        return face.init(0, 0, 0, 0);
+        face.init(0, 0, 0, 0);
+        return createContextMenu();
       }
     };
   });

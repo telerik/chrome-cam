@@ -59,6 +59,10 @@ define([
 	errback = ->
 		console.log("Couldn't Get The Video");
 
+	createContextMenu = ->
+		chrome.contextMenus.onClicked.addListener (info, tab) ->
+			console.log [info, tab]
+
 	pub = 
 		init: ->
 
@@ -103,4 +107,6 @@ define([
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
+
+			createContextMenu()
 )
