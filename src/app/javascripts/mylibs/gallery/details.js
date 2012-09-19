@@ -68,6 +68,9 @@
         $.subscribe("/details/hide", function() {
           return hide();
         });
+        $.subscribe("/gallery/delete", function() {
+          return hide();
+        });
         $.subscribe("/keyboard/esc", function() {
           return $.publish("/details/hide");
         });
