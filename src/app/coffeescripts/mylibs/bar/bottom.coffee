@@ -1,7 +1,8 @@
 define [
   'Kendo'
   'text!mylibs/bar/views/bottom.html'
-], (kendo, template) ->
+  'text!mylibs/bar/views/thumbnail.html'
+], (kendo, template, thumbnailTemplate) ->
 
 	BROKEN_IMAGE = "styles/images/photoPlaceholder.png"
 	
@@ -142,12 +143,17 @@ define [
 			# render the bar and binds it to the view model
 			view.render(viewModel, true)
 
+			# find the destination container
+			view.find("#destination", "destination")
+
 			# wire up events
 			$.subscribe "/bottom/update", (state) ->
 				states.set(state)
 
-			$.subscribe "/bottom/thumbnail", (image) ->
-				viewModel.set("thumbnail.src", image)
+			$.subscribe "/bottom/thumbnail", (file) ->
+				view.el.destination.empty()
+				thumbnail = new kendo.View(view.el.destination, thumbnailTemplate, file)
+				thumbnail.render()
 
 			# get a reference to the dots.
 			# TODO: this sucks. fix it with custom
