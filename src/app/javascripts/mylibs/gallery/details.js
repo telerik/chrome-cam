@@ -74,8 +74,16 @@
         $.subscribe("/details/show", function(message) {
           return show(message);
         });
-        return $.subscribe("/details/update", function(message) {
+        $.subscribe("/details/update", function(message) {
           return update(message);
+        });
+        return $.subscribe("/keyboard/arrow", function(direction) {
+          if (direction === "left" && viewModel.previous.visible) {
+            viewModel.previous.click();
+          }
+          if (direction === "right" && viewModel.next.visible) {
+            return viewModel.next.click();
+          }
         });
       }
     };
