@@ -13,8 +13,9 @@ define([
   'mylibs/gallery/details'
   'mylibs/events/events'
   'mylibs/file/filewrapper'
+  'mylibs/settings/settings'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, record ) ->
+], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, record ) ->
 	
 	pub = 
 		    
