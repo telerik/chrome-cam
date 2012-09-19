@@ -32,7 +32,9 @@ define [
         effects: "pageturn:horizontal"
         reverse: false
         duration: 800
-        
+
+    isFirstChange = true
+
     # the main draw loop which renders the live video effects      
     draw = ->
 
@@ -210,6 +212,21 @@ define [
                     page1.container.find("canvas").hide()
                     page1.container.find("img").show()
                     shouldUpdateThumbnails = true
+
+                    flipCompleted = ->
+                        page1.container.find("img").hide()
+                        page1.container.find("canvas").show()
+
+                        # the current page becomes the next page
+                        justPaged = previousPage
+                        
+                        previousPage = nextPage
+                        nextPage = justPaged
+
+                        justPaged.empty()
+
+                        flipping = false
+
                     flippy = ->
                         page1.container.kendoAnimate
                             effects: animation.effects
@@ -217,20 +234,13 @@ define [
                             back: if animation.reverse then previousPage else nextPage
                             duration: animation.duration
                             reverse: animation.reverse
-                            complete: ->
-                                page1.container.find("img").hide()
-                                page1.container.find("canvas").show()
+                            complete: flipCompleted
 
-                                # the current page becomes the next page
-                                justPaged = previousPage
-                                
-                                previousPage = nextPage
-                                nextPage = justPaged
-
-                                justPaged.empty()
-
-                                flipping = false
-                    setTimeout flippy, 100
+                    if isFirstChange
+                        setTimeout flipCompleted, 100
+                        isFirstChange = false
+                    else
+                        setTimeout flippy, 100
 
 
             # read from the datasource
