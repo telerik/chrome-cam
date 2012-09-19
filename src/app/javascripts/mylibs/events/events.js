@@ -10,7 +10,7 @@
           return $.publish("/keyboard/" + name, [key]);
         };
         return $(document).keydown(function(e) {
-          switch (e.keyCode) {
+          switch (e.which) {
             case 37:
               return p("arrow", "left");
             case 39:
@@ -21,6 +21,10 @@
               return p("arrow", "down");
             case 27:
               return p("esc", "esc");
+            case 32:
+              return p("space", {
+                ctrlKey: e.ctrlKey
+              });
           }
         });
       }

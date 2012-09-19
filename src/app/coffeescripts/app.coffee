@@ -4,17 +4,17 @@ define([
   'mylibs/camera/camera'
   'mylibs/bar/bottom'
   'mylibs/bar/top'
+  'mylibs/bar/confirm'
   'mylibs/preview/preview'
   'mylibs/full/full'
   'mylibs/postman/postman'
   'mylibs/utils/utils'
   'mylibs/gallery/gallery'
   'mylibs/gallery/details'
-  'mylibs/share/share'
   'mylibs/events/events'
   'mylibs/file/filewrapper'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, preview, full, postman, utils, gallery, details, share, events, filewrapper, record ) ->
+], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, record ) ->
 	
 	pub = 
 		    
@@ -42,9 +42,7 @@ define([
 				# create the top and bottom bars
 				window.APP.bottom = bottom.init(".bottom")
 				window.APP.top = top.init(".top")
-
-				# initialize the command bar
-				# bar.init ".top", ".bottom"
+				window.APP.confirm = confirm.init("#gallery")
 
 				# initialize the previews
 				preview.init "#filters"
@@ -57,8 +55,6 @@ define([
 
 				# initialize the thumbnail gallery
 				gallery.init "#thumbnails"
-
-				window.APP.share = share.init "#gallery"
 
 				# start drawing some previews
 				preview.draw()

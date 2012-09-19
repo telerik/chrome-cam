@@ -16,8 +16,8 @@ define [
 				states.gallery()
 				e.preventDefault()
 		destroy:
-			click: ->
-				$.publish "/gallery/delete"
+			click: (e) ->
+				$("#confirm").data("kendoMobilePopOver").openFor($(e.currentTarget))
 		share:
 			save: (e) ->
 				file = @.get("current")
@@ -28,6 +28,8 @@ define [
 	states = 
 		selected: ->
 			viewModel.set("selected", true)
+		deselected: ->
+			viewModel.set("selected", false)
 		details: =>
 			viewModel.set("back.text", "< Gallery")
 			viewModel.set("back.details", true)

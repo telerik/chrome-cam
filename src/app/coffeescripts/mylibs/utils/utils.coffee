@@ -36,15 +36,12 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
                 
                 name = new Date().getTime() + ".webm"
 
-                blobUrl = window.URL.createObjectURL(blob)
-
-                console.log blobUrl
-
                 # save the recording
                 filewrapper.save(name, blob)
 
-                # hide the time
-                $.publish "/bar/time/hide"
+                blobUrl = window.URL.createObjectURL(blob)
+
+                return { url: blobUrl, name: name }
 
             for i in [0...frames.length]
                 bufferContext.putImageData frames[i].imageData, 0, 0

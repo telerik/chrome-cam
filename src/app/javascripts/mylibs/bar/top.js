@@ -17,8 +17,8 @@
         }
       },
       destroy: {
-        click: function() {
-          return $.publish("/gallery/delete");
+        click: function(e) {
+          return $("#confirm").data("kendoMobilePopOver").openFor($(e.currentTarget));
         }
       },
       share: {
@@ -37,6 +37,9 @@
     states = {
       selected: function() {
         return viewModel.set("selected", true);
+      },
+      deselected: function() {
+        return viewModel.set("selected", false);
       },
       details: function() {
         viewModel.set("back.text", "< Gallery");

@@ -24,7 +24,7 @@
       duration: 800
     };
     select = function(name) {
-      selected = container.find("[name='" + name + "']").parent(":first");
+      selected = container.find("[data-name='" + name + "']").parent(":first");
       container.find(".thumbnail").removeClass("selected");
       return selected.addClass("selected");
     };
@@ -34,23 +34,25 @@
         if (direction > 0 && _this.ds.page() > 1) {
           animation.reverse = true;
           _this.ds.page(_this.ds.page() - 1);
+          render(true);
         }
         if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
           animation.reverse = false;
           _this.ds.page(_this.ds.page() + 1);
+          return render(true);
         }
-        return render(true);
       }
     };
     destroy = function() {
       var name,
         _this = this;
-      name = selected.children(":first").attr("name");
+      name = selected.children(":first").attr("data-name");
       return selected.kendoStop(true).kendoAnimate({
         effects: "zoomOut fadOut",
         hide: true,
         complete: function() {
           return filewrapper.deleteFile(name).done(function() {
+            $.publish("/top/update", ["deselected"]);
             selected.remove();
             _this.ds.remove(_this.ds.get(name));
             return render();
@@ -207,24 +209,19 @@
         page1.container.on("dblclick", ".thumbnail", function() {
           var thumb;
           thumb = $(this).children(":first");
-          return $.publish("/details/show", [get("" + (thumb.attr("data-name")))]);
+          return $.publish("/details/show", [get("" + (thumb.data("name")))]);
         });
         page1.container.on("click", ".thumbnail", function() {
           var thumb;
           thumb = $(this).children(":first");
           $.publish("/top/update", ["selected"]);
-          $.publish("/item/selected", [get("" + (thumb.attr("data-name")))]);
-          return select(thumb.attr("name"));
+          $.publish("/item/selected", [get("" + (thumb.data("name")))]);
+          return select(thumb.data("name"));
         });
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = new kendo.data.DataSource({
             data: message.message,
             pageSize: 12,
-            change: function() {
-              if (this.page() === 1) {
-                return $.publish("/bottom/thumbnail", [this.view()[0]]);
-              }
-            },
             sort: {
               dir: "desc",
               field: "name"
@@ -235,7 +232,10 @@
               }
             }
           });
-          return _this.ds.read();
+          if (message.message.length > 0) {
+            _this.ds.read();
+            return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
+          }
         });
         $.subscribe("/gallery/delete", function() {
           return destroy();

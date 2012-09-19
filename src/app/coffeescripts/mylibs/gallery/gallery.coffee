@@ -27,7 +27,7 @@ define [
     select = (name) =>
 
         # find the item with the specified name
-        selected = container.find("[name='#{name}']").parent(":first")
+        selected = container.find("[data-name='#{name}']").parent(":first")
         container.find(".thumbnail").removeClass "selected"
         selected.addClass "selected"
 
@@ -40,24 +40,26 @@ define [
             if direction > 0 and @ds.page() > 1
                 animation.reverse = true
                 @ds.page @ds.page() - 1
+                render(true)
             if direction < 0 and @ds.page() < @ds.totalPages()
                 animation.reverse = false
                 @ds.page @ds.page() + 1
-
-            render(true)
+                render(true)
 
     destroy = ->
 
-        name = selected.children(":first").attr("name")
+        name = selected.children(":first").attr("data-name")
         
         selected.kendoStop(true).kendoAnimate
             effects: "zoomOut fadOut"
             hide: true
             complete: =>
                 filewrapper.deleteFile(name).done => 
+                    $.publish "/top/update", ["deselected"]
                     selected.remove()
                     @ds.remove(@ds.get(name))
                     render()
+
 
     get = (name) => 
         # find the match in the data source
@@ -218,24 +220,18 @@ define [
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", ->
                 thumb = $(@).children(":first")            
-                $.publish "/details/show", [ get("#{thumb.attr("data-name")}") ]
+                $.publish "/details/show", [ get("#{thumb.data("name")}") ]
 
             page1.container.on "click", ".thumbnail", ->
                 thumb = $(@).children(":first")            
                 $.publish "/top/update", ["selected"]
-                $.publish "/item/selected", [get("#{thumb.attr("data-name")}")]
-                select thumb.attr("name")
+                $.publish "/item/selected", [get("#{thumb.data("name")}")]
+                select thumb.data("name")
 
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = new kendo.data.DataSource
                     data: message.message
                     pageSize: 12                    
-                    change: ->
-                        # check to see if we need to update the thumbnail. The easiest
-                        # way is just to check and see if this is the first page and 
-                        # then publish the first item
-                        if @.page() == 1 
-                            $.publish "/bottom/thumbnail", [@.view()[0]]
                     sort:
                         dir: "desc" 
                         field: "name"  
@@ -244,7 +240,9 @@ define [
                             id: "name" 
 
 
-                @ds.read()
+                if message.message.length > 0
+                    @ds.read()
+                    $.publish "/bottom/thumbnail", [@ds.view()[0]]
 
             $.subscribe "/gallery/delete", ->
                 destroy()

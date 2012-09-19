@@ -36,10 +36,12 @@
           }
           blob = video.compile();
           name = new Date().getTime() + ".webm";
-          blobUrl = window.URL.createObjectURL(blob);
-          console.log(blobUrl);
           filewrapper.save(name, blob);
-          return $.publish("/bar/time/hide");
+          blobUrl = window.URL.createObjectURL(blob);
+          return {
+            url: blobUrl,
+            name: name
+          };
         };
         for (i = _i = 0, _ref = frames.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
           bufferContext.putImageData(frames[i].imageData, 0, 0);

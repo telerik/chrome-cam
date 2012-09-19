@@ -6,7 +6,16 @@
       _this = this;
     index = 0;
     viewModel = kendo.observable({
-      src: "styles/images/photoPlaceholder.png",
+      video: {
+        src: function() {
+          return "styles/images/photoPlaceholder.png";
+        }
+      },
+      img: {
+        src: function() {
+          return "styles/images/photoPlaceholder.png";
+        }
+      },
       type: "jpeg",
       isVideo: function() {
         return this.get("type") === "webm";
@@ -41,8 +50,12 @@
       });
     };
     update = function(message) {
-      viewModel.set("src", message.item.file);
       viewModel.set("type", message.item.type);
+      if (viewModel.get("type") === "webm") {
+        viewModel.set("video.src", message.item.file);
+      } else {
+        viewModel.set("img.src", message.item.file);
+      }
       viewModel.set("next.visible", message.index < message.length - 1);
       viewModel.set("previous.visible", message.index > 0 && message.length > 1);
       index = message.index;
@@ -55,11 +68,25 @@
         $.subscribe("/details/hide", function() {
           return hide();
         });
+        $.subscribe("/gallery/delete", function() {
+          return hide();
+        });
+        $.subscribe("/keyboard/esc", function() {
+          return $.publish("/details/hide");
+        });
         $.subscribe("/details/show", function(message) {
           return show(message);
         });
-        return $.subscribe("/details/update", function(message) {
+        $.subscribe("/details/update", function(message) {
           return update(message);
+        });
+        return $.subscribe("/keyboard/arrow", function(direction) {
+          if (direction === "left" && viewModel.previous.visible) {
+            viewModel.previous.click();
+          }
+          if (direction === "right" && viewModel.next.visible) {
+            return viewModel.next.click();
+          }
         });
       }
     };
