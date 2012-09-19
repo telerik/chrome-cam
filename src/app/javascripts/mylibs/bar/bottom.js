@@ -126,6 +126,9 @@
           thumbnail = new kendo.View(view.el.destination, thumbnailTemplate, file);
           return thumbnail.render();
         });
+        $.subscribe("/keyboard/space", function(e) {
+          return viewModel.capture.click.call(viewModel, e);
+        });
         view.find(".stop", "stop");
         view.find(".counter", "counters");
         view.find(".bar", "bar");

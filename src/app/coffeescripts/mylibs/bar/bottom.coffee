@@ -155,6 +155,9 @@ define [
 				thumbnail = new kendo.View(view.el.destination, thumbnailTemplate, file)
 				thumbnail.render()
 
+			$.subscribe "/keyboard/space", (e) ->
+				viewModel.capture.click.call viewModel, e
+
 			# get a reference to the dots.
 			# TODO: this sucks. fix it with custom
 			# bindings instead of this crazy BS.
