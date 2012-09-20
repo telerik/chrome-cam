@@ -34,6 +34,7 @@
       }
     });
     hide = function() {
+      $.publish("/top/update", ["gallery"]);
       return _this.details.container.kendoStop(true).kendoAnimate({
         effects: "zoomOut",
         hide: true
@@ -70,9 +71,6 @@
         });
         $.subscribe("/gallery/delete", function() {
           return hide();
-        });
-        $.subscribe("/keyboard/esc", function() {
-          return $.publish("/details/hide");
         });
         $.subscribe("/details/show", function(message) {
           return show(message);
