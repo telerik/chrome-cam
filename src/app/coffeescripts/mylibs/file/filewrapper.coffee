@@ -21,6 +21,9 @@ define [], (file) ->
 		deleteFile: (filename) ->
 			asyncFileRequest "/file/delete", "/file/deleted/#{filename}", name: filename
 
+		clear: ->
+			asyncFileRequest "/file/clear", "/file/cleared", {}
+
 		save: (filename, blob) ->
 			asyncFileRequest "/file/save", "/file/saved/#{filename}", name: filename, file: blob
 

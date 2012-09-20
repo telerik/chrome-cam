@@ -253,6 +253,21 @@ define([
       # we did not get file system access
       , errorHandler
 
+  clear = ->
+    withFileSystem (fs) ->
+      dirReader = fs.root.createReader()
+      dirReader.readEntries (entries) ->
+
+        deletedCount = 0
+        totalCount = entries.length
+
+        for entry in entries
+          do (entry) ->
+            entry.remove ->
+              ++deletedCount
+              if deletedCount == totalCount
+                $.publish "/postman/deliver", [ {}, "/file/cleared" ]
+
   pub = 
 
     init: (kb) ->
@@ -275,5 +290,8 @@ define([
       
       $.subscribe "/file/readFile", (message) ->
         readSingleFile message.name
+
+      $.subscribe "/file/clear", (message) ->
+        clear()
 
 )

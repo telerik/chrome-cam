@@ -25,6 +25,9 @@
           name: filename
         });
       },
+      clear: function() {
+        return asyncFileRequest("/file/clear", "/file/cleared", {});
+      },
       save: function(filename, blob) {
         return asyncFileRequest("/file/save", "/file/saved/" + filename, {
           name: filename,

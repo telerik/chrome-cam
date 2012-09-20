@@ -7,7 +7,7 @@
     The file module takes care of all the reading and writing to and from the file system
     */
 
-    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, getFileExtension, list, myPicturesDir, pub, read, readSingleFile, save, withFileSystem;
+    var blobBuiler, clear, compare, destroy, download, errorHandler, fileSystem, getFileExtension, list, myPicturesDir, pub, read, readSingleFile, save, withFileSystem;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
     fileSystem = null;
     myPicturesDir = {};
@@ -235,6 +235,30 @@
         }, errorHandler);
       });
     };
+    clear = function() {
+      return withFileSystem(function(fs) {
+        var dirReader;
+        dirReader = fs.root.createReader();
+        return dirReader.readEntries(function(entries) {
+          var deletedCount, entry, totalCount, _i, _len, _results;
+          deletedCount = 0;
+          totalCount = entries.length;
+          _results = [];
+          for (_i = 0, _len = entries.length; _i < _len; _i++) {
+            entry = entries[_i];
+            _results.push((function(entry) {
+              return entry.remove(function() {
+                ++deletedCount;
+                if (deletedCount === totalCount) {
+                  return $.publish("/postman/deliver", [{}, "/file/cleared"]);
+                }
+              });
+            })(entry));
+          }
+          return _results;
+        });
+      });
+    };
     return pub = {
       init: function(kb) {
         $.subscribe("/file/save", function(message) {
@@ -252,8 +276,11 @@
         $.subscribe("/file/list", function(message) {
           return list();
         });
-        return $.subscribe("/file/readFile", function(message) {
+        $.subscribe("/file/readFile", function(message) {
           return readSingleFile(message.name);
+        });
+        return $.subscribe("/file/clear", function(message) {
+          return clear();
         });
       }
     };

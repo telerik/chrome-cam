@@ -1,7 +1,8 @@
 define [
     'Kendo'
+    'mylibs/file/filewrapper'
     'text!mylibs/settings/views/settings.html' 
-], (kendo, template) ->
+], (kendo, filewrapper, template) ->
     SETTINGS_VIEW = "#settings"
 
     view = null
@@ -15,6 +16,10 @@ define [
         hide: ->
             $.publish "/postman/deliver", [ true, "/menu/enable" ]
             window.APP.app.navigate oldView
+        clearGallery: ->
+            # TODO: PROMPT BEFORE DELETING EVERYTHING.
+            filewrapper.clear().done ->
+                console.log "Everything was deleted"
 
     pub = 
         init: (selector) ->
