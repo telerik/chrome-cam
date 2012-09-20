@@ -14,6 +14,9 @@
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
         });
+        $.subscribe('/menu/click/chrome-cam-about-menu', function() {
+          return window.APP.app.navigate("#about");
+        });
         return camera.init("countdown", function() {
           window.APP.bottom = bottom.init(".bottom");
           window.APP.top = top.init(".top");

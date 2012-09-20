@@ -36,6 +36,9 @@ define([
 			    $('#pictures').append(intro)
 			)
 
+			$.subscribe '/menu/click/chrome-cam-about-menu', ->
+				window.APP.app.navigate "#about"
+
 			# initialize the camera
 			camera.init "countdown", ->
 
