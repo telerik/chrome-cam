@@ -4,10 +4,14 @@ define [
 ], (kendo, template) ->
 
     view = null
-    viewModel = { }
+    oldView = "#home"
 
-    show = (selector) ->
-        window.APP.app.navigate selector
+    viewModel = kendo.observable
+        show: ->
+            oldView = window.APP.app.view().id
+            window.APP.app.navigate "#settings"
+        hide: ->
+            window.APP.app.navigate oldView
 
     pub = 
         init: (selector) ->
@@ -15,4 +19,4 @@ define [
             view.render(viewModel, true)
 
             $.subscribe '/menu/click/chrome-cam-settings-menu', ->
-                show selector
+                viewModel.show()

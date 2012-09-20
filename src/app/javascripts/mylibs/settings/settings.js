@@ -2,18 +2,24 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/settings/views/settings.html'], function(kendo, template) {
-    var pub, show, view, viewModel;
+    var oldView, pub, view, viewModel;
     view = null;
-    viewModel = {};
-    show = function(selector) {
-      return window.APP.app.navigate(selector);
-    };
+    oldView = "#home";
+    viewModel = kendo.observable({
+      show: function() {
+        oldView = window.APP.app.view().id;
+        return window.APP.app.navigate("#settings");
+      },
+      hide: function() {
+        return window.APP.app.navigate(oldView);
+      }
+    });
     return pub = {
       init: function(selector) {
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
         return $.subscribe('/menu/click/chrome-cam-settings-menu', function() {
-          return show(selector);
+          return viewModel.show();
         });
       }
     };
