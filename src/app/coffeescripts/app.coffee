@@ -58,6 +58,7 @@ define([
 			    $('#pictures').append(intro)
 			)
 
+			$.publish "/postman/deliver", [ true, "/menu/enable" ]
 			initAbout "#about"
 
 			# initialize the camera
