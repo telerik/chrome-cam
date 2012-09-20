@@ -32,6 +32,7 @@
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
         });
+        $.publish("/postman/deliver", [true, "/menu/enable"]);
         initAbout("#about");
         return camera.init("countdown", function() {
           window.APP.bottom = bottom.init(".bottom");
