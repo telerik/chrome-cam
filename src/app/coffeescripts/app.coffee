@@ -14,8 +14,9 @@ define([
   'mylibs/events/events'
   'mylibs/file/filewrapper'
   'mylibs/settings/settings'
+  'mylibs/assets/assets'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, record ) ->
+], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, assets, record ) ->
 	
 	initAbout = (selector) ->
 		about = $(selector)
@@ -49,6 +50,9 @@ define([
 			
 			# fire up the postman!
 			postman.init window.top
+			
+			# initialize the asset pipeline
+			assets.init()
 			
 			$.subscribe('/camera/unsupported', ->
 			    $('#pictures').append(intro)

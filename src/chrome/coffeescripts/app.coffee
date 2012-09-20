@@ -21,7 +21,7 @@ define [
 	skipBit = 0
 	skipMax = 10
 
-	setupContextMenu = ->
+	menu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
 			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
 
@@ -113,10 +113,11 @@ define [
 			# get the files
 			file.init()
 
-			# send embeded assets down to the app
-			# assets.init()
+			# initialize the asset pipeline
+			assets.init()
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
 
-			setupContextMenu()
+			# setup the context menu
+			menu()
