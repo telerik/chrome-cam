@@ -5,17 +5,16 @@
     var pub, show, view, viewModel;
     view = null;
     viewModel = {};
-    show = function() {
-      return view.container.kendoStop(true).kendoAnimate({
-        effects: "zoomIn",
-        show: true
-      });
+    show = function(selector) {
+      return window.APP.app.navigate(selector);
     };
     return pub = {
       init: function(selector) {
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
-        return $.subscribe('/menu/click/chrome-cam-settings-menu', show);
+        return $.subscribe('/menu/click/chrome-cam-settings-menu', function() {
+          return show(selector);
+        });
       }
     };
   });
