@@ -56,14 +56,21 @@
     };
     return pub = {
       init: function(container) {
+        var back;
         _this.view = new kendo.View(container, template);
         _this.view.render(viewModel, true);
-        _this.view.find("#back", "back");
+        back = _this.view.find(".back.button");
         $.subscribe("/top/update", function(state) {
           return states.set(state);
         });
         $.subscribe("/item/selected", function(message) {
           return viewModel.set("current", message.item);
+        });
+        $.subscribe("/keyboard/esc", function() {
+          if (states.current === "details") {
+            states.set("gallery");
+            return back.trigger("click");
+          }
         });
         return _this.view;
       }

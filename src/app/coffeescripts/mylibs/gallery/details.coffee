@@ -25,6 +25,7 @@ define [
     }
 
     hide = =>
+        $.publish "/top/update", ["gallery"]
         @details.container.kendoStop(true).kendoAnimate
             effects: "zoomOut"
             hide: true
@@ -61,9 +62,6 @@ define [
 
             $.subscribe "/gallery/delete", ->
                 hide()
-
-            $.subscribe "/keyboard/esc", ->
-                $.publish "/details/hide"
 
             $.subscribe "/details/show", (message) ->
                 show(message)

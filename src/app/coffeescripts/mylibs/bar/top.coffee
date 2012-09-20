@@ -51,7 +51,7 @@ define [
 			@view.render(viewModel, true)
 
 			# find and cache some DOM elements
-			@view.find("#back", "back")
+			back = @view.find(".back.button")
 
 			# wire up events
 			$.subscribe "/top/update", (state) ->
@@ -59,6 +59,11 @@ define [
 
 			$.subscribe "/item/selected", (message) ->
 				viewModel.set("current", message.item)
+
+			$.subscribe "/keyboard/esc", ->
+				if states.current == "details"
+					states.set "gallery"
+					back.trigger "click"
 
 			return @view
 
