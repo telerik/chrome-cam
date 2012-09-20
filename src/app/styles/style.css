@@ -548,12 +548,15 @@ a.button {
 	background-size: 134px 134px;
 	margin-bottom: 80px;
 }
-	.appInfoHeader > * { margin-left: 115px; }
-	.appInfoHeader h1 { font-size: 65px; }
-	.appInfoHeader h2 {
+	.km-content .appInfoHeader h1 { 
+		margin-left: 115px;
+		font-size: 65px;
+	}
+	.km-content .appInfoHeader h2 {
 		padding-left: 10px;
 		font-size: 20px;
 		position: relative;
+		margin-left: 115px;
 		top: -13px;
 		color: #666;
 		font-weight: normal;
