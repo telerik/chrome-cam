@@ -198,6 +198,8 @@ a.button {
 	font-size: 14px;
 	line-height: 16px;
 	text-decoration: none;
+	color: black;
+	cursor: pointer;
 }
 
 	a.button:hover { 
@@ -229,13 +231,25 @@ a.button {
 
 /* Popover Styles */
 
+.km-blackberry .km-popup.km-pane .km-content {
+	background-image: none !important;
+	background-color: #f1f1f1 !important;
+}
+
+.km-popup-arrow { left: 88px !important; }
+
 .km-scroll-container p {
 	margin: 1em;
 	font-size: .7em;
 	text-align: center;
 }
 	.km-scroll-container p:first-child { margin-top: 2em; }
-	.km-scroll-container .km-button.red { background-color: darkred; }
+	.km-scroll-container a {
+		background-color: #555;
+		color: white;
+	}
+	.km-scroll-container .red { background-color: darkred; }
+	.km-scroll-container a:hover { background: #bbb; }
 
 /* Bar States */
 
