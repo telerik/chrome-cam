@@ -220,18 +220,24 @@ a.button {
 	text-indent: 999px;
 	direction: rtl;
 	background-position: 0 -116px;
-	margin-right: 10px;
+	margin: 0 20px;
 	cursor: pointer;
 	display: block;
 }
 	.delete.hidden { display: none; }
 	.delete:hover { opacity: .7; }
 
-/* Bar States */
+/* Popover Styles */
 
-/*.galleryMode .mode, .galleryMode
-.previewMode .back, .previewMode .delete, .previewMode .share,
-.recording .mode, .recording .galleryLink { display: none; }*/
+.km-scroll-container p {
+	margin: 1em;
+	font-size: .7em;
+	text-align: center;
+}
+	.km-scroll-container p:first-child { margin-top: 2em; }
+	.km-scroll-container .km-button.red { background-color: darkred; }
+
+/* Bar States */
 
 .galleryMode, .details .bar {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(15%,rgba(46,46,46,1)), color-stop(100%,rgba(130,130,130,1)));
