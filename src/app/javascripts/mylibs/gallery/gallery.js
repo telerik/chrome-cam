@@ -2,9 +2,10 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, at, container, create, data, destroy, ds, el, flipping, get, index, page, pageSize, pages, pub, render, select, selected, total,
+    var active, add, animation, at, container, create, data, dataSource, destroy, ds, el, files, flipping, get, index, page, pageSize, pages, pub, render, select, selected, total,
       _this = this;
     pageSize = 12;
+    files = [];
     ds = {};
     data = [];
     container = {};
@@ -88,13 +89,34 @@
       $.publish("/details/update", [match]);
       return select(match.item.name);
     };
+    dataSource = {
+      create: function(data) {
+        return _this.ds = new kendo.data.DataSource({
+          data: data,
+          pageSize: 12,
+          sort: {
+            dir: "desc",
+            field: "name"
+          },
+          schema: {
+            model: {
+              id: "name"
+            }
+          }
+        });
+      }
+    };
     add = function(item) {
       item = {
         name: item.name,
         file: item.file,
         type: item.type
       };
-      return _this.ds.add(item);
+      if (!_this.ds) {
+        return _this.ds = dataSource.create([item]);
+      } else {
+        return _this.ds.add(item);
+      }
     };
     create = function(item) {
       var element, fadeIn;
@@ -219,23 +241,9 @@
           return select(thumb.data("name"));
         });
         $.subscribe("/pictures/bulk", function(message) {
-          _this.ds = new kendo.data.DataSource({
-            data: message.message,
-            pageSize: 12,
-            sort: {
-              dir: "desc",
-              field: "name"
-            },
-            schema: {
-              model: {
-                id: "name"
-              }
-            }
-          });
-          if (message.message.length > 0) {
-            _this.ds.read();
-            return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
-          }
+          _this.ds = dataSource.create(message.message);
+          _this.ds.read();
+          return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
         });
         $.subscribe("/gallery/delete", function() {
           return destroy();

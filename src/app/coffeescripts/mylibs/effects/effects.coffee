@@ -1,4 +1,5 @@
 define([
+  'mylibs/assets/assets' 
   'libs/face/ccv'
   'libs/face/face'
 ], (assets) ->
@@ -43,8 +44,6 @@ define([
             ghostBuffer = []
 
         init: ->
-
-            pox.src = "images/pox.png"
 
         data: [ 
 
@@ -359,7 +358,7 @@ define([
                         y = face.y * factor
 
                         simple canvas, element, 0, 0, element.width, element.height
-                        simple canvas, pox, x, y, width, height  
+                        simple canvas, assets.images.pox, x, y, width, height  
             }
         ]          
 )

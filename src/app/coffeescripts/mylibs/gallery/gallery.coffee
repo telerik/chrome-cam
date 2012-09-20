@@ -6,6 +6,7 @@ define [
 ], (kendo, utils, filewrapper, template) ->
     
     pageSize = 12
+    files = []
     ds = {}
     data = []
     container = {}
@@ -91,10 +92,26 @@ define [
         
         select match.item.name
 
+    dataSource =
+        create: (data) =>
+            @ds = new kendo.data.DataSource
+                data: data
+                pageSize: 12                    
+                sort:
+                    dir: "desc" 
+                    field: "name"  
+                schema: 
+                    model:
+                        id: "name" 
+
     add = (item) =>
         item = { name: item.name, file: item.file, type: item.type }
-        # add the item to the datasource
-        @ds.add(item)
+        # check to make sure there is a data source before trying to add to it
+        if not @ds
+            @ds = dataSource.create([item])
+        else
+            # add the item to the datasource
+            @ds.add(item)
 
     create = (item) ->
 
@@ -229,20 +246,9 @@ define [
                 select thumb.data("name")
 
             $.subscribe "/pictures/bulk", (message) =>
-                @ds = new kendo.data.DataSource
-                    data: message.message
-                    pageSize: 12                    
-                    sort:
-                        dir: "desc" 
-                        field: "name"  
-                    schema: 
-                        model:
-                            id: "name" 
-
-
-                if message.message.length > 0
-                    @ds.read()
-                    $.publish "/bottom/thumbnail", [@ds.view()[0]]
+                @ds = dataSource.create(message.message)
+                @ds.read()
+                $.publish "/bottom/thumbnail", [@ds.view()[0]]
 
             $.subscribe "/gallery/delete", ->
                 destroy()

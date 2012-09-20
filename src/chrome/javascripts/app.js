@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/intents/intents', 'mylibs/notify/notify', 'mylibs/assets/assets', 'libs/face/track'], function(postman, utils, file, intents, notify, assets, face) {
     'use strict';
 
-    var canvas, ctx, draw, errback, hollaback, iframe, paused, pub, setupContextMenu, skip, skipBit, skipMax, track, update;
+    var canvas, ctx, draw, errback, hollaback, iframe, menu, paused, pub, skip, skipBit, skipMax, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -13,12 +13,12 @@
     skip = false;
     skipBit = 0;
     skipMax = 10;
-    setupContextMenu = function() {
+    menu = function() {
       chrome.contextMenus.onClicked.addListener(function(info, tab) {
         return $.publish("/postman/deliver", [{}, "/menu/click/" + info.menuItemId]);
       });
       return $.subscribe("/menu/enable", function(isEnabled) {
-        var menu, menus, _i, _len, _results;
+        var menus, _i, _len, _results;
         menus = ["chrome-cam-about-menu", "chrome-cam-settings-menu"];
         _results = [];
         for (_i = 0, _len = menus.length; _i < _len; _i++) {
@@ -99,8 +99,9 @@
         notify.init();
         intents.init();
         file.init();
+        assets.init();
         face.init(0, 0, 0, 0);
-        return setupContextMenu();
+        return menu();
       }
     };
   });
