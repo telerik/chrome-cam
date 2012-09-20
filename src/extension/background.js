@@ -1,3 +1,11 @@
+chrome.runtime.onInstalled.addListener(function() {
+  chrome.contextMenus.create({
+    id: "chrome-cam-about-menu",
+    title: "About...",
+    contexts: ["page"]
+  });
+});
+
 chrome.app.runtime.onLaunched.addListener(function() { 
   
   function onWindowLoaded(win) {

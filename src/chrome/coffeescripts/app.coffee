@@ -21,6 +21,10 @@ define([
 	skipBit = 0
 	skipMax = 10
 
+	setupContextMenu = ->
+		chrome.contextMenus.onClicked.addListener (info, tab) ->
+			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
+
 	draw = -> 
 
 		# utils.getAnimationFrame()(draw)
@@ -103,4 +107,6 @@ define([
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
+
+			setupContextMenu()
 )
