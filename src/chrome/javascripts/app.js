@@ -79,6 +79,12 @@
             key: e.data.key
           });
         });
+        $.subscribe("/tab/open", function(url) {
+          console.log("DAH!");
+          return chrome.tabs.create({
+            url: url
+          });
+        });
         notify.init();
         intents.init();
         file.init();

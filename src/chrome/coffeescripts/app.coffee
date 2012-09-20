@@ -93,6 +93,9 @@ define([
 					data: e.data.data
 					key: e.data.key
 
+			$.subscribe "/tab/open", (url) ->
+				chrome.tabs.create url: url
+
 			#initialize notifications
 			notify.init()
 

@@ -40,8 +40,11 @@ define([
 				oldView = window.APP.app.view().id
 				window.APP.app.navigate "#about"
 				# TODO: don't use jQuery directly here...
-				$("#about").unbind("click").click ->
+				$("#about button").unbind("click").click ->
 					window.APP.app.navigate oldView
+
+			$("#about").find("a").click ->
+				$.publish "/postman/deliver", [@getAttribute("href"), "/tab/open"]
 
 			# initialize the camera
 			camera.init "countdown", ->

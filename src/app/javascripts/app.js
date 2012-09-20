@@ -18,9 +18,13 @@
           var oldView;
           oldView = window.APP.app.view().id;
           window.APP.app.navigate("#about");
-          return $("#about").unbind("click").click(function() {
+          return $("#about button").unbind("click").click(function() {
             return window.APP.app.navigate(oldView);
           });
+        });
+        $("#about").find("a").click(function() {
+          console.log("FUS ROH");
+          return $.publish("/postman/deliver", [this.getAttribute("href"), "/tab/open"]);
         });
         return camera.init("countdown", function() {
           window.APP.bottom = bottom.init(".bottom");
