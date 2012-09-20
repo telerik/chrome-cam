@@ -15,7 +15,12 @@
           return $('#pictures').append(intro);
         });
         $.subscribe('/menu/click/chrome-cam-about-menu', function() {
-          return window.APP.app.navigate("#about");
+          var oldView;
+          oldView = window.APP.app.view().id;
+          window.APP.app.navigate("#about");
+          return $("#about").unbind("click").click(function() {
+            return window.APP.app.navigate(oldView);
+          });
         });
         return camera.init("countdown", function() {
           window.APP.bottom = bottom.init(".bottom");

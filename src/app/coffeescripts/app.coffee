@@ -37,7 +37,11 @@ define([
 			)
 
 			$.subscribe '/menu/click/chrome-cam-about-menu', ->
+				oldView = window.APP.app.view().id
 				window.APP.app.navigate "#about"
+				# TODO: don't use jQuery directly here...
+				$("#about").unbind("click").click ->
+					window.APP.app.navigate oldView
 
 			# initialize the camera
 			camera.init "countdown", ->
