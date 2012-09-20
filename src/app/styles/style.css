@@ -233,8 +233,10 @@ a.button {
 
 .km-blackberry .km-popup.km-pane .km-content {
 	background-image: none !important;
-	background-color: #e0e0e0 !important;
+	background-color: #f1f1f1 !important;
 }
+
+.km-popup-arrow { left: 88px !important; }
 
 .km-scroll-container p {
 	margin: 1em;
@@ -242,12 +244,12 @@ a.button {
 	text-align: center;
 }
 	.km-scroll-container p:first-child { margin-top: 2em; }
-	.km-scroll-container .red { 
-		background-color: darkred;
+	.km-scroll-container a {
+		background-color: #555;
 		color: white;
 	}
-
-.km-scroll-container a:hover { background: #bbb; }
+	.km-scroll-container .red { background-color: darkred; }
+	.km-scroll-container a:hover { background: #bbb; }
 
 /* Bar States */
 
