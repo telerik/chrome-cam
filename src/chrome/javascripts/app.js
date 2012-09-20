@@ -14,8 +14,20 @@
     skipBit = 0;
     skipMax = 10;
     setupContextMenu = function() {
-      return chrome.contextMenus.onClicked.addListener(function(info, tab) {
+      chrome.contextMenus.onClicked.addListener(function(info, tab) {
         return $.publish("/postman/deliver", [{}, "/menu/click/" + info.menuItemId]);
+      });
+      return $.subscribe("/menu/enable", function(isEnabled) {
+        var menu, menus, _i, _len, _results;
+        menus = ["chrome-cam-about-menu", "chrome-cam-settings-menu"];
+        _results = [];
+        for (_i = 0, _len = menus.length; _i < _len; _i++) {
+          menu = menus[_i];
+          _results.push(chrome.contextMenus.update(menu, {
+            enabled: isEnabled
+          }));
+        }
+        return _results;
       });
     };
     draw = function() {

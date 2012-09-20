@@ -25,6 +25,14 @@ define [
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
 			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
 
+		$.subscribe "/menu/enable", (isEnabled) ->
+			menus = [
+				"chrome-cam-about-menu"
+				"chrome-cam-settings-menu"
+			]
+			for menu in menus
+				chrome.contextMenus.update menu, enabled: isEnabled
+
 	draw = -> 
 
 		# utils.getAnimationFrame()(draw)

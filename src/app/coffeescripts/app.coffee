@@ -19,13 +19,16 @@ define([
 	
 	initAbout = (selector) ->
 		about = $(selector)
+		aboutView = selector
 		oldView = "#home"
 
 		$.subscribe '/menu/click/chrome-cam-about-menu', ->
+			$.publish "/postman/deliver", [ false, "/menu/enable" ]
 			oldView = window.APP.app.view().id
-			window.APP.app.navigate selector
+			window.APP.app.navigate aboutView
 		
 		about.find("button").click ->
+			$.publish "/postman/deliver", [ true, "/menu/enable" ]
 			window.APP.app.navigate oldView
 
 		about.find("a").click ->

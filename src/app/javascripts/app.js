@@ -4,14 +4,17 @@
   define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/bar/confirm', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/events/events', 'mylibs/file/filewrapper', 'mylibs/settings/settings', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, record) {
     var initAbout, pub;
     initAbout = function(selector) {
-      var about, oldView;
+      var about, aboutView, oldView;
       about = $(selector);
+      aboutView = selector;
       oldView = "#home";
       $.subscribe('/menu/click/chrome-cam-about-menu', function() {
+        $.publish("/postman/deliver", [false, "/menu/enable"]);
         oldView = window.APP.app.view().id;
-        return window.APP.app.navigate(selector);
+        return window.APP.app.navigate(aboutView);
       });
       about.find("button").click(function() {
+        $.publish("/postman/deliver", [true, "/menu/enable"]);
         return window.APP.app.navigate(oldView);
       });
       return about.find("a").click(function() {
