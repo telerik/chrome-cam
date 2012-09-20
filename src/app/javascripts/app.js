@@ -2,7 +2,22 @@
 (function() {
 
   define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/bar/confirm', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/events/events', 'mylibs/file/filewrapper', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, record) {
-    var pub;
+    var initAbout, pub;
+    initAbout = function(selector) {
+      var about, oldView;
+      about = $(selector);
+      oldView = "#home";
+      $.subscribe('/menu/click/chrome-cam-about-menu', function() {
+        oldView = window.APP.app.view().id;
+        return window.APP.app.navigate(selector);
+      });
+      about.find("button").click(function() {
+        return window.APP.app.navigate(oldView);
+      });
+      return about.find("a").click(function() {
+        return $.publish("/postman/deliver", [this.getAttribute("href"), "/tab/open"]);
+      });
+    };
     return pub = {
       init: function() {
         window.APP = {};
@@ -14,18 +29,7 @@
         $.subscribe('/camera/unsupported', function() {
           return $('#pictures').append(intro);
         });
-        $.subscribe('/menu/click/chrome-cam-about-menu', function() {
-          var oldView;
-          oldView = window.APP.app.view().id;
-          window.APP.app.navigate("#about");
-          return $("#about button").unbind("click").click(function() {
-            return window.APP.app.navigate(oldView);
-          });
-        });
-        $("#about").find("a").click(function() {
-          console.log("FUS ROH");
-          return $.publish("/postman/deliver", [this.getAttribute("href"), "/tab/open"]);
-        });
+        initAbout("#about");
         return camera.init("countdown", function() {
           window.APP.bottom = bottom.init(".bottom");
           window.APP.top = top.init(".top");

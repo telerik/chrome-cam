@@ -80,7 +80,6 @@
           });
         });
         $.subscribe("/tab/open", function(url) {
-          console.log("DAH!");
           return chrome.tabs.create({
             url: url
           });
