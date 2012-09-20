@@ -15,7 +15,7 @@
       init: function(selector) {
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
-        return $.subscribe("/settings/show", show);
+        return $.subscribe('/menu/click/chrome-cam-settings-menu', show);
       }
     };
   });

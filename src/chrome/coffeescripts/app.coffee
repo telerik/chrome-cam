@@ -1,4 +1,4 @@
-define([
+define [
 	'mylibs/postman/postman'
 	'mylibs/utils/utils'
 	'mylibs/file/file'
@@ -20,6 +20,10 @@ define([
 	skip = false
 	skipBit = 0
 	skipMax = 10
+
+	setupContextMenu = ->
+		chrome.contextMenus.onClicked.addListener (info, tab) ->
+			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
 
 	draw = -> 
 
@@ -59,11 +63,6 @@ define([
 	errback = ->
 		console.log("Couldn't Get The Video");
 
-	createContextMenu = ->
-		chrome.contextMenus.onClicked.addListener (info, tab) ->
-			# todo: differentiate between what's clicked in the menu when we have more than one option...
-			$.publish "/postman/deliver", [ {}, "/settings/show" ]
-
 	pub = 
 		init: ->
 
@@ -94,6 +93,9 @@ define([
 					data: e.data.data
 					key: e.data.key
 
+			$.subscribe "/tab/open", (url) ->
+				chrome.tabs.create url: url
+
 			#initialize notifications
 			notify.init()
 
@@ -109,5 +111,4 @@ define([
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
 
-			createContextMenu()
-)
+			setupContextMenu()

@@ -16,4 +16,4 @@ define [
             view = new kendo.View(selector, template)
             view.render(viewModel, true)
 
-            $.subscribe "/settings/show", show
+            $.subscribe '/menu/click/chrome-cam-settings-menu', show

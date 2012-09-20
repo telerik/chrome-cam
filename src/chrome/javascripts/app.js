@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/intents/intents', 'mylibs/notify/notify', 'mylibs/assets/assets', 'libs/face/track'], function(postman, utils, file, intents, notify, assets, face) {
     'use strict';
 
-    var canvas, createContextMenu, ctx, draw, errback, hollaback, iframe, paused, pub, skip, skipBit, skipMax, track, update;
+    var canvas, ctx, draw, errback, hollaback, iframe, paused, pub, setupContextMenu, skip, skipBit, skipMax, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -13,6 +13,11 @@
     skip = false;
     skipBit = 0;
     skipMax = 10;
+    setupContextMenu = function() {
+      return chrome.contextMenus.onClicked.addListener(function(info, tab) {
+        return $.publish("/postman/deliver", [{}, "/menu/click/" + info.menuItemId]);
+      });
+    };
     draw = function() {
       return update();
     };
@@ -50,11 +55,6 @@
     errback = function() {
       return console.log("Couldn't Get The Video");
     };
-    createContextMenu = function() {
-      return chrome.contextMenus.onClicked.addListener(function(info, tab) {
-        return $.publish("/postman/deliver", [{}, "/settings/show"]);
-      });
-    };
     return pub = {
       init: function() {
         var thumbnailWorker;
@@ -79,11 +79,16 @@
             key: e.data.key
           });
         });
+        $.subscribe("/tab/open", function(url) {
+          return chrome.tabs.create({
+            url: url
+          });
+        });
         notify.init();
         intents.init();
         file.init();
         face.init(0, 0, 0, 0);
-        return createContextMenu();
+        return setupContextMenu();
       }
     };
   });

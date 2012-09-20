@@ -17,6 +17,20 @@ define([
   'libs/record/record'
 ], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, record ) ->
 	
+	initAbout = (selector) ->
+		about = $(selector)
+		oldView = "#home"
+
+		$.subscribe '/menu/click/chrome-cam-about-menu', ->
+			oldView = window.APP.app.view().id
+			window.APP.app.navigate selector
+		
+		about.find("button").click ->
+			window.APP.app.navigate oldView
+
+		about.find("a").click ->
+			$.publish "/postman/deliver", [@getAttribute("href"), "/tab/open"]
+
 	pub = 
 		    
 		init: ->
@@ -36,6 +50,8 @@ define([
 			$.subscribe('/camera/unsupported', ->
 			    $('#pictures').append(intro)
 			)
+
+			initAbout "#about"
 
 			# initialize the camera
 			camera.init "countdown", ->
