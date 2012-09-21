@@ -22,12 +22,18 @@ define [
 	skipMax = 10
 
 	config =
-		values: { }
+		get: (key, fn) ->
+			chrome.storage.local.get key, (storage) ->
+				$.publish "/postman/deliver", [ storage[key], "/config/value/#{key}" ]
+		set: (key, value) ->
+			obj = {}
+			obj[key] = value
+			chrome.storage.local.set obj
 		init: ->
 			$.subscribe "/config/get", (key) ->
-				$.publish "/postman/deliver", [ config.values[key], "/config/value/#{key}" ]
+				config.get key
 			$.subscribe "/config/set", (e) ->
-				config.values[e.key] = e.value
+				config.set e.key, e.value
 			$.subscribe "/config/all", ->
 				$.publish "/postman/deliver", [ config.values, "/config/values" ]
 

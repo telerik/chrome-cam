@@ -14,13 +14,23 @@
     skipBit = 0;
     skipMax = 10;
     config = {
-      values: {},
+      get: function(key, fn) {
+        return chrome.storage.local.get(key, function(storage) {
+          return $.publish("/postman/deliver", [storage[key], "/config/value/" + key]);
+        });
+      },
+      set: function(key, value) {
+        var obj;
+        obj = {};
+        obj[key] = value;
+        return chrome.storage.local.set(obj);
+      },
       init: function() {
         $.subscribe("/config/get", function(key) {
-          return $.publish("/postman/deliver", [config.values[key], "/config/value/" + key]);
+          return config.get(key);
         });
         $.subscribe("/config/set", function(e) {
-          return config.values[e.key] = e.value;
+          return config.set(e.key, e.value);
         });
         return $.subscribe("/config/all", function() {
           return $.publish("/postman/deliver", [config.values, "/config/values"]);
