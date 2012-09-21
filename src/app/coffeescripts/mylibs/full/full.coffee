@@ -3,9 +3,10 @@ define([
   'mylibs/effects/effects'
   'mylibs/utils/utils'
   'mylibs/file/filewrapper'
+  'mylibs/config/config'
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
-], (kendo, effects, utils, filewrapper, template, transferImg) ->
+], (kendo, effects, utils, filewrapper, config, template, transferImg) ->
 	SECONDS_TO_RECORD = 6
 
 	canvas = {}
@@ -56,8 +57,11 @@ define([
 
 	flash = (callback, file) ->
 
-		full.el.flash.show()	
-		transfer.content.kendoStop().kendoAnimate 
+		config.get "flash", (enabled) ->
+			# TODO: use enabled value
+			full.el.flash.show()
+
+			transfer.content.kendoStop().kendoAnimate 
 				effects: "transfer",  
 				target: $("#destination"), 
 				duration: 1000, 
@@ -66,11 +70,11 @@ define([
 					$.publish "/bottom/thumbnail", [file]
 					transfer.destroy()
 					transfer = {}
-		
+
 					callback()
 
-		full.el.flash.hide()
-		
+			full.el.flash.hide()
+
 
 	capture = (callback) ->
 

@@ -28,6 +28,8 @@ define [
 				$.publish "/postman/deliver", [ config.values[key], "/config/value/#{key}" ]
 			$.subscribe "/config/set", (e) ->
 				config.values[e.key] = e.value
+			$.subscribe "/config/all", ->
+				$.publish "/postman/deliver", [ config.values, "/config/values" ]
 
 	menu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->

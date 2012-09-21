@@ -17,12 +17,13 @@
       values: {},
       init: function() {
         $.subscribe("/config/get", function(key) {
-          console.log(["get", key, config.values[key]]);
           return $.publish("/postman/deliver", [config.values[key], "/config/value/" + key]);
         });
-        return $.subscribe("/config/set", function(e) {
-          console.log(["set", e.key, e.value]);
+        $.subscribe("/config/set", function(e) {
           return config.values[e.key] = e.value;
+        });
+        return $.subscribe("/config/all", function() {
+          return $.publish("/postman/deliver", [config.values, "/config/values"]);
         });
       }
     };
