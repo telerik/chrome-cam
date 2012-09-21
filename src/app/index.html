@@ -22,14 +22,14 @@
 			<div class="full" id="capture"></div>
 		</div>
 
-		<div data-role="view" id="gallery" data-show="APP.gallery.show" data-before-show="APP.gallery.before" data-hide="APP.gallery.hide" data-layout="top">
+		<div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="overlay:up" data-before-show="APP.gallery.before" data-hide="APP.gallery.hide" data-layout="top">
 			<div data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
 				<div id="thumbnails" class="flip"></div>
 			</div>
 			<div id="details" class="full"></div>
 		</div>
 
-		<div data-role="view" id="about" data-stretch="true">
+		<div data-role="view" id="about" data-stretch="true" data-transition="overlay:down">
 			<section class="about">
 				<hgroup class="appInfoHeader">
 					<h1>Camera</h1>
@@ -43,7 +43,7 @@
 			</section>
 		</div>
 
-		<div data-role="view" id="settings" data-stretch="true"></div>
+		<div data-role="view" id="settings" data-transition="overlay:down" data-stretch="true"></div>
 
 		<div data-role="layout" data-id="top">
 			<div data-role="header" data-model="APP.top.viewModel">
