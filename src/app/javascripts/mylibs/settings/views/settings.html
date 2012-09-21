@@ -6,7 +6,7 @@
 	<section>
 		<ul>
 			<li>
-				Camera flash: <input id="wink-switch" data-role="switch" />
+				Camera flash: <input id="wink-switch" data-role="switch" data-bind="checked: flash.enabled, events: { change: flash.change }" />
 			</li>
 			<li>
 				<a class="button" data-role="button" data-bind="click: gallery.clear">Clear Gallery</a>

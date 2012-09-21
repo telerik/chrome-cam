@@ -9,6 +9,11 @@ define [
     previous = "#home"
 
     viewModel = kendo.observable
+        flash:
+            enabled: false
+            change: (e) ->
+                console.log e
+                $.publish "/postman/deliver", [ key: "flash", value: viewModel.flash.enabled, "/config/set" ]
         show: ->
             $.publish "/postman/deliver", [ false, "/menu/enable" ]
             previous = window.APP.app.view().id

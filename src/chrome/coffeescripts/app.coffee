@@ -21,6 +21,14 @@ define [
 	skipBit = 0
 	skipMax = 10
 
+	config =
+		values: { }
+		init: ->
+			$.subscribe "/config/get", (key) ->
+				$.publish "/postman/deliver", [ config.values[key], "/config/value/#{key}" ]
+			$.subscribe "/config/set", (e) ->
+				config.values[e.key] = e.value
+
 	menu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
 			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
@@ -115,6 +123,8 @@ define [
 
 			# initialize the asset pipeline
 			assets.init()
+
+			config.init()
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
