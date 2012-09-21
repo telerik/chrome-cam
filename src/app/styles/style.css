@@ -607,6 +607,8 @@ a.button {
 		cursor: pointer;
 	}
 
+	.settings .km-switch-label-on { background: #3E8EC3; }
+
 	.settings ul { 
 		width: 265px;
 		list-style-type: none;
@@ -616,7 +618,11 @@ a.button {
 			text-align: center;
 		}
 
-
+.settings button, .about button {
+	position: absolute;
+	left: 47%;
+	top: 90%;
+}
 /* Clearfix */
 
 .clearfix:after {
