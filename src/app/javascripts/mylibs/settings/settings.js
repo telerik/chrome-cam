@@ -1,10 +1,11 @@
 (function() {
 
   define(['Kendo', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/settings/views/settings.html'], function(kendo, filewrapper, config, template) {
-    var SETTINGS_VIEW, previous, pub, view, viewModel;
+    var CONFIRM_TEXT, SETTINGS_VIEW, previous, pub, view, viewModel;
     SETTINGS_VIEW = "#settings";
     view = null;
     previous = "#home";
+    CONFIRM_TEXT = "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?";
     viewModel = kendo.observable({
       flash: {
         enabled: false,
@@ -23,9 +24,7 @@
       },
       gallery: {
         clear: function() {
-          return filewrapper.clear().done(function() {
-            return console.log("Everything was deleted");
-          });
+          return $.publish("/confirm/show", [CONFIRM_TEXT, "/gallery/clear"]);
         }
       }
     });

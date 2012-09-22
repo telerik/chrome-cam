@@ -1,6 +1,6 @@
 (function() {
 
-  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/bar/confirm', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/events/events', 'mylibs/file/filewrapper', 'mylibs/settings/settings', 'mylibs/about/about', 'mylibs/assets/assets', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, assets, record) {
+  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/popover/popover', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/events/events', 'mylibs/file/filewrapper', 'mylibs/settings/settings', 'mylibs/about/about', 'mylibs/confirm/confirm', 'mylibs/assets/assets', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, popover, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, record) {
     var pub;
     return pub = {
       init: function() {
@@ -21,13 +21,14 @@
         return camera.init("countdown", function() {
           APP.bottom = bottom.init(".bottom");
           APP.top = top.init(".top");
-          APP.confirm = confirm.init("#gallery");
+          APP.popover = popover.init("#gallery");
           preview.init("#filters");
           full.init("#capture");
           details.init("#details");
           gallery.init("#thumbnails");
           settings.init("#settings");
           about.init("#about");
+          confirm.init("#confirm");
           preview.draw();
           $.publish("/postman/deliver", [
             {

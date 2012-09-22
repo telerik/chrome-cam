@@ -132,6 +132,7 @@ define [
         
         element.src = item.file
         element.setAttribute("data-name", item.name)
+        element.setAttribute("draggable", true)
 
         element.width = 270
         element.height = 180
@@ -167,8 +168,6 @@ define [
 
             pages.previous = pages.next
             pages.next = justPaged
-            
-
 
             flipping = false
 
@@ -258,6 +257,12 @@ define [
 
             $.subscribe "/gallery/at", (index) ->
                 at(index)
+
+            $.subscribe "/gallery/clear", =>
+                window.APP.app.showLoading()
+                filewrapper.clear().done =>
+                    @ds.read()
+                    window.APP.app.hideLoading()
 
             $.publish "/postman/deliver", [ {}, "/file/read" ]
 

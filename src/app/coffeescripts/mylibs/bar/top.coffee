@@ -17,7 +17,7 @@ define [
 				e.preventDefault()
 		destroy:
 			click: (e) ->
-				$("#confirm").data("kendoMobilePopOver").openFor($(e.currentTarget))
+				$("#popover").data("kendoMobilePopOver").openFor($(e.currentTarget))
 		share:
 			save: (e) ->
 				file = @.get("current")

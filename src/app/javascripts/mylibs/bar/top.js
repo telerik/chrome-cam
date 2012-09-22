@@ -17,7 +17,7 @@
       },
       destroy: {
         click: function(e) {
-          return $("#confirm").data("kendoMobilePopOver").openFor($(e.currentTarget));
+          return $("#popover").data("kendoMobilePopOver").openFor($(e.currentTarget));
         }
       },
       share: {

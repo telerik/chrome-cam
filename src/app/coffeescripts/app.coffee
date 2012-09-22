@@ -4,7 +4,7 @@ define([
   'mylibs/camera/camera'
   'mylibs/bar/bottom'
   'mylibs/bar/top'
-  'mylibs/bar/confirm'
+  'mylibs/popover/popover'
   'mylibs/preview/preview'
   'mylibs/full/full'
   'mylibs/postman/postman'
@@ -15,9 +15,10 @@ define([
   'mylibs/file/filewrapper'
   'mylibs/settings/settings'
   'mylibs/about/about'
+  'mylibs/confirm/confirm'
   'mylibs/assets/assets'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, assets, record ) ->
+], (kendo, glfx, camera, bottom, top, popover, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, record ) ->
 	
 	pub = 
 		    
@@ -52,7 +53,7 @@ define([
 				# create the top and bottom bars
 				APP.bottom = bottom.init(".bottom")
 				APP.top = top.init(".top")
-				APP.confirm = confirm.init("#gallery")
+				APP.popover = popover.init("#gallery")
 
 				# initialize the previews
 				preview.init "#filters"
@@ -71,6 +72,9 @@ define([
 
 				# initialize the about view
 				about.init "#about"
+
+				# initialize the confirm window
+				confirm.init "#confirm"
 
 				# start drawing some previews
 				preview.draw()

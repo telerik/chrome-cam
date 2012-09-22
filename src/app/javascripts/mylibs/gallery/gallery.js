@@ -136,6 +136,7 @@
       }
       element.src = item.file;
       element.setAttribute("data-name", item.name);
+      element.setAttribute("draggable", true);
       element.width = 270;
       element.height = 180;
       element.setAttribute("class", "hidden");
@@ -250,6 +251,13 @@
         });
         $.subscribe("/gallery/at", function(index) {
           return at(index);
+        });
+        $.subscribe("/gallery/clear", function() {
+          window.APP.app.showLoading();
+          return filewrapper.clear().done(function() {
+            _this.ds.read();
+            return window.APP.app.hideLoading();
+          });
         });
         $.publish("/postman/deliver", [{}, "/file/read"]);
         return gallery;

@@ -1,6 +1,6 @@
 (function() {
 
-  define(['Kendo', 'text!mylibs/bar/views/confirm.html'], function(kendo, template) {
+  define(['Kendo', 'text!mylibs/popover/views/popover.html'], function(kendo, template) {
     var pub, viewModel;
     viewModel = {
       ok: function() {

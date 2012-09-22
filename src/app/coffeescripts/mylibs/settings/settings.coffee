@@ -8,24 +8,27 @@ define [
 
     view = null
     previous = "#home"
+    CONFIRM_TEXT = "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?"
 
     viewModel = kendo.observable
+        
         flash:
             enabled: false
             change: (e) ->
                 config.set "flash", viewModel.flash.enabled
+        
         show: ->
             $.publish "/postman/deliver", [ false, "/menu/enable" ]
             previous = window.APP.app.view().id
             window.APP.app.navigate SETTINGS_VIEW
+        
         hide: ->
             $.publish "/postman/deliver", [ true, "/menu/enable" ]
             window.APP.app.navigate previous
+        
         gallery:
             clear: ->
-                # TODO: PROMPT BEFORE DELETING EVERYTHING.
-                filewrapper.clear().done ->
-                    console.log "Everything was deleted"
+                $.publish "/confirm/show", [ CONFIRM_TEXT, "/gallery/clear" ]
 
     pub = 
 
