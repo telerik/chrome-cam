@@ -6,13 +6,6 @@
     view = null;
     previous = "#home";
     viewModel = kendo.observable({
-      before: function() {
-        return $.publish("/postman/deliver", [
-          {
-            paused: true
-          }, "/camera/pause"
-        ]);
-      },
       flash: {
         enabled: false,
         change: function(e) {
@@ -26,11 +19,6 @@
       },
       hide: function() {
         $.publish("/postman/deliver", [true, "/menu/enable"]);
-        $.publish("/postman/deliver", [
-          {
-            paused: false
-          }, "/camera/pause"
-        ]);
         return window.APP.app.navigate(previous);
       },
       gallery: {
@@ -42,6 +30,20 @@
       }
     });
     return pub = {
+      before: function() {
+        return $.publish("/postman/deliver", [
+          {
+            paused: true
+          }, "/camera/pause"
+        ]);
+      },
+      hide: function() {
+        return $.publish("/postman/deliver", [
+          {
+            paused: false
+          }, "/camera/pause"
+        ]);
+      },
       init: function(selector) {
         view = new kendo.View(selector, template);
         view.render(viewModel, true);

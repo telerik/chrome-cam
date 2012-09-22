@@ -39,11 +39,12 @@ define([
 		    
 		init: ->
 
-			window.APP = {}
+			APP = window.APP = {}
 
-			window.APP.full = full
-			window.APP.filters = preview
-			window.APP.gallery = gallery
+			APP.full = full
+			APP.filters = preview
+			APP.gallery = gallery
+			APP.settings = settings
 
 			# bind document level events
 			events.init()
@@ -65,9 +66,9 @@ define([
 			camera.init "countdown", ->
 
 				# create the top and bottom bars
-				window.APP.bottom = bottom.init(".bottom")
-				window.APP.top = top.init(".top")
-				window.APP.confirm = confirm.init("#gallery")
+				APP.bottom = bottom.init(".bottom")
+				APP.top = top.init(".top")
+				APP.confirm = confirm.init("#gallery")
 
 				# initialize the previews
 				preview.init "#filters"
@@ -90,6 +91,6 @@ define([
 				# we are done loading the app. have the postman deliver that msg.
 				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
 
-				window.APP.app = new kendo.mobile.Application document.body, { transition: "overlay:up", platform: "blackberry" }
+				window.APP.app = new kendo.mobile.Application document.body, { platform: "blackberry" }
 
 )

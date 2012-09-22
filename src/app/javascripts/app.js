@@ -22,10 +22,12 @@
     };
     return pub = {
       init: function() {
-        window.APP = {};
-        window.APP.full = full;
-        window.APP.filters = preview;
-        window.APP.gallery = gallery;
+        var APP;
+        APP = window.APP = {};
+        APP.full = full;
+        APP.filters = preview;
+        APP.gallery = gallery;
+        APP.settings = settings;
         events.init();
         postman.init(window.top);
         assets.init();
@@ -35,9 +37,9 @@
         $.publish("/postman/deliver", [true, "/menu/enable"]);
         initAbout("#about");
         return camera.init("countdown", function() {
-          window.APP.bottom = bottom.init(".bottom");
-          window.APP.top = top.init(".top");
-          window.APP.confirm = confirm.init("#gallery");
+          APP.bottom = bottom.init(".bottom");
+          APP.top = top.init(".top");
+          APP.confirm = confirm.init("#gallery");
           preview.init("#filters");
           full.init("#capture");
           details.init("#details");
@@ -50,7 +52,6 @@
             }, "/app/ready"
           ]);
           return window.APP.app = new kendo.mobile.Application(document.body, {
-            transition: "overlay:up",
             platform: "blackberry"
           });
         });

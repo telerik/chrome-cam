@@ -10,8 +10,6 @@ define [
     previous = "#home"
 
     viewModel = kendo.observable
-        before: ->
-            $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
         flash:
             enabled: false
             change: (e) ->
@@ -22,7 +20,6 @@ define [
             window.APP.app.navigate SETTINGS_VIEW
         hide: ->
             $.publish "/postman/deliver", [ true, "/menu/enable" ]
-            $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
             window.APP.app.navigate previous
         gallery:
             clear: ->
@@ -31,6 +28,14 @@ define [
                     console.log "Everything was deleted"
 
     pub = 
+
+        # unlike the viewModel events, these events are for the mobile view itself
+        before: ->
+            $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
+
+        hide: ->
+            $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
+
         init: (selector) ->
             view = new kendo.View(selector, template)
             view.render(viewModel, true)

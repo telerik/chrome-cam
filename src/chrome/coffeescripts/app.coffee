@@ -21,6 +21,7 @@ define [
 	skipBit = 0
 	skipMax = 10
 
+	# TODO: Move the settings to it's own file
 	config =
 		get: (key, fn) ->
 			chrome.storage.local.get key, (storage) ->
@@ -37,6 +38,7 @@ define [
 			$.subscribe "/config/all", ->
 				$.publish "/postman/deliver", [ config.values, "/config/values" ]
 
+	# TODO: Move the context menu to it's own file
 	menu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
 			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
@@ -49,6 +51,7 @@ define [
 			for menu in menus
 				chrome.contextMenus.update menu, enabled: isEnabled
 
+	# TODO: Move the camera to it's own file
 	draw = -> 
 
 		# utils.getAnimationFrame()(draw)
