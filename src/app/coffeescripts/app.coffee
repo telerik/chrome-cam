@@ -14,27 +14,11 @@ define([
   'mylibs/events/events'
   'mylibs/file/filewrapper'
   'mylibs/settings/settings'
+  'mylibs/about/about'
   'mylibs/assets/assets'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, assets, record ) ->
+], (kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, assets, record ) ->
 	
-	initAbout = (selector) ->
-		about = $(selector)
-		aboutView = selector
-		oldView = "#home"
-
-		$.subscribe '/menu/click/chrome-cam-about-menu', ->
-			$.publish "/postman/deliver", [ false, "/menu/enable" ]
-			oldView = window.APP.app.view().id
-			window.APP.app.navigate aboutView
-		
-		about.find("button").click ->
-			$.publish "/postman/deliver", [ true, "/menu/enable" ]
-			window.APP.app.navigate oldView
-
-		about.find("a").click ->
-			$.publish "/postman/deliver", [@getAttribute("href"), "/tab/open"]
-
 	pub = 
 		    
 		init: ->
@@ -45,6 +29,7 @@ define([
 			APP.filters = preview
 			APP.gallery = gallery
 			APP.settings = settings
+			APP.about = about
 
 			# bind document level events
 			events.init()
@@ -60,7 +45,6 @@ define([
 			)
 
 			$.publish "/postman/deliver", [ true, "/menu/enable" ]
-			initAbout "#about"
 
 			# initialize the camera
 			camera.init "countdown", ->
@@ -84,6 +68,9 @@ define([
 
 				# initialize the settings view
 				settings.init "#settings"
+
+				# initialize the about view
+				about.init "#about"
 
 				# start drawing some previews
 				preview.draw()

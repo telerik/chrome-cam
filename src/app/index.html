@@ -29,19 +29,7 @@
 			<div id="details" class="full"></div>
 		</div>
 
-		<div data-role="view" id="about" data-stretch="true" data-transition="overlay:down">
-			<section class="about">
-				<hgroup class="appInfoHeader">
-					<h1>Camera</h1>
-					<h2>Version/Build</h2>
-				</hgroup>
-				<hgroup>
-					<h3>Created using <a href="http://www.kendoui.com" title="KendoUI" target="_blank">KendoUI</a> from <a href="http://www.telerik.com" title="Telerik" target="_blank">Telerik</a>.</h3>
-					<h4>Visit <a href="http:/www.kendoui.com" title="KendoUI" target="_blank">KendoUI.com</a> for app license and details.</h4>
-				</hgroup>
-				<button data-role="button" class="button back">Back</button>
-			</section>
-		</div>
+		<div data-role="view" id="about" data-stretch="true" data-transition="slide:right" data-before-show="APP.about.before" data-hide="APP.about.hide"></div>
 
 		<div data-role="view" id="settings" data-before-show="APP.settings.before" data-hide="APP.settings.hide" data-transition="slide:left" data-stretch="true"></div>
 

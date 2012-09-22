@@ -1,25 +1,7 @@
 (function() {
 
-  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/bar/confirm', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/events/events', 'mylibs/file/filewrapper', 'mylibs/settings/settings', 'mylibs/assets/assets', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, assets, record) {
-    var initAbout, pub;
-    initAbout = function(selector) {
-      var about, aboutView, oldView;
-      about = $(selector);
-      aboutView = selector;
-      oldView = "#home";
-      $.subscribe('/menu/click/chrome-cam-about-menu', function() {
-        $.publish("/postman/deliver", [false, "/menu/enable"]);
-        oldView = window.APP.app.view().id;
-        return window.APP.app.navigate(aboutView);
-      });
-      about.find("button").click(function() {
-        $.publish("/postman/deliver", [true, "/menu/enable"]);
-        return window.APP.app.navigate(oldView);
-      });
-      return about.find("a").click(function() {
-        return $.publish("/postman/deliver", [this.getAttribute("href"), "/tab/open"]);
-      });
-    };
+  define(['Kendo', 'Glfx', 'mylibs/camera/camera', 'mylibs/bar/bottom', 'mylibs/bar/top', 'mylibs/bar/confirm', 'mylibs/preview/preview', 'mylibs/full/full', 'mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/gallery/gallery', 'mylibs/gallery/details', 'mylibs/events/events', 'mylibs/file/filewrapper', 'mylibs/settings/settings', 'mylibs/about/about', 'mylibs/assets/assets', 'libs/record/record'], function(kendo, glfx, camera, bottom, top, confirm, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, assets, record) {
+    var pub;
     return pub = {
       init: function() {
         var APP;
@@ -28,6 +10,7 @@
         APP.filters = preview;
         APP.gallery = gallery;
         APP.settings = settings;
+        APP.about = about;
         events.init();
         postman.init(window.top);
         assets.init();
@@ -35,7 +18,6 @@
           return $('#pictures').append(intro);
         });
         $.publish("/postman/deliver", [true, "/menu/enable"]);
-        initAbout("#about");
         return camera.init("countdown", function() {
           APP.bottom = bottom.init(".bottom");
           APP.top = top.init(".top");
@@ -45,6 +27,7 @@
           details.init("#details");
           gallery.init("#thumbnails");
           settings.init("#settings");
+          about.init("#about");
           preview.draw();
           $.publish("/postman/deliver", [
             {
