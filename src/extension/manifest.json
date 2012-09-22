@@ -21,7 +21,8 @@
    "videoCapture",
    { "fileSystem": ["write"] },
    "notifications",
-   "contextMenus"
+   "contextMenus",
+   "storage"
  ],
   "sandbox": {
     "pages": [ "app/index.html" ]

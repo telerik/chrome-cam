@@ -1,6 +1,6 @@
 (function() {
 
-  define(['Kendo', 'mylibs/file/filewrapper', 'text!mylibs/settings/views/settings.html'], function(kendo, filewrapper, template) {
+  define(['Kendo', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/settings/views/settings.html'], function(kendo, filewrapper, config, template) {
     var SETTINGS_VIEW, previous, pub, view, viewModel;
     SETTINGS_VIEW = "#settings";
     view = null;
@@ -12,6 +12,12 @@
             paused: true
           }, "/camera/pause"
         ]);
+      },
+      flash: {
+        enabled: false,
+        change: function(e) {
+          return config.set("flash", viewModel.flash.enabled);
+        }
       },
       show: function() {
         $.publish("/postman/deliver", [false, "/menu/enable"]);
@@ -39,6 +45,9 @@
       init: function(selector) {
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
+        config.get("flash", function(value) {
+          return viewModel.flash.enabled = value;
+        });
         return $.subscribe('/menu/click/chrome-cam-settings-menu', function() {
           return viewModel.show();
         });

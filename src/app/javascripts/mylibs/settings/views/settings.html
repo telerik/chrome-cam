@@ -6,12 +6,12 @@
 	<section>
 		<ul>
 			<li>
-				Camera flash: <input id="wink-switch" data-role="switch" />
+				Camera flash: <input id="wink-switch" data-role="switch" data-bind="checked: flash.enabled, events: { change: flash.change }" />
 			</li>
 			<li>
 				<a class="button" data-role="button" data-bind="click: gallery.clear">Clear Gallery</a>
 			</li>
 		</ul>
-		<button data-role="button" data-bind="click: hide">Back</button>
+		<button data-role="button" data-bind="click: hide" class="button back">Back</button>
 	</section>
 </section>
