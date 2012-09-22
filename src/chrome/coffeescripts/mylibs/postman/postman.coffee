@@ -40,5 +40,5 @@ define([
 
 				# send the message as a post message to the extension outside
 				# of the sandbox
-				recipient.webkitPostMessage delivery, "*", block
+				recipient.postMessage delivery, "*", block
 )

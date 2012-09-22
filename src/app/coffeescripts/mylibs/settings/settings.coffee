@@ -9,12 +9,15 @@ define [
     previous = "#home"
 
     viewModel = kendo.observable
+        before: ->
+            $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
         show: ->
             $.publish "/postman/deliver", [ false, "/menu/enable" ]
             previous = window.APP.app.view().id
             window.APP.app.navigate SETTINGS_VIEW
         hide: ->
             $.publish "/postman/deliver", [ true, "/menu/enable" ]
+            $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
             window.APP.app.navigate previous
         gallery:
             clear: ->

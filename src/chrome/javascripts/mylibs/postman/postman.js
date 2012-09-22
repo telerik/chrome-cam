@@ -25,7 +25,7 @@
           delivery = {};
           delivery.address = address;
           delivery.message = message;
-          return recipient.webkitPostMessage(delivery, "*", block);
+          return recipient.postMessage(delivery, "*", block);
         });
       }
     };

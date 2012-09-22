@@ -6,6 +6,13 @@
     view = null;
     previous = "#home";
     viewModel = kendo.observable({
+      before: function() {
+        return $.publish("/postman/deliver", [
+          {
+            paused: true
+          }, "/camera/pause"
+        ]);
+      },
       show: function() {
         $.publish("/postman/deliver", [false, "/menu/enable"]);
         previous = window.APP.app.view().id;
@@ -13,6 +20,11 @@
       },
       hide: function() {
         $.publish("/postman/deliver", [true, "/menu/enable"]);
+        $.publish("/postman/deliver", [
+          {
+            paused: false
+          }, "/camera/pause"
+        ]);
         return window.APP.app.navigate(previous);
       },
       gallery: {
