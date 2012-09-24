@@ -95,8 +95,9 @@
     download = function(name, dataURL) {
       var blob;
       blob = utils.toBlob(dataURL);
-      return chrome.fileSystem.chooseFile({
-        type: "saveFile"
+      return chrome.fileSystem.chooseEntry({
+        type: "saveFile",
+        suggestedName: name
       }, function(fileEntry) {
         return fileEntry.createWriter(function(fileWriter) {
           fileWriter.onwriteend = function(e) {

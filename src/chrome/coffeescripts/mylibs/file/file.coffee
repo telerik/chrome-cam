@@ -122,7 +122,7 @@ define([
     blob = utils.toBlob(dataURL)
 
     # invoke the chrome file chooser saying that we are going to save a file
-    chrome.fileSystem.chooseFile {type: "saveFile"}, (fileEntry) ->
+    chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
 
       # create the writer
       fileEntry.createWriter (fileWriter) ->

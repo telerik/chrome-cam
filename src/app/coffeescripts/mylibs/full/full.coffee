@@ -90,9 +90,9 @@ define([
 
 			# set the name of this image to the current time string
 			
-			file = { type: "jpeg", name: "#{name}.jpeg", file: image }
+			file = { type: "jpg", name: "#{name}.jpg", file: image }
 
-			filewrapper.save(name, image)
+			filewrapper.save(file.name, image)
 				# I may have it bouncing around too much, but I don't want the bar to
 				# just respond to *all* file saves, or have this module know about
 				# the bar's internals

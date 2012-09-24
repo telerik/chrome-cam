@@ -68,11 +68,11 @@
       return transfer.find("img").load(function() {
         var file;
         file = {
-          type: "jpeg",
-          name: "" + name + ".jpeg",
+          type: "jpg",
+          name: "" + name + ".jpg",
           file: image
         };
-        filewrapper.save(name, image);
+        filewrapper.save(file.name, image);
         $.publish("/gallery/add", [file]);
         return flash(callback, file);
       });
