@@ -247,7 +247,8 @@ define [
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = dataSource.create(message.message)
                 @ds.read()
-                $.publish "/bottom/thumbnail", [@ds.view()[0]]
+                if @ds.view().length > 0
+                    $.publish "/bottom/thumbnail", [@ds.view()[0]]
 
             $.subscribe "/gallery/delete", ->
                 destroy()

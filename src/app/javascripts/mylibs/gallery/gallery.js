@@ -241,7 +241,9 @@
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = dataSource.create(message.message);
           _this.ds.read();
-          return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
+          if (_this.ds.view().length > 0) {
+            return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
+          }
         });
         $.subscribe("/gallery/delete", function() {
           return destroy();

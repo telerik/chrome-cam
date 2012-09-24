@@ -22,7 +22,7 @@ define [
 				
 				a = $(e.target)
 
-				this.set("mode.active", a.data("mode"))
+				@.set("mode.active", a.data("mode"))
 
 				# loop through all of the buttons and remove the active class
 				a.parent().parent().find("a").removeClass "active"
@@ -68,7 +68,10 @@ define [
 
 		thumbnail:
 			src: BROKEN_IMAGE
-			visible: true
+			visible: ->
+				return @.get("enabled") && @.get("active")
+			enabled: false
+			active: true
 
 		filters: 
 			visible: false
@@ -108,19 +111,19 @@ define [
 			viewModel.set("mode.visible", false)
 			viewModel.set("capture.visible", false)
 			viewModel.set("filters.visible", false)
-			viewModel.set("thumbnail.visible", true)
+			viewModel.set("thumbnail.active", true)
 		capture: ->
-			viewModel.set("thumbnail.visible", true)
+			viewModel.set("thumbnail.active", true)
 			viewModel.set("mode.visible", false)
 			viewModel.set("capture.visible", false)
 			viewModel.set("filters.visible", false)
 		record: ->
-			viewModel.set("thumbnail.visible", false)
+			viewModel.set("thumbnail.active", false)
 			viewModel.set("mode.visible", false)
 			viewModel.set("filters.visible", false)
 		full: ->
 			viewModel.set("processing.visible", false)
-			viewModel.set("thumbnail.visible", true)	
+			viewModel.set("thumbnail.active", true)	
 			viewModel.set("mode.visible", true)
 			viewModel.set("capture.visible", true)
 			viewModel.set("filters.visible", true)
@@ -143,17 +146,20 @@ define [
 			# render the bar and binds it to the view model
 			view.render(viewModel, true)
 
-			# find the destination container
-			view.find("#destination", "destination")
+			# find the thumbnail anchor container
+			view.find(".galleryLink", "galleryLink")
 
 			# wire up events
 			$.subscribe "/bottom/update", (state) ->
 				states.set(state)
 
 			$.subscribe "/bottom/thumbnail", (file) ->
-				view.el.destination.empty()
-				thumbnail = new kendo.View(view.el.destination, thumbnailTemplate, file)
+				view.el.galleryLink.empty()
+				
+				thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file)
 				thumbnail.render()
+				
+				viewModel.set("thumbnail.enabled", true)
 
 			$.subscribe "/keyboard/space", (e) ->
 				viewModel.capture.click.call viewModel, e

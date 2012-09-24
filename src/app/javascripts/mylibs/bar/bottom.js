@@ -49,7 +49,11 @@
       },
       thumbnail: {
         src: BROKEN_IMAGE,
-        visible: true
+        visible: function() {
+          return this.get("enabled") && this.get("active");
+        },
+        enabled: false,
+        active: true
       },
       filters: {
         visible: false,
@@ -81,22 +85,22 @@
         viewModel.set("mode.visible", false);
         viewModel.set("capture.visible", false);
         viewModel.set("filters.visible", false);
-        return viewModel.set("thumbnail.visible", true);
+        return viewModel.set("thumbnail.active", true);
       },
       capture: function() {
-        viewModel.set("thumbnail.visible", true);
+        viewModel.set("thumbnail.active", true);
         viewModel.set("mode.visible", false);
         viewModel.set("capture.visible", false);
         return viewModel.set("filters.visible", false);
       },
       record: function() {
-        viewModel.set("thumbnail.visible", false);
+        viewModel.set("thumbnail.active", false);
         viewModel.set("mode.visible", false);
         return viewModel.set("filters.visible", false);
       },
       full: function() {
         viewModel.set("processing.visible", false);
-        viewModel.set("thumbnail.visible", true);
+        viewModel.set("thumbnail.active", true);
         viewModel.set("mode.visible", true);
         viewModel.set("capture.visible", true);
         return viewModel.set("filters.visible", true);
@@ -115,15 +119,16 @@
       init: function(container) {
         view = new kendo.View(container, template);
         view.render(viewModel, true);
-        view.find("#destination", "destination");
+        view.find(".galleryLink", "galleryLink");
         $.subscribe("/bottom/update", function(state) {
           return states.set(state);
         });
         $.subscribe("/bottom/thumbnail", function(file) {
           var thumbnail;
-          view.el.destination.empty();
-          thumbnail = new kendo.View(view.el.destination, thumbnailTemplate, file);
-          return thumbnail.render();
+          view.el.galleryLink.empty();
+          thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file);
+          thumbnail.render();
+          return viewModel.set("thumbnail.enabled", true);
         });
         $.subscribe("/keyboard/space", function(e) {
           return viewModel.capture.click.call(viewModel, e);

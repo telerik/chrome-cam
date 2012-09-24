@@ -184,6 +184,16 @@ a { color: #E15613; }
     box-shadow:  0 3px 5px 2px rgba(0, 0, 0, .75);
 }
 
+.absolute {
+	position: absolute;
+}
+
+#destination {
+	margin-left: 20px;
+	height: 48px;
+	width: 72px;
+}
+
 .thumbnail {
 	width: 72px;
 	height: 48px;

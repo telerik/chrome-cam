@@ -31,8 +31,11 @@
 	</section>
 	<section class="right">
 		<a data-role="button" class="button filters" data-bind="click: filters.click, visible: filters.visible">Filters</a>
-		<a href="\#gallery" data-transition="overlay:up reverse" data-bind="visible: thumbnail.visible" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery">
-			<div id="destination"></div>
-		</a>
+		<div class="thumbnail">
+			<div class="absolute">
+				<a href="\#gallery" data-transition="overlay:up reverse" data-bind="visible: thumbnail.visible" class="galleryLink" alt="Go to the Gallery" title="Go to the Gallery"></a>
+			</div>
+			<div class="absolute" id="destination" class="thumbnail" ></div>
+		<div>
 	</section>
 </section>
