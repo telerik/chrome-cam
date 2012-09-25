@@ -1176,7 +1176,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
     z-index: 10001;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1254,10 +1253,7 @@
     width: 460px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     padding: 14px 17px 14px 17px;
-    opacity: 0;
-    -webkit-transform: perspective(500px) scale(0.99) translateY(-20px) rotateX(5deg);
     border-radius: 3px;
-    -webkit-transition: all 0.18s;
     z-index: 10001;
     position: relative;
     overflow: hidden;
@@ -1579,7 +1575,7 @@ body:after {
 
 .km-blackberry,.km-blackberry .km-content {
     color: #000;
-    background: #f1f1f1
+    background: #fbfbfb
 }
 
 .km-blackberry .km-navbar,.km-blackberry .km-toolbar,.km-blackberry .km-button,.km-blackberry .km-buttongroup,.km-blackberry .km-tabstrip,.km-blackberry input[type=file],.km-blackberry li.km-actionsheet-cancel>a {
@@ -2286,7 +2282,9 @@ body:after {
 }
 
 .km-blackberry .km-shim,.km-phone .km-blackberry .km-actionsheet-wrapper {
-    background: rgba(0,0,0,0.5)
+    background: none;
+    -webkit-transition: opacity .5s;
+    background-image: -webkit-radial-gradient(50% 5%, rgba(255, 255, 255, 0.75), rgba(127, 127, 127, 0.75));
 }
 
 .km-blackberry .km-actionsheet-wrapper {
@@ -2494,12 +2492,12 @@ body:after {
 }
 
 .km-blackberry .km-modalview {
-    background-color: #7185a2;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    box-shadow: 0 0 15px rgba(0,0,0,.5),0 0 2px rgba(0,0,0,.5);
-    -webkit-box-shadow: 0 0 15px rgba(0,0,0,.5),0 0 2px rgba(0,0,0,.5)
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: transparent;
 }
 
 .km-blackberry .km-modalview .km-header {
