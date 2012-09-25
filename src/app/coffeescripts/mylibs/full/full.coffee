@@ -78,7 +78,7 @@ define([
 
 	capture = (callback) ->
 
-		image = canvas.toDataURL()
+		image = canvas.toDataURL("image/jpeg", 1.0)
 		name = new Date().getTime()
 
 		data = { src: image, height: full.content.height(), width: full.content.width() }
@@ -151,15 +151,15 @@ define([
 			paused = false
 
 			# get the height of the container minus the footer
-			full.content.height(full.container.height()) - 50
+			# full.content.height(full.container.height()) - 50
 			full.el.transfer.height(full.content.height())
 
 			# determine the width based on a 3:2 aspect ratio (.66 repeating)
 			# $content.width (3 / 2) * $content.height()
-			full.content.width (3 / 2) * full.content.height()
+			# full.content.width (3 / 2) * full.content.height()
 			full.el.transfer.width(full.content.width())
 
-			$(canvas).height(full.content.height())
+			# $(canvas).height(full.content.height())
 
 			full.container.kendoStop(true).kendoAnimate {
 				effects: "zoomIn fadeIn"
@@ -206,6 +206,9 @@ define([
 			capture(callback)
 
 		video: ->
+			# TODO: make it stop recording early instead?
+			return if recording
+			recording = true
 
 			console.log "Recording..."
 
@@ -215,14 +218,9 @@ define([
 
 			full.container.find(".timer").removeClass("hidden")
 
-			setTimeout (-> 
-				
-				recording = false
-				$.publish "/bottom/update", ["processing"]
+			save = ->
 
-				setTimeout -> 
-					
-					result = utils.createVideo frames
+				utils.createVideo(frames).done (result) ->
 
 					console.log("Recording Done!")
 
@@ -253,13 +251,11 @@ define([
 
 					$.publish "/bottom/update", ["full"]
 
-					# $.publish "/recording/done", [ "full" ]
-				
-				, 0
+			done = ->
+				recording = false
+				$.publish "/bottom/update", ["processing"]
 
-			), SECONDS_TO_RECORD * 1000
+				setTimeout save, 0
 
-			recording = true
-
-				
+			setTimeout done, SECONDS_TO_RECORD * 1000
 )

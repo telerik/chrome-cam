@@ -16,39 +16,34 @@
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame;
       },
       createVideo: function(frames) {
-        var i, transcode, _ref;
-        transcode = function() {
-          var blob, blobUrl, i, name, pair, video, _i, _len, _ref;
-          video = new Whammy.Video();
-          _ref = (function() {
-            var _ref, _results;
-            _results = [];
-            for (i = 0, _ref = frames.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-              _results.push(frames.slice(i, (i + 1) + 1 || 9e9));
-            }
-            return _results;
-          })();
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            pair = _ref[_i];
-            video.add(pair[0].imageData, pair[1].time - pair[0].time);
+        var blob, deferred, i, name, pair, reader, video, _i, _len, _ref;
+        deferred = $.Deferred();
+        video = new Whammy.Video();
+        _ref = (function() {
+          var _ref, _results;
+          _results = [];
+          for (i = 0, _ref = frames.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+            _results.push(frames.slice(i, (i + 1) + 1 || 9e9));
           }
-          blob = video.compile();
-          name = new Date().getTime() + ".webm";
-          filewrapper.save(name, blob);
-          blobUrl = window.URL.createObjectURL(blob);
-          return {
-            url: blobUrl,
-            name: name
-          };
-        };
-        for (i = 0, _ref = frames.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-          bufferContext.putImageData(frames[i].imageData, 0, 0);
-          frames[i] = {
-            imageData: bufferCanvas.toDataURL('image/webp', 0.8),
-            time: frames[i].time
-          };
+          return _results;
+        })();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          pair = _ref[_i];
+          bufferContext.putImageData(pair[0].imageData, 0, 0);
+          video.add(bufferCanvas.toDataURL('image/webp', 0.8), pair[1].time - pair[0].time);
         }
-        return transcode();
+        blob = video.compile();
+        name = new Date().getTime() + ".webm";
+        filewrapper.save(name, blob);
+        reader = new FileReader();
+        reader.onload = function(e) {
+          return deferred.resolve({
+            url: e.target.result,
+            name: name
+          });
+        };
+        reader.readAsDataURL(blob);
+        return deferred.promise();
       }
     };
   });

@@ -56,7 +56,7 @@
     };
     capture = function(callback) {
       var data, image, name;
-      image = canvas.toDataURL();
+      image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       data = {
         src: image,
@@ -114,11 +114,8 @@
       show: function(item) {
         effect = item.filter;
         paused = false;
-        full.content.height(full.container.height()) - 50;
         full.el.transfer.height(full.content.height());
-        full.content.width((3 / 2) * full.content.height());
         full.el.transfer.width(full.content.width());
-        $(canvas).height(full.content.height());
         return full.container.kendoStop(true).kendoAnimate({
           effects: "zoomIn fadeIn",
           show: true,
@@ -159,16 +156,16 @@
         return capture(callback);
       },
       video: function() {
+        var done, save;
+        if (recording) return;
+        recording = true;
         console.log("Recording...");
         frames = [];
         startTime = Date.now();
         full.container.find(".timer").removeClass("hidden");
-        setTimeout((function() {
-          recording = false;
-          $.publish("/bottom/update", ["processing"]);
-          return setTimeout(function() {
-            var data, file, image, result;
-            result = utils.createVideo(frames);
+        save = function() {
+          return utils.createVideo(frames).done(function(result) {
+            var data, file, image;
             console.log("Recording Done!");
             frames = [];
             full.container.find(".timer").addClass("hidden");
@@ -200,9 +197,14 @@
               });
             });
             return $.publish("/bottom/update", ["full"]);
-          }, 0);
-        }), SECONDS_TO_RECORD * 1000);
-        return recording = true;
+          });
+        };
+        done = function() {
+          recording = false;
+          $.publish("/bottom/update", ["processing"]);
+          return setTimeout(save, 0);
+        };
+        return setTimeout(done, SECONDS_TO_RECORD * 1000);
       }
     };
   });

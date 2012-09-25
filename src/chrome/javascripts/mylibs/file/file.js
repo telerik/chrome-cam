@@ -21,24 +21,27 @@
     errorHandler = function(e) {
       var msg;
       msg = '';
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = 'QUOTA_EXCEEDED_ERR';
-          break;
-        case FileError.NOT_FOUND_ERR:
-          msg = 'NOT_FOUND_ERR';
-          break;
-        case FileError.SECURITY_ERR:
-          msg = 'SECURITY_ERR';
-          break;
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = 'INVALID_MODIFICATION_ERR';
-          break;
-        case FileError.INVALID_STATE_ERR:
-          msg = 'INVALID_STATE_ERR';
-          break;
-        default:
-          msg = 'Unknown Error';
+      console.log(e);
+      if (e.type === "error") {
+        switch (e.code || e.target.error.code) {
+          case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'QUOTA_EXCEEDED_ERR';
+            break;
+          case FileError.NOT_FOUND_ERR:
+            msg = 'NOT_FOUND_ERR';
+            break;
+          case FileError.SECURITY_ERR:
+            msg = 'SECURITY_ERR';
+            break;
+          case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'INVALID_MODIFICATION_ERR';
+            break;
+          case FileError.INVALID_STATE_ERR:
+            msg = 'INVALID_STATE_ERR';
+            break;
+          default:
+            msg = 'Unknown Error';
+        }
       }
       $.publish("/notify/show", ["File Error", msg, true]);
       return $.publish("/notify/show", ["File Access Denied", "Access to the file system could not be obtained.", false]);
@@ -58,19 +61,22 @@
       }
     };
     save = function(name, blob) {
+      var onwrite;
       if (typeof blob === "string") blob = utils.toBlob(blob);
-      return withFileSystem(function() {
-        return fileSystem.root.getFile(name, {
+      window.theBlob = blob;
+      console.log(blob);
+      onwrite = function(e) {
+        $.publish("/share/gdrive/upload", [blob]);
+        return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
+      };
+      return withFileSystem(function(fs) {
+        return fs.root.getFile(name, {
           create: true
         }, function(fileEntry) {
           return fileEntry.createWriter(function(fileWriter) {
-            fileWriter.onwrite = function(e) {
-              $.publish("/share/gdrive/upload", [blob]);
-              return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
-            };
-            fileWriter.onerror = function(e) {
-              return errorHandler(e);
-            };
+            fileWriter.onwrite = onwrite;
+            fileWriter.onerror = errorHandler;
+            fileWriter.abort();
             return fileWriter.write(blob);
           });
         }, errorHandler);

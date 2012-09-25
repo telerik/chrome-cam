@@ -162,7 +162,7 @@
     visibility: hidden
 }
 
-.km-toolbar,.km-navbar,.km-button,.km-buttongroup,.km-tabstrip,.km-android li.km-actionsheet-cancel>a {
+.km-toolbar,.km-navbar,.km-buttongroup,.km-tabstrip,.km-android li.km-actionsheet-cancel>a {
     background-origin: border-box;
     position: relative;
     display: inline-block;
@@ -176,6 +176,87 @@
     text-decoration: none
 }
 
+.km-button {
+    display: inline-block;
+    min-width: 54px;
+    border:1px solid #DCDCDC;
+    border: 1px solid rgba(0,0,0,0.1);
+    text-align: center;
+    color: #444;
+    font-size: 11px;
+    font-weight: bold;
+    height: 27px;
+    padding: 0 8px;
+    line-height: 27px;
+    -webkit-border-radius:2px;
+    border-radius: 2px;
+    -webkit-transition: all 0.218s;
+    background-color: #f5f5f5;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f5f5f5),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+    cursor:default;
+}
+
+.km-button:hover, .km-button.hover {
+    border: 1px solid #C6C6C6;
+    color: #222;
+    -webkit-transition: all 0.0s;
+    transition: all 0.0s;
+    background-color: #f8f8f8;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f8f8f8),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+    -webkit-box-shadow: 0px 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 1px 1px rgba(0,0,0,0.1);
+}
+.km-button:active, .km-button.active {
+    background-color: #f6f6f6;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f6f6f6),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#f6f6f6,#f1f1f1);
+    -webkit-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+}
+.km-button.active{
+    border: 1px solid #C6C6C6;
+    color: #333;
+}
+
+.km-button:visited { 
+    color: #666;
+    text-decoration: none;
+}
+
+.km-button.focus, .km-button.right.focus, .km-button.mid.focus, .km-button.left.focus{
+    outline: none;
+    border: 1px solid #4d90fe;
+    z-index:4 !important;
+}
+
+.km-button.selected {
+    background-color: #EEEEEE;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#EEEEEE),to(#E0E0E0));
+    background-image: -webkit-linear-gradient(top,#EEEEEE,#E0E0E0);
+    -webkit-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+    border: 1px solid #CCC;
+    color: #333;
+}
+.km-button input[type=checkbox] {
+    position: relative;
+    top: 3px;
+}
+
+.km-button img {
+    display: inline-block;
+    margin: -3px 0 0;
+    opacity: 0.55;
+    margin-left: 0px;
+    margin-right: 0px;
+    vertical-align: middle;
+}
+    .km-button.selected img { opacity: 0.9; }
+    .km-button:hover img { opacity: 0.72; }
+    .km-button:active img { opacity: 1.0; }
+
 .km-toolbar,.km-navbar,.km-buttongroup,.km-tabstrip {
     padding: .4rem .7rem
 }
@@ -186,11 +267,6 @@
 
 .km-horizontal .km-tabstrip {
     padding: .2rem .7rem
-}
-
-.km-button {
-    cursor: pointer;
-    outline: 0
 }
 
 .km-switch input[type=checkbox] {
@@ -924,17 +1000,10 @@
 }
 
 .km-dialog .km-button {
-    display: block;
     margin: .4em;
-    font-size: 1.3em;
-    text-align: center;
-    padding: .44em;
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px
 }
 
 .km-loader {
@@ -1592,7 +1661,7 @@ body:after {
     background-color: #f1f1f1;
 }
 
-.km-android .km-navbar,.km-android .km-toolbar,.km-android .km-button,.km-android .km-buttongroup,.km-android .km-tabstrip,.km-android input[type=file],.km-android li.km-actionsheet-cancel>a {
+.km-android .km-navbar,.km-android .km-toolbar,.km-android .km-buttongroup,.km-android .km-tabstrip,.km-android input[type=file],.km-android li.km-actionsheet-cancel>a {
     font-weight: normal;
     color: #000;
     background-color: #cfd3d6;
@@ -1668,7 +1737,7 @@ body:after {
     border-color: #fff
 }
 
-.km-android .km-button:not([disabled]):active,.km-android .km-button.km-state-active:not([disabled]),.km-android .km-buttongroup .km-state-active,.km-android input[type=file]:active,.km-android input[type=file]:focus,.km-android li.km-actionsheet-cancel>a:hover,.km-android li.km-actionsheet-cancel>a:active {
+.km-android .km-buttongroup .km-state-active,.km-android input[type=file]:active,.km-android input[type=file]:focus,.km-android li.km-actionsheet-cancel>a:hover,.km-android li.km-actionsheet-cancel>a:active {
     color: #FFF;
     background-color: #057fe4;
     background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0,rgba(255,255,255,0.3)),color-stop(1,rgba(255,255,255,0)));
@@ -1678,10 +1747,6 @@ body:after {
     background-image: linear-gradient(top,rgba(255,255,255,0.3),rgba(255,255,255,0));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
     -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.2)
-}
-
-.km-android .km-content .km-button {
-    padding: .4rem 1.6rem
 }
 
 .km-android .km-back:before {
@@ -2520,6 +2585,7 @@ body:after {
 }
 
 .km-android .km-modalview>:first-child {
+    background: #fbfbfb;
     border: 0
 }
 

@@ -22,29 +22,28 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
         createVideo: (frames) ->
 
-            transcode = ->
-                video = new Whammy.Video()
-                
-                # step through frames in pairs of two
-                # this is so that each frame can be added with the appropriate duration,
-                # since we know how long of a gap there is between frames
-                for pair in (frames[i .. i + 1] for i in [0 .. frames.length - 2])
-                    # at this point, imageData is really a data URL
-                    video.add pair[0].imageData, pair[1].time - pair[0].time
+            deferred = $.Deferred()
 
-                blob = video.compile()
-                
-                name = new Date().getTime() + ".webm"
+            video = new Whammy.Video()
+            
+            # step through frames in pairs of two
+            # this is so that each frame can be added with the appropriate duration,
+            # since we know how long of a gap there is between frames
+            for pair in (frames[i .. i + 1] for i in [0 .. frames.length - 2])
+                # at this point, imageData is really a data URL
+                bufferContext.putImageData pair[0].imageData, 0, 0
+                video.add bufferCanvas.toDataURL('image/webp', 0.8), pair[1].time - pair[0].time
 
-                # save the recording
-                filewrapper.save(name, blob)
+            blob = video.compile()
+            
+            name = new Date().getTime() + ".webm"
 
-                blobUrl = window.URL.createObjectURL(blob)
+            # save the recording
+            filewrapper.save(name, blob)
 
-                return { url: blobUrl, name: name }
+            reader = new FileReader()
+            reader.onload = (e) ->
+                deferred.resolve { url: e.target.result, name: name }
+            reader.readAsDataURL(blob)
 
-            for i in [0...frames.length]
-                bufferContext.putImageData frames[i].imageData, 0, 0
-                frames[i] = imageData: bufferCanvas.toDataURL('image/webp', 0.8), time: frames[i].time
-
-            transcode()
+            deferred.promise()
