@@ -215,14 +215,9 @@ define([
 
 			full.container.find(".timer").removeClass("hidden")
 
-			setTimeout (-> 
-				
-				recording = false
-				$.publish "/bottom/update", ["processing"]
+			save = ->
 
-				setTimeout -> 
-					
-					result = utils.createVideo frames
+				utils.createVideo(frames).done (result) ->
 
 					console.log("Recording Done!")
 
@@ -253,11 +248,13 @@ define([
 
 					$.publish "/bottom/update", ["full"]
 
-					# $.publish "/recording/done", [ "full" ]
-				
-				, 0
+			done = ->
+				recording = false
+				$.publish "/bottom/update", ["processing"]
 
-			), SECONDS_TO_RECORD * 1000
+				setTimeout save, 0
+
+			setTimeout done, SECONDS_TO_RECORD * 1000
 
 			recording = true
 

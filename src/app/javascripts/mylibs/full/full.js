@@ -160,16 +160,14 @@
         return capture(callback);
       },
       video: function() {
+        var done, save;
         console.log("Recording...");
         frames = [];
         startTime = Date.now();
         full.container.find(".timer").removeClass("hidden");
-        setTimeout((function() {
-          recording = false;
-          $.publish("/bottom/update", ["processing"]);
-          return setTimeout(function() {
-            var data, file, image, result;
-            result = utils.createVideo(frames);
+        save = function() {
+          return utils.createVideo(frames).done(function(result) {
+            var data, file, image;
             console.log("Recording Done!");
             frames = [];
             full.container.find(".timer").addClass("hidden");
@@ -201,8 +199,14 @@
               });
             });
             return $.publish("/bottom/update", ["full"]);
-          }, 0);
-        }), SECONDS_TO_RECORD * 1000);
+          });
+        };
+        done = function() {
+          recording = false;
+          $.publish("/bottom/update", ["processing"]);
+          return setTimeout(save, 0);
+        };
+        setTimeout(done, SECONDS_TO_RECORD * 1000);
         return recording = true;
       }
     };
