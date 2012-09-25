@@ -4,13 +4,8 @@
 
 html, body, #wrap {
 	height: 100%;
-	background-color: #f1f1f1 !important;
 	font-family: 'Droid Sans', sans-serif;
 	overflow: hidden;
-}
-
-.km-blackberry, .km-blackberry .km-content {
-	background-color: #f1f1f1 !important;
 }
 
 /*  fix for the position: relative which is set

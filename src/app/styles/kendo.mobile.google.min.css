@@ -1181,7 +1181,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
     z-index: 10001;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1260,13 +1259,14 @@
 }
 
 .km-popup-wrapper,.km-modalview-wrapper {
+     background-color: #fbfbfb;
+    box-shadow: 0 4px 23px 5px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0,0,0,0.15);
+    width: 460px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 14px 17px 14px 17px;
     z-index: 10001;
     position: relative;
     overflow: hidden;
-    background: 0;
-    border: 0;
-    box-shadow: none;
-    -webkit-box-shadow: none
 }
 
 .km-popup-overlay {
@@ -1334,6 +1334,7 @@
 
 .km-modalview .km-content {
     box-flex: 1
+    background: #fbfbfb;
 }
 
 .km-modalview-wrapper:before {
@@ -1588,7 +1589,7 @@ body:after {
 
 .km-android,.km-android .km-content {
     color: #000;
-    background: #fff
+    background-color: #f1f1f1;
 }
 
 .km-android .km-navbar,.km-android .km-toolbar,.km-android .km-button,.km-android .km-buttongroup,.km-android .km-tabstrip,.km-android input[type=file],.km-android li.km-actionsheet-cancel>a {
@@ -2295,7 +2296,9 @@ body:after {
 }
 
 .km-android .km-shim,.km-phone .km-android .km-actionsheet-wrapper {
-    background: rgba(0,0,0,0.5)
+    background: none;
+    -webkit-transition: opacity .5s;
+    background-image: -webkit-radial-gradient(50% 5%, rgba(255, 255, 255, 0.75), rgba(127, 127, 127, 0.75));
 }
 
 .km-android .km-actionsheet-wrapper {
@@ -2503,12 +2506,12 @@ body:after {
 }
 
 .km-android .km-modalview {
-    background-color: #7185a2;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    box-shadow: 0 0 15px rgba(0,0,0,.5),0 0 2px rgba(0,0,0,.5);
-    -webkit-box-shadow: 0 0 15px rgba(0,0,0,.5),0 0 2px rgba(0,0,0,.5)
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: #fbfbfb;
 }
 
 .km-android .km-modalview .km-header {
