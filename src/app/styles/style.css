@@ -327,7 +327,7 @@ a.button {
 
 .preview { 
 	float: left;
-	-webkit-transition: -webkit-transform .08s ease-in-out;
+	-webkit-transition: -webkit-transform .02s ease-in-out;
 }
 	.preview[data-col="1"] { margin: 0 26px; }
 	.preview[data-row="0"] { margin-bottom: 26px; }
@@ -375,7 +375,7 @@ a.button {
 	width: 270px;
 	height: 180px;
 	background: url('images/photoPlaceholder.png');
-	-webkit-transition: -webkit-transform .08s ease-in-out;
+	-webkit-transition: -webkit-transform .02s ease-in-out;
 	background-size: 270px 180px;
 	margin: 0 8px 16px 8px;
 }
@@ -388,7 +388,7 @@ a.button {
 }
 
 .gallery .selected {
-	border: 2px solid magenta;
+	border: 2px solid #E15613;
 	margin: 0 6px 12px 6px;
 }
 
