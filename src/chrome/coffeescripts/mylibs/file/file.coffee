@@ -76,6 +76,13 @@ define([
     if typeof blob == "string"
       blob = utils.toBlob blob
 
+    window.theBlob = blob
+    console.log blob
+
+    onwrite = (e) ->
+      $.publish "/share/gdrive/upload", [ blob ]
+      $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
+
     # get the file from the file system, creating it if it doesn't exist
     withFileSystem (fs) ->
       fs.root.getFile name, create: true, (fileEntry) ->
@@ -84,16 +91,15 @@ define([
         fileEntry.createWriter (fileWriter) ->
 
           # called when the write ends
-          fileWriter.onwrite = (e) ->
-            $.publish "/share/gdrive/upload", [ blob ]
-            $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
+          fileWriter.onwrite = onwrite
 
           # called when the write pukes
-          fileWriter.onerror = (e) ->
-              errorHandler e
+          fileWriter.onerror = errorHandler
 
           # write the blob to the file system
-          setTimeout (-> fileWriter.write blob), 100
+
+          fileWriter.abort()
+          fileWriter.write blob
           
       # we didn't get access to the file system for some reason
       , errorHandler

@@ -57,7 +57,7 @@
     };
     capture = function(callback) {
       var data, image, name;
-      image = canvas.toDataURL();
+      image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       data = {
         src: image,

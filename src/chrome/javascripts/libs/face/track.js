@@ -35,7 +35,6 @@
           min_neighbors: 1
         });
         if (comp.length) {
-          console.log("FACE!");
           cache.comp = comp;
         }
         _ref = cache.comp;

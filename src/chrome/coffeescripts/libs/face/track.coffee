@@ -40,7 +40,7 @@ define([
 
 			if comp.length
 
-				console.log("FACE!")
+#				console.log("FACE!")
 				cache.comp = comp
 
 			for i in cache.comp

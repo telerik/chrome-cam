@@ -67,24 +67,25 @@
       }
     };
     save = function(name, blob) {
+      var onwrite;
       if (typeof blob === "string") {
         blob = utils.toBlob(blob);
       }
+      window.theBlob = blob;
+      console.log(blob);
+      onwrite = function(e) {
+        $.publish("/share/gdrive/upload", [blob]);
+        return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
+      };
       return withFileSystem(function(fs) {
         return fs.root.getFile(name, {
           create: true
         }, function(fileEntry) {
           return fileEntry.createWriter(function(fileWriter) {
-            fileWriter.onwrite = function(e) {
-              $.publish("/share/gdrive/upload", [blob]);
-              return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
-            };
-            fileWriter.onerror = function(e) {
-              return errorHandler(e);
-            };
-            return setTimeout((function() {
-              return fileWriter.write(blob);
-            }), 100);
+            fileWriter.onwrite = onwrite;
+            fileWriter.onerror = errorHandler;
+            fileWriter.abort();
+            return fileWriter.write(blob);
           });
         }, errorHandler);
       });

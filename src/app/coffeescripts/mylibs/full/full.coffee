@@ -78,7 +78,7 @@ define([
 
 	capture = (callback) ->
 
-		image = canvas.toDataURL()
+		image = canvas.toDataURL("image/jpeg", 1.0)
 		name = new Date().getTime()
 
 		data = { src: image, height: full.content.height(), width: full.content.width() }
