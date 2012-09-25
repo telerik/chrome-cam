@@ -34,18 +34,18 @@ define [
 
     page = (direction) =>
 
-        if not flipping
-            
+        return if flipping
+        
+        if direction > 0 and @ds.page() > 1
             flipping = true
-
-            if direction > 0 and @ds.page() > 1
-                animation.reverse = true
-                @ds.page @ds.page() - 1
-                render(true)
-            if direction < 0 and @ds.page() < @ds.totalPages()
-                animation.reverse = false
-                @ds.page @ds.page() + 1
-                render(true)
+            animation.reverse = true
+            @ds.page @ds.page() - 1
+            render(true)
+        if direction < 0 and @ds.page() < @ds.totalPages()
+            flipping = true
+            animation.reverse = false
+            @ds.page @ds.page() + 1
+            render(true)
 
     destroy = ->
 
