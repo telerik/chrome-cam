@@ -27,24 +27,27 @@
     errorHandler = function(e) {
       var msg;
       msg = '';
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = 'QUOTA_EXCEEDED_ERR';
-          break;
-        case FileError.NOT_FOUND_ERR:
-          msg = 'NOT_FOUND_ERR';
-          break;
-        case FileError.SECURITY_ERR:
-          msg = 'SECURITY_ERR';
-          break;
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = 'INVALID_MODIFICATION_ERR';
-          break;
-        case FileError.INVALID_STATE_ERR:
-          msg = 'INVALID_STATE_ERR';
-          break;
-        default:
-          msg = 'Unknown Error';
+      console.log(e);
+      if (e.type === "error") {
+        switch (e.code || e.target.error.code) {
+          case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'QUOTA_EXCEEDED_ERR';
+            break;
+          case FileError.NOT_FOUND_ERR:
+            msg = 'NOT_FOUND_ERR';
+            break;
+          case FileError.SECURITY_ERR:
+            msg = 'SECURITY_ERR';
+            break;
+          case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'INVALID_MODIFICATION_ERR';
+            break;
+          case FileError.INVALID_STATE_ERR:
+            msg = 'INVALID_STATE_ERR';
+            break;
+          default:
+            msg = 'Unknown Error';
+        }
       }
       $.publish("/notify/show", ["File Error", msg, true]);
       return $.publish("/notify/show", ["File Access Denied", "Access to the file system could not be obtained.", false]);
@@ -67,8 +70,8 @@
       if (typeof blob === "string") {
         blob = utils.toBlob(blob);
       }
-      return withFileSystem(function() {
-        return fileSystem.root.getFile(name, {
+      return withFileSystem(function(fs) {
+        return fs.root.getFile(name, {
           create: true
         }, function(fileEntry) {
           return fileEntry.createWriter(function(fileWriter) {
@@ -79,7 +82,9 @@
             fileWriter.onerror = function(e) {
               return errorHandler(e);
             };
-            return fileWriter.write(blob);
+            return setTimeout((function() {
+              return fileWriter.write(blob);
+            }), 100);
           });
         }, errorHandler);
       });

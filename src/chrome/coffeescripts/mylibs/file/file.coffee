@@ -37,19 +37,22 @@ define([
 
     msg = ''
 
-    switch e.code
-      when FileError.QUOTA_EXCEEDED_ERR
-        msg = 'QUOTA_EXCEEDED_ERR'
-      when FileError.NOT_FOUND_ERR
-        msg = 'NOT_FOUND_ERR'
-      when FileError.SECURITY_ERR
-        msg = 'SECURITY_ERR'
-      when FileError.INVALID_MODIFICATION_ERR
-        msg = 'INVALID_MODIFICATION_ERR'
-      when FileError.INVALID_STATE_ERR
-        msg = 'INVALID_STATE_ERR'
-      else
-        msg = 'Unknown Error'
+    console.log e
+
+    if e.type == "error"
+      switch e.code || e.target.error.code
+        when FileError.QUOTA_EXCEEDED_ERR
+          msg = 'QUOTA_EXCEEDED_ERR'
+        when FileError.NOT_FOUND_ERR
+          msg = 'NOT_FOUND_ERR'
+        when FileError.SECURITY_ERR
+          msg = 'SECURITY_ERR'
+        when FileError.INVALID_MODIFICATION_ERR
+          msg = 'INVALID_MODIFICATION_ERR'
+        when FileError.INVALID_STATE_ERR
+          msg = 'INVALID_STATE_ERR'
+        else
+          msg = 'Unknown Error'
 
     $.publish "/notify/show", [ "File Error", msg, true ]
 
@@ -74,8 +77,8 @@ define([
       blob = utils.toBlob blob
 
     # get the file from the file system, creating it if it doesn't exist
-    withFileSystem ->
-      fileSystem.root.getFile name, create: true, (fileEntry) ->
+    withFileSystem (fs) ->
+      fs.root.getFile name, create: true, (fileEntry) ->
 
         # create a writer
         fileEntry.createWriter (fileWriter) ->
@@ -90,7 +93,7 @@ define([
               errorHandler e
 
           # write the blob to the file system
-          fileWriter.write blob
+          setTimeout (-> fileWriter.write blob), 100
           
       # we didn't get access to the file system for some reason
       , errorHandler
