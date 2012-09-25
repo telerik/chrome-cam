@@ -446,8 +446,13 @@ body div { padding-top: 0px; }
 	left: 0;
 }
 
-	.full > div { margin: auto; }
-	.full canvas { position: absolute; }
+	.full > div { 
+		margin: auto;
+		width: 720px;
+		display: -webkit-box;
+		-webkit-box-align: center;
+		height: 100%;
+	}
 	.full .flash {
 		position: absolute;
 		width: 100%;
