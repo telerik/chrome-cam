@@ -161,6 +161,10 @@
       },
       video: function() {
         var done, save;
+        if (recording) {
+          return;
+        }
+        recording = true;
         console.log("Recording...");
         frames = [];
         startTime = Date.now();
@@ -206,8 +210,7 @@
           $.publish("/bottom/update", ["processing"]);
           return setTimeout(save, 0);
         };
-        setTimeout(done, SECONDS_TO_RECORD * 1000);
-        return recording = true;
+        return setTimeout(done, SECONDS_TO_RECORD * 1000);
       }
     };
   });

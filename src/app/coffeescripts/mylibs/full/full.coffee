@@ -206,6 +206,9 @@ define([
 			capture(callback)
 
 		video: ->
+			# TODO: make it stop recording early instead?
+			return if recording
+			recording = true
 
 			console.log "Recording..."
 
@@ -255,8 +258,4 @@ define([
 				setTimeout save, 0
 
 			setTimeout done, SECONDS_TO_RECORD * 1000
-
-			recording = true
-
-				
 )
