@@ -3,6 +3,8 @@ define [
   'text!mylibs/bar/views/top.html'
 ], (kendo, template) ->
 
+	CONFIRM_TEXT = "Are you sure you want to delete this priceless photo?"
+
 	# create a view model for the top bar
 	# VIEW MODEL ISN'T WORKING. WHY NOT?
 	viewModel = kendo.observable {
@@ -17,7 +19,7 @@ define [
 				e.preventDefault()
 		destroy:
 			click: (e) ->
-				$("#popover").data("kendoMobilePopOver").openFor($(e.currentTarget))
+				$.publish "/confirm/show", [ CONFIRM_TEXT, "/gallery/delete" ]
 		share:
 			save: (e) ->
 				file = @.get("current")

@@ -1,8 +1,9 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/bar/views/top.html'], function(kendo, template) {
-    var pub, states, viewModel,
+    var CONFIRM_TEXT, pub, states, viewModel,
       _this = this;
+    CONFIRM_TEXT = "Are you sure you want to delete this priceless photo?";
     viewModel = kendo.observable({
       current: null,
       selected: false,
@@ -17,7 +18,7 @@
       },
       destroy: {
         click: function(e) {
-          return $("#popover").data("kendoMobilePopOver").openFor($(e.currentTarget));
+          return $.publish("/confirm/show", [CONFIRM_TEXT, "/gallery/delete"]);
         }
       },
       share: {
