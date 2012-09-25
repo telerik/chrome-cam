@@ -116,11 +116,8 @@
       show: function(item) {
         effect = item.filter;
         paused = false;
-        full.content.height(full.container.height()) - 50;
         full.el.transfer.height(full.content.height());
-        full.content.width((3 / 2) * full.content.height());
         full.el.transfer.width(full.content.width());
-        $(canvas).height(full.content.height());
         return full.container.kendoStop(true).kendoAnimate({
           effects: "zoomIn fadeIn",
           show: true,
