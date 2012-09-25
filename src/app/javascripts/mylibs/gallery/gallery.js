@@ -29,18 +29,20 @@
       return selected.addClass("selected");
     };
     page = function(direction) {
-      if (!flipping) {
+      if (flipping) {
+        return;
+      }
+      if (direction > 0 && _this.ds.page() > 1) {
         flipping = true;
-        if (direction > 0 && _this.ds.page() > 1) {
-          animation.reverse = true;
-          _this.ds.page(_this.ds.page() - 1);
-          render(true);
-        }
-        if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
-          animation.reverse = false;
-          _this.ds.page(_this.ds.page() + 1);
-          return render(true);
-        }
+        animation.reverse = true;
+        _this.ds.page(_this.ds.page() - 1);
+        render(true);
+      }
+      if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
+        flipping = true;
+        animation.reverse = false;
+        _this.ds.page(_this.ds.page() + 1);
+        return render(true);
       }
     };
     destroy = function() {

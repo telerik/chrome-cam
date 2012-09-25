@@ -53,7 +53,8 @@ define([
 
 	            	# update the time in the view
 	            	secondsRecorded = (Date.now() - startTime) / 1000
-	            	full.el.timer.first().html kendo.toString(SECONDS_TO_RECORD - secondsRecorded, "0")
+	            	remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded)
+	            	full.el.timer.first().html kendo.toString(remaining, "0")
 
 	flash = (callback, file) ->
 

@@ -19,7 +19,7 @@
     scaleCanvas = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var secondsRecorded, time;
+        var remaining, secondsRecorded, time;
         if (!paused) {
           frame++;
           effect(canvas, stream.canvas, frame, stream.track);
@@ -31,7 +31,8 @@
               time: time
             });
             secondsRecorded = (Date.now() - startTime) / 1000;
-            return full.el.timer.first().html(kendo.toString(SECONDS_TO_RECORD - secondsRecorded, "0"));
+            remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded);
+            return full.el.timer.first().html(kendo.toString(remaining, "0"));
           }
         }
       });
