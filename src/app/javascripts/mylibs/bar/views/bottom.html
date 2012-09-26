@@ -2,13 +2,13 @@
 	<section class="left">
 		<ul class="mode" data-bind="visible: mode.visible">
 			<li>
-				<a data-bind="click: mode.click" class="photo active" data-mode="photo" alt="Photo Mode" title="Photo Mode"></a>
+				<a data-bind="click: mode.click" class="active km-button" data-mode="photo" alt="Photo Mode" title="Photo Mode"><img src="styles/images/cameraMode.png"></a>
 			</li>
 			<li>
-				<a data-mode="video" class="video" data-bind="click: mode.click" data-mode="video" alt="Video Mode" title="Video Mode"></a>
+				<a data-mode="video" class="km-button" data-bind="click: mode.click" data-mode="video" alt="Video Mode" title="Video Mode"><img src="styles/images/cameraMode.png"></a>
 			</li>
 			<li>
-				<a data-mode="paparazzi" class="paparazzi" data-bind="click: mode.click" data-mode="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"></a>
+				<a data-mode="km-button" class="paparazzi" data-bind="click: mode.click" data-mode="paparazzi" alt="Paparazzi Mode" title="Paparazzi Mode"><img src="styles/images/cameraMode.png"></a>
 			</li>
 		</ul>
 		<a data-role="button" class="button filters" data-bind="click: filters.click, visible: filters.visible">Filters</a> 
