@@ -254,7 +254,7 @@
     vertical-align: middle;
     width: 100%;
 }
-    .km-button.selected img { opacity: 0.9; }
+    .km-button.selected img { opacity: 1.0; }
     .km-button:hover img { opacity: 0.72; }
     .km-button:active img { opacity: 1.0; }
 
