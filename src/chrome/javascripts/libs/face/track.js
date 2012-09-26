@@ -2,54 +2,52 @@
 (function() {
 
   define(['libs/face/ccv', 'libs/face/face'], function() {
-    var backCanvas, backContext, cache, h, pub, w;
+    var backCanvas, backContext, h, pub, result, w;
     backCanvas = document.createElement("canvas");
     backContext = backCanvas.getContext("2d");
     w = 300 / 4 * 0.8;
     h = 270 / 4 * 0.8;
-    cache = {};
+    result = {};
     return pub = {
       init: function(x, y, width, height) {
         backCanvas.width = 120;
         backCanvas.height = 80;
-        return cache.comp = [
-          {
-            x: x,
-            y: y,
-            width: backCanvas.width,
-            height: backCanvas.height
-          }
-        ];
-      },
-      track: function(video) {
-        var comp, i, track, _i, _len, _ref;
-        track = {
+        return result = {
           faces: [],
           trackWidth: backCanvas.width
         };
+      },
+      track: function(video) {
+        var params;
+        result.faces = [];
         backContext.drawImage(video, 0, 0, backCanvas.width, backCanvas.height);
-        comp = ccv.detect_objects(cache.ccv = cache.ccv || {
+        params = {
           canvas: ccv.grayscale(ccv.pre(backCanvas)),
           cascade: cascade,
           interval: 2,
           min_neighbors: 1,
-          accurate: 0
+          accurate: 0,
+          async: true,
+          worker: 1
+        };
+        (ccv.detect_objects(params))(function(faces) {
+          var face, _i, _len, _results;
+          if (faces.length) {
+            result.faces = [];
+            _results = [];
+            for (_i = 0, _len = faces.length; _i < _len; _i++) {
+              face = faces[_i];
+              _results.push(result.faces.push({
+                x: face.x,
+                y: face.y,
+                width: face.width,
+                height: face.height
+              }));
+            }
+            return _results;
+          }
         });
-        if (comp.length) {
-          console.log("FACE!");
-          cache.comp = comp;
-        }
-        _ref = cache.comp;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          i = _ref[_i];
-          track.faces.push({
-            x: i.x,
-            y: i.y,
-            width: i.width,
-            height: i.height
-          });
-        }
-        return track;
+        return result;
       }
     };
   });
