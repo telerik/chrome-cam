@@ -445,15 +445,12 @@ body div { padding-top: 0px; }
 	left: 0;
 }
 
-.full canvas {
-	position: absolute;
-	top: 50%;
-	margin-top: -240px;
-}
-
 	.full > div { 
 		margin: auto;
 		width: 720px;
+		display: -webkit-box;
+		-webkit-box-align: center;
+		height: 100%;
 	}
 	.full .flash {
 		position: absolute;
