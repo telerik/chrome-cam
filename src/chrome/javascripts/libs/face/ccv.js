@@ -447,3 +447,14 @@ var ccv = {
 		return { "pre" : pre, "core" : core, "post" : post };
 	})
 }
+
+onmessage = function (event) {
+	var data = (typeof event.data == "string") ? JSON.parse(event.data) : event.data;
+	var scope = { "shared" : data.shared };
+	var result = parallable.core[data.name].apply(scope, [data.input, data.id, data.worker]);
+	try {
+		postMessage(result);
+	} catch (e) {
+		postMessage(JSON.stringify(result));
+	}
+}
