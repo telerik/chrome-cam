@@ -19,16 +19,15 @@ define [
 			visible: false
 			active: "photo"
 			click: (e) ->
-				
-				a = $(e.target)
+				a = $(e.target).closest("a")
 
-				@.set("mode.active", a.data("mode"))
+				@.set("mode.selected", a.data("mode"))
 
 				# loop through all of the buttons and remove the active class
-				a.parent().parent().find("a").removeClass "active"
+				a.closest("ul").find("a").removeClass "selected"
 
 				# add the active class to this anchor
-				a.addClass "active"
+				a.addClass "selected"
 
 		capture:
 

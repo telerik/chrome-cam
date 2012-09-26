@@ -14,10 +14,10 @@
         active: "photo",
         click: function(e) {
           var a;
-          a = $(e.target);
-          this.set("mode.active", a.data("mode"));
-          a.parent().parent().find("a").removeClass("active");
-          return a.addClass("active");
+          a = $(e.target).closest("a");
+          this.set("mode.selected", a.data("mode"));
+          a.closest("ul").find("a").removeClass("selected");
+          return a.addClass("selected");
         }
       },
       capture: {
