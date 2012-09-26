@@ -70,7 +70,7 @@ body div { padding-top: 0px; }
 		-webkit-box-align: center;
 	}
 
-.km-header .left, .km-footer .left { padding-left: 35px; }
+.km-header .left, .km-footer .left { padding-left: 15px; }
 
 .km-header .center, .km-footer .center { text-align: center; }
 
