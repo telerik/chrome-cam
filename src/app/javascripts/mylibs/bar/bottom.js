@@ -15,8 +15,8 @@
         click: function(e) {
           var a;
           a = $(e.target).closest("a");
-          this.set("mode.selected", a.data("mode"));
-          a.closest("ul").find("a").removeClass("selected");
+          this.set("mode.active", a.data("mode"));
+          a.closest(".bar").find("a").removeClass("selected");
           return a.addClass("selected");
         }
       },

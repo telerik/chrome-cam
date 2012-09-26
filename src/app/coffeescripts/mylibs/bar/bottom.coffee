@@ -21,10 +21,10 @@ define [
 			click: (e) ->
 				a = $(e.target).closest("a")
 
-				@.set("mode.selected", a.data("mode"))
+				@.set("mode.active", a.data("mode"))
 
 				# loop through all of the buttons and remove the active class
-				a.closest("ul").find("a").removeClass "selected"
+				a.closest(".bar").find("a").removeClass "selected"
 
 				# add the active class to this anchor
 				a.addClass "selected"
