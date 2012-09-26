@@ -29,12 +29,14 @@
         };
         backContext.drawImage(video, 0, 0, backCanvas.width, backCanvas.height);
         comp = ccv.detect_objects(cache.ccv = cache.ccv || {
-          canvas: ccv.grayscale(backCanvas),
+          canvas: ccv.grayscale(ccv.pre(backCanvas)),
           cascade: cascade,
-          interval: 5,
-          min_neighbors: 1
+          interval: 2,
+          min_neighbors: 1,
+          accurate: 0
         });
         if (comp.length) {
+          console.log("FACE!");
           cache.comp = comp;
         }
         _ref = cache.comp;

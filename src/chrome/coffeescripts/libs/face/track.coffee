@@ -32,15 +32,16 @@ define([
 			backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
 
 			comp = ccv.detect_objects cache.ccv = cache.ccv || {
-				canvas: ccv.grayscale(backCanvas)
-				cascade: cascade,
-				interval: 5,
+				canvas: ccv.grayscale(ccv.pre(backCanvas))
+				cascade: cascade
+				interval: 2
 				min_neighbors: 1
+				accurate: 0
 			}
 
 			if comp.length
 
-#				console.log("FACE!")
+				console.log("FACE!")
 				cache.comp = comp
 
 			for i in cache.comp
