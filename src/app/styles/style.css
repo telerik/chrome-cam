@@ -88,40 +88,10 @@ body div { padding-top: 0px; }
 
 /* Bar Contents */
 
-.mode { list-style-type: none; }
-	.mode li { float: left; }
-		.mode li:first-child a {
-			border-bottom-left-radius: 2px;
-			border-top-left-radius: 2px;
-			border-right: 0 solid transparent;
-		}
-		.mode li:last-child a {
-			border-bottom-right-radius: 2px;
-			border-top-right-radius: 2px;
-			border-left: 0 solid transparent;
-		}
+.delete { background-image: url('images/cameraModeSpritex2.png'); }
 
-.mode a {
-	display: block;
-	width: 36px;
-	height: 30px;
-	background-color: rgba(244, 244, 244, 0.3);
-	border: 1px solid rgba(244, 244, 244, .3);
-	background-repeat: no-repeat;
-    background-size: 24px 140px;
-    cursor: pointer;
-}
-.mode a, .delete { background-image: url('images/cameraModeSpritex2.png'); }
+.mode { margin-right: 10px; }
 
-	.mode a:hover { background-color: rgba(244, 244, 244, 0.5); }
-	.mode .active, .mode .active:hover { 
-		background-color: rgba(192, 192, 192, 1);
-		cursor: default;
-	}
-	.mode .photo { background-position: 50% 6px; }
-	.mode .video { background-position: 50% -29px; }
-	.mode .paparazzi { background-position: 50% -68px; }
-	
 .capture {
 	position: absolute;
 	width: 150px;
