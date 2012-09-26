@@ -10,6 +10,8 @@ define([
 
 	result = {}
 
+	enabled = false
+
 	pub = 
 
 		init: (x, y, width, height) ->
@@ -20,10 +22,16 @@ define([
 				faces: []
 				trackWidth: backCanvas.width
 
+			$.subscribe "/tracking/enable", (set) ->
+				console.log "Face tracking: #{set}"
+				enabled = set
+
 		track: (video) ->
 
 			result.faces = []
 			
+			return result unless enabled
+
 			backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
 
 			params =

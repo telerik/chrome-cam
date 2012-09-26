@@ -181,6 +181,8 @@ define [
                     previews = []
 
                     index = 0
+                    tracks = false
+
                     for item in @.view()
 
                         # this is wrapped in a closure so that it doesn't step on itself during
@@ -207,6 +209,10 @@ define [
                                 $.publish "/full/show", [ item ]
 
                             previews.push { canvas: filter, filter: item.filter, name: item.name }
+
+                            tracks = tracks or item.tracks
+
+                    $.publish "/postman/deliver", [ tracks, "/tracking/enable" ]
 
                     # move the current page out and the next page in
                     page1.container.find("canvas").hide()
