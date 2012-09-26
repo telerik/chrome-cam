@@ -255,6 +255,7 @@
         }, {
           id: "frogman",
           name: "Frogman",
+          tracks: true,
           filter: function(canvas, element, frame, track) {
             var effect;
             if (track.faces.length !== 0) {
@@ -281,6 +282,7 @@
         }, {
           id: "chubbyBunny",
           name: "Chubby Bunny",
+          tracks: true,
           filter: function(canvas, element, frame, stream) {
             var effect;
             if (stream.faces.length !== 0) {
@@ -307,6 +309,7 @@
         }, {
           id: "giraffe",
           name: "Giraffe",
+          tracks: true,
           filter: function(canvas, element, frame, stream) {
             var effect;
             if (stream.faces.length !== 0) {
@@ -329,6 +332,7 @@
         }, {
           id: "chickenPox",
           name: "Chicken Pox",
+          tracks: true,
           filter: function(canvas, element, frame, stream) {
             var face, factor, height, width, x, y, _i, _len, _results;
             if (stream.faces.length !== 0) {

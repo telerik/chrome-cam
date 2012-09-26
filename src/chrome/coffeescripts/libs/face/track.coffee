@@ -9,6 +9,8 @@ define([
 	h = 270 / 4 * 0.8
 	cache = {}
 
+	enabled = false
+
 	pub = 
 
 		init: (x, y, width, height) ->
@@ -23,12 +25,18 @@ define([
 				height: backCanvas.height
 			}]
 
+			$.subscribe "/tracking/enable", (set) ->
+				console.log "Face tracking: #{set}"
+				enabled = set
+
 		track: (video) ->
 
 			track = 
 				faces: []
 				trackWidth: backCanvas.width
 			
+			return track unless enabled
+
 			backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
 
 			comp = ccv.detect_objects cache.ccv = cache.ccv || {
