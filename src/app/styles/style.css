@@ -515,10 +515,10 @@ body div { padding-top: 0px; }
 	background: #60626A;
 	border-radius: 2px;
 	height: 16px;
-	width: 60px;
+	width: 30px;
 	font-size: 17px;
 	color: white;
-	padding: 5px;
+	padding: 5px 10px 5px 5px;
 	text-align: right;
 	position: relative;
 	top: 30px;
@@ -535,7 +535,7 @@ body div { padding-top: 0px; }
 		width: 10px;
 		height: 10px;
 		margin: auto;
-		box-shadow: 0 0 4px 0 rgba(251, 247, 193, .5);
+		box-shadow: inset 0px 0px 5px 0 rgba(0, 0, 0, .9);
 		border-radius: 50%;
 	}
 
