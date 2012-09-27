@@ -266,8 +266,10 @@ define [
             $.subscribe "/gallery/clear", =>
                 window.APP.app.showLoading()
                 filewrapper.clear().done =>
-                    @ds.read()
+                    for item in @ds.data()
+                        @ds.remove(item)
                     window.APP.app.hideLoading()
+                    $.publish "/bottom/thumbnail"
 
             $.publish "/postman/deliver", [ {}, "/file/read" ]
 

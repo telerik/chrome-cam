@@ -127,9 +127,13 @@
         $.subscribe("/bottom/thumbnail", function(file) {
           var thumbnail;
           view.el.galleryLink.empty();
-          thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file);
-          thumbnail.render();
-          return viewModel.set("thumbnail.enabled", true);
+          if (file) {
+            thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file);
+            thumbnail.render();
+            return viewModel.set("thumbnail.enabled", true);
+          } else {
+            return viewModel.set("thumbnail.enabled", false);
+          }
         });
         $.subscribe("/keyboard/space", function(e) {
           return viewModel.capture.click.call(viewModel, e);

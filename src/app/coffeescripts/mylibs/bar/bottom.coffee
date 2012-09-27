@@ -155,10 +155,13 @@ define [
 			$.subscribe "/bottom/thumbnail", (file) ->
 				view.el.galleryLink.empty()
 				
-				thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file)
-				thumbnail.render()
-				
-				viewModel.set("thumbnail.enabled", true)
+				if file
+					thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file)
+					thumbnail.render()
+					
+					viewModel.set("thumbnail.enabled", true)
+				else
+					viewModel.set("thumbnail.enabled", false)
 
 			$.subscribe "/keyboard/space", (e) ->
 				viewModel.capture.click.call viewModel, e

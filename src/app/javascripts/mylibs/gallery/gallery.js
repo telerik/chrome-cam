@@ -264,8 +264,14 @@
         $.subscribe("/gallery/clear", function() {
           window.APP.app.showLoading();
           return filewrapper.clear().done(function() {
-            _this.ds.read();
-            return window.APP.app.hideLoading();
+            var item, _i, _len, _ref;
+            _ref = _this.ds.data();
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              item = _ref[_i];
+              _this.ds.remove(item);
+            }
+            window.APP.app.hideLoading();
+            return $.publish("/bottom/thumbnail");
           });
         });
         $.publish("/postman/deliver", [{}, "/file/read"]);
