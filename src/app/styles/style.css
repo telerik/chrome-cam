@@ -511,6 +511,12 @@ body div { padding-top: 0px; }
 		background-color: #EDEDED;
 	}
 
+.timer, .papparazzi {
+	position: relative;
+	top: 30px;
+	left: 40px;
+}
+
 .timer {
 	background: #60626A;
 	border-radius: 2px;
@@ -520,9 +526,6 @@ body div { padding-top: 0px; }
 	color: white;
 	padding: 5px 10px 5px 5px;
 	text-align: right;
-	position: relative;
-	top: 30px;
-	left: 40px;
 	line-height: 17px;
 }
 	.timer:before {
@@ -539,6 +542,25 @@ body div { padding-top: 0px; }
 		border-radius: 50%;
 	}
 
+.papparazzi, .papparazzi:before, .papparazzi:after {
+	border: 1px solid rgba(255, 255, 255, .7);
+	height: 15px;
+	content: '';
+	width: 15px;
+	background: #60626A;
+	position: relative;
+}
+	.papparazzi:after {
+	    top: -13px;
+	    left: -6px;
+	    z-index: 1;
+	}
+
+	.papparazzi:before {
+	    top: 9px;
+	    left: -11px;
+	    z-index: 10;
+	}
 
 
 /* Loader Styles */
