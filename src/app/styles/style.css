@@ -2,10 +2,22 @@
 
 * { margin:0; padding:0; } 
 
+/* Type */
+
+@font-face {
+	font-family: "Droid Sans";
+	src: url("type/ChromeDroidSans.ttf");
+}
+@font-face {
+	font-family: "Droid Sans Bold";
+	src: url("type/ChromeDroidSansBold.ttf");
+}
+
 html, body, #wrap {
 	height: 100%;
 	background-color: #f1f1f1 !important;
-	font-family: 'Droid Sans', sans-serif;
+	font-family: 'Droid Sans';
+	letter-spacing: 0em;
 	overflow: hidden;
 }
 
@@ -63,7 +75,6 @@ body div { padding-top: 0px; }
 	display: -webkit-flex; 
 	-webkit-box-align: center;
 	-webkit-box-pack: center;
-	font-size: 20px;
 }
 	.bar > section {
 		height: 100%;
