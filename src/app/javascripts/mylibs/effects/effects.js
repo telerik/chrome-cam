@@ -32,9 +32,10 @@
       init: function() {},
       advance: function(element) {
         if (texture != null) {
-          texture.destroy();
+          return texture.loadContentsOf(element);
+        } else {
+          return texture = webgl.texture(element);
         }
-        return texture = webgl.texture(element);
       },
       data: [
         {

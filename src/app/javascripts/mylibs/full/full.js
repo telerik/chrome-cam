@@ -23,6 +23,7 @@
         var remaining, secondsRecorded, time;
         if (!paused) {
           frame++;
+          effects.advance(stream.canvas);
           effect(canvas, stream.canvas, frame, stream.track);
           if (recording) {
             time = Date.now();
@@ -145,16 +146,29 @@
         return capture(callback);
       },
       paparazzi: function() {
-        var callback;
+        var advance, callback, left, wrapper;
+        wrapper = full.container.find(".wrapper");
+        wrapper.find(".paparazzi").removeClass("hidden");
+        left = 4;
+        advance = function() {
+          wrapper.removeClass("paparazzi-" + left);
+          left -= 1;
+          return wrapper.addClass("paparazzi-" + left);
+        };
         callback = function() {
           callback = function() {
             callback = function() {
-              return $.publish("/bottom/update", ["full"]);
+              $.publish("/bottom/update", ["full"]);
+              wrapper.removeClass("paparazzi-1");
+              return wrapper.find(".paparazzi").removeClass("hidden");
             };
+            advance();
             return capture(callback);
           };
+          advance();
           return capture(callback);
         };
+        advance();
         return capture(callback);
       },
       video: function() {

@@ -45,8 +45,10 @@ define([
         init: ->
 
         advance: (element) ->
-            texture.destroy() if texture?
-            texture = webgl.texture(element)
+            if texture?
+                texture.loadContentsOf element
+            else
+                texture = webgl.texture(element)
 
         data: [ 
 
