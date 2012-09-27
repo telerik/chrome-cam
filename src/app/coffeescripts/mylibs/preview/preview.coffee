@@ -2,9 +2,7 @@ define [
   'mylibs/effects/effects'
   'mylibs/utils/utils'
   'text!mylibs/preview/views/preview.html'
-  'text!mylibs/preview/views/half.html'
-  'text!mylibs/preview/views/page.html'
-], (effects, utils, previewTemplate, halfTemplate, pageTemplate) ->
+], (effects, utils, previewTemplate) ->
     
     ###     Select Preview
 

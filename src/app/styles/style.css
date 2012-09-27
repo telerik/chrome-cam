@@ -353,7 +353,7 @@ body div { padding-top: 0px; }
 
 .details .bar { height: 60px; }
 
-.details .previous, .details .next {
+.previous, .next {
 	display: block;
 	font-size: 130px;
 	position: absolute;
@@ -363,9 +363,9 @@ body div { padding-top: 0px; }
 	cursor: pointer;
 	color: #d4d4d4;
 }
-	.details .previous:hover, .details .next:hover { color: #2d2d2d; }
-	.details .previous { left: 20px; }
-	.details .next {
+	.previous:hover, .next:hover { color: #2d2d2d; }
+	.previous { left: 20px; }
+	.next {
 		margin-right: 20px;
 		right: 0;
 	}
