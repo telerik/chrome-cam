@@ -184,8 +184,9 @@
                 arrows.left.show();
               }
               if (ds.page() < ds.totalPages()) {
-                return arrows.right.show();
+                arrows.right.show();
               }
+              return $.publish("/postman/deliver", [false, "/camera/pause"]);
             };
             flippy = function() {
               return page1.container.kendoAnimate({
@@ -201,6 +202,7 @@
               setTimeout(flipCompleted, 100);
               return isFirstChange = false;
             } else {
+              $.publish("/postman/deliver", [true, "/camera/pause"]);
               return setTimeout(flippy, 100);
             }
           }

@@ -249,6 +249,8 @@ define [
                         arrows.left.show() if ds.page() > 1
                         arrows.right.show() if ds.page() < ds.totalPages()
 
+                        $.publish "/postman/deliver", [ false, "/camera/pause" ]
+
                     flippy = ->
                         page1.container.kendoAnimate
                             effects: animation.effects
@@ -262,6 +264,7 @@ define [
                         setTimeout flipCompleted, 100
                         isFirstChange = false
                     else
+                        $.publish "/postman/deliver", [ true, "/camera/pause" ]
                         setTimeout flippy, 100
 
 
