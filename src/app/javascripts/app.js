@@ -11,6 +11,7 @@
         APP.gallery = gallery;
         APP.settings = settings;
         APP.about = about;
+        APP.confirm = confirm;
         events.init();
         postman.init(window.top);
         assets.init();

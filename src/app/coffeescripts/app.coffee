@@ -31,6 +31,7 @@ define([
 			APP.gallery = gallery
 			APP.settings = settings
 			APP.about = about
+			APP.confirm = confirm
 
 			# bind document level events
 			events.init()

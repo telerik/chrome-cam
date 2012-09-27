@@ -29,9 +29,7 @@
       return selected.addClass("selected");
     };
     page = function(direction) {
-      if (flipping) {
-        return;
-      }
+      if (flipping) return;
       if (direction > 0 && _this.ds.page() > 1) {
         flipping = true;
         animation.reverse = true;

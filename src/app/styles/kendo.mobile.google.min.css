@@ -1407,6 +1407,22 @@
     background: #fbfbfb;
 }
 
+.km-modalview p,h1 {
+    font-family: "Lucida Grande";
+    color: #333;
+}
+
+.km-modalview h1 {
+  font-size: 16px;
+  font-weight: normal;
+  margin-top:0;
+}
+
+.km-modalview p {
+  font-size: 13px;
+  margin-top: 1em;
+}
+
 .km-modalview-wrapper:before {
     content: "\a0";
     width: 0;
