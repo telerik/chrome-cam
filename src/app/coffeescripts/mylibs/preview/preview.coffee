@@ -33,8 +33,6 @@ define [
 
     isFirstChange = true
 
-    arrows = {}
-
     # the main draw loop which renders the live video effects      
     draw = ->
 
@@ -87,7 +85,8 @@ define [
             $.unsubcribe "/keyboard/arrow"
 
     page = (direction) ->
-
+        arrows.both.hide()
+        
         # if the direction requested was left
         if direction == "left"
 
@@ -111,9 +110,21 @@ define [
                 # go to the previous page
                 ds.page(ds.page() - 1)
 
-        arrows.left.toggle ds.page() > 1
-        arrows.right.toggle ds.page() < ds.totalPages()
+    arrows =
+        left: null
+        right: null
+        both: null
+        init: (parent) ->
+            arrows.left = parent.find(".previous")
+            arrows.left.hide()
+            arrows.right = parent.find(".next")
+            arrows.both = $([arrows.left[0], arrows.right[0]])
 
+            # in this case, "right" means "previous" and "left" means "next" because of the "natural" scrolling
+            arrows.left.on "click", ->
+                page "right"
+            arrows.right.on "click", ->
+                page "left"
 
     # anything under here is public
     pub = 
@@ -162,10 +173,7 @@ define [
             previousPage = page1.render().addClass("page")
             nextPage = page2.render().addClass("page")
 
-            parent = $(selector).parent()
-            arrows.left = parent.find(".previous")
-            arrows.left.hide()
-            arrows.right = parent.find(".next")
+            arrows.init $(selector).parent()
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -240,6 +248,9 @@ define [
                         justPaged.empty()
 
                         flipping = false
+
+                        arrows.left.show() if ds.page() > 1
+                        arrows.right.show() if ds.page() < ds.totalPages()
 
                     flippy = ->
                         page1.container.kendoAnimate

@@ -28,7 +28,6 @@
       duration: 800
     };
     isFirstChange = true;
-    arrows = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         var eventData, imageData, preview, previewContext, _i, _len;
@@ -70,19 +69,35 @@
       }
     };
     page = function(direction) {
+      arrows.both.hide();
       if (direction === "left") {
         animation.reverse = false;
         if (ds.page() < ds.totalPages()) {
-          ds.page(ds.page() + 1);
+          return ds.page(ds.page() + 1);
         }
       } else {
         animation.reverse = true;
         if (ds.page() > 1) {
-          ds.page(ds.page() - 1);
+          return ds.page(ds.page() - 1);
         }
       }
-      arrows.left.toggle(ds.page() > 1);
-      return arrows.right.toggle(ds.page() < ds.totalPages());
+    };
+    arrows = {
+      left: null,
+      right: null,
+      both: null,
+      init: function(parent) {
+        arrows.left = parent.find(".previous");
+        arrows.left.hide();
+        arrows.right = parent.find(".next");
+        arrows.both = $([arrows.left[0], arrows.right[0]]);
+        arrows.left.on("click", function() {
+          return page("right");
+        });
+        return arrows.right.on("click", function() {
+          return page("left");
+        });
+      }
     };
     return pub = {
       draw: function() {
@@ -97,7 +112,7 @@
         }
       },
       init: function(selector) {
-        var nextPage, page1, page2, parent, previousPage;
+        var nextPage, page1, page2, previousPage;
         effects.init();
         keyboard(true);
         $.subscribe("/previews/pause", function(isPaused) {
@@ -111,10 +126,7 @@
         page2 = new kendo.View(selector, null);
         previousPage = page1.render().addClass("page");
         nextPage = page2.render().addClass("page");
-        parent = $(selector).parent();
-        arrows.left = parent.find(".previous");
-        arrows.left.hide();
-        arrows.right = parent.find(".next");
+        arrows.init($(selector).parent());
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -169,7 +181,13 @@
               previousPage = nextPage;
               nextPage = justPaged;
               justPaged.empty();
-              return flipping = false;
+              flipping = false;
+              if (ds.page() > 1) {
+                arrows.left.show();
+              }
+              if (ds.page() < ds.totalPages()) {
+                return arrows.right.show();
+              }
             };
             flippy = function() {
               return page1.container.kendoAnimate({
