@@ -33,6 +33,7 @@
         var eventData, imageData, preview, previewContext, _i, _len;
         if (!paused) {
           ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
+          effects.advance(canvas);
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;

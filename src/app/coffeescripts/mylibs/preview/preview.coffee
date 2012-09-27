@@ -43,6 +43,8 @@ define [
                 # get the 2d canvas context and draw the image
                 # this happens at the curent framerate
                 ctx.drawImage stream.canvas, 0, 0, canvas.width, canvas.height
+
+                effects.advance canvas
                 
                 # for each of the preview objects, create a texture of the 
                 # 2d canvas and then apply the webgl effect. these are live
