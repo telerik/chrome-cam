@@ -75,7 +75,7 @@ define [
         if enabled
 
             # subscribe to the left arrow key
-            $.subscribe "/keyboard/arrow", (e) ->
+            keyboard.token = $.subscribe "/keyboard/arrow", (e) ->
 
                 if not flipping
                     page e
@@ -84,7 +84,7 @@ define [
         else
 
             # unsubscribe from events
-            $.unsubcribe "/keyboard/arrow"
+            $.unsubscribe keyboard.token
 
     page = (direction) ->
         arrows.both.hide()
@@ -153,10 +153,6 @@ define [
             # bind to keyboard events
             keyboard true
 
-            # subscribe to the pause and unpause events
-            $.subscribe "/previews/pause", (isPaused) ->
-                paused = isPaused 
-
             # create an internal canvas that contains a copy of the video. this
             # is so we can resize the video stream without resizing the original canvas
             # which contains our unadulturated stream
@@ -222,8 +218,7 @@ define [
                             html = filters.render()
                             html.find(".canvas").append(filter).append(img).click ->
 
-                                paused = true
-
+                                $.publish "/preview/pause", [ true ]
                                 $.publish "/full/show", [ item ]
 
                             previews.push { canvas: filter, filter: item.filter, name: item.name }
@@ -278,5 +273,5 @@ define [
 
             $.subscribe "/preview/pause", (pause) ->
                 paused = pause
-    
+                keyboard (not pause)
 

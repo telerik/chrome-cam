@@ -60,13 +60,13 @@
     };
     keyboard = function(enabled) {
       if (enabled) {
-        return $.subscribe("/keyboard/arrow", function(e) {
+        return keyboard.token = $.subscribe("/keyboard/arrow", function(e) {
           if (!flipping) {
             return page(e);
           }
         });
       } else {
-        return $.unsubcribe("/keyboard/arrow");
+        return $.unsubscribe(keyboard.token);
       }
     };
     page = function(direction) {
@@ -116,9 +116,6 @@
         var nextPage, page1, page2, previousPage;
         effects.init();
         keyboard(true);
-        $.subscribe("/previews/pause", function(isPaused) {
-          return paused = isPaused;
-        });
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
         canvas.width = 360;
@@ -156,7 +153,7 @@
               filters = new kendo.View(nextPage, previewTemplate, data);
               html = filters.render();
               html.find(".canvas").append(filter).append(img).click(function() {
-                paused = true;
+                $.publish("/preview/pause", [true]);
                 return $.publish("/full/show", [item]);
               });
               previews.push({
@@ -213,7 +210,8 @@
           return $("[data-filter-name='" + e.key + "']", selector).find("img").attr("src", e.src);
         });
         return $.subscribe("/preview/pause", function(pause) {
-          return paused = pause;
+          paused = pause;
+          return keyboard(!pause);
         });
       }
     };
