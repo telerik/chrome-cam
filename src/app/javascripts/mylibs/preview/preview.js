@@ -56,8 +56,18 @@
     };
     keyboard = function(enabled) {
       if (enabled) {
+<<<<<<< HEAD
         return keyboard.token = $.subscribe("/keyboard/arrow", function(e) {
+<<<<<<< HEAD
           if (!flipping) return page(e);
+=======
+=======
+        return $.subscribe("/keyboard/arrow", function(e) {
+>>>>>>> auto-gen
+          if (!flipping) {
+            return page(e);
+          }
+>>>>>>> auto-gen
         });
       } else {
         return $.unsubscribe(keyboard.token);
