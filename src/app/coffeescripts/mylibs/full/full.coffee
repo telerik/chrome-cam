@@ -144,6 +144,9 @@ define([
 			$.subscribe "/capture/video", ->
 				pub.video()
 
+			$.subscribe "/keyboard/esc", ->
+				$.publish "/full/hide" unless paused
+
 			draw()
 
 		show: (item) ->
