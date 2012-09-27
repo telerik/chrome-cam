@@ -36,6 +36,8 @@ body div { padding-top: 0px; }
   user-select: none;
 }
 
+.km-button, button, .button { cursor: pointer; }
+
 /************ Animations ************/
 
 .animate { -webkit-transition: all 0.5s ease-out; }
@@ -89,6 +91,68 @@ body div { padding-top: 0px; }
 /* Bar Contents */
 
 .delete { background-image: url('images/cameraModeSpritex2.png'); }
+
+.kd-button-submit:focus, .kd-button-submit.focus,
+.kd-button-share:focus, .kd-button-share.focus,
+.kd-button-action:focus, .kd-button-action.focus{
+	box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
+}	
+.kd-button-submit:focus, .kd-button-submit.focus,
+.kd-button-share:focus, .kd-button-share.focus,
+.kd-button-action:focus, .kd-button-action.focus {
+	border-color:#404040;
+}
+
+.kd-button-submit:focus:hover, .kd-button-submit.focus:hover,
+.kd-button-share:focus:hover, .kd-button-share.focus:hover,
+.kd-button-action:focus:hover, .kd-button-action.focus:hover{
+	box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
+	-webkit-box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
+}
+
+.kd-button-submit,
+.kd-button-share,
+.kd-button-action {
+	border: 1px solid #505050;
+	color: #FFF;
+	background-color: #666;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#777),to(#555));
+	background-image: -webkit-linear-gradient(top,#777,#555);
+	background-image: linear-gradient(top,#777,#555);
+}
+.kd-button-submit:hover,
+.kd-button-share:hover,
+.kd-button-action:hover {
+	border: 1px solid #404040;
+	color: #FFF;
+	background-color: #555;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#666),to(#444));
+	background-image: -webkit-linear-gradient(top,#666,#444);
+	background-image: linear-gradient(top,#666,#444);
+}
+.kd-button-submit:active, .kd-button-submit:focus:active, .kd-button-submit.focus:active,
+.kd-button-share:active, .kd-button-share:focus:active, .kd-button-share.focus:active,
+.kd-button-action:active, .kd-button-action:focus:active, .kd-button-action.focus:active {
+	-webkit-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.3);
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.3);
+}
+
+.kd-button-share { text-shadow: 0px 1px rgba(0,0,0,0.1); }
+.kd-button-share:hover { text-shadow: 0px 1px rgba(0,0,0,0.3); }
+.kd-button-action {
+	margin-bottom: 16px;
+	text-transform: uppercase;
+	letter-spacing:1;
+	text-shadow: 0px 1px rgba(0,0,0,0.1);
+}
+.kd-button-action:hover {
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+	box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+}
+.kd-button-action:visited,
+.kd-button-share:visited,
+.kd-button-submit:visited { color: #FFF; }
 
 .mode { margin-right: 10px; }
     .mode .km-button { min-width: 20px; width: 20px; }
@@ -429,10 +493,12 @@ body div { padding-top: 0px; }
 	.full > div { 
 		margin: auto;
 		width: 720px;
-		display: -webkit-box;
-		-webkit-box-align: center;
-		height: 100%;
+		height: 480px;
+		position: relative;
+		top: 50%;
+		margin-top: -240px;
 	}
+	.wrapper canvas { position: absolute; }
 	.full .flash {
 		position: absolute;
 		width: 100%;
