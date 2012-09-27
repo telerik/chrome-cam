@@ -113,6 +113,9 @@
         type: "saveFile",
         suggestedName: name
       }, function(fileEntry) {
+        if (fileEntry == null) {
+          return;
+        }
         return fileEntry.createWriter(function(fileWriter) {
           fileWriter.onwriteend = function(e) {
             return $.publish("/notify/show", ["File Saved", "The picture was saved succesfully", false]);

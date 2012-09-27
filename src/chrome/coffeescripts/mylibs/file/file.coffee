@@ -132,6 +132,8 @@ define([
 
     # invoke the chrome file chooser saying that we are going to save a file
     chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
+      
+      return unless fileEntry?
 
       # create the writer
       fileEntry.createWriter (fileWriter) ->
