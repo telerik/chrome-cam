@@ -112,6 +112,11 @@
         $.subscribe("/capture/video", function() {
           return pub.video();
         });
+        $.subscribe("/keyboard/esc", function() {
+          if (!paused) {
+            return $.publish("/full/hide");
+          }
+        });
         return draw();
       },
       show: function(item) {
