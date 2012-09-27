@@ -28,7 +28,7 @@ define [
         
         gallery:
             clear: ->
-                $.publish "/confirm/show", [ CONFIRM_TEXT, "/gallery/clear" ]
+                $.publish "/confirm/show", [ "Remove All", CONFIRM_TEXT, -> $.publish("/gallery/clear") ]
 
     pub = 
 

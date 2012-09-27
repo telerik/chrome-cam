@@ -24,7 +24,11 @@
       },
       gallery: {
         clear: function() {
-          return $.publish("/confirm/show", [CONFIRM_TEXT, "/gallery/clear"]);
+          return $.publish("/confirm/show", [
+            "Remove All", CONFIRM_TEXT, function() {
+              return $.publish("/gallery/clear");
+            }
+          ]);
         }
       }
     });
