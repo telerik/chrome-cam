@@ -1,7 +1,7 @@
 (function() {
 
   define(['mylibs/assets/assets', 'libs/face/ccv', 'libs/face/face'], function(assets) {
-    var draw, eyeFactor, faces, ghostBuffer, pox, pub, simple, timeStripsBuffer, webgl;
+    var draw, eyeFactor, faces, ghostBuffer, pox, pub, simple, texture, timeStripsBuffer, webgl;
     faces = [];
     eyeFactor = .05;
     timeStripsBuffer = [];
@@ -9,14 +9,13 @@
     webgl = fx.canvas();
     pox = new Image();
     pox.src = "images/pox.png";
+    texture = null;
     draw = function(canvas, element, effect) {
-      var ctx, texture;
+      var ctx;
       ctx = canvas.getContext("2d");
-      texture = webgl.texture(element);
       webgl.draw(texture);
       effect(webgl, element);
       webgl.update();
-      texture.destroy();
       return ctx.drawImage(webgl, 0, 0, webgl.width, webgl.height);
     };
     simple = function(canvas, element, x, y, width, height) {
@@ -30,6 +29,13 @@
         return ghostBuffer = [];
       },
       init: function() {},
+      advance: function(element) {
+        if (texture != null) {
+          return texture.loadContentsOf(element);
+        } else {
+          return texture = webgl.texture(element);
+        }
+      },
       data: [
         {
           id: "normal",

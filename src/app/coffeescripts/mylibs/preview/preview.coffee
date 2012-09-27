@@ -2,9 +2,7 @@ define [
   'mylibs/effects/effects'
   'mylibs/utils/utils'
   'text!mylibs/preview/views/preview.html'
-  'text!mylibs/preview/views/half.html'
-  'text!mylibs/preview/views/page.html'
-], (effects, utils, previewTemplate, halfTemplate, pageTemplate) ->
+], (effects, utils, previewTemplate) ->
     
     ###     Select Preview
 
@@ -45,6 +43,8 @@ define [
                 # get the 2d canvas context and draw the image
                 # this happens at the curent framerate
                 ctx.drawImage stream.canvas, 0, 0, canvas.width, canvas.height
+
+                effects.advance canvas
                 
                 # for each of the preview objects, create a texture of the 
                 # 2d canvas and then apply the webgl effect. these are live
@@ -87,7 +87,8 @@ define [
             $.unsubcribe "/keyboard/arrow"
 
     page = (direction) ->
-
+        arrows.both.hide()
+        
         # if the direction requested was left
         if direction == "left"
 
@@ -111,6 +112,21 @@ define [
                 # go to the previous page
                 ds.page(ds.page() - 1)
 
+    arrows =
+        left: null
+        right: null
+        both: null
+        init: (parent) ->
+            arrows.left = parent.find(".previous")
+            arrows.left.hide()
+            arrows.right = parent.find(".next")
+            arrows.both = $([arrows.left[0], arrows.right[0]])
+
+            # in this case, "right" means "previous" and "left" means "next" because of the "natural" scrolling
+            arrows.left.on "click", ->
+                page "right"
+            arrows.right.on "click", ->
+                page "left"
 
     # anything under here is public
     pub = 
@@ -158,6 +174,8 @@ define [
 
             previousPage = page1.render().addClass("page")
             nextPage = page2.render().addClass("page")
+
+            arrows.init $(selector).parent()
 
             # create a new kendo data source
             ds = new kendo.data.DataSource
@@ -232,6 +250,9 @@ define [
                         justPaged.empty()
 
                         flipping = false
+
+                        arrows.left.show() if ds.page() > 1
+                        arrows.right.show() if ds.page() < ds.totalPages()
 
                     flippy = ->
                         page1.container.kendoAnimate

@@ -1,11 +1,11 @@
 (function() {
 
-  define(['mylibs/effects/effects', 'mylibs/utils/utils', 'text!mylibs/preview/views/preview.html', 'text!mylibs/preview/views/half.html', 'text!mylibs/preview/views/page.html'], function(effects, utils, previewTemplate, halfTemplate, pageTemplate) {
+  define(['mylibs/effects/effects', 'mylibs/utils/utils', 'text!mylibs/preview/views/preview.html'], function(effects, utils, previewTemplate) {
     /*     Select Preview
     
     Select preview shows pages of 6 live previews using webgl effects
     */
-    var animation, canvas, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
+    var animation, arrows, canvas, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
     paused = false;
     canvas = {};
     ctx = {};
@@ -29,6 +29,7 @@
         var eventData, imageData, preview, previewContext, _i, _len;
         if (!paused) {
           ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
+          effects.advance(canvas);
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
             frame++;
@@ -63,12 +64,30 @@
       }
     };
     page = function(direction) {
+      arrows.both.hide();
       if (direction === "left") {
         animation.reverse = false;
         if (ds.page() < ds.totalPages()) return ds.page(ds.page() + 1);
       } else {
         animation.reverse = true;
         if (ds.page() > 1) return ds.page(ds.page() - 1);
+      }
+    };
+    arrows = {
+      left: null,
+      right: null,
+      both: null,
+      init: function(parent) {
+        arrows.left = parent.find(".previous");
+        arrows.left.hide();
+        arrows.right = parent.find(".next");
+        arrows.both = $([arrows.left[0], arrows.right[0]]);
+        arrows.left.on("click", function() {
+          return page("right");
+        });
+        return arrows.right.on("click", function() {
+          return page("left");
+        });
       }
     };
     return pub = {
@@ -96,6 +115,7 @@
         page2 = new kendo.View(selector, null);
         previousPage = page1.render().addClass("page");
         nextPage = page2.render().addClass("page");
+        arrows.init($(selector).parent());
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
@@ -150,7 +170,9 @@
               previousPage = nextPage;
               nextPage = justPaged;
               justPaged.empty();
-              return flipping = false;
+              flipping = false;
+              if (ds.page() > 1) arrows.left.show();
+              if (ds.page() < ds.totalPages()) return arrows.right.show();
             };
             flippy = function() {
               return page1.container.kendoAnimate({

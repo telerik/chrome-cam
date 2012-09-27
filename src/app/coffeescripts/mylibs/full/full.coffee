@@ -39,7 +39,8 @@ define([
 
 	 			# pass in the webgl canvas, the canvas that contains the 
 	            # video drawn from the application canvas and the current frame.
-	            effect(canvas, stream.canvas, frame, stream.track)
+	            effects.advance stream.canvas
+	            effect canvas, stream.canvas, frame, stream.track
 
 	            # if we are recording, dump this canvas to a pixel array
 	            if recording
@@ -193,17 +194,31 @@ define([
 		paparazzi: ->
 
 			# build a gross callback tree and fling poo
+			wrapper = full.container.find(".wrapper")
+			wrapper.find(".paparazzi").removeClass "hidden"
+
+			left = 4
+			advance = ->
+				wrapper.removeClass "paparazzi-#{left}"
+				left -= 1
+				wrapper.addClass "paparazzi-#{left}"
+
 			callback = ->
 				
 				callback = ->
 
 					callback = ->
 						$.publish "/bottom/update", [ "full" ]
+						wrapper.removeClass "paparazzi-1"
+						wrapper.find(".paparazzi").removeClass "hidden"
 					
+					advance()
 					capture(callback)
 
+				advance()
 				capture(callback)
 
+			advance()
 			capture(callback)
 
 		video: ->

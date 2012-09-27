@@ -16,18 +16,17 @@ define([
     pox = new Image()
     pox.src = "images/pox.png"
 
-    draw = (canvas, element, effect) ->
+    texture = null
 
+    draw = (canvas, element, effect) ->
         ctx = canvas.getContext "2d"
 
-        texture = webgl.texture(element)
         webgl.draw texture
         # canvas.draw(texture)
 
         effect webgl, element
 
         webgl.update()
-        texture.destroy()
 
         ctx.drawImage webgl, 0, 0, webgl.width, webgl.height
 
@@ -44,6 +43,12 @@ define([
             ghostBuffer = []
 
         init: ->
+
+        advance: (element) ->
+            if texture?
+                texture.loadContentsOf element
+            else
+                texture = webgl.texture(element)
 
         data: [ 
 
