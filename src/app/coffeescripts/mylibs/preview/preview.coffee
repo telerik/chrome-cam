@@ -33,6 +33,8 @@ define [
 
     isFirstChange = true
 
+    arrows = {}
+
     # the main draw loop which renders the live video effects      
     draw = ->
 
@@ -109,6 +111,9 @@ define [
                 # go to the previous page
                 ds.page(ds.page() - 1)
 
+        arrows.left.toggle ds.page() > 1
+        arrows.right.toggle ds.page() < ds.totalPages()
+
 
     # anything under here is public
     pub = 
@@ -156,6 +161,11 @@ define [
 
             previousPage = page1.render().addClass("page")
             nextPage = page2.render().addClass("page")
+
+            parent = $(selector).parent()
+            arrows.left = parent.find(".previous")
+            arrows.left.hide()
+            arrows.right = parent.find(".next")
 
             # create a new kendo data source
             ds = new kendo.data.DataSource

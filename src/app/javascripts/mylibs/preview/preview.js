@@ -7,7 +7,7 @@
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var animation, canvas, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
+    var animation, arrows, canvas, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
     paused = false;
     canvas = {};
     ctx = {};
@@ -28,6 +28,7 @@
       duration: 800
     };
     isFirstChange = true;
+    arrows = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         var eventData, imageData, preview, previewContext, _i, _len;
@@ -72,14 +73,16 @@
       if (direction === "left") {
         animation.reverse = false;
         if (ds.page() < ds.totalPages()) {
-          return ds.page(ds.page() + 1);
+          ds.page(ds.page() + 1);
         }
       } else {
         animation.reverse = true;
         if (ds.page() > 1) {
-          return ds.page(ds.page() - 1);
+          ds.page(ds.page() - 1);
         }
       }
+      arrows.left.toggle(ds.page() > 1);
+      return arrows.right.toggle(ds.page() < ds.totalPages());
     };
     return pub = {
       draw: function() {
@@ -94,7 +97,7 @@
         }
       },
       init: function(selector) {
-        var nextPage, page1, page2, previousPage;
+        var nextPage, page1, page2, parent, previousPage;
         effects.init();
         keyboard(true);
         $.subscribe("/previews/pause", function(isPaused) {
@@ -108,6 +111,10 @@
         page2 = new kendo.View(selector, null);
         previousPage = page1.render().addClass("page");
         nextPage = page2.render().addClass("page");
+        parent = $(selector).parent();
+        arrows.left = parent.find(".previous");
+        arrows.left.hide();
+        arrows.right = parent.find(".next");
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 6,
