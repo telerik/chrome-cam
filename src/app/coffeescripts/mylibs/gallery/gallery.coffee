@@ -149,6 +149,8 @@ define [
             thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
             thumbs.push(dom: thumbnail.render(), data: item)
 
+        $("#gallery").css "pointer-events", "none"
+
         complete = =>
 
             setTimeout(->
@@ -170,6 +172,8 @@ define [
             pages.next = justPaged
 
             flipping = false
+
+            $("#gallery").css "pointer-events", "auto"
 
         if flip
 

@@ -1,17 +1,18 @@
 (function() {
 
   define(['libs/face/ccv', 'libs/face/face'], function() {
-    var backCanvas, backContext, cache, h, pub, w;
+    var backCanvas, backContext, cache, enabled, h, pub, w;
     backCanvas = document.createElement("canvas");
     backContext = backCanvas.getContext("2d");
     w = 300 / 4 * 0.8;
     h = 270 / 4 * 0.8;
     cache = {};
+    enabled = false;
     return pub = {
       init: function(x, y, width, height) {
         backCanvas.width = 120;
         backCanvas.height = 80;
-        return cache.comp = [
+        cache.comp = [
           {
             x: x,
             y: y,
@@ -19,6 +20,10 @@
             height: backCanvas.height
           }
         ];
+        return $.subscribe("/tracking/enable", function(set) {
+          console.log("Face tracking: " + set);
+          return enabled = set;
+        });
       },
       track: function(video) {
         var comp, i, track, _i, _len, _ref;
@@ -26,6 +31,9 @@
           faces: [],
           trackWidth: backCanvas.width
         };
+        if (!enabled) {
+          return track;
+        }
         backContext.drawImage(video, 0, 0, backCanvas.width, backCanvas.height);
         comp = ccv.detect_objects(cache.ccv = cache.ccv || {
           canvas: ccv.grayscale(backCanvas),

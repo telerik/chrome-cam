@@ -249,6 +249,7 @@ define([
             {
                 id: "frogman"
                 name: "Frogman"
+                tracks: true
                 filter: (canvas, element, frame, track) ->
 
                     if track.faces.length != 0
@@ -281,6 +282,7 @@ define([
             {
                 id: "chubbyBunny"
                 name: "Chubby Bunny"
+                tracks: true
                 filter: (canvas, element, frame, stream) ->
 
                     if stream.faces.length != 0
@@ -313,6 +315,7 @@ define([
             {
                 id: "giraffe"
                 name: "Giraffe"
+                tracks: true
                 filter: (canvas, element, frame, stream) ->
 
                     if stream.faces.length != 0
@@ -342,6 +345,7 @@ define([
             {
                 id: "chickenPox"
                 name: "Chicken Pox"
+                tracks: true
                 filter: (canvas, element, frame, stream) ->
 
                     if stream.faces.length != 0

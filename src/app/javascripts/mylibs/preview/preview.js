@@ -100,10 +100,11 @@
           data: effects.data,
           pageSize: 6,
           change: function() {
-            var flipCompleted, flippy, index, item, _fn, _i, _len, _ref;
+            var flipCompleted, flippy, index, item, tracks, _fn, _i, _len, _ref;
             flipping = true;
             previews = [];
             index = 0;
+            tracks = false;
             _ref = this.view();
             _fn = function(item) {
               var data, filter, filters, html, img;
@@ -126,16 +127,18 @@
                 paused = true;
                 return $.publish("/full/show", [item]);
               });
-              return previews.push({
+              previews.push({
                 canvas: filter,
                 filter: item.filter,
                 name: item.name
               });
+              return tracks = tracks || item.tracks;
             };
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               item = _ref[_i];
               _fn(item);
             }
+            $.publish("/postman/deliver", [tracks, "/tracking/enable"]);
             page1.container.find("canvas").hide();
             page1.container.find("img").show();
             shouldUpdateThumbnails = true;

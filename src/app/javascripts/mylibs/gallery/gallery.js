@@ -156,6 +156,7 @@
           data: item
         });
       }
+      $("#gallery").css("pointer-events", "none");
       complete = function() {
         var justPaged;
         setTimeout(function() {
@@ -177,7 +178,8 @@
         justPaged.empty();
         pages.previous = pages.next;
         pages.next = justPaged;
-        return flipping = false;
+        flipping = false;
+        return $("#gallery").css("pointer-events", "auto");
       };
       if (flip) {
         return container.kendoAnimate({
