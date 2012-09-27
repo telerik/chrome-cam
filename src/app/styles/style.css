@@ -15,14 +15,14 @@
 
 html, body, #wrap {
 	height: 100%;
+<<<<<<< HEAD
+	font-family: 'Droid Sans', sans-serif;
+=======
 	background-color: #f1f1f1 !important;
 	font-family: 'Droid Sans';
 	letter-spacing: 0em;
+>>>>>>> 126a2b4d3d8b73c6526d68650293cc7a2943580b
 	overflow: hidden;
-}
-
-.km-blackberry, .km-blackberry .km-content {
-	background-color: #f1f1f1 !important;
 }
 
 /*  fix for the position: relative which is set
@@ -94,7 +94,6 @@ body div { padding-top: 0px; }
 	}
 
 .km-header .right, .km-footer .right {
-	text-align: right;
 	padding-right: 35px;
 	-webkit-box-pack: end;
 }
@@ -286,11 +285,11 @@ body div { padding-top: 0px; }
 
 .km-popup-arrow { left: 88px !important; }
 
-.km-scroll-container p {
+/*.km-scroll-container p {
 	margin: 1em;
 	font-size: .7em;
 	text-align: center;
-}
+}*/
 	.km-scroll-container p:first-child { margin-top: 2em; }
 	.km-scroll-container a {
 		background-color: #555;

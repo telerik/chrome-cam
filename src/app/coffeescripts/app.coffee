@@ -31,6 +31,7 @@ define([
 			APP.gallery = gallery
 			APP.settings = settings
 			APP.about = about
+			APP.confirm = confirm
 
 			# bind document level events
 			events.init()
@@ -82,6 +83,6 @@ define([
 				# we are done loading the app. have the postman deliver that msg.
 				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
 
-				window.APP.app = new kendo.mobile.Application document.body, { platform: "blackberry" }
+				window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
 
 )

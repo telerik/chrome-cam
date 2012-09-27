@@ -4,33 +4,30 @@ define [
 ], (kendo, template) ->
 	
 	view = {}
-
-	viewModel = kendo.observable {
-
-		callback: ""
-		
-		ok: (e) ->
-			view.container.data("kendoMobileModalView").close()
-			$.publish @.get("callback")
-
-		cancel: (e) ->
-			view.container.data("kendoMobileModalView").close()
-
-	}
+	@callback = null
 
 	pub = 
+
+		yes: (e) =>
+			view.data("kendoMobileModalView").close()
+			if @callback
+				@callback()
+
+		no: (e) ->
+			view.data("kendoMobileModalView").close()
 	
-		init: (selector) ->
+		init: (selector) =>
 
-			view = new kendo.View(selector, template)
-			view.render(viewModel, true)
-			view.find(".message", "message")
+			# view = new kendo.View(selector, template)
+			# view.render(viewModel, true)
+			view = $(selector)
 
-			$.subscribe "/confirm/show", (message, callback) ->
+			$.subscribe "/confirm/show", (title, message, callback) =>
 
-				viewModel.set("callback", callback)
+				@callback = callback
 
-				view.el.message.html(message)
+				view.find(".title").html(title)
+				view.find(".message").html(message)
 
-				view.container.data("kendoMobileModalView").open()
+				view.data("kendoMobileModalView").open()
 

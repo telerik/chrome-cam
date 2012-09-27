@@ -12,6 +12,7 @@
         APP.gallery = gallery;
         APP.settings = settings;
         APP.about = about;
+        APP.confirm = confirm;
         events.init();
         postman.init(window.top);
         assets.init();
@@ -37,7 +38,7 @@
             }, "/app/ready"
           ]);
           return window.APP.app = new kendo.mobile.Application(document.body, {
-            platform: "blackberry"
+            platform: "android"
           });
         });
       }

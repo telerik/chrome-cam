@@ -19,7 +19,7 @@ define [
 				e.preventDefault()
 		destroy:
 			click: (e) ->
-				$.publish "/confirm/show", [ CONFIRM_TEXT, "/gallery/delete" ]
+				$.publish "/confirm/show", [ "Delete", CONFIRM_TEXT, -> $.publish("/gallery/delete") ]
 		share:
 			save: (e) ->
 				file = @.get("current")

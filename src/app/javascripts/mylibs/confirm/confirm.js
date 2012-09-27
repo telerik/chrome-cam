@@ -2,27 +2,27 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/confirm/views/confirm.html'], function(kendo, template) {
-    var pub, view, viewModel;
+    var pub, view,
+      _this = this;
     view = {};
-    viewModel = kendo.observable({
-      callback: "",
-      ok: function(e) {
-        view.container.data("kendoMobileModalView").close();
-        return $.publish(this.get("callback"));
-      },
-      cancel: function(e) {
-        return view.container.data("kendoMobileModalView").close();
-      }
-    });
+    this.callback = null;
     return pub = {
+      yes: function(e) {
+        view.data("kendoMobileModalView").close();
+        if (_this.callback) {
+          return _this.callback();
+        }
+      },
+      no: function(e) {
+        return view.data("kendoMobileModalView").close();
+      },
       init: function(selector) {
-        view = new kendo.View(selector, template);
-        view.render(viewModel, true);
-        view.find(".message", "message");
-        return $.subscribe("/confirm/show", function(message, callback) {
-          viewModel.set("callback", callback);
-          view.el.message.html(message);
-          return view.container.data("kendoMobileModalView").open();
+        view = $(selector);
+        return $.subscribe("/confirm/show", function(title, message, callback) {
+          _this.callback = callback;
+          view.find(".title").html(title);
+          view.find(".message").html(message);
+          return view.data("kendoMobileModalView").open();
         });
       }
     };

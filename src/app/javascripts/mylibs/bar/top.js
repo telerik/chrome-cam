@@ -19,7 +19,11 @@
       },
       destroy: {
         click: function(e) {
-          return $.publish("/confirm/show", [CONFIRM_TEXT, "/gallery/delete"]);
+          return $.publish("/confirm/show", [
+            "Delete", CONFIRM_TEXT, function() {
+              return $.publish("/gallery/delete");
+            }
+          ]);
         }
       },
       share: {
