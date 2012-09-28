@@ -23,7 +23,12 @@ define [
     animation = 
         effects: "pageturn:horizontal"
         reverse: false
-        duration: 800      
+        duration: 800   
+
+    deselect = =>
+        container.find(".thumbnail").removeClass "selected"
+        selected = null
+        $.publish "/top/update", [ "deselected" ]
 
     select = (name) =>
 
@@ -32,10 +37,13 @@ define [
         container.find(".thumbnail").removeClass "selected"
         selected.addClass "selected"
 
+        $.publish "/item/selected", [get(name)]
+
+
     page = (direction) =>
 
         return if flipping
-        
+
         if direction > 0 and @ds.page() > 1
             flipping = true
             animation.reverse = true
@@ -96,7 +104,9 @@ define [
         create: (data) =>
             @ds = new kendo.data.DataSource
                 data: data
-                pageSize: 12                    
+                pageSize: 12 
+                change: ->
+                    deselect()                   
                 sort:
                     dir: "desc" 
                     field: "name"  
@@ -245,7 +255,6 @@ define [
             page1.container.on "click", ".thumbnail", ->
                 thumb = $(@).children(":first")            
                 $.publish "/top/update", ["selected"]
-                $.publish "/item/selected", [get("#{thumb.data("name")}")]
                 select thumb.data("name")
 
             $.subscribe "/pictures/bulk", (message) =>

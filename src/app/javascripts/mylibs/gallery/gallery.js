@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, at, container, create, data, dataSource, destroy, ds, el, files, flipping, get, index, page, pageSize, pages, pub, render, select, selected, total,
+    var active, add, animation, at, container, create, data, dataSource, deselect, destroy, ds, el, files, flipping, get, index, page, pageSize, pages, pub, render, select, selected, total,
       _this = this;
     pageSize = 12;
     files = [];
@@ -23,10 +23,16 @@
       reverse: false,
       duration: 800
     };
+    deselect = function() {
+      container.find(".thumbnail").removeClass("selected");
+      selected = null;
+      return $.publish("/top/update", ["deselected"]);
+    };
     select = function(name) {
       selected = container.find("[data-name='" + name + "']").parent(":first");
       container.find(".thumbnail").removeClass("selected");
-      return selected.addClass("selected");
+      selected.addClass("selected");
+      return $.publish("/item/selected", [get(name)]);
     };
     page = function(direction) {
       if (flipping) return;
@@ -93,6 +99,9 @@
         return _this.ds = new kendo.data.DataSource({
           data: data,
           pageSize: 12,
+          change: function() {
+            return deselect();
+          },
           sort: {
             dir: "desc",
             field: "name"
@@ -237,7 +246,6 @@
           var thumb;
           thumb = $(this).children(":first");
           $.publish("/top/update", ["selected"]);
-          $.publish("/item/selected", [get("" + (thumb.data("name")))]);
           return select(thumb.data("name"));
         });
         $.subscribe("/pictures/bulk", function(message) {

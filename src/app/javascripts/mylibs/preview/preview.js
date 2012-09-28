@@ -168,17 +168,8 @@
               nextPage = justPaged;
               justPaged.empty();
               flipping = false;
-<<<<<<< HEAD
               if (ds.page() > 1) arrows.left.show();
               if (ds.page() < ds.totalPages()) arrows.right.show();
-=======
-              if (ds.page() > 1) {
-                arrows.left.show();
-              }
-              if (ds.page() < ds.totalPages()) {
-                arrows.right.show();
-              }
->>>>>>> auto-gen
               return $.publish("/postman/deliver", [false, "/camera/pause"]);
             };
             flippy = function() {
