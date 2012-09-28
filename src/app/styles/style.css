@@ -446,9 +446,11 @@ h3 { padding: 20px 0; }
 	position: absolute;
 	top: 50%;
 	margin-top: -18px;
-	line-height: 0;
 	cursor: pointer;
-	color: #d4d4d4;
+	color: #D4D4D4;
+	height: 55px;
+	overflow: hidden;
+	line-height: 35px;
 }
 	.previous:hover, .next:hover { color: #2d2d2d; }
 	.previous { left: 10px; }
@@ -649,15 +651,23 @@ h3 { padding: 20px 0; }
 	}
 	.about h3 { 
 		background: url("images/kendoUILogo.png") -12px 0 no-repeat;
-		padding: 15px 0 40px 60px;
+		padding: 20px 0 40px 60px;
 		background-size: 80px 80px;
+		width: 440px;
 	}
 	.about h4 { 
 		font-weight: normal;
 		position: relative;
-		top: -40px;
-		left: 30px;
+		top: -38px;
+		left: -53px;
 		font-size: 13px; 
+	}
+	.about h5 {
+		position: relative;
+		top: -27px;
+		font-size: .7em;
+		left: 28px;
+		color: #777;
 	}
 
 .appInfoHeader + * {
