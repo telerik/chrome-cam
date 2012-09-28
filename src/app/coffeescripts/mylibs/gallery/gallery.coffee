@@ -55,6 +55,12 @@ define [
             @ds.page @ds.page() + 1
             render(true)
 
+    clear = ->
+        pages.previous.empty()
+        pages.next.empty()
+
+        $.publish "/postman/deliver", [ {}, "/file/read" ]
+
     destroy = ->
 
         name = selected.children(":first").attr("data-name")
@@ -275,8 +281,7 @@ define [
             $.subscribe "/gallery/clear", =>
                 window.APP.app.showLoading()
                 filewrapper.clear().done =>
-                    for item in @ds.data()
-                        @ds.remove(item)
+                    clear()
                     window.APP.app.hideLoading()
                     $.publish "/bottom/thumbnail"
 
