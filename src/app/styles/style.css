@@ -25,9 +25,9 @@ html, body, #wrap {
 	by the mobile framework and does not work in
 	chrome apps
 */
-#static {
-	position: static;
-}
+#static { position: static; }
+
+.absolute { position: absolute; }
 
 body > #wrap { height: 100%;}
 
@@ -65,9 +65,7 @@ body div { padding-top: 0px; }
 	clear: both;
 }
 
-.km-footer {
-	background-color: transparent;
-}
+.km-footer { background-color: transparent; }
 
 .bar {
 	width: 100%;
@@ -198,9 +196,7 @@ body div { padding-top: 0px; }
 	margin-top: 10px;
 	cursor: pointer;
 }
-	.bar .gray:hover {
-		-webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .5);
-	}
+	.bar .gray:hover { -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .5); }
 	.bar .gray:after {
 		display: block;
 		content: '';
@@ -248,10 +244,6 @@ body div { padding-top: 0px; }
 	width: 72px;
 	margin-left: 20px;
     box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, .75);
-}
-
-.absolute {
-	position: absolute;
 }
 
 #destination {
@@ -354,13 +346,6 @@ body div { padding-top: 0px; }
 	height: 600px;
 }
 
-.half {
-	margin: 0 auto;
-}
-
-.half + .half { margin-top: 26px; }
-.gallery-row + .gallery-row { margin-top: 13px; }
-
 .preview { 
 	float: left;
 	-webkit-transition: -webkit-transform .02s ease-in-out;
@@ -440,8 +425,7 @@ body div { padding-top: 0px; }
 	-webkit-box-align: center;
 }
 
-.details img,
-.details video {
+.details img, .details video {
 	display: block;
 	margin: auto;
 }
@@ -475,32 +459,6 @@ body div { padding-top: 0px; }
 }
 	.preview-title h2 { font-size: 30px; }
 
-/* Share Styles */
-
-.shareList li {
-	margin: 0 !important;
-	padding: 0 !important;
-}
-
-.shareList a {
-	overflow: hidden;
-	text-indent: 999px;
-	background-image: url('images/socialIcons.png');
-	background-size: 35px;
-	background-repeat: no-repeat;
-	width: 35px;
-	padding: 0 !important;
-	margin: 0 !important;
-	height: 35px;
-	cursor: pointer;
-	opacity: .85;
-}
-	.shareList a:hover { opacity: 1; }
-	.shareList .google { background-position: 0 -37px; }
-	.shareList .twitter { background-position: 0 -74px; }
-	.shareList .download { background-position: 0 100%; }
-
-
 /************ Full Styles ************/
 
 .full {
@@ -528,7 +486,6 @@ body div { padding-top: 0px; }
 		height: 100%;
 		background-color: #EDEDED;
 	}
-
 	.full .transfer {
 		position: absolute;
 		background-color: #EDEDED;
@@ -564,7 +521,6 @@ body div { padding-top: 0px; }
 	}
 
 .paparazzi { left: 50px; }
-
 .paparazzi, .paparazzi:before, .paparazzi:after {
 	border: 1px solid #ddd;
 	height: 20px;
@@ -591,7 +547,7 @@ body div { padding-top: 0px; }
 .paparazzi-3 .paparazzi:after
  { background: #ddd; }
 
-/* Loader Styles */
+/************ Loader Styles ************/
 
 #circleG { width:149.33333333333334px; }
 
@@ -627,7 +583,13 @@ body div { padding-top: 0px; }
 	100% { opacity:0.3; }
 }
 
-/* About and Settings Pages */
+a.canvas img { display: none; }
+
+.flipping a.canvas canvas { display: none; }
+
+.flipping a.canvas img { display: block; }
+
+/************ About and Settings Pages ************/
 
 .about, .settings {
 	display: -webkit-box;
@@ -715,7 +677,7 @@ body div { padding-top: 0px; }
 			text-align: center;
 		}
 
-/* Clearfix */
+/************ Clearfix ************/
 
 .clearfix:after {
 	content: ".";
@@ -736,16 +698,4 @@ html[xmlns] .clearfix {
  
 * html .clearfix {
 	height: 1%;
-}
-
-a.canvas img {
-	display: none;
-}
-
-.flipping a.canvas canvas {
-	display: none;
-}
-
-.flipping a.canvas img {
-	display: block;
 }
