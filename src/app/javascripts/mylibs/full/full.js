@@ -205,7 +205,7 @@
             callback = function() {
               $.publish("/bottom/update", ["full"]);
               full.el.wrapper.removeClass("paparazzi-1");
-              return full.el.paparazzi.removeClass("hidden");
+              return full.el.paparazzi.addClass("hidden");
             };
             advance();
             return capture(callback);

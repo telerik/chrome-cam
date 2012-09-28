@@ -242,7 +242,7 @@ define([
                     callback = ->
                         $.publish "/bottom/update", [ "full" ]
                         full.el.wrapper.removeClass "paparazzi-1"
-                        full.el.paparazzi.removeClass "hidden"
+                        full.el.paparazzi.addClass "hidden"
                     
                     advance()
                     capture(callback)
