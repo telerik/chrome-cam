@@ -36,7 +36,10 @@
       $.publish("/top/update", ["gallery"]);
       return _this.details.container.kendoStop(true).kendoAnimate({
         effects: "zoomOut",
-        hide: true
+        hide: true,
+        complete: function() {
+          return $.unsubscribe("/gallery/delete");
+        }
       });
     };
     show = function(message) {
@@ -45,7 +48,10 @@
         effects: "zoomIn",
         show: true,
         complete: function() {
-          return $.publish("/top/update", ["details"]);
+          $.publish("/top/update", ["details"]);
+          return $.subscribe("/gallery/delete", function() {
+            return hide();
+          });
         }
       });
     };
@@ -66,9 +72,6 @@
         _this.details = new kendo.View(selector, template);
         _this.details.render(viewModel, true);
         $.subscribe("/details/hide", function() {
-          return hide();
-        });
-        $.subscribe("/gallery/delete", function() {
           return hide();
         });
         $.subscribe("/details/show", function(message) {

@@ -29,6 +29,8 @@ define [
         @details.container.kendoStop(true).kendoAnimate
             effects: "zoomOut"
             hide: true
+            complete: ->
+                $.unsubscribe "/gallery/delete"
 
     show = (message) =>
         update(message)
@@ -37,6 +39,8 @@ define [
             show: true 	
             complete: ->
                 $.publish "/top/update", ["details"]
+                $.subscribe "/gallery/delete", ->
+                    hide()
 
     update = (message) ->
         viewModel.set("type", message.item.type)
@@ -60,13 +64,10 @@ define [
             $.subscribe "/details/hide", ->
                 hide()
 
-            $.subscribe "/gallery/delete", ->
-                hide()
-
             $.subscribe "/details/show", (message) ->
                 show(message)
 
-            $.subscribe "/details/update", (message) ->
+            $.subscribe "/details/update", (message) =>
                 update(message)
 
             $.subscribe "/keyboard/arrow", (direction) ->
