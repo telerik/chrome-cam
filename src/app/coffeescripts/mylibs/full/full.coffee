@@ -102,6 +102,10 @@ define([
 
 			flash(callback, file)
 
+	index = ->
+		# return is compulsory here.
+		return i for i in [0...effects.data.length] when effects.data[i].filter is effect
+
 	pub = 
 
 		init: (selector) ->
@@ -152,6 +156,8 @@ define([
 		show: (item) ->
 
 			effect = item.filter
+
+			console.log index()
 
 			paused = false
 

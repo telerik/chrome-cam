@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
+    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
     SECONDS_TO_RECORD = 6;
     canvas = {};
     ctx = {};
@@ -80,6 +80,14 @@
         return flash(callback, file);
       });
     };
+    index = function() {
+      var i, _i, _ref;
+      for (i = _i = 0, _ref = effects.data.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        if (effects.data[i].filter === effect) {
+          return i;
+        }
+      }
+    };
     return pub = {
       init: function(selector) {
         full = new kendo.View(selector, template);
@@ -121,6 +129,7 @@
       },
       show: function(item) {
         effect = item.filter;
+        console.log(index());
         paused = false;
         full.el.transfer.height(full.content.height());
         full.el.transfer.width(full.content.width());
