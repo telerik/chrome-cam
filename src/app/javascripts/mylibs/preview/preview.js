@@ -168,9 +168,23 @@
               nextPage = justPaged;
               justPaged.empty();
               flipping = false;
+<<<<<<< HEAD
               if (ds.page() > 1) arrows.left.show();
               if (ds.page() < ds.totalPages()) arrows.right.show();
+=======
+              if (ds.page() > 1) {
+                arrows.left.show();
+              }
+              if (ds.page() < ds.totalPages()) {
+<<<<<<< HEAD
+                arrows.right.show();
+              }
+>>>>>>> auto-gen
               return $.publish("/postman/deliver", [false, "/camera/pause"]);
+=======
+                return arrows.right.show();
+              }
+>>>>>>> auto-gen
             };
             flippy = function() {
               return page1.container.kendoAnimate({
