@@ -688,8 +688,6 @@ h3 { padding: 20px 0; }
 		cursor: pointer;
 	}
 
-	.settings .km-switch-label-on { background: #E15613; }
-
 	.settings ul { 
 		width: 265px;
 		list-style-type: none;
