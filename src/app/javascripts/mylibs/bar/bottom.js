@@ -29,6 +29,7 @@
             capture = function() {
               return $.publish("/capture/" + mode);
             };
+            $.publish("/countdown/" + mode);
             if (e.ctrlKey) {
               return capture();
             } else {

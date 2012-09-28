@@ -145,7 +145,8 @@
               index++;
               filters = new kendo.View(nextPage, previewTemplate, data);
               html = filters.render();
-              html.find(".canvas").append(filter).append(img).click(function() {
+              html.find(".canvas").append(filter).append(img);
+              html.click(function() {
                 $.publish("/preview/pause", [true]);
                 return $.publish("/full/show", [item]);
               });

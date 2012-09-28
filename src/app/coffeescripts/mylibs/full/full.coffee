@@ -25,6 +25,8 @@ define([
 
     scaleCanvas = {}
 
+    paparazzi = {}
+
     # the main draw loop which renders the live video effects      
     draw = ->
 
@@ -140,6 +142,8 @@ define([
             full.find(".timer", "timer")
             full.find(".transfer", "transfer")
             full.find(".transfer img", "source")
+            full.find(".wrapper", "wrapper")
+            full.find(".paparazzi", "paparazzi")
 
             # subscribe to external events an map them to internal
             # functions
@@ -154,7 +158,10 @@ define([
             
             $.subscribe "/capture/paparazzi", ->
                 pub.paparazzi()
-                
+
+            $.subscribe "/countdown/paparazzi", ->
+                 full.el.paparazzi.removeClass "hidden"
+
             $.subscribe "/capture/video", ->
                 pub.video()
 
@@ -222,14 +229,11 @@ define([
         paparazzi: ->
 
             # build a gross callback tree and fling poo
-            wrapper = full.container.find(".wrapper")
-            wrapper.find(".paparazzi").removeClass "hidden"
-
             left = 4
             advance = ->
-                wrapper.removeClass "paparazzi-#{left}"
+                full.el.wrapper.removeClass "paparazzi-#{left}"
                 left -= 1
-                wrapper.addClass "paparazzi-#{left}"
+                full.el.wrapper.addClass "paparazzi-#{left}"
 
             callback = ->
                 
@@ -237,8 +241,8 @@ define([
 
                     callback = ->
                         $.publish "/bottom/update", [ "full" ]
-                        wrapper.removeClass "paparazzi-1"
-                        wrapper.find(".paparazzi").removeClass "hidden"
+                        full.el.wrapper.removeClass "paparazzi-1"
+                        full.el.paparazzi.addClass "hidden"
                     
                     advance()
                     capture(callback)

@@ -42,6 +42,7 @@ define [
 
 					# start the countdown
 					capture = -> $.publish "/capture/#{mode}"
+					$.publish "/countdown/#{mode}"
 					if e.ctrlKey
 						capture()
 					else

@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
+    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
     SECONDS_TO_RECORD = 6;
     canvas = {};
     ctx = {};
@@ -17,6 +17,7 @@
     transfer = {};
     effect = {};
     scaleCanvas = {};
+    paparazzi = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         var remaining, request, secondsRecorded, time;
@@ -115,6 +116,8 @@
         full.find(".timer", "timer");
         full.find(".transfer", "transfer");
         full.find(".transfer img", "source");
+        full.find(".wrapper", "wrapper");
+        full.find(".paparazzi", "paparazzi");
         $.subscribe("/full/show", function(item) {
           return pub.show(item);
         });
@@ -126,6 +129,9 @@
         });
         $.subscribe("/capture/paparazzi", function() {
           return pub.paparazzi();
+        });
+        $.subscribe("/countdown/paparazzi", function() {
+          return full.el.paparazzi.removeClass("hidden");
         });
         $.subscribe("/capture/video", function() {
           return pub.video();
@@ -178,21 +184,19 @@
         return capture(callback);
       },
       paparazzi: function() {
-        var advance, callback, left, wrapper;
-        wrapper = full.container.find(".wrapper");
-        wrapper.find(".paparazzi").removeClass("hidden");
+        var advance, callback, left;
         left = 4;
         advance = function() {
-          wrapper.removeClass("paparazzi-" + left);
+          full.el.wrapper.removeClass("paparazzi-" + left);
           left -= 1;
-          return wrapper.addClass("paparazzi-" + left);
+          return full.el.wrapper.addClass("paparazzi-" + left);
         };
         callback = function() {
           callback = function() {
             callback = function() {
               $.publish("/bottom/update", ["full"]);
-              wrapper.removeClass("paparazzi-1");
-              return wrapper.find(".paparazzi").removeClass("hidden");
+              full.el.wrapper.removeClass("paparazzi-1");
+              return full.el.paparazzi.addClass("hidden");
             };
             advance();
             return capture(callback);
