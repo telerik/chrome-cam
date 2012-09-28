@@ -446,9 +446,11 @@ h3 { padding: 20px 0; }
 	position: absolute;
 	top: 50%;
 	margin-top: -18px;
-	line-height: 0;
 	cursor: pointer;
-	color: #d4d4d4;
+	color: #D4D4D4;
+	height: 55px;
+	overflow: hidden;
+	line-height: 35px;
 }
 	.previous:hover, .next:hover { color: #2d2d2d; }
 	.previous { left: 10px; }
