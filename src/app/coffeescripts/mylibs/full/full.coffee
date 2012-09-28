@@ -102,9 +102,15 @@ define([
 
             flash(callback, file)
 
-    index = ->
-        # return is compulsory here.
-        return i for i in [0...effects.data.length] when effects.data[i].filter is effect
+    index =
+        current: ->
+            # return is compulsory here.
+            return i for i in [0...effects.data.length] when effects.data[i].filter is effect
+        max: ->
+            effects.data.length
+        select: (i) ->
+            effect = effects.data[i].filter
+            $.publish "/postman/deliver", [ effects.data[i].tracks, "/tracking/enable" ]
 
     pub = 
 
@@ -151,6 +157,12 @@ define([
             $.subscribe "/keyboard/esc", ->
                 $.publish "/full/hide" unless paused
 
+            $.subscribe "/keyboard/arrow", (dir) ->
+                if dir is "left" and index.current() > 0
+                    index.select index.current() - 1
+                if dir is "right" and index.current() + 1 < index.max()
+                    index.select index.current() + 1
+
             draw()
 
         show: (item) ->
@@ -158,8 +170,6 @@ define([
             return unless paused
 
             effect = item.filter
-
-            console.log index()
 
             paused = false
 
