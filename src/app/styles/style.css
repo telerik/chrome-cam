@@ -649,15 +649,23 @@ h3 { padding: 20px 0; }
 	}
 	.about h3 { 
 		background: url("images/kendoUILogo.png") -12px 0 no-repeat;
-		padding: 15px 0 40px 60px;
+		padding: 20px 0 40px 60px;
 		background-size: 80px 80px;
+		width: 440px;
 	}
 	.about h4 { 
 		font-weight: normal;
 		position: relative;
-		top: -40px;
-		left: 30px;
+		top: -38px;
+		left: -53px;
 		font-size: 13px; 
+	}
+	.about h5 {
+		position: relative;
+		top: -27px;
+		font-size: .7em;
+		left: 28px;
+		color: #777;
 	}
 
 .appInfoHeader + * {

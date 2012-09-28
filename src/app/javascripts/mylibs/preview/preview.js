@@ -173,8 +173,17 @@
               nextPage = justPaged;
               justPaged.empty();
               flipping = false;
+<<<<<<< HEAD
               if (ds.page() > 1) arrows.left.show();
               if (ds.page() < ds.totalPages()) arrows.right.show();
+=======
+              if (ds.page() > 1) {
+                arrows.left.show();
+              }
+              if (ds.page() < ds.totalPages()) {
+                arrows.right.show();
+              }
+>>>>>>> Cleaned up About and Settings
               return $.publish("/postman/deliver", [false, "/camera/pause"]);
             };
             flippy = function() {
