@@ -46,7 +46,7 @@ body div { padding-top: 0px; }
 
 h3 { padding: 20px 0; }
 
-.km-button, button, .button { cursor: pointer; }
+.km-button, button, .button { cursor: pointer; text-decoration: none; }
 
 /************ Animations ************/
 
@@ -651,7 +651,7 @@ h3 { padding: 20px 0; }
 		font-weight: normal;
 		position: relative;
 		top: -40px;
-		left: -1px;
+		left: 30px;
 		font-size: 13px; 
 	}
 
