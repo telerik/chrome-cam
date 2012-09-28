@@ -211,7 +211,7 @@ body div { padding-top: 0px; }
 		left: 0px;
 		z-index: 1;
 	}
-	.gray:active { background: #5b5b5b; }
+	.gray:active { background: #eee; }
 
 .bar .countdown {
 	margin: auto;
