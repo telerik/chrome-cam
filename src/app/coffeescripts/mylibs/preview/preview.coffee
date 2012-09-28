@@ -222,7 +222,8 @@ define [
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
                             html = filters.render()
-                            html.find(".canvas").append(filter).append(img).click ->
+                            html.find(".canvas").append(filter).append(img)
+                            html.click ->
 
                                 $.publish "/preview/pause", [ true ]
                                 $.publish "/full/show", [ item ]
