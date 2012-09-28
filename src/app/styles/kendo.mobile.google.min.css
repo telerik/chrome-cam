@@ -7,7 +7,8 @@
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
 .km-root {
-    font-size: .92em
+    font-size: .92em;
+    text-decoration: none;
 }
 
 .km-root a {
