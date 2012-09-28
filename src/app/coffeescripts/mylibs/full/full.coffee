@@ -7,282 +7,282 @@ define([
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
 ], (kendo, effects, utils, filewrapper, config, template, transferImg) ->
-	SECONDS_TO_RECORD = 6
+    SECONDS_TO_RECORD = 6
 
-	canvas = {}
-	ctx = {}
-	video = {}
-	videoCtx = {}
-	preview = {}
-	paused = true
-	frame = 0
-	frames = []
-	recording = false
-	startTime = 0
-	full = {}
-	transfer = {}
-	effect = {}
+    canvas = {}
+    ctx = {}
+    video = {}
+    videoCtx = {}
+    preview = {}
+    paused = true
+    frame = 0
+    frames = []
+    recording = false
+    startTime = 0
+    full = {}
+    transfer = {}
+    effect = {}
 
-	scaleCanvas = {}
+    scaleCanvas = {}
 
-	# the main draw loop which renders the live video effects      
-	draw = ->
+    # the main draw loop which renders the live video effects      
+    draw = ->
 
-		# subscribe to the app level draw event
-		$.subscribe "/camera/stream", (stream) ->
+        # subscribe to the app level draw event
+        $.subscribe "/camera/stream", (stream) ->
 
-			if not paused
+            if not paused
 
-	            # increment the curent frame counter. this is used for animated effects
-	            # like old movie and vhs. most effects simply ignore this
-	            frame++
+                # increment the curent frame counter. this is used for animated effects
+                # like old movie and vhs. most effects simply ignore this
+                frame++
 
-	 			# pass in the webgl canvas, the canvas that contains the 
-	            # video drawn from the application canvas and the current frame.
-	            effects.advance stream.canvas
-	            effect canvas, stream.canvas, frame, stream.track
-
-	            # if we are recording, dump this canvas to a pixel array
-	            if recording
-
-	            	time = Date.now()
-
-	            	# push the current frame onto the buffer
-	            	# scale the video down to 360 x 240
-	            	videoCtx.drawImage canvas, 0, 0
-	            	frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: time
-
-	            	# update the time in the view
-	            	secondsRecorded = (Date.now() - startTime) / 1000
-	            	remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded)
-	            	full.el.timer.first().html kendo.toString(remaining, "0")
-
-	flash = (callback, file) ->
+                # pass in the webgl canvas, the canvas that contains the 
+                # video drawn from the application canvas and the current frame.
+                effects.advance stream.canvas
+                effect canvas, stream.canvas, frame, stream.track
+
+                # if we are recording, dump this canvas to a pixel array
+                if recording
+
+                    time = Date.now()
+
+                    # push the current frame onto the buffer
+                    # scale the video down to 360 x 240
+                    videoCtx.drawImage canvas, 0, 0
+                    frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: time
+
+                    # update the time in the view
+                    secondsRecorded = (Date.now() - startTime) / 1000
+                    remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded)
+                    full.el.timer.first().html kendo.toString(remaining, "0")
+
+    flash = (callback, file) ->
 
-		config.get "flash", (enabled) ->
-			# TODO: use enabled value
-			full.el.flash.show()
+        config.get "flash", (enabled) ->
+            # TODO: use enabled value
+            full.el.flash.show()
 
-			transfer.content.kendoStop().kendoAnimate 
-				effects: "transfer",  
-				target: $("#destination"), 
-				duration: 1000, 
-				ease: "ease-in",
-				complete: ->
-					$.publish "/bottom/thumbnail", [file]
-					transfer.destroy()
-					transfer = {}
+            transfer.content.kendoStop().kendoAnimate 
+                effects: "transfer",  
+                target: $("#destination"), 
+                duration: 1000, 
+                ease: "ease-in",
+                complete: ->
+                    $.publish "/bottom/thumbnail", [file]
+                    transfer.destroy()
+                    transfer = {}
 
-					callback()
+                    callback()
 
-			full.el.flash.hide()
+            full.el.flash.hide()
 
 
-	capture = (callback) ->
+    capture = (callback) ->
 
-		image = canvas.toDataURL("image/jpeg", 1.0)
-		name = new Date().getTime()
+        image = canvas.toDataURL("image/jpeg", 1.0)
+        name = new Date().getTime()
 
-		data = { src: image, height: full.content.height(), width: full.content.width() }
+        data = { src: image, height: full.content.height(), width: full.content.width() }
 
-		transfer = new kendo.View(full.content, transferImg, data)
-		transfer.render()
-		
-		transfer.find("img").load ->
+        transfer = new kendo.View(full.content, transferImg, data)
+        transfer.render()
+        
+        transfer.find("img").load ->
 
-			# set the name of this image to the current time string
-			
-			file = { type: "jpg", name: "#{name}.jpg", file: image }
+            # set the name of this image to the current time string
+            
+            file = { type: "jpg", name: "#{name}.jpg", file: image }
 
-			filewrapper.save(file.name, image)
-				# I may have it bouncing around too much, but I don't want the bar to
-				# just respond to *all* file saves, or have this module know about
-				# the bar's internals
-			$.publish "/gallery/add", [file]
+            filewrapper.save(file.name, image)
+                # I may have it bouncing around too much, but I don't want the bar to
+                # just respond to *all* file saves, or have this module know about
+                # the bar's internals
+            $.publish "/gallery/add", [file]
 
-			flash(callback, file)
+            flash(callback, file)
 
-	index = ->
-		# return is compulsory here.
-		return i for i in [0...effects.data.length] when effects.data[i].filter is effect
+    index = ->
+        # return is compulsory here.
+        return i for i in [0...effects.data.length] when effects.data[i].filter is effect
 
-	pub = 
+    pub = 
 
-		init: (selector) ->
+        init: (selector) ->
 
-			full = new kendo.View(selector, template)
+            full = new kendo.View(selector, template)
 
-			# create a new canvas for drawing
-			canvas = document.createElement "canvas"
-			video = document.createElement "canvas"
-			video.width = 360
-			video.height = 240
-			canvas.width = 720
-			canvas.height = 480
-			ctx = canvas.getContext "2d"
-			videoCtx = video.getContext "2d"
-			videoCtx.scale 0.5, 0.5
+            # create a new canvas for drawing
+            canvas = document.createElement "canvas"
+            video = document.createElement "canvas"
+            video.width = 360
+            video.height = 240
+            canvas.width = 720
+            canvas.height = 480
+            ctx = canvas.getContext "2d"
+            videoCtx = video.getContext "2d"
+            videoCtx.scale 0.5, 0.5
 
-			full.render().prepend(canvas)
-
-			# find and cache the flash element
-			full.find(".flash", "flash")
-			full.find(".timer", "timer")
-			full.find(".transfer", "transfer")
-			full.find(".transfer img", "source")
+            full.render().prepend(canvas)
+
+            # find and cache the flash element
+            full.find(".flash", "flash")
+            full.find(".timer", "timer")
+            full.find(".transfer", "transfer")
+            full.find(".transfer img", "source")
 
-			# subscribe to external events an map them to internal
-			# functions
-			$.subscribe "/full/show", (item) ->
-				pub.show(item)
+            # subscribe to external events an map them to internal
+            # functions
+            $.subscribe "/full/show", (item) ->
+                pub.show(item)
 
-			$.subscribe "/full/hide", ->		
-				pub.hide()
-				
-			$.subscribe "/capture/photo", ->
-				pub.photo()
-			
-			$.subscribe "/capture/paparazzi", ->
-				pub.paparazzi()
-				
-			$.subscribe "/capture/video", ->
-				pub.video()
+            $.subscribe "/full/hide", ->        
+                pub.hide()
+                
+            $.subscribe "/capture/photo", ->
+                pub.photo()
+            
+            $.subscribe "/capture/paparazzi", ->
+                pub.paparazzi()
+                
+            $.subscribe "/capture/video", ->
+                pub.video()
 
-			$.subscribe "/keyboard/esc", ->
-				$.publish "/full/hide" unless paused
+            $.subscribe "/keyboard/esc", ->
+                $.publish "/full/hide" unless paused
 
-			draw()
+            draw()
 
-		show: (item) ->
+        show: (item) ->
 
-			return unless paused
+            return unless paused
 
-			effect = item.filter
+            effect = item.filter
 
-			console.log index()
+            console.log index()
 
-			paused = false
+            paused = false
 
-			# get the height of the container minus the footer
-			# full.content.height(full.container.height()) - 50
-			full.el.transfer.height(full.content.height())
+            # get the height of the container minus the footer
+            # full.content.height(full.container.height()) - 50
+            full.el.transfer.height(full.content.height())
 
-			# determine the width based on a 3:2 aspect ratio (.66 repeating)
-			# $content.width (3 / 2) * $content.height()
-			# full.content.width (3 / 2) * full.content.height()
-			full.el.transfer.width(full.content.width())
+            # determine the width based on a 3:2 aspect ratio (.66 repeating)
+            # $content.width (3 / 2) * $content.height()
+            # full.content.width (3 / 2) * full.content.height()
+            full.el.transfer.width(full.content.width())
 
-			# $(canvas).height(full.content.height())
+            # $(canvas).height(full.content.height())
 
-			full.container.kendoStop(true).kendoAnimate {
-				effects: "zoomIn fadeIn"
-				show: true
-				complete: ->
-					# show the record controls in the footer
-					$.publish "/bottom/update", [ "full" ]
-			}
+            full.container.kendoStop(true).kendoAnimate {
+                effects: "zoomIn fadeIn"
+                show: true
+                complete: ->
+                    # show the record controls in the footer
+                    $.publish "/bottom/update", [ "full" ]
+            }
 
-		hide: ->
+        hide: ->
 
-			paused = true
+            paused = true
 
-			$.publish "/bottom/update", ["preview"]
+            $.publish "/bottom/update", ["preview"]
 
-			full.container.kendoStop(true).kendoAnimate {
-				effects: "zoomOut fadeOut"
-				hide: true,
-				complete: ->
-					$.publish "/preview/pause", [false]
-			}
+            full.container.kendoStop(true).kendoAnimate {
+                effects: "zoomOut fadeOut"
+                hide: true,
+                complete: ->
+                    $.publish "/preview/pause", [false]
+            }
 
-		photo: ->
+        photo: ->
 
-			callback = ->
-				$.publish "/bottom/update", [ "full" ]
-				
-			capture(callback)
+            callback = ->
+                $.publish "/bottom/update", [ "full" ]
+                
+            capture(callback)
 
-		paparazzi: ->
+        paparazzi: ->
 
-			# build a gross callback tree and fling poo
-			wrapper = full.container.find(".wrapper")
-			wrapper.find(".paparazzi").removeClass "hidden"
+            # build a gross callback tree and fling poo
+            wrapper = full.container.find(".wrapper")
+            wrapper.find(".paparazzi").removeClass "hidden"
 
-			left = 4
-			advance = ->
-				wrapper.removeClass "paparazzi-#{left}"
-				left -= 1
-				wrapper.addClass "paparazzi-#{left}"
+            left = 4
+            advance = ->
+                wrapper.removeClass "paparazzi-#{left}"
+                left -= 1
+                wrapper.addClass "paparazzi-#{left}"
 
-			callback = ->
-				
-				callback = ->
+            callback = ->
+                
+                callback = ->
 
-					callback = ->
-						$.publish "/bottom/update", [ "full" ]
-						wrapper.removeClass "paparazzi-1"
-						wrapper.find(".paparazzi").removeClass "hidden"
-					
-					advance()
-					capture(callback)
+                    callback = ->
+                        $.publish "/bottom/update", [ "full" ]
+                        wrapper.removeClass "paparazzi-1"
+                        wrapper.find(".paparazzi").removeClass "hidden"
+                    
+                    advance()
+                    capture(callback)
 
-				advance()
-				capture(callback)
+                advance()
+                capture(callback)
 
-			advance()
-			capture(callback)
+            advance()
+            capture(callback)
 
-		video: ->
-			# TODO: make it stop recording early instead?
-			return if recording
-			recording = true
+        video: ->
+            # TODO: make it stop recording early instead?
+            return if recording
+            recording = true
 
-			console.log "Recording..."
+            console.log "Recording..."
 
-			frames = []
-			
-			startTime = Date.now()
+            frames = []
+            
+            startTime = Date.now()
 
-			full.container.find(".timer").removeClass("hidden")
+            full.container.find(".timer").removeClass("hidden")
 
-			save = ->
+            save = ->
 
-				utils.createVideo(frames).done (result) ->
+                utils.createVideo(frames).done (result) ->
 
-					console.log("Recording Done!")
+                    console.log("Recording Done!")
 
-					frames = []
+                    frames = []
 
-					full.container.find(".timer").addClass("hidden")
-					
-					image = canvas.toDataURL()
+                    full.container.find(".timer").addClass("hidden")
+                    
+                    image = canvas.toDataURL()
 
-					file = { type: "webm", name: result.name, file: result.url }
-					data = { src: image, height: full.content.height(), width: full.content.width() }
-					
-					transfer = new kendo.View(full.content, transferImg, data)
-					transfer.render()
+                    file = { type: "webm", name: result.name, file: result.url }
+                    data = { src: image, height: full.content.height(), width: full.content.width() }
+                    
+                    transfer = new kendo.View(full.content, transferImg, data)
+                    transfer.render()
 
-					transfer.find("img").load ->	
-						
-						transfer.content.kendoStop().kendoAnimate 
-							effects: "transfer",  
-							target: $("#destination"), 
-							duration: 1000, 
-							ease: "ease-in",
-							complete: ->
-								$.publish "/bottom/thumbnail", [file]
-								$.publish "/gallery/add", [file]
-								transfer.destroy()
-								transfer = {}
+                    transfer.find("img").load ->    
+                        
+                        transfer.content.kendoStop().kendoAnimate 
+                            effects: "transfer",  
+                            target: $("#destination"), 
+                            duration: 1000, 
+                            ease: "ease-in",
+                            complete: ->
+                                $.publish "/bottom/thumbnail", [file]
+                                $.publish "/gallery/add", [file]
+                                transfer.destroy()
+                                transfer = {}
 
-					$.publish "/bottom/update", ["full"]
+                    $.publish "/bottom/update", ["full"]
 
-			done = ->
-				recording = false
-				$.publish "/bottom/update", ["processing"]
+            done = ->
+                recording = false
+                $.publish "/bottom/update", ["processing"]
 
-				setTimeout save, 0
+                setTimeout save, 0
 
-			setTimeout done, SECONDS_TO_RECORD * 1000
+            setTimeout done, SECONDS_TO_RECORD * 1000
 )
