@@ -30,7 +30,6 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
             # this is so that each frame can be added with the appropriate duration,
             # since we know how long of a gap there is between frames
             for pair in (frames[i .. i + 1] for i in [0 .. frames.length - 2])
-                # at this point, imageData is really a data URL
                 bufferContext.putImageData pair[0].imageData, 0, 0
                 video.add bufferCanvas.toDataURL('image/webp', 0.8), pair[1].time - pair[0].time
 
