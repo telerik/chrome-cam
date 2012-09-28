@@ -155,6 +155,8 @@ define([
 
 		show: (item) ->
 
+			return unless paused
+
 			effect = item.filter
 
 			console.log index()

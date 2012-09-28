@@ -128,6 +128,9 @@
         return draw();
       },
       show: function(item) {
+        if (!paused) {
+          return;
+        }
         effect = item.filter;
         console.log(index());
         paused = false;
