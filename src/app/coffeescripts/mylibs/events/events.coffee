@@ -17,5 +17,5 @@ define([
                     when 38 then p("arrow", "up")
                     when 40 then p("arrow", "down")
                     when 27 then p("esc", "esc")
-                    when 32 then p("space", ctrlKey: e.ctrlKey)
+                    when 32 then p("space", ctrlKey: e.ctrlKey or e.metaKey)
 )

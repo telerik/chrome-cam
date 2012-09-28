@@ -36,7 +36,7 @@ define [
     # the main draw loop which renders the live video effects      
     draw = ->
 
-        $.subscribe "/camera/stream", (stream)->
+        $.subscribe "/camera/stream", (stream) ->
 
             if not paused
 
@@ -68,6 +68,10 @@ define [
                         $.publish "/postman/deliver", [ data: eventData, "/preview/thumbnail/request" ]
 
                 shouldUpdateThumbnails = false
+
+                request = ->
+                    $.publish "/postman/deliver", [null, "/camera/request"]
+                setTimeout request, 1
 
     keyboard = (enabled) ->
 
@@ -145,6 +149,8 @@ define [
                 page e.direction
             
         init: (selector) ->
+
+            $.publish "/postman/deliver", [null, "/camera/request"]
         
             # initialize effects
             # TODO: this should be initialized somewhere else

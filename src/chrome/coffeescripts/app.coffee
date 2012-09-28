@@ -76,8 +76,6 @@ define [
 			else
 				skipBit = 0
 
-		setTimeout update, 1000 / 30
-
 	hollaback = (stream) ->
 
 		e = window.URL || window.webkitURL
@@ -99,6 +97,9 @@ define [
 			# subscribe to the pause event
 			$.subscribe "/camera/pause", (message) ->
 				paused = message.paused
+
+			$.subscribe "/camera/request", ->
+				update()
 
 			# start the camera
 			navigator.webkitGetUserMedia { video: true }, hollaback, errback

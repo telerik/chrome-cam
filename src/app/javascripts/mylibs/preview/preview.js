@@ -26,7 +26,7 @@
     isFirstChange = true;
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var eventData, imageData, preview, previewContext, _i, _len;
+        var eventData, imageData, preview, previewContext, request, _i, _len;
         if (!paused) {
           ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
           effects.advance(canvas);
@@ -50,7 +50,11 @@
               ]);
             }
           }
-          return shouldUpdateThumbnails = false;
+          shouldUpdateThumbnails = false;
+          request = function() {
+            return $.publish("/postman/deliver", [null, "/camera/request"]);
+          };
+          return setTimeout(request, 1);
         }
       });
     };
@@ -102,6 +106,7 @@
       },
       init: function(selector) {
         var nextPage, page1, page2, previousPage;
+        $.publish("/postman/deliver", [null, "/camera/request"]);
         effects.init();
         keyboard(true);
         canvas = document.createElement("canvas");

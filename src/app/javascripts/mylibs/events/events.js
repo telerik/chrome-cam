@@ -22,7 +22,7 @@
               return p("esc", "esc");
             case 32:
               return p("space", {
-                ctrlKey: e.ctrlKey
+                ctrlKey: e.ctrlKey || e.metaKey
               });
           }
         });

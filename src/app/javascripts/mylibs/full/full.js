@@ -19,7 +19,7 @@
     scaleCanvas = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var remaining, secondsRecorded, time;
+        var remaining, request, secondsRecorded, time;
         if (!paused) {
           frame++;
           effects.advance(stream.canvas);
@@ -33,8 +33,12 @@
             });
             secondsRecorded = (Date.now() - startTime) / 1000;
             remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded);
-            return full.el.timer.first().html(kendo.toString(remaining, "0"));
+            full.el.timer.first().html(kendo.toString(remaining, "0"));
           }
+          request = function() {
+            return $.publish("/postman/deliver", [null, "/camera/request"]);
+          };
+          return setTimeout(request, 1);
         }
       });
     };
@@ -161,7 +165,8 @@
           effects: "zoomOut fadeOut",
           hide: true,
           complete: function() {
-            return $.publish("/preview/pause", [false]);
+            $.publish("/preview/pause", [false]);
+            return $.publish("/postman/deliver", [null, "/camera/request"]);
           }
         });
       },

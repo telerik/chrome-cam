@@ -224,6 +224,7 @@ define [
         hide: (e) ->
             # unpause the camera
             $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
+            $.publish "/postman/deliver", [null, "/camera/request"]
 
             # don't respond to the keyboard events anymore
             $.unsubscribe "/keyboard/arrow"
