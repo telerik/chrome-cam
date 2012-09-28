@@ -158,6 +158,8 @@ define([
                 $.publish "/full/hide" unless paused
 
             $.subscribe "/keyboard/arrow", (dir) ->
+                return if paused
+                
                 if dir is "left" and index.current() > 0
                     index.select index.current() - 1
                 if dir is "right" and index.current() + 1 < index.max()

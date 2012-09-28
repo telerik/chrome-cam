@@ -135,6 +135,9 @@
           }
         });
         $.subscribe("/keyboard/arrow", function(dir) {
+          if (paused) {
+            return;
+          }
           if (dir === "left" && index.current() > 0) {
             index.select(index.current() - 1);
           }
