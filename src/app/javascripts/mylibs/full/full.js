@@ -1,7 +1,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
+    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
     SECONDS_TO_RECORD = 6;
     canvas = {};
     ctx = {};
@@ -79,6 +79,21 @@
         return flash(callback, file);
       });
     };
+    index = {
+      current: function() {
+        var i, _ref;
+        for (i = 0, _ref = effects.data.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
+          if (effects.data[i].filter === effect) return i;
+        }
+      },
+      max: function() {
+        return effects.data.length;
+      },
+      select: function(i) {
+        effect = effects.data[i].filter;
+        return $.publish("/postman/deliver", [effects.data[i].tracks, "/tracking/enable"]);
+      }
+    };
     return pub = {
       init: function(selector) {
         full = new kendo.View(selector, template);
@@ -114,9 +129,19 @@
         $.subscribe("/keyboard/esc", function() {
           if (!paused) return $.publish("/full/hide");
         });
+        $.subscribe("/keyboard/arrow", function(dir) {
+          if (paused) return;
+          if (dir === "left" && index.current() > 0) {
+            index.select(index.current() - 1);
+          }
+          if (dir === "right" && index.current() + 1 < index.max()) {
+            return index.select(index.current() + 1);
+          }
+        });
         return draw();
       },
       show: function(item) {
+        if (!paused) return;
         effect = item.filter;
         paused = false;
         full.el.transfer.height(full.content.height());
