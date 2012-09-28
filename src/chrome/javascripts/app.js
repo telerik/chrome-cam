@@ -73,12 +73,11 @@
           }, "/camera/update", [buffer]
         ]);
         if (skipBit < 4) {
-          skipBit++;
+          return skipBit++;
         } else {
-          skipBit = 0;
+          return skipBit = 0;
         }
       }
-      return setTimeout(update, 1000 / 30);
     };
     hollaback = function(stream) {
       var e, video;
@@ -97,6 +96,9 @@
         utils.init();
         $.subscribe("/camera/pause", function(message) {
           return paused = message.paused;
+        });
+        $.subscribe("/camera/request", function() {
+          return update();
         });
         navigator.webkitGetUserMedia({
           video: true

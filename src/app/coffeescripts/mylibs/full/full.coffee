@@ -57,6 +57,10 @@ define([
                     remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded)
                     full.el.timer.first().html kendo.toString(remaining, "0")
 
+                request = ->
+                    $.publish "/postman/deliver", [null, "/camera/request"]
+                setTimeout request, 1
+
     flash = (callback, file) ->
 
         config.get "flash", (enabled) ->
@@ -159,7 +163,7 @@ define([
 
             $.subscribe "/keyboard/arrow", (dir) ->
                 return if paused
-                
+
                 if dir is "left" and index.current() > 0
                     index.select index.current() - 1
                 if dir is "right" and index.current() + 1 < index.max()
@@ -205,6 +209,7 @@ define([
                 hide: true,
                 complete: ->
                     $.publish "/preview/pause", [false]
+                    $.publish "/postman/deliver", [null, "/camera/request"]
             }
 
         photo: ->

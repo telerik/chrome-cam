@@ -223,6 +223,7 @@
             paused: false
           }, "/camera/pause"
         ]);
+        $.publish("/postman/deliver", [null, "/camera/request"]);
         $.unsubscribe("/keyboard/arrow");
         pages.next.empty();
         return pages.previous.empty();
