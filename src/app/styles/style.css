@@ -330,16 +330,17 @@ body div { padding-top: 0px; }
 .flip {
 	margin-left: auto;
 	margin-right: auto;
-	width: 780px;
 	height: 600px;
 }
+	.flip > .page {
+		position: absolute;
+		background-color: #f1f1f1;
+		height: 600px;
+	}
 
-.flip > .page {
-	position: absolute;
-	background-color: #f1f1f1;
-	width: 780px;
-	height: 600px;
-}
+#filters.flip, #filters.flip > .page { width: 780px; }
+
+#thumbnails.flip, #thumbnails.flip > .page { width: 1150px; }
 
 .preview { 
 	float: left;
