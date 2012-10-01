@@ -5,7 +5,7 @@
     
     Select preview shows pages of 6 live previews using webgl effects
     */
-    var animation, arrows, canvas, columns, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub;
+    var animation, arrows, canvas, columns, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
     paused = false;
     canvas = {};
     ctx = {};
@@ -14,6 +14,11 @@
     ds = {};
     flipping = false;
     columns = 2;
+    shouldUpdateThumbnails = true;
+    setThumbnailsToBeUpdated = function() {
+      if (!flipping) return shouldUpdateThumbnails = true;
+    };
+    setInterval(setThumbnailsToBeUpdated, 1000);
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
@@ -22,17 +27,31 @@
     isFirstChange = true;
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var el, preview, request, _i, _len;
+        var eventData, imageData, preview, previewContext, request, _i, _len;
         if (!paused) {
+          ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
+          effects.advance(canvas);
           for (_i = 0, _len = previews.length; _i < _len; _i++) {
             preview = previews[_i];
-            el = $(".preview[data-filter-name='" + preview.name + "']");
-            if (!el.is(".hover")) continue;
             frame++;
-            ctx.drawImage(stream.canvas, 0, 0, canvas.width, canvas.height);
-            effects.advance(canvas);
             preview.filter(preview.canvas, canvas, frame, stream.track);
+            if (shouldUpdateThumbnails) {
+              previewContext = preview.canvas.getContext("2d");
+              imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height);
+              eventData = {
+                width: imageData.width,
+                height: imageData.height,
+                data: imageData.data,
+                key: preview.name
+              };
+              $.publish("/postman/deliver", [
+                {
+                  data: eventData
+                }, "/preview/thumbnail/request"
+              ]);
+            }
           }
+          shouldUpdateThumbnails = false;
           request = function() {
             return $.publish("/postman/deliver", [null, "/camera/request"]);
           };
@@ -105,9 +124,6 @@
         previousPage = page1.render().addClass("page");
         nextPage = page2.render().addClass("page");
         arrows.init($(selector).parent());
-        $(selector).on("mouseenter mouseleave", ".preview", function() {
-          return $(this).toggleClass('hover');
-        });
         ds = new kendo.data.DataSource({
           data: effects.data,
           pageSize: 4,
@@ -119,10 +135,13 @@
             tracks = false;
             _ref = this.view();
             _fn = function(item) {
-              var data, filter, filters, html;
+              var data, filter, filters, html, img;
               filter = document.createElement("canvas");
               filter.width = canvas.width;
               filter.height = canvas.height;
+              img = document.createElement("img");
+              img.width = canvas.width;
+              img.height = canvas.height;
               data = {
                 effect: item.id,
                 name: item.name,
@@ -132,7 +151,7 @@
               index++;
               filters = new kendo.View(nextPage, previewTemplate, data);
               html = filters.render();
-              html.find(".canvas").append(filter);
+              html.find(".canvas").append(filter).append(img);
               html.click(function() {
                 $.publish("/preview/pause", [true]);
                 return $.publish("/full/show", [item]);
@@ -149,8 +168,12 @@
               _fn(item);
             }
             $.publish("/postman/deliver", [tracks, "/tracking/enable"]);
+            page1.container.find("canvas").hide();
+            page1.container.find("img").show();
             flipCompleted = function() {
               var justPaged;
+              page1.container.find("img").hide();
+              page1.container.find("canvas").fadeIn('fast');
               justPaged = previousPage;
               previousPage = nextPage;
               nextPage = justPaged;
@@ -158,7 +181,8 @@
               flipping = false;
               if (ds.page() > 1) arrows.left.show();
               if (ds.page() < ds.totalPages()) arrows.right.show();
-              return $.publish("/postman/deliver", [false, "/camera/pause"]);
+              $.publish("/postman/deliver", [false, "/camera/pause"]);
+              return shouldUpdateThumbnails = true;
             };
             flippy = function() {
               return page1.container.kendoAnimate({
@@ -180,6 +204,9 @@
           }
         });
         ds.read();
+        $.subscribe("/preview/thumbnail/response/", function(e) {
+          return $("[data-filter-name='" + e.key + "']", selector).find("img").attr("src", e.src);
+        });
         return $.subscribe("/preview/pause", function(pause) {
           paused = pause;
           return keyboard(!pause);

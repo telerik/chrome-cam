@@ -579,6 +579,8 @@ body div { padding-top: 0px; }
 	100% { opacity:0.3; }
 }
 
+a.canvas img { display: none; }
+
 a.canvas {
 	display: block;
 	width: 360px;
@@ -589,14 +591,9 @@ a.canvas {
 	background-position: center center;
 }
 
-.preview canvas {
-	opacity:0;
-	-webkit-transition: opacity 0.5s linear;
-}
-.preview:hover canvas {
-	opacity: 1;
-	-webkit-transition: opacity 0.5s linear;
-}
+.flipping a.canvas canvas { display: none; }
+
+.flipping a.canvas img { display: block; }
 
 /************ About and Settings Pages ************/
 

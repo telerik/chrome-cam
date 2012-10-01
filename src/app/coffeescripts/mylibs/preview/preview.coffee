@@ -21,6 +21,11 @@ define [
     flipping = false
 
     columns = 2
+
+    shouldUpdateThumbnails = true
+    setThumbnailsToBeUpdated = ->
+        shouldUpdateThumbnails = true if not flipping
+    setInterval setThumbnailsToBeUpdated, 1000
     
     # define the animations. we slide different directions depending on if we are going forward or back.
     animation = 
@@ -37,21 +42,34 @@ define [
 
             if not paused
 
-                # TODO: invert this
+                # get the 2d canvas context and draw the image
+                # this happens at the curent framerate
+                ctx.drawImage stream.canvas, 0, 0, canvas.width, canvas.height
+
+                effects.advance canvas
+                
+                # for each of the preview objects, create a texture of the 
+                # 2d canvas and then apply the webgl effect. these are live
+                # previews
                 for preview in previews
-                    el = $(".preview[data-filter-name='#{preview.name}']")
-                    continue unless el.is(".hover")
 
                     # increment the curent frame counter. this is used for animated effects
                     # like old movie and vhs. most effects simply ignore this
                     frame++
-                    
-                    # get the 2d canvas context and draw the image
-                    # this happens at the curent framerate
-                    ctx.drawImage stream.canvas, 0, 0, canvas.width, canvas.height
-
-                    effects.advance canvas
+               
                     preview.filter preview.canvas, canvas, frame, stream.track
+
+                    if shouldUpdateThumbnails
+                        previewContext = preview.canvas.getContext("2d")
+                        imageData = previewContext.getImageData(0, 0, preview.canvas.width, preview.canvas.height)
+                        eventData = 
+                            width: imageData.width
+                            height: imageData.height
+                            data: imageData.data
+                            key: preview.name
+                        $.publish "/postman/deliver", [ data: eventData, "/preview/thumbnail/request" ]
+
+                shouldUpdateThumbnails = false
 
                 request = ->
                     $.publish "/postman/deliver", [null, "/camera/request"]
@@ -163,10 +181,6 @@ define [
 
             arrows.init $(selector).parent()
 
-            # jQuery 1.8 breaks is(":hover")
-            $(selector).on "mouseenter mouseleave", ".preview", ->
-                $(this).toggleClass('hover')
-
             # create a new kendo data source
             ds = new kendo.data.DataSource
                     
@@ -201,12 +215,16 @@ define [
                             filter.width = canvas.width
                             filter.height =canvas.height
 
+                            img = document.createElement "img"
+                            img.width = canvas.width
+                            img.height = canvas.height
+
                             data = { effect: item.id, name: item.name, col: index % columns, row: Math.floor index / columns }
                             index++
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
                             html = filters.render()
-                            html.find(".canvas").append(filter)
+                            html.find(".canvas").append(filter).append(img)
                             html.click ->
 
                                 $.publish "/preview/pause", [ true ]
@@ -218,7 +236,16 @@ define [
 
                     $.publish "/postman/deliver", [ tracks, "/tracking/enable" ]
 
+                    # move the current page out and the next page in
+                    page1.container.find("canvas").hide()
+                    page1.container.find("img").show()
+
                     flipCompleted = ->
+                        page1.container.find("img").hide()
+
+                        # TODO: find out why Kendo's fade:in blows everything up
+                        page1.container.find("canvas").fadeIn('fast')
+
                         # the current page becomes the next page
                         justPaged = previousPage
                         
@@ -233,6 +260,8 @@ define [
                         arrows.right.show() if ds.page() < ds.totalPages()
 
                         $.publish "/postman/deliver", [ false, "/camera/pause" ]
+
+                        shouldUpdateThumbnails = true
 
                     flippy = ->
                         page1.container.kendoAnimate
@@ -252,7 +281,10 @@ define [
 
 
             # read from the datasource
-            ds.read()
+            ds.read()   
+
+            $.subscribe "/preview/thumbnail/response/", (e) ->
+                $("[data-filter-name='#{e.key}']", selector).find("img").attr("src", e.src)
 
             $.subscribe "/preview/pause", (pause) ->
                 paused = pause
