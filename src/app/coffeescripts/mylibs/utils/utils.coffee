@@ -46,3 +46,10 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
             reader.readAsDataURL(blob)
 
             deferred.promise()
+
+        oppositeDirectionOf: (dir) ->
+            switch dir
+                when "left" then "right"
+                when "right" then "left"
+                when "up" then "down"
+                when "down" then "up"

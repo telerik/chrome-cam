@@ -84,7 +84,7 @@ define [
             keyboard.token = $.subscribe "/keyboard/arrow", (e) ->
 
                 if not flipping
-                    page e
+                    page utils.oppositeDirectionOf(e)
 
         # otherwise
         else
@@ -114,7 +114,7 @@ define [
             # if this isn't page one
             if ds.page() > 1
                 arrows.both.hide()
-                
+
                 # go to the previous page
                 ds.page(ds.page() - 1)
 

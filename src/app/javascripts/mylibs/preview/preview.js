@@ -67,7 +67,7 @@
       if (enabled) {
         return keyboard.token = $.subscribe("/keyboard/arrow", function(e) {
           if (!flipping) {
-            return page(e);
+            return page(utils.oppositeDirectionOf(e));
           }
         });
       } else {

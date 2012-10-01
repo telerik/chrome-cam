@@ -46,6 +46,18 @@
         };
         reader.readAsDataURL(blob);
         return deferred.promise();
+      },
+      oppositeDirectionOf: function(dir) {
+        switch (dir) {
+          case "left":
+            return "right";
+          case "right":
+            return "left";
+          case "up":
+            return "down";
+          case "down":
+            return "up";
+        }
       }
     };
   });
