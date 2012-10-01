@@ -163,11 +163,12 @@ define([
             }
         
             {
-                id: "vhs"
-                name: "VHS"
+                id: "andy"
+                name: "Andy"
                 filter: (canvas, element, frame) -> 
                     effect = (canvas, element) ->
-                        canvas.vhs frame
+                        canvas.quadRotate 0, 0, 0, 0
+                        canvas.popArt()
                     draw(canvas, element, effect)
             }
         
@@ -188,6 +189,15 @@ define([
             #             canvas.hopePoster()
             #         draw(canvas, element, effect)
             # }
+
+            {
+                id: "blueberry"
+                name: "Blueberry"
+                filter: (canvas, element) -> 
+                    effect = (canvas, element) ->
+                        canvas.blueberry()
+                    draw(canvas, element, effect)
+            }
         
             {
                 id: "ghost"

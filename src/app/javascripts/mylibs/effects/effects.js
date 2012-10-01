@@ -159,12 +159,13 @@
             return draw(canvas, element, effect);
           }
         }, {
-          id: "vhs",
-          name: "VHS",
+          id: "andy",
+          name: "Andy",
           filter: function(canvas, element, frame) {
             var effect;
             effect = function(canvas, element) {
-              return canvas.vhs(frame);
+              canvas.quadRotate(0, 0, 0, 0);
+              return canvas.popArt();
             };
             return draw(canvas, element, effect);
           }
@@ -175,6 +176,16 @@
             var effect;
             effect = function(canvas, element) {
               return canvas.oldFilm(frame);
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
+          id: "blueberry",
+          name: "Blueberry",
+          filter: function(canvas, element) {
+            var effect;
+            effect = function(canvas, element) {
+              return canvas.blueberry();
             };
             return draw(canvas, element, effect);
           }
