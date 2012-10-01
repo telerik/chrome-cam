@@ -182,15 +182,6 @@ define([
             }        
             
             {
-                id: "hope"
-                name: "Hope"
-                filter: (canvas, element) -> 
-                    effect = (canvas, element) ->
-                        canvas.hopePoster()
-                    draw(canvas, element, effect)
-            }
-
-            {
                 id: "blueberry"
                 name: "Blueberry"
                 filter: (canvas, element) -> 
