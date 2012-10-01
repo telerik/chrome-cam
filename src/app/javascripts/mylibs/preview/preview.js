@@ -7,7 +7,7 @@
     Select preview shows pages of 6 live previews using webgl effects
     */
 
-    var animation, arrows, canvas, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
+    var animation, arrows, canvas, columns, ctx, draw, ds, flipping, frame, isFirstChange, keyboard, page, paused, previews, pub, setThumbnailsToBeUpdated, shouldUpdateThumbnails;
     paused = false;
     canvas = {};
     ctx = {};
@@ -15,6 +15,7 @@
     frame = 0;
     ds = {};
     flipping = false;
+    columns = 2;
     shouldUpdateThumbnails = true;
     setThumbnailsToBeUpdated = function() {
       if (!flipping) {
@@ -132,7 +133,7 @@
         arrows.init($(selector).parent());
         ds = new kendo.data.DataSource({
           data: effects.data,
-          pageSize: 6,
+          pageSize: 4,
           change: function() {
             var flipCompleted, flippy, index, item, tracks, _fn, _i, _len, _ref;
             flipping = true;
@@ -151,8 +152,8 @@
               data = {
                 effect: item.id,
                 name: item.name,
-                col: index % 3,
-                row: Math.floor(index / 3)
+                col: index % columns,
+                row: Math.floor(index / columns)
               };
               index++;
               filters = new kendo.View(nextPage, previewTemplate, data);

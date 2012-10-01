@@ -20,6 +20,8 @@ define [
     ds = {}
     flipping = false
 
+    columns = 2
+
     shouldUpdateThumbnails = true
     setThumbnailsToBeUpdated = ->
         shouldUpdateThumbnails = true if not flipping
@@ -187,7 +189,7 @@ define [
                 data: effects.data
                 
                 # we want it in chunks of six
-                pageSize: 6
+                pageSize: 4
                 
                 # when the data source changes, this event will fire
                 change: ->
@@ -217,7 +219,7 @@ define [
                             img.width = canvas.width
                             img.height = canvas.height
 
-                            data = { effect: item.id, name: item.name, col: index % 3, row: Math.floor index / 3 }
+                            data = { effect: item.id, name: item.name, col: index % columns, row: Math.floor index / columns }
                             index++
 
                             filters = new kendo.View(nextPage, previewTemplate, data)
