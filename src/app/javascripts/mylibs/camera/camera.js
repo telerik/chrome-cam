@@ -36,21 +36,14 @@
     };
     return pub = {
       init: function(counter, callback) {
-        var video;
         canvas = document.createElement("canvas");
-        canvas.width = 720;
-        canvas.height = 480;
-        video = document.createElement("video");
-        video.width = 720;
-        video.height = 480;
+        canvas.width = 360;
+        canvas.height = 240;
         ctx = canvas.getContext("2d");
         $.subscribe("/camera/pause", function(isPaused) {
           return paused = isPaused;
         });
-        turnOn(callback);
-        return $.subscribe("/camera/countdown", function(num, hollaback) {
-          return countdown(num, hollaback);
-        });
+        return turnOn(callback);
       }
     };
   });

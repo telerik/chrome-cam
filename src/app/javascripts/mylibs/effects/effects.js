@@ -180,6 +180,16 @@
             return draw(canvas, element, effect);
           }
         }, {
+          id: "hope",
+          name: "Hope",
+          filter: function(canvas, element) {
+            var effect;
+            effect = function(canvas, element) {
+              return canvas.hopePoster();
+            };
+            return draw(canvas, element, effect);
+          }
+        }, {
           id: "blueberry",
           name: "Blueberry",
           filter: function(canvas, element) {

@@ -62,13 +62,8 @@ define([
 
             # create a blank canvas element and set it's size
             canvas = document.createElement("canvas")
-            canvas.width = 720
-            canvas.height = 480
-
-            # create a blank video element
-            video = document.createElement("video")
-            video.width = 720
-            video.height = 480
+            canvas.width = 360
+            canvas.height = 240
 
             # get the canvas context for drawing and reading
             ctx = canvas.getContext("2d")
@@ -78,11 +73,5 @@ define([
                 paused = isPaused
 
             turnOn(callback)
-    		
-            
-            # listen for the '/camera/countdown message and respond to the event'
-            $.subscribe("/camera/countdown", ( num, hollaback ) ->
-                countdown(num, hollaback)
-            )
 
 )

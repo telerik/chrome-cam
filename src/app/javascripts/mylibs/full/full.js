@@ -104,10 +104,11 @@
         full = new kendo.View(selector, template);
         canvas = document.createElement("canvas");
         video = document.createElement("canvas");
-        video.width = 360;
-        video.height = 240;
-        canvas.width = 720;
-        canvas.height = 480;
+        video.width = 720;
+        video.height = 480;
+        canvas.width = 360;
+        canvas.height = 240;
+        $(canvas).attr("style", "width: 720px; height: 480px;");
         ctx = canvas.getContext("2d");
         videoCtx = video.getContext("2d");
         videoCtx.scale(0.5, 0.5);

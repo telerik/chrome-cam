@@ -64,7 +64,7 @@
         buffer = img.data.buffer;
         $.publish("/postman/deliver", [
           {
-            image: img.data.buffer,
+            image: buffer,
             track: track
           }, "/camera/update", [buffer]
         ]);
