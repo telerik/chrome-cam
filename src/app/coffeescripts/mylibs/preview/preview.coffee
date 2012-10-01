@@ -93,8 +93,6 @@ define [
             $.unsubscribe keyboard.token
 
     page = (direction) ->
-        arrows.both.hide()
-        
         # if the direction requested was left
         if direction == "left"
 
@@ -103,6 +101,7 @@ define [
             # if the current page is less than the total 
             # number of pages
             if ds.page() < ds.totalPages()
+                arrows.both.hide()
 
                 # go to the next page
                 ds.page ds.page() + 1
@@ -114,7 +113,8 @@ define [
 
             # if this isn't page one
             if ds.page() > 1
-
+                arrows.both.hide()
+                
                 # go to the previous page
                 ds.page(ds.page() - 1)
 

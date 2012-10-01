@@ -75,15 +75,16 @@
       }
     };
     page = function(direction) {
-      arrows.both.hide();
       if (direction === "left") {
         animation.reverse = false;
         if (ds.page() < ds.totalPages()) {
+          arrows.both.hide();
           return ds.page(ds.page() + 1);
         }
       } else {
         animation.reverse = true;
         if (ds.page() > 1) {
+          arrows.both.hide();
           return ds.page(ds.page() - 1);
         }
       }
