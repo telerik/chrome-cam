@@ -180,14 +180,14 @@ define([
                     draw(canvas, element, effect)
             }        
             
-            {
-                id: "hope"
-                name: "Hope"
-                filter: (canvas, element) -> 
-                    effect = (canvas, element) ->
-                        canvas.hopePoster()
-                    draw(canvas, element, effect)
-            }
+            # {
+            #     id: "hope"
+            #     name: "Hope"
+            #     filter: (canvas, element) -> 
+            #         effect = (canvas, element) ->
+            #             canvas.hopePoster()
+            #         draw(canvas, element, effect)
+            # }
         
             {
                 id: "ghost"
@@ -230,14 +230,12 @@ define([
             }
         
             {
-                id: "comix"
-                name: "Comix"
+                id: "photocopy"
+                name: "Photocopy"
                 kind: "webgl"
-                filter: (canvas, element) -> 
+                filter: (canvas, element, frame) -> 
                     effect = (canvas, element) ->
-                        canvas.quadRotate 0, 0, 0, 0
-                        canvas.denoise 50
-                        canvas.ink .5
+                        canvas.photocopy .35, frame
                     draw(canvas, element, effect)
             }
         
