@@ -288,11 +288,6 @@ body div { padding-top: 0px; }
 
 .km-popup-arrow { left: 88px !important; }
 
-/*.km-scroll-container p {
-	margin: 1em;
-	font-size: .7em;
-	text-align: center;
-}*/
 	.km-scroll-container p:first-child { margin-top: 2em; }
 	.km-scroll-container a {
 		background-color: #555;
@@ -335,14 +330,14 @@ body div { padding-top: 0px; }
 .flip {
 	margin-left: auto;
 	margin-right: auto;
-	width: 1150px;
+	width: 780px;
 	height: 600px;
 }
 
 .flip > .page {
 	position: absolute;
 	background-color: #f1f1f1;
-	width: 1150px;
+	width: 780px;
 	height: 600px;
 }
 
@@ -350,7 +345,7 @@ body div { padding-top: 0px; }
 	float: left;
 	-webkit-transition: -webkit-transform .02s ease-in-out;
 }
-	.preview[data-col="1"] { margin: 0 26px; }
+	.preview[data-col="1"] { margin: 0 0 0 26px; }
 	.preview[data-row="0"] { margin-bottom: 26px; }
 
 .thumbnail { margin-left: 13px; }
