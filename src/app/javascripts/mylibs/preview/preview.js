@@ -178,11 +178,10 @@
             $.publish("/postman/deliver", [tracks, "/tracking/enable"]);
             page1.container.find("canvas").hide();
             page1.container.find("img").show();
-            shouldUpdateThumbnails = true;
             flipCompleted = function() {
               var justPaged;
               page1.container.find("img").hide();
-              page1.container.find("canvas").show();
+              page1.container.find("canvas").fadeIn('fast');
               justPaged = previousPage;
               previousPage = nextPage;
               nextPage = justPaged;
@@ -194,7 +193,8 @@
               if (ds.page() < ds.totalPages()) {
                 arrows.right.show();
               }
-              return $.publish("/postman/deliver", [false, "/camera/pause"]);
+              $.publish("/postman/deliver", [false, "/camera/pause"]);
+              return shouldUpdateThumbnails = true;
             };
             flippy = function() {
               return page1.container.kendoAnimate({
@@ -207,11 +207,11 @@
               });
             };
             if (isFirstChange) {
-              setTimeout(flipCompleted, 100);
+              setTimeout(flipCompleted, 1);
               return isFirstChange = false;
             } else {
               $.publish("/postman/deliver", [true, "/camera/pause"]);
-              return setTimeout(flippy, 100);
+              return setTimeout(flippy, 20);
             }
           }
         });

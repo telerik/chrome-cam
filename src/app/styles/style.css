@@ -581,6 +581,16 @@ body div { padding-top: 0px; }
 
 a.canvas img { display: none; }
 
+a.canvas {
+	display: block;
+	width: 360px;
+	height: 240px;
+	background: url('images/photoPlaceholder.png');
+	background-size: 270px 180px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
 .flipping a.canvas canvas { display: none; }
 
 .flipping a.canvas img { display: block; }

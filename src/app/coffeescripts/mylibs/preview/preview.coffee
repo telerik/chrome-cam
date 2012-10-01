@@ -239,11 +239,12 @@ define [
                     # move the current page out and the next page in
                     page1.container.find("canvas").hide()
                     page1.container.find("img").show()
-                    shouldUpdateThumbnails = true
 
                     flipCompleted = ->
                         page1.container.find("img").hide()
-                        page1.container.find("canvas").show()
+
+                        # TODO: find out why Kendo's fade:in blows everything up
+                        page1.container.find("canvas").fadeIn('fast')
 
                         # the current page becomes the next page
                         justPaged = previousPage
@@ -260,6 +261,8 @@ define [
 
                         $.publish "/postman/deliver", [ false, "/camera/pause" ]
 
+                        shouldUpdateThumbnails = true
+
                     flippy = ->
                         page1.container.kendoAnimate
                             effects: animation.effects
@@ -270,11 +273,11 @@ define [
                             complete: flipCompleted
 
                     if isFirstChange
-                        setTimeout flipCompleted, 100
+                        setTimeout flipCompleted, 1
                         isFirstChange = false
                     else
                         $.publish "/postman/deliver", [ true, "/camera/pause" ]
-                        setTimeout flippy, 100
+                        setTimeout flippy, 20
 
 
             # read from the datasource
