@@ -343,8 +343,8 @@
           filter: function(canvas, element, frame, stream) {
             var effect;
             effect = function(canvas, element) {
-              canvas.vibrance(1);
-              return canvas.pixelate(2, 2, 6);
+              canvas.pixelate(2, 2, 6);
+              return canvas.flatColors();
             };
             return draw(canvas, element, effect);
           }

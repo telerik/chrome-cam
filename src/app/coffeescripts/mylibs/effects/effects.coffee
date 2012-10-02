@@ -354,8 +354,8 @@ define([
                 tracks: true
                 filter: (canvas, element, frame, stream) ->
                     effect = (canvas, element) ->
-                        canvas.vibrance 1
                         canvas.pixelate 2, 2, 6
+                        canvas.flatColors()
                     draw(canvas, element, effect)
             }
         ]          
