@@ -219,8 +219,6 @@ define [
             # right now.
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
-            $.publish "/preview/pause", [true]
-
             # listen to keyboard events
             keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
                 unless flipping or details
@@ -228,7 +226,6 @@ define [
 
         hide: (e) ->
             # unpause the camera
-            $.publish "/preview/pause", [false]
             $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
             $.publish "/postman/deliver", [null, "/camera/request"]
 

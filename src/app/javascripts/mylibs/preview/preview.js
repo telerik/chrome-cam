@@ -65,18 +65,13 @@
     };
     keyboard = function(enabled) {
       if (enabled) {
-        if (!keyboard.token) {
-          return keyboard.token = $.subscribe("/keyboard/arrow", function(e) {
-            if (!flipping) {
-              return page(utils.oppositeDirectionOf(e));
-            }
-          });
-        }
+        return keyboard.token = $.subscribe("/keyboard/arrow", function(e) {
+          if (!flipping) {
+            return page(utils.oppositeDirectionOf(e));
+          }
+        });
       } else {
-        if (keyboard.token) {
-          $.unsubscribe(keyboard.token);
-        }
-        return keyboard.token = null;
+        return $.unsubscribe(keyboard.token);
       }
     };
     page = function(direction) {

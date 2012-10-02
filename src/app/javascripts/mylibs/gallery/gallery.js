@@ -219,7 +219,6 @@
             paused: true
           }, "/camera/pause"
         ]);
-        $.publish("/preview/pause", [true]);
         return keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
           if (!(flipping || details)) {
             return page((key === "right") - (key === "left"));
@@ -227,7 +226,6 @@
         });
       },
       hide: function(e) {
-        $.publish("/preview/pause", [false]);
         $.publish("/postman/deliver", [
           {
             paused: false
