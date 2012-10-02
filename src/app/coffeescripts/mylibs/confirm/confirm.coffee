@@ -5,15 +5,18 @@ define [
 	
 	view = {}
 	@callback = null
+	open = false
 
 	pub = 
 
 		yes: (e) =>
 			view.data("kendoMobileModalView").close()
+			open = false
 			if @callback
 				@callback()
 
 		no: (e) ->
+			open = false
 			view.data("kendoMobileModalView").close()
 	
 		init: (selector) =>
@@ -30,4 +33,8 @@ define [
 				view.find(".message").html(message)
 
 				view.data("kendoMobileModalView").open()
+				open = true
+
+			$.subscribe "/keyboard/esc", ->
+				pub.no() if open
 

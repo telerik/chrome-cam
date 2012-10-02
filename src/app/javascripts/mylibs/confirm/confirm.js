@@ -2,27 +2,36 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/confirm/views/confirm.html'], function(kendo, template) {
-    var pub, view,
+    var open, pub, view,
       _this = this;
     view = {};
     this.callback = null;
+    open = false;
     return pub = {
       yes: function(e) {
         view.data("kendoMobileModalView").close();
+        open = false;
         if (_this.callback) {
           return _this.callback();
         }
       },
       no: function(e) {
+        open = false;
         return view.data("kendoMobileModalView").close();
       },
       init: function(selector) {
         view = $(selector);
-        return $.subscribe("/confirm/show", function(title, message, callback) {
+        $.subscribe("/confirm/show", function(title, message, callback) {
           _this.callback = callback;
           view.find(".title").html(title);
           view.find(".message").html(message);
-          return view.data("kendoMobileModalView").open();
+          view.data("kendoMobileModalView").open();
+          return open = true;
+        });
+        return $.subscribe("/keyboard/esc", function() {
+          if (open) {
+            return pub.no();
+          }
         });
       }
     };
