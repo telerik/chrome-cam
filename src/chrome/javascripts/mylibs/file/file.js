@@ -116,9 +116,7 @@
           return;
         }
         return fileEntry.createWriter(function(fileWriter) {
-          fileWriter.onwriteend = function(e) {
-            return $.publish("/notify/show", ["File Saved", "The picture was saved succesfully", false]);
-          };
+          fileWriter.onwriteend = function(e) {};
           fileWriter.onerror = function(e) {
             return errorHandler(e);
           };

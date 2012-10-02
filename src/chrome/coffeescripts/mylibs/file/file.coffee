@@ -140,8 +140,6 @@ define([
         # called when the file has been written successfully
         fileWriter.onwriteend = (e) ->
 
-          $.publish "/notify/show", [ "File Saved", "The picture was saved succesfully", false ]
-
         # the file could not be written.
         fileWriter.onerror = (e) ->
 
