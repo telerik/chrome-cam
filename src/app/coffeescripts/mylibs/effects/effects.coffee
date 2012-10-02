@@ -312,6 +312,8 @@ define([
 
                             canvas.bulgePinch (x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
                             canvas.bulgePinch (x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
+                            canvas.bulgePinch (x + width / 2) - eyeWidth*2, (y + height / 3) + eyeWidth*1.8, eyeWidth * 2.25, .5
+                            canvas.bulgePinch (x + width / 2) + eyeWidth*2, (y + height / 3) + eyeWidth*1.8, eyeWidth * 2.25, .5
 
                     draw(canvas, element, effect)
             }
