@@ -404,14 +404,15 @@ body div { padding-top: 0px; }
 
 .gallery .thumbnail:hover, .preview:hover {
 	cursor: pointer;
-	-webkit-transform: scale(1.02);
-	transform: scale(1.02);
-/*	box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, .75);*/
+	-webkit-transform: scale(1.1);
+	transform: scale(1.1);
+	box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, .75);
 }
 
 .gallery .selected {
 	border: 5px solid #1A5EFF;
 	margin: -4px 3px 10px 3px;
+	background: #1A5EFF;
 }
 
 /* Details styles */
