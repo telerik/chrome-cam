@@ -15,7 +15,7 @@ define([
 		init: ->
 
 			# subscribe to the show message
-			$.subscribe "/notify/show", (title, body, sticky) ->					
+			$.subscribe "/notify/show", (title, body, sticky) ->
 
 				# close callback for timeout
 				close = ->

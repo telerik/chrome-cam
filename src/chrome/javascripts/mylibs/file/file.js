@@ -96,7 +96,6 @@
           create: false
         }, function(fileEntry) {
           return fileEntry.remove(function() {
-            $.publish("/notify/show", ["File Deleted!", "The picture was deleted successfully", false]);
             return $.publish("/postman/deliver", [
               {
                 message: ""

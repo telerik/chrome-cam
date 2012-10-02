@@ -115,7 +115,6 @@ define([
           fileEntry.remove ->
 
               # dispatch events that we killed it
-              $.publish "/notify/show", [ "File Deleted!", "The picture was deleted successfully", false ]
               $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
 
           # file couldn't be deleted
