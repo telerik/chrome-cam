@@ -49,11 +49,77 @@ body div { padding-top: 0px; }
   user-select: none;
 }
 
+/************ Buttons ************/ 
+
 .km-button, button, .button { 
 	cursor: pointer;
 	text-decoration: none; 
 	font-family: "Droid Sans Bold";
 }
+
+.kd-button-submit:focus, .kd-button-submit.focus,
+.kd-button-share:focus, .kd-button-share.focus,
+.kd-button-action:focus, .kd-button-action.focus{
+	box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
+}	
+.kd-button-submit:focus, .kd-button-submit.focus,
+.kd-button-share:focus, .kd-button-share.focus,
+.kd-button-action:focus, .kd-button-action.focus {
+	border-color:#404040;
+}
+
+.kd-button-submit:focus:hover, .kd-button-submit.focus:hover,
+.kd-button-share:focus:hover, .kd-button-share.focus:hover,
+.kd-button-action:focus:hover, .kd-button-action.focus:hover{
+	box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
+	-webkit-box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
+}
+
+.kd-button-submit,
+.kd-button-share,
+.kd-button-action {
+	border: 1px solid #505050;
+	color: #FFF;
+	background-color: #4D90FE;
+	background-image: -webkit-linear-gradient(top,#4D90FE,#4787ED);
+	background-image: linear-gradient(top,#4D90FE,#4787ED);
+	border: 1px solid #3079ED;
+}
+.kd-button-submit span,
+.kd-button-share span,
+.kd-button-action span {
+	color: white;
+}
+.kd-button-submit:hover,
+.kd-button-share:hover,
+.kd-button-action:hover {
+	background-color: #357AE8;
+	background-image: -webkit-linear-gradient(top,#4D90FE,#357AE8);
+	background-image: linear-gradient(top,#4D90FE,#357AE8);
+	border: 1px solid #2F5BB7;
+}
+.kd-button-submit:active, .kd-button-submit:focus:active, .kd-button-submit.focus:active,
+.kd-button-share:active, .kd-button-share:focus:active, .kd-button-share.focus:active,
+.kd-button-action:active, .kd-button-action:focus:active, .kd-button-action.focus:active {
+	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.kd-button-share { text-shadow: 0px 1px rgba(0,0,0,0.1); }
+.kd-button-share:hover { text-shadow: 0px 1px rgba(0,0,0,0.3); }
+.kd-button-action {
+	letter-spacing: 0px;
+	text-shadow: 0px 1px rgba(0,0,0,0.1);
+}
+.kd-button-action:hover {
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+	box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+}
+.kd-button-action:visited,
+.kd-button-share:visited,
+.kd-button-submit:visited { color: #FFF; }
 
 /************ Animations ************/
 
@@ -110,81 +176,14 @@ body div { padding-top: 0px; }
 	color: white;
 }
 
-.kd-button-submit:focus, .kd-button-submit.focus,
-.kd-button-share:focus, .kd-button-share.focus,
-.kd-button-action:focus, .kd-button-action.focus{
-	box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
-	-webkit-box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
-}	
-.kd-button-submit:focus, .kd-button-submit.focus,
-.kd-button-share:focus, .kd-button-share.focus,
-.kd-button-action:focus, .kd-button-action.focus {
-	border-color:#404040;
-}
-
-.kd-button-submit:focus:hover, .kd-button-submit.focus:hover,
-.kd-button-share:focus:hover, .kd-button-share.focus:hover,
-.kd-button-action:focus:hover, .kd-button-action.focus:hover{
-	box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
-	-webkit-box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
-}
-
-.kd-button-submit,
-.kd-button-share,
-.kd-button-action {
-	border: 1px solid #505050;
-	color: #FFF;
-	background-color: #4D90FE;
-	background-image: -webkit-linear-gradient(top,#4D90FE,#4787ED);
-	background-image: linear-gradient(top,#4D90FE,#4787ED);
-	border: 1px solid #3079ED;
-}
-.kd-button-submit span,
-.kd-button-share span,
-.kd-button-action span {
-	color: white;
-}
-.kd-button-submit:hover,
-.kd-button-share:hover,
-.kd-button-action:hover {
-	background-color: #357AE8;
-	background-image: -webkit-linear-gradient(top,#4D90FE,#357AE8);
-	background-image: -moz-linear-gradient(top,#4D90FE,#357AE8);
-	background-image: -ms-linear-gradient(top,#4D90FE,#357AE8);
-	background-image: -o-linear-gradient(top,#4D90FE,#357AE8);
-	background-image: linear-gradient(top,#4D90FE,#357AE8);
-	border: 1px solid #2F5BB7;
-}
-.kd-button-submit:active, .kd-button-submit:focus:active, .kd-button-submit.focus:active,
-.kd-button-share:active, .kd-button-share:focus:active, .kd-button-share.focus:active,
-.kd-button-action:active, .kd-button-action:focus:active, .kd-button-action.focus:active {
-	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.kd-button-share { text-shadow: 0px 1px rgba(0,0,0,0.1); }
-.kd-button-share:hover { text-shadow: 0px 1px rgba(0,0,0,0.3); }
-.kd-button-action {
-	letter-spacing: 0px;
-	text-shadow: 0px 1px rgba(0,0,0,0.1);
-}
-.kd-button-action:hover {
-	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
-	box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
-}
-.kd-button-action:visited,
-.kd-button-share:visited,
-.kd-button-submit:visited { color: #FFF; }
-
 .mode { margin-right: 10px; }
-	.mode .km-button { 
-		min-width: 20px;
-		width: 20px;
+	.mode .km-button {
 		border-radius: 0;
 		border-right: 1px;
 	}
+	.mode .km-button:hover { box-shadow: none; }
 	.mode .km-button.selected { background: #bbb; }
+	.mode .km-button img { width: 20px; }
 
 .mode .km-button:first-child {
 	border-bottom-left-radius: 2px;
