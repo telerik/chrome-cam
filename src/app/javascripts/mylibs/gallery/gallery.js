@@ -216,6 +216,7 @@
             paused: true
           }, "/camera/pause"
         ]);
+        $.publish("/preview/pause", [true]);
         return $.subscribe("/keyboard/arrow", function(e) {
           if (!flipping) {
             return page((e === "right") - (e === "left"));
@@ -223,6 +224,7 @@
         });
       },
       hide: function(e) {
+        $.publish("/preview/pause", [false]);
         $.publish("/postman/deliver", [
           {
             paused: false

@@ -81,16 +81,16 @@ define [
         if enabled
 
             # subscribe to the left arrow key
-            keyboard.token = $.subscribe "/keyboard/arrow", (e) ->
-
-                if not flipping
-                    page utils.oppositeDirectionOf(e)
+            unless keyboard.token
+                keyboard.token = $.subscribe "/keyboard/arrow", (e) ->
+                    page utils.oppositeDirectionOf(e) unless flipping
 
         # otherwise
         else
 
             # unsubscribe from events
-            $.unsubscribe keyboard.token
+            $.unsubscribe keyboard.token if keyboard.token
+            keyboard.token = null
 
     page = (direction) ->
         # if the direction requested was left
