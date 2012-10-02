@@ -349,26 +349,14 @@ define([
             }
             
             {
-                id: "chickenPox"
-                name: "Chicken Pox"
+                id: "eightbits"
+                name: "Eight Bits"
                 tracks: true
                 filter: (canvas, element, frame, stream) ->
-
-                    if stream.faces.length != 0
-                        faces = stream.faces
-
-                    factor = element.width / stream.trackWidth
-
-                    # add the effect to each face we find
-                    for face in faces
-
-                        width = face.width * factor
-                        height = face.height * factor
-                        x = face.x * factor
-                        y = face.y * factor
-
-                        simple canvas, element, 0, 0, element.width, element.height
-                        simple canvas, assets.images.pox, x, y, width, height  
+                    effect = (canvas, element) ->
+                        canvas.vibrance 1
+                        canvas.pixelate 2, 2, 6
+                    draw(canvas, element, effect)
             }
         ]          
 )

@@ -337,26 +337,16 @@
             return draw(canvas, element, effect);
           }
         }, {
-          id: "chickenPox",
-          name: "Chicken Pox",
+          id: "eightbits",
+          name: "Eight Bits",
           tracks: true,
           filter: function(canvas, element, frame, stream) {
-            var face, factor, height, width, x, y, _i, _len, _results;
-            if (stream.faces.length !== 0) {
-              faces = stream.faces;
-            }
-            factor = element.width / stream.trackWidth;
-            _results = [];
-            for (_i = 0, _len = faces.length; _i < _len; _i++) {
-              face = faces[_i];
-              width = face.width * factor;
-              height = face.height * factor;
-              x = face.x * factor;
-              y = face.y * factor;
-              simple(canvas, element, 0, 0, element.width, element.height);
-              _results.push(simple(canvas, assets.images.pox, x, y, width, height));
-            }
-            return _results;
+            var effect;
+            effect = function(canvas, element) {
+              canvas.vibrance(1);
+              return canvas.pixelate(2, 2, 6);
+            };
+            return draw(canvas, element, effect);
           }
         }
       ]
