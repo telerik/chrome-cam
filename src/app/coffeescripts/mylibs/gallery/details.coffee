@@ -5,6 +5,8 @@ define [
 
     index = 0
 
+    visible = false
+
     viewModel = kendo.observable {
         video: 
             src: -> "styles/images/photoPlaceholder.png"
@@ -62,15 +64,18 @@ define [
 
             # subscribe to events
             $.subscribe "/details/hide", ->
+                visible = false
                 hide()
 
             $.subscribe "/details/show", (message) ->
+                visible = true
                 show(message)
 
             $.subscribe "/details/update", (message) =>
                 update(message)
 
             $.subscribe "/keyboard/arrow", (direction) ->
+                return unless visible
                 if direction is "left" and viewModel.previous.visible
                     viewModel.previous.click()
                 if direction is "right" and viewModel.next.visible

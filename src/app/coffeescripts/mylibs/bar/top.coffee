@@ -35,9 +35,11 @@ define [
 		details: =>
 			viewModel.set("back.text", "< Gallery")
 			viewModel.set("back.details", true)
+			$.publish "/gallery/details", [true]
 		gallery: =>
 			viewModel.set("back.text", "< Camera")
 			viewModel.set("back.details", false)
+			$.publish "/gallery/details", [false]
 		set: (state) ->
 			states.current = state
 			states[state]()

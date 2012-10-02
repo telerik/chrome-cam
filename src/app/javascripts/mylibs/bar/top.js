@@ -48,11 +48,13 @@
       },
       details: function() {
         viewModel.set("back.text", "< Gallery");
-        return viewModel.set("back.details", true);
+        viewModel.set("back.details", true);
+        return $.publish("/gallery/details", [true]);
       },
       gallery: function() {
         viewModel.set("back.text", "< Camera");
-        return viewModel.set("back.details", false);
+        viewModel.set("back.details", false);
+        return $.publish("/gallery/details", [false]);
       },
       set: function(state) {
         states.current = state;

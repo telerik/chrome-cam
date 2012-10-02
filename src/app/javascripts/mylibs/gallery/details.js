@@ -2,9 +2,10 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/gallery/views/details.html'], function(kendo, template) {
-    var hide, index, pub, show, update, viewModel,
+    var hide, index, pub, show, update, viewModel, visible,
       _this = this;
     index = 0;
+    visible = false;
     viewModel = kendo.observable({
       video: {
         src: function() {
@@ -73,15 +74,20 @@
         _this.details = new kendo.View(selector, template);
         _this.details.render(viewModel, true);
         $.subscribe("/details/hide", function() {
+          visible = false;
           return hide();
         });
         $.subscribe("/details/show", function(message) {
+          visible = true;
           return show(message);
         });
         $.subscribe("/details/update", function(message) {
           return update(message);
         });
         return $.subscribe("/keyboard/arrow", function(direction) {
+          if (!visible) {
+            return;
+          }
           if (direction === "left" && viewModel.previous.visible) {
             viewModel.previous.click();
           }

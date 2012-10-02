@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, at, clear, container, create, data, dataSource, deselect, destroy, ds, el, files, flipping, get, index, page, pageSize, pages, pub, render, select, selected, total,
+    var active, add, animation, at, clear, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, select, selected, total,
       _this = this;
     pageSize = 12;
     files = [];
@@ -19,6 +19,8 @@
       next: {}
     };
     active = {};
+    details = false;
+    keyboard = {};
     animation = {
       effects: "pageturn:horizontal",
       reverse: false,
@@ -36,6 +38,7 @@
       return $.publish("/item/selected", [get(name)]);
     };
     page = function(direction) {
+      console.log(direction);
       if (flipping) {
         return;
       }
@@ -217,9 +220,9 @@
           }, "/camera/pause"
         ]);
         $.publish("/preview/pause", [true]);
-        return $.subscribe("/keyboard/arrow", function(e) {
-          if (!flipping) {
-            return page((e === "right") - (e === "left"));
+        return keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
+          if (!(flipping || details)) {
+            return page((key === "right") - (key === "left"));
           }
         });
       },
@@ -231,7 +234,7 @@
           }, "/camera/pause"
         ]);
         $.publish("/postman/deliver", [null, "/camera/request"]);
-        $.unsubscribe("/keyboard/arrow");
+        $.unsubscribe(keyboard.token);
         pages.next.empty();
         return pages.previous.empty();
       },
@@ -267,6 +270,9 @@
           if (_this.ds.view().length > 0) {
             return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
           }
+        });
+        $.subscribe("/gallery/details", function(d) {
+          return details = d;
         });
         $.subscribe("/gallery/delete", function() {
           return destroy();

@@ -19,6 +19,8 @@ define [
         previous: {}
         next: {}
     active = {}
+    details = false
+    keyboard = {}
 
     animation = 
         effects: "pageturn:horizontal"
@@ -41,6 +43,8 @@ define [
 
 
     page = (direction) =>
+
+        console.log direction
 
         return if flipping
 
@@ -171,7 +175,6 @@ define [
 
             setTimeout(->
                 for item in thumbs
-
                     do ->
                         element = create(item.data)
                         item.dom.append(element)
@@ -219,9 +222,9 @@ define [
             $.publish "/preview/pause", [true]
 
             # listen to keyboard events
-            $.subscribe "/keyboard/arrow", (e) ->
-                if not flipping
-                    page (e == "right") - (e == "left")
+            keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
+                unless flipping or details
+                    page (key == "right") - (key == "left")
 
         hide: (e) ->
             # unpause the camera
@@ -230,7 +233,7 @@ define [
             $.publish "/postman/deliver", [null, "/camera/request"]
 
             # don't respond to the keyboard events anymore
-            $.unsubscribe "/keyboard/arrow"
+            $.unsubscribe keyboard.token
 
             pages.next.empty()
             pages.previous.empty()
@@ -272,6 +275,9 @@ define [
                 @ds.read()
                 if @ds.view().length > 0
                     $.publish "/bottom/thumbnail", [@ds.view()[0]]
+
+            $.subscribe "/gallery/details", (d) ->
+                details = d
 
             $.subscribe "/gallery/delete", ->
                 destroy()
