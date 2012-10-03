@@ -92,13 +92,14 @@
       return select(name);
     };
     at = function(index) {
+      debugger;
       var match, position, target;
       target = Math.ceil((index + 1) / pageSize);
       if (target !== _this.ds.page()) {
         _this.ds.page(target);
         render();
       }
-      position = target > 1 ? index - pageSize : index;
+      position = index - pageSize * (target - 1);
       match = {
         length: _this.ds.data().length,
         index: index,

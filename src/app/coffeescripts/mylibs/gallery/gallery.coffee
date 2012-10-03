@@ -96,6 +96,7 @@ define [
         select name
 
     at = (index) =>
+        debugger
         # we may need to page the data before grabbing the item.
         # to get the current page, divide the index by the pageSize. then
         target = Math.ceil((index + 1) / pageSize)
@@ -105,7 +106,7 @@ define [
             render()
         # the actual index of the item within the page has to be recalculated if
         # the current page is greater than 1
-        position = if target > 1 then index - pageSize else index
+        position = index - pageSize * (target - 1)
         # now we can search the current datasource view for the item at the correct index
         match = { length: @ds.data().length, index: index, item: @ds.view()[position] }
         $.publish "/details/update", [match]
