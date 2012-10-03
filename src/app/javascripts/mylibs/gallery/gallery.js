@@ -92,7 +92,6 @@
       return select(name);
     };
     at = function(index) {
-      debugger;
       var match, position, target;
       target = Math.ceil((index + 1) / pageSize);
       if (target !== _this.ds.page()) {

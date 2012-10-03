@@ -96,7 +96,6 @@ define [
         select name
 
     at = (index) =>
-        debugger
         # we may need to page the data before grabbing the item.
         # to get the current page, divide the index by the pageSize. then
         target = Math.ceil((index + 1) / pageSize)
