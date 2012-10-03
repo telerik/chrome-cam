@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, rows, select, selected, total,
+    var active, add, animation, arrows, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, rows, select, selected, total,
       _this = this;
     columns = 3;
     rows = 3;
@@ -40,7 +40,6 @@
       return $.publish("/item/selected", [get(name)]);
     };
     page = function(direction) {
-      console.log(direction);
       if (flipping) {
         return;
       }
@@ -214,6 +213,24 @@
         return complete();
       }
     };
+    arrows = {
+      left: null,
+      right: null,
+      both: null,
+      init: function(parent) {
+        arrows.left = parent.find(".previous");
+        arrows.left.hide();
+        arrows.right = parent.find(".next");
+        arrows.both = $([arrows.left[0], arrows.right[0]]);
+        console.log(arrows);
+        arrows.left.on("click", function() {
+          return page(1);
+        });
+        return arrows.right.on("click", function() {
+          return page(-1);
+        });
+      }
+    };
     return pub = {
       before: function(e) {
         $.publish("/postman/deliver", [
@@ -251,6 +268,7 @@
         page1 = new kendo.View(selector, null);
         page2 = new kendo.View(selector, null);
         container = page1.container;
+        arrows.init($(selector).parent());
         pages.previous = page1.render().addClass("page gallery");
         active = pages.next = page2.render().addClass("page gallery");
         page1.container.on("dblclick", ".thumbnail", function() {

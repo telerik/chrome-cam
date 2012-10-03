@@ -46,8 +46,6 @@ define [
 
     page = (direction) =>
 
-        console.log direction
-
         return if flipping
 
         if direction > 0 and @ds.page() > 1
@@ -210,6 +208,24 @@ define [
 
         else complete()
 
+    arrows =
+        left: null
+        right: null
+        both: null
+        init: (parent) ->
+            arrows.left = parent.find(".previous")
+            arrows.left.hide()
+            arrows.right = parent.find(".next")
+            arrows.both = $([arrows.left[0], arrows.right[0]])
+
+            console.log arrows
+
+            # in this case, "right" means "previous" and "left" means "next" because of the "natural" scrolling
+            arrows.left.on "click", ->
+                page 1
+            arrows.right.on "click", ->
+                page -1
+
     pub =
 
         before: (e) ->
@@ -255,6 +271,8 @@ define [
 
             # get a reference to the view container
             container = page1.container
+
+            arrows.init $(selector).parent()
 
             pages.previous = page1.render().addClass("page gallery")
             active = pages.next = page2.render().addClass("page gallery")
