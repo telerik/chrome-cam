@@ -48,6 +48,8 @@ define [
 
         return if flipping
 
+        arrows.both.hide()
+
         if direction > 0 and @ds.page() > 1
             flipping = true
             animation.reverse = true
@@ -191,6 +193,9 @@ define [
             pages.next = justPaged
 
             flipping = false
+
+            arrows.left.toggle @ds.page() > 1
+            arrows.right.toggle @ds.page() < @ds.totalPages()
 
             $("#gallery").css "pointer-events", "auto"
 

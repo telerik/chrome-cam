@@ -43,6 +43,7 @@
       if (flipping) {
         return;
       }
+      arrows.both.hide();
       if (direction > 0 && _this.ds.page() > 1) {
         flipping = true;
         animation.reverse = true;
@@ -198,6 +199,8 @@
         pages.previous = pages.next;
         pages.next = justPaged;
         flipping = false;
+        arrows.left.toggle(_this.ds.page() > 1);
+        arrows.right.toggle(_this.ds.page() < _this.ds.totalPages());
         return $("#gallery").css("pointer-events", "auto");
       };
       if (flip) {
