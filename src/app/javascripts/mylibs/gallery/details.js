@@ -71,6 +71,7 @@
     };
     return pub = {
       init: function(selector) {
+        var page;
         _this.details = new kendo.View(selector, template);
         _this.details.render(viewModel, true);
         $.subscribe("/details/hide", function() {
@@ -84,7 +85,7 @@
         $.subscribe("/details/update", function(message) {
           return update(message);
         });
-        return $.subscribe("/keyboard/arrow", function(direction) {
+        page = function(direction) {
           if (!visible) {
             return;
           }
@@ -92,9 +93,11 @@
             viewModel.previous.click();
           }
           if (direction === "right" && viewModel.next.visible) {
-            return viewModel.next.click();
+            viewModel.next.click();
           }
-        });
+          return false;
+        };
+        return $.subscribe("/keyboard/arrow", page, true);
       }
     };
   });

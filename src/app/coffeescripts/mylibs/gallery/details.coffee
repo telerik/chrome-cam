@@ -74,9 +74,11 @@ define [
             $.subscribe "/details/update", (message) =>
                 update(message)
 
-            $.subscribe "/keyboard/arrow", (direction) ->
+            page = (direction) ->
                 return unless visible
                 if direction is "left" and viewModel.previous.visible
                     viewModel.previous.click()
                 if direction is "right" and viewModel.next.visible
                     viewModel.next.click()
+                return false
+            $.subscribe "/keyboard/arrow", page, true
