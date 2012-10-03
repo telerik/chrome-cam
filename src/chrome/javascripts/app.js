@@ -128,7 +128,8 @@
         assets.init();
         config.init();
         face.init(0, 0, 0, 0);
-        return menu();
+        menu();
+        return $(iframe).focus();
       }
     };
   });

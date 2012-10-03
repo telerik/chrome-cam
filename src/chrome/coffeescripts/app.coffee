@@ -143,3 +143,5 @@ define [
 
 			# setup the context menu
 			menu()
+
+			$(iframe).focus()
