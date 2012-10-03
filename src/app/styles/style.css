@@ -358,7 +358,7 @@ body div { padding-top: 0px; }
 
 #filters.flip, #filters.flip > .page { width: 780px; }
 
-#thumbnails.flip, #thumbnails.flip > .page { width: 1150px; }
+#thumbnails.flip, #thumbnails.flip > .page { width: 870px; }
 
 .preview { 
 	float: left;
@@ -395,7 +395,7 @@ body div { padding-top: 0px; }
 
 .gallery {
 	height: 800px;
-	padding: 57px 0 0;
+	padding: 50px 0 0;
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
 	-webkit-box-orient: vertical;
@@ -412,7 +412,7 @@ body div { padding-top: 0px; }
 	background: url('images/photoPlaceholder.png');
 	-webkit-transition: -webkit-transform .02s ease-in-out;
 	background-size: 270px 180px;
-	margin: 0 8px 16px 8px;
+	margin: 0 10px 20px 10px;
 }
 
 .gallery .thumbnail:hover, .preview:hover {
