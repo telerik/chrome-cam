@@ -18,7 +18,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
   }
 
   var dimensions = { 
-    width: 1280,
+    width: 1050,
     height: 750
   };
   
