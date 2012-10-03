@@ -182,8 +182,8 @@ define([
             }        
             
             {
-                id: "frozen"
-                name: "Frozen"
+                id: "blueberry"
+                name: "Blueberry"
                 filter: (canvas, element) -> 
                     effect = (canvas, element) ->
                         canvas.blueberry()

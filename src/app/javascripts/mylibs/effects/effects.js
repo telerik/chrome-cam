@@ -181,8 +181,8 @@
             return draw(canvas, element, effect);
           }
         }, {
-          id: "frozen",
-          name: "Frozen",
+          id: "blueberry",
+          name: "Blueberry",
           filter: function(canvas, element) {
             var effect;
             effect = function(canvas, element) {
