@@ -424,7 +424,7 @@ body div { padding-top: 0px; }
 
 .gallery .selected {
 	border: 5px solid #1A5EFF;
-	margin: -4px 3px 10px 3px;
+	margin: -5px 5px 15px 5px;
 	background: #1A5EFF;
 }
 
