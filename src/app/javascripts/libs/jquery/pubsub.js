@@ -7,6 +7,8 @@
 	Original is (c) Dojo Foundation 2004-2010. Released under either AFL or new BSD, see:
 	http://dojofoundation.org/license for more information.
 
+	Minor tweak by us.
+
 */	
 
 ;(function(d){
@@ -29,11 +31,11 @@
 		//
 		//	|		$.publish("/some/topic", ["a","b","c"]);
 		cache[topic] && d.each(cache[topic], function(){
-			this.apply(d, args || []);
+			return this.apply(d, args || []);
 		});
 	};
 
-	d.subscribe = function(/* String */topic, /* Function */callback){
+	d.subscribe = function(/* String */topic, /* Function */callback, /* Boolean? */ first){
 		// summary:
 		//		Register a callback on a named topic.
 		// topic: String
@@ -52,7 +54,11 @@
 		if(!cache[topic]){
 			cache[topic] = [];
 		}
-		cache[topic].push(callback);
+		if (first) {
+			cache[topic].unshift(callback);
+		} else {
+			cache[topic].push(callback);
+		}
 		return [topic, callback]; // Array
 	};
 

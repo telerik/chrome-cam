@@ -35,6 +35,10 @@ define [
 				view.data("kendoMobileModalView").open()
 				open = true
 
-			$.subscribe "/keyboard/esc", ->
-				pub.no() if open
+			esc = ->
+				if open
+					pub.no()
+					return false
+
+			$.subscribe "/keyboard/esc", esc, true
 

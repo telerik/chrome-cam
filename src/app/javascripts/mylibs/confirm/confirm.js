@@ -20,6 +20,7 @@
         return view.data("kendoMobileModalView").close();
       },
       init: function(selector) {
+        var esc;
         view = $(selector);
         $.subscribe("/confirm/show", function(title, message, callback) {
           _this.callback = callback;
@@ -28,11 +29,13 @@
           view.data("kendoMobileModalView").open();
           return open = true;
         });
-        return $.subscribe("/keyboard/esc", function() {
+        esc = function() {
           if (open) {
-            return pub.no();
+            pub.no();
+            return false;
           }
-        });
+        };
+        return $.subscribe("/keyboard/esc", esc, true);
       }
     };
   });
