@@ -2,9 +2,11 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, at, clear, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, select, selected, total,
+    var active, add, animation, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, rows, select, selected, total,
       _this = this;
-    pageSize = 12;
+    columns = 3;
+    rows = 3;
+    pageSize = columns * rows;
     files = [];
     ds = {};
     data = [];
@@ -109,7 +111,7 @@
       create: function(data) {
         return _this.ds = new kendo.data.DataSource({
           data: data,
-          pageSize: 12,
+          pageSize: pageSize,
           change: function() {
             return deselect();
           },

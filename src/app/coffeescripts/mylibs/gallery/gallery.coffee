@@ -4,8 +4,10 @@ define [
     'mylibs/file/filewrapper'
     'text!mylibs/gallery/views/thumb.html'
 ], (kendo, utils, filewrapper, template) ->
-    
-    pageSize = 12
+    columns = 3
+    rows = 3
+    pageSize = columns * rows
+
     files = []
     ds = {}
     data = []
@@ -114,7 +116,7 @@ define [
         create: (data) =>
             @ds = new kendo.data.DataSource
                 data: data
-                pageSize: 12 
+                pageSize: pageSize
                 change: ->
                     deselect()                   
                 sort:
