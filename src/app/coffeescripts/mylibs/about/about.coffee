@@ -5,7 +5,9 @@ define [
 	
 	previous = "#home"
 
-	viewModel = kendo.observable {
+	CONFIRM_TEXT = "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?"
+
+	viewModel = kendo.observable
 
 		back: ->
 			$.publish "/postman/deliver", [ true, "/menu/enable" ]
@@ -14,16 +16,18 @@ define [
 		goto: (e) ->
 			$.publish "/postman/deliver", [$(e.currentTarget).attr("href"), "/tab/open"]
 
-	}
+		gallery:
+			clear: ->
+				$.publish "/confirm/show", [ "Remove All", CONFIRM_TEXT, -> $.publish("/gallery/clear") ]
 
 	pub = 
 
 		# unlike the viewModel events, these events are for the mobile view itself
 		before: ->
-            $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
+			$.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
 		hide: ->
-        	$.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
+			$.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
 
 		init: (selector) ->
 

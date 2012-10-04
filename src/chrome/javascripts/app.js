@@ -43,7 +43,7 @@
       });
       return $.subscribe("/menu/enable", function(isEnabled) {
         var menus, _i, _len, _results;
-        menus = ["chrome-cam-about-menu", "chrome-cam-settings-menu"];
+        menus = ["chrome-cam-about-menu"];
         _results = [];
         for (_i = 0, _len = menus.length; _i < _len; _i++) {
           menu = menus[_i];

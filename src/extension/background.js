@@ -4,11 +4,6 @@ chrome.runtime.onInstalled.addListener(function() {
     title: "About...",
     contexts: ["page"]
   });
-  chrome.contextMenus.create({
-    id: "chrome-cam-settings-menu",
-    title: "Settings...",
-    contexts: ["page"]
-  });
 });
 
 chrome.app.runtime.onLaunched.addListener(function() { 

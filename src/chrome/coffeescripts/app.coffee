@@ -44,10 +44,7 @@ define [
 			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
 
 		$.subscribe "/menu/enable", (isEnabled) ->
-			menus = [
-				"chrome-cam-about-menu"
-				"chrome-cam-settings-menu"
-			]
+			menus = [ "chrome-cam-about-menu" ]
 			for menu in menus
 				chrome.contextMenus.update menu, enabled: isEnabled
 

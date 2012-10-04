@@ -12,13 +12,12 @@ define [
   'mylibs/gallery/details'
   'mylibs/events/events'
   'mylibs/file/filewrapper'
-  'mylibs/settings/settings'
   'mylibs/about/about'
   'mylibs/confirm/confirm'
   'mylibs/assets/assets'
   'mylibs/effects/effects'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, effects, record ) ->
+], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects, record ) ->
 	
 	pub = 
 		    
@@ -29,7 +28,6 @@ define [
 			APP.full = full
 			APP.filters = effects.data
 			APP.gallery = gallery
-			APP.settings = settings
 			APP.about = about
 			APP.confirm = confirm
 
@@ -64,9 +62,6 @@ define [
 
 				# initialize the thumbnail gallery
 				gallery.init "#thumbnails"
-
-				# initialize the settings view
-				settings.init "#settings"
 
 				# initialize the about view
 				about.init "#about"
