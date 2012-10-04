@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
+    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, pub, recording, scaleCanvas, startTime, subscribe, transfer, video, videoCtx;
     canvas = {};
     ctx = {};
     video = {};
@@ -20,15 +20,16 @@
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
         var request;
-        if (!paused) {
-          frame++;
-          effects.advance(stream.canvas);
-          effect(canvas, stream.canvas, frame, stream.track);
-          request = function() {
-            return $.publish("/postman/deliver", [null, "/camera/request"]);
-          };
-          return setTimeout(request, 1);
+        if (paused) {
+          return;
         }
+        frame++;
+        effects.advance(stream.canvas);
+        effect(canvas, stream.canvas, frame, stream.track);
+        request = function() {
+          return $.publish("/postman/deliver", [null, "/camera/request"]);
+        };
+        return setTimeout(request, 1);
       });
     };
     flash = function(callback, file) {
@@ -89,6 +90,42 @@
         return $.publish("/postman/deliver", [effects.data[i].tracks, "/tracking/enable"]);
       }
     };
+    subscribe = function(pub) {
+      $.subscribe("/full/show", function(item) {
+        return pub.show(item);
+      });
+      $.subscribe("/full/hide", function() {
+        return pub.hide();
+      });
+      $.subscribe("/capture/photo", function() {
+        return pub.photo();
+      });
+      $.subscribe("/capture/paparazzi", function() {
+        return pub.paparazzi();
+      });
+      $.subscribe("/countdown/paparazzi", function() {
+        return full.el.paparazzi.removeClass("hidden");
+      });
+      $.subscribe("/capture/video", function() {
+        return pub.video();
+      });
+      $.subscribe("/keyboard/esc", function() {
+        if (!paused) {
+          return $.publish("/full/hide");
+        }
+      });
+      return $.subscribe("/keyboard/arrow", function(dir) {
+        if (paused) {
+          return;
+        }
+        if (dir === "left" && index.current() > 0) {
+          index.select(index.current() - 1);
+        }
+        if (dir === "right" && index.current() + 1 < index.max()) {
+          return index.select(index.current() + 1);
+        }
+      });
+    };
     return pub = {
       init: function(selector) {
         $.publish("/postman/deliver", [null, "/camera/request"]);
@@ -110,40 +147,7 @@
         full.find(".transfer img", "source");
         full.find(".wrapper", "wrapper");
         full.find(".paparazzi", "paparazzi");
-        $.subscribe("/full/show", function(item) {
-          return pub.show(item);
-        });
-        $.subscribe("/full/hide", function() {
-          return pub.hide();
-        });
-        $.subscribe("/capture/photo", function() {
-          return pub.photo();
-        });
-        $.subscribe("/capture/paparazzi", function() {
-          return pub.paparazzi();
-        });
-        $.subscribe("/countdown/paparazzi", function() {
-          return full.el.paparazzi.removeClass("hidden");
-        });
-        $.subscribe("/capture/video", function() {
-          return pub.video();
-        });
-        $.subscribe("/keyboard/esc", function() {
-          if (!paused) {
-            return $.publish("/full/hide");
-          }
-        });
-        $.subscribe("/keyboard/arrow", function(dir) {
-          if (paused) {
-            return;
-          }
-          if (dir === "left" && index.current() > 0) {
-            index.select(index.current() - 1);
-          }
-          if (dir === "right" && index.current() + 1 < index.max()) {
-            return index.select(index.current() + 1);
-          }
-        });
+        subscribe(pub);
         return draw();
       },
       show: function(item) {

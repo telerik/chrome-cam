@@ -27,24 +27,23 @@ define [
 
     # the main draw loop which renders the live video effects      
     draw = ->
-
         # subscribe to the app level draw event
         $.subscribe "/camera/stream", (stream) ->
+            
+            return if paused
 
-            if not paused
+            # increment the curent frame counter. this is used for animated effects
+            # like old movie and vhs. most effects simply ignore this
+            frame++
 
-                # increment the curent frame counter. this is used for animated effects
-                # like old movie and vhs. most effects simply ignore this
-                frame++
+            # pass in the webgl canvas, the canvas that contains the 
+            # video drawn from the application canvas and the current frame.
+            effects.advance stream.canvas
+            effect canvas, stream.canvas, frame, stream.track
 
-                # pass in the webgl canvas, the canvas that contains the 
-                # video drawn from the application canvas and the current frame.
-                effects.advance stream.canvas
-                effect canvas, stream.canvas, frame, stream.track
-
-                request = ->
-                    $.publish "/postman/deliver", [null, "/camera/request"]
-                setTimeout request, 1
+            request = ->
+                $.publish "/postman/deliver", [null, "/camera/request"]
+            setTimeout request, 1
 
     flash = (callback, file) ->
 
@@ -79,26 +78,55 @@ define [
         transfer.find("img").load ->
 
             # set the name of this image to the current time string
-            
             file = { type: "jpg", name: "#{name}.jpg", file: image }
 
             filewrapper.save(file.name, image)
-                # I may have it bouncing around too much, but I don't want the bar to
-                # just respond to *all* file saves, or have this module know about
-                # the bar's internals
+
             $.publish "/gallery/add", [file]
 
             flash(callback, file)
 
     index =
         current: ->
-            # return is compulsory here.
+            # return is compulsory here; otherwise CoffeeScript will build an array.
             return i for i in [0...effects.data.length] when effects.data[i].filter is effect
         max: ->
             effects.data.length
         select: (i) ->
             effect = effects.data[i].filter
             $.publish "/postman/deliver", [ effects.data[i].tracks, "/tracking/enable" ]
+
+    subscribe = (pub) ->
+        # subscribe to external events an map them to internal functions
+
+        $.subscribe "/full/show", (item) ->
+            pub.show(item)
+
+        $.subscribe "/full/hide", ->
+            pub.hide()
+            
+        $.subscribe "/capture/photo", ->
+            pub.photo()
+        
+        $.subscribe "/capture/paparazzi", ->
+            pub.paparazzi()
+
+        $.subscribe "/countdown/paparazzi", ->
+             full.el.paparazzi.removeClass "hidden"
+
+        $.subscribe "/capture/video", ->
+            pub.video()
+
+        $.subscribe "/keyboard/esc", ->
+            $.publish "/full/hide" unless paused
+
+        $.subscribe "/keyboard/arrow", (dir) ->
+            return if paused
+
+            if dir is "left" and index.current() > 0
+                index.select index.current() - 1
+            if dir is "right" and index.current() + 1 < index.max()
+                index.select index.current() + 1
 
     pub = 
 
@@ -130,36 +158,7 @@ define [
             full.find(".wrapper", "wrapper")
             full.find(".paparazzi", "paparazzi")
 
-            # subscribe to external events an map them to internal
-            # functions
-            $.subscribe "/full/show", (item) ->
-                pub.show(item)
-
-            $.subscribe "/full/hide", ->
-                pub.hide()
-                
-            $.subscribe "/capture/photo", ->
-                pub.photo()
-            
-            $.subscribe "/capture/paparazzi", ->
-                pub.paparazzi()
-
-            $.subscribe "/countdown/paparazzi", ->
-                 full.el.paparazzi.removeClass "hidden"
-
-            $.subscribe "/capture/video", ->
-                pub.video()
-
-            $.subscribe "/keyboard/esc", ->
-                $.publish "/full/hide" unless paused
-
-            $.subscribe "/keyboard/arrow", (dir) ->
-                return if paused
-
-                if dir is "left" and index.current() > 0
-                    index.select index.current() - 1
-                if dir is "right" and index.current() + 1 < index.max()
-                    index.select index.current() + 1
+            subscribe pub
 
             draw()
 
