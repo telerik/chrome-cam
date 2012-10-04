@@ -120,8 +120,8 @@
             return draw(canvas, element, effect);
           }
         }, {
-          id: "mirrorBottom",
-          name: "Mirror Bottom",
+          id: "reflection",
+          name: "Reflection",
           filter: function(canvas, element) {
             var effect;
             effect = function(canvas, element) {
@@ -130,8 +130,8 @@
             return draw(canvas, element, effect);
           }
         }, {
-          id: "mirrorTube",
-          name: "Mirror Tube",
+          id: "flush",
+          name: "Flush",
           filter: function(canvas, element) {
             var effect;
             effect = function(canvas, element) {

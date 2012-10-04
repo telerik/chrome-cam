@@ -127,8 +127,8 @@ define([
             }
 
             {
-                id: "mirrorBottom"
-                name: "Mirror Bottom"
+                id: "reflection"
+                name: "Reflection"
                 filter: (canvas, element) -> 
                     effect = (canvas, element) ->
                         canvas.mirror Math.PI * 1.5
@@ -136,8 +136,8 @@ define([
             }
         
             {
-                id: "mirrorTube"
-                name: "Mirror Tube"
+                id: "flush"
+                name: "Flush"
                 filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.mirrorTube canvas.width / 2, canvas.height / 2, canvas.height / 4
