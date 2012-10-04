@@ -156,7 +156,7 @@ define [
         
             # initialize effects
             # TODO: this should be initialized somewhere else
-            effects.init()
+            
 
             # bind to keyboard events
             keyboard true

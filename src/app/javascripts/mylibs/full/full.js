@@ -104,6 +104,7 @@
     };
     return pub = {
       init: function(selector) {
+        $.publish("/postman/deliver", [null, "/camera/request"]);
         full = new kendo.View(selector, template);
         canvas = document.createElement("canvas");
         video = document.createElement("canvas");

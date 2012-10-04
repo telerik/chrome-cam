@@ -17,8 +17,9 @@ define([
   'mylibs/about/about'
   'mylibs/confirm/confirm'
   'mylibs/assets/assets'
+  'mylibs/effects/effects'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, popover, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, record ) ->
+], (kendo, glfx, camera, bottom, top, popover, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, effects, record ) ->
 	
 	pub = 
 		    
@@ -56,9 +57,6 @@ define([
 				APP.top = top.init(".top")
 				APP.popover = popover.init("#gallery")
 
-				# initialize the previews
-				preview.init "#filters"
-
 				# initialize the full screen capture mode
 				full.init "#capture"
 
@@ -77,8 +75,9 @@ define([
 				# initialize the confirm window
 				confirm.init "#confirm"
 
-				# start drawing some previews
-				preview.draw()
+				# start up camera
+				effects.init()
+				full.show effects.data[0]
 
 				# we are done loading the app. have the postman deliver that msg.
 				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]

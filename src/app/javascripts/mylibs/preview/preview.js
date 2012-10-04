@@ -121,7 +121,6 @@
       init: function(selector) {
         var nextPage, page1, page2, previousPage;
         $.publish("/postman/deliver", [null, "/camera/request"]);
-        effects.init();
         keyboard(true);
         canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
