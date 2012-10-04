@@ -21,7 +21,7 @@
         }
       },
       capture: {
-        visible: false,
+        visible: true,
         click: function(e) {
           var capture, mode;
           mode = this.get("mode.active");

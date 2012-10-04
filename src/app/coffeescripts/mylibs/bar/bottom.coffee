@@ -28,9 +28,8 @@ define [
 				a.addClass "selected"
 
 		capture:
-			visible: false
+			visible: true
 			click: (e) ->
-
 				mode = this.get("mode.active")
 
 				states.capture()
