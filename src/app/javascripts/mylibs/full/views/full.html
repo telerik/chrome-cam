@@ -2,4 +2,11 @@
 	<h1 class="timer hidden"></h1>
 	<h1 class="paparazzi hidden"></h1>
 	<div class="flash hidden"></div>
+	<div class="filters hidden">
+		<ul>
+			# for (var i = 0; i < APP.filters.length; ++i) { #
+				<li data-filter-index="#: i #" data-filter-id="#: APP.filters[i].id #">#: APP.filters[i].name #</li>
+			# } #
+		</ul>
+	</div>
 </div>

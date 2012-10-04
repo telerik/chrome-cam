@@ -2,20 +2,16 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, pub, recording, scaleCanvas, startTime, subscribe, transfer, video, videoCtx;
+    var canvas, capture, ctx, draw, effect, flash, frame, full, index, paparazzi, paused, pub, subscribe, transfer, video, videoCtx;
     canvas = {};
     ctx = {};
     video = {};
     videoCtx = {};
     paused = true;
     frame = 0;
-    frames = [];
-    recording = false;
-    startTime = 0;
     full = {};
     transfer = {};
     effect = {};
-    scaleCanvas = {};
     paparazzi = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
@@ -147,6 +143,7 @@
         full.find(".transfer img", "source");
         full.find(".wrapper", "wrapper");
         full.find(".paparazzi", "paparazzi");
+        full.find(".filters", "filters");
         subscribe(pub);
         return draw();
       },

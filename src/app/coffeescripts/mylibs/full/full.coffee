@@ -14,14 +14,9 @@ define [
     videoCtx = {}
     paused = true
     frame = 0
-    frames = []
-    recording = false
-    startTime = 0
     full = {}
     transfer = {}
     effect = {}
-
-    scaleCanvas = {}
 
     paparazzi = {}
 
@@ -29,7 +24,7 @@ define [
     draw = ->
         # subscribe to the app level draw event
         $.subscribe "/camera/stream", (stream) ->
-            
+
             return if paused
 
             # increment the curent frame counter. this is used for animated effects
@@ -157,6 +152,7 @@ define [
             full.find(".transfer img", "source")
             full.find(".wrapper", "wrapper")
             full.find(".paparazzi", "paparazzi")
+            full.find(".filters", "filters")
 
             subscribe pub
 

@@ -8,6 +8,7 @@
         var APP;
         APP = window.APP = {};
         APP.full = full;
+        APP.filters = effects.data;
         APP.gallery = gallery;
         APP.settings = settings;
         APP.about = about;
