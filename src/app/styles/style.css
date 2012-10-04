@@ -193,7 +193,7 @@ body div { padding-top: 0px; }
 	color: white;
 }
 
-.mode { margin-right: 10px; }
+.mode { margin-left: 25px; }
 	.mode .km-button {
 		border-radius: 0;
 		border-right-width: 1px;
@@ -209,6 +209,18 @@ body div { padding-top: 0px; }
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
+
+.capture {
+	border-color: #cc0018;
+	background-color: #fe2d38;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#fe2d38),to(#e30a26));
+	background-image: -webkit-linear-gradient(top,#fe2d38,#e30a26);
+	background-image: linear-gradient(top,#fe2d38,#e30a26);
+}
+	.capture:hover {
+		border-color: #cc0018;
+		background: #fe2d38;
+	}
 
 .bar .countdown {
 	margin: auto;
