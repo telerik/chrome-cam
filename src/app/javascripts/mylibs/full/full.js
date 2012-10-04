@@ -29,22 +29,20 @@
       });
     };
     flash = function(callback, file) {
-      return config.get("flash", function(enabled) {
-        full.el.flash.show();
-        transfer.content.kendoStop().kendoAnimate({
-          effects: "transfer",
-          target: $("#destination"),
-          duration: 1000,
-          ease: "ease-in",
-          complete: function() {
-            $.publish("/bottom/thumbnail", [file]);
-            transfer.destroy();
-            transfer = {};
-            return callback();
-          }
-        });
-        return full.el.flash.hide();
+      full.el.flash.show();
+      transfer.content.kendoStop().kendoAnimate({
+        effects: "transfer",
+        target: $("#destination"),
+        duration: 1000,
+        ease: "ease-in",
+        complete: function() {
+          $.publish("/bottom/thumbnail", [file]);
+          transfer.destroy();
+          transfer = {};
+          return callback();
+        }
       });
+      return full.el.flash.hide();
     };
     capture = function(callback) {
       var data, image, name;

@@ -42,23 +42,22 @@ define [
 
     flash = (callback, file) ->
 
-        config.get "flash", (enabled) ->
-            # TODO: use enabled value
-            full.el.flash.show()
+        # TODO: use enabled value
+        full.el.flash.show()
 
-            transfer.content.kendoStop().kendoAnimate 
-                effects: "transfer",  
-                target: $("#destination"), 
-                duration: 1000, 
-                ease: "ease-in",
-                complete: ->
-                    $.publish "/bottom/thumbnail", [file]
-                    transfer.destroy()
-                    transfer = {}
+        transfer.content.kendoStop().kendoAnimate 
+            effects: "transfer",  
+            target: $("#destination"), 
+            duration: 1000, 
+            ease: "ease-in",
+            complete: ->
+                $.publish "/bottom/thumbnail", [file]
+                transfer.destroy()
+                transfer = {}
 
-                    callback()
+                callback()
 
-            full.el.flash.hide()
+        full.el.flash.hide()
 
     capture = (callback) ->
 
