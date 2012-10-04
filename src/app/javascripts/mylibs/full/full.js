@@ -170,6 +170,9 @@
         full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
         return $.publish("/postman/deliver", [item.tracks, "/tracking/enable"]);
       },
+      filter: function(e) {
+        return index.select($(e.target).data("filter-index"));
+      },
       hide: function() {
         paused = true;
         $.publish("/bottom/update", ["preview"]);

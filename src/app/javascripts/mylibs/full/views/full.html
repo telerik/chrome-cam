@@ -5,7 +5,7 @@
 	<div class="filters-list hidden">
 		<ul>
 			# for (var i = 0; i < APP.filters.length; ++i) { #
-				<li data-filter-index="#: i #" data-filter-id="#: APP.filters[i].id #">#: APP.filters[i].name #</li>
+				<li data-bind="click: filter" data-filter-index="#: i #" data-filter-id="#: APP.filters[i].id #">#: APP.filters[i].name #</li>
 			# } #
 		</ul>
 	</div>

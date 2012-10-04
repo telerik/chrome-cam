@@ -183,6 +183,9 @@ define [
             full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
             $.publish "/postman/deliver", [ item.tracks, "/tracking/enable" ]
 
+        filter: (e) ->
+            index.select $(e.target).data("filter-index")
+
         hide: ->
 
             paused = true
