@@ -1673,7 +1673,6 @@ body:after {
 
 .km-android,.km-android .km-content {
     color: #000;
-    background-color: #f1f1f1;
 }
 
 .km-android .km-navbar,.km-android .km-toolbar,.km-android .km-buttongroup,.km-android .km-tabstrip,.km-android input[type=file],.km-android li.km-actionsheet-cancel>a {
