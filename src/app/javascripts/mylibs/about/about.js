@@ -32,11 +32,12 @@
         ]);
       },
       hide: function() {
-        return $.publish("/postman/deliver", [
+        $.publish("/postman/deliver", [
           {
             paused: false
           }, "/camera/pause"
         ]);
+        return $.publish("/postman/deliver", [null, "/camera/request"]);
       },
       init: function(selector) {
         var view;

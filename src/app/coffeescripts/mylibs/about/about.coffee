@@ -28,6 +28,7 @@ define [
 
 		hide: ->
 			$.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
+			$.publish "/postman/deliver", [ null, "/camera/request" ]
 
 		init: (selector) ->
 
