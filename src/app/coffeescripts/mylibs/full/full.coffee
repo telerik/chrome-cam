@@ -1,4 +1,4 @@
-define([
+define [
   'Kendo'
   'mylibs/effects/effects'
   'mylibs/utils/utils'
@@ -7,8 +7,7 @@ define([
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
 ], (kendo, effects, utils, filewrapper, config, template, transferImg) ->
-    SECONDS_TO_RECORD = 6
-
+    
     canvas = {}
     ctx = {}
     video = {}
@@ -43,21 +42,6 @@ define([
                 effects.advance stream.canvas
                 effect canvas, stream.canvas, frame, stream.track
 
-                # if we are recording, dump this canvas to a pixel array
-                if recording
-
-                    time = Date.now()
-
-                    # push the current frame onto the buffer
-                    # scale the video down to 360 x 240
-                    videoCtx.drawImage canvas, 0, 0
-                    frames.push imageData: videoCtx.getImageData(0, 0, video.width, video.height), time: time
-
-                    # update the time in the view
-                    secondsRecorded = (Date.now() - startTime) / 1000
-                    remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded)
-                    full.el.timer.first().html kendo.toString(remaining, "0")
-
                 request = ->
                     $.publish "/postman/deliver", [null, "/camera/request"]
                 setTimeout request, 1
@@ -81,7 +65,6 @@ define([
                     callback()
 
             full.el.flash.hide()
-
 
     capture = (callback) ->
 
@@ -152,7 +135,7 @@ define([
             $.subscribe "/full/show", (item) ->
                 pub.show(item)
 
-            $.subscribe "/full/hide", ->        
+            $.subscribe "/full/hide", ->
                 pub.hide()
                 
             $.subscribe "/capture/photo", ->
@@ -188,24 +171,15 @@ define([
 
             paused = false
 
-            # get the height of the container minus the footer
-            # full.content.height(full.container.height()) - 50
             full.el.transfer.height(full.content.height())
-
-            # determine the width based on a 3:2 aspect ratio (.66 repeating)
-            # $content.width (3 / 2) * $content.height()
-            # full.content.width (3 / 2) * full.content.height()
             full.el.transfer.width(full.content.width())
 
-            # $(canvas).height(full.content.height())
-
-            full.container.kendoStop(true).kendoAnimate {
+            full.container.kendoStop(true).kendoAnimate
                 effects: "zoomIn fadeIn"
                 show: true
                 complete: ->
                     # show the record controls in the footer
                     $.publish "/bottom/update", [ "full" ]
-            }
 
         hide: ->
 
@@ -213,13 +187,12 @@ define([
 
             $.publish "/bottom/update", ["preview"]
 
-            full.container.kendoStop(true).kendoAnimate {
+            full.container.kendoStop(true).kendoAnimate
                 effects: "zoomOut fadeOut"
                 hide: true,
                 complete: ->
                     $.publish "/preview/pause", [false]
                     $.publish "/postman/deliver", [null, "/camera/request"]
-            }
 
         photo: ->
 
@@ -254,58 +227,3 @@ define([
 
             advance()
             capture(callback)
-
-        video: ->
-            # TODO: make it stop recording early instead?
-            return if recording
-            recording = true
-
-            console.log "Recording..."
-
-            frames = []
-            
-            startTime = Date.now()
-
-            full.container.find(".timer").removeClass("hidden")
-
-            save = ->
-
-                utils.createVideo(frames).done (result) ->
-
-                    console.log("Recording Done!")
-
-                    frames = []
-
-                    full.container.find(".timer").addClass("hidden")
-                    
-                    image = canvas.toDataURL()
-
-                    file = { type: "webm", name: result.name, file: result.url }
-                    data = { src: image, height: full.content.height(), width: full.content.width() }
-                    
-                    transfer = new kendo.View(full.content, transferImg, data)
-                    transfer.render()
-
-                    transfer.find("img").load ->    
-                        
-                        transfer.content.kendoStop().kendoAnimate 
-                            effects: "transfer",  
-                            target: $("#destination"), 
-                            duration: 1000, 
-                            ease: "ease-in",
-                            complete: ->
-                                $.publish "/bottom/thumbnail", [file]
-                                $.publish "/gallery/add", [file]
-                                transfer.destroy()
-                                transfer = {}
-
-                    $.publish "/bottom/update", ["full"]
-
-            done = ->
-                recording = false
-                $.publish "/bottom/update", ["processing"]
-
-                setTimeout save, 0
-
-            setTimeout done, SECONDS_TO_RECORD * 1000
-)

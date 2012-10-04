@@ -2,8 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
-    SECONDS_TO_RECORD = 6;
+    var canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
     canvas = {};
     ctx = {};
     video = {};
@@ -20,22 +19,11 @@
     paparazzi = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var remaining, request, secondsRecorded, time;
+        var request;
         if (!paused) {
           frame++;
           effects.advance(stream.canvas);
           effect(canvas, stream.canvas, frame, stream.track);
-          if (recording) {
-            time = Date.now();
-            videoCtx.drawImage(canvas, 0, 0);
-            frames.push({
-              imageData: videoCtx.getImageData(0, 0, video.width, video.height),
-              time: time
-            });
-            secondsRecorded = (Date.now() - startTime) / 1000;
-            remaining = Math.max(0, SECONDS_TO_RECORD - secondsRecorded);
-            full.el.timer.first().html(kendo.toString(remaining, "0"));
-          }
           request = function() {
             return $.publish("/postman/deliver", [null, "/camera/request"]);
           };
@@ -216,59 +204,6 @@
         };
         advance();
         return capture(callback);
-      },
-      video: function() {
-        var done, save;
-        if (recording) {
-          return;
-        }
-        recording = true;
-        console.log("Recording...");
-        frames = [];
-        startTime = Date.now();
-        full.container.find(".timer").removeClass("hidden");
-        save = function() {
-          return utils.createVideo(frames).done(function(result) {
-            var data, file, image;
-            console.log("Recording Done!");
-            frames = [];
-            full.container.find(".timer").addClass("hidden");
-            image = canvas.toDataURL();
-            file = {
-              type: "webm",
-              name: result.name,
-              file: result.url
-            };
-            data = {
-              src: image,
-              height: full.content.height(),
-              width: full.content.width()
-            };
-            transfer = new kendo.View(full.content, transferImg, data);
-            transfer.render();
-            transfer.find("img").load(function() {
-              return transfer.content.kendoStop().kendoAnimate({
-                effects: "transfer",
-                target: $("#destination"),
-                duration: 1000,
-                ease: "ease-in",
-                complete: function() {
-                  $.publish("/bottom/thumbnail", [file]);
-                  $.publish("/gallery/add", [file]);
-                  transfer.destroy();
-                  return transfer = {};
-                }
-              });
-            });
-            return $.publish("/bottom/update", ["full"]);
-          });
-        };
-        done = function() {
-          recording = false;
-          $.publish("/bottom/update", ["processing"]);
-          return setTimeout(save, 0);
-        };
-        return setTimeout(done, SECONDS_TO_RECORD * 1000);
       }
     };
   });
