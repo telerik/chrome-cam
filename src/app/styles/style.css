@@ -121,6 +121,17 @@ body div { padding-top: 0px; }
 .kd-button-share:visited,
 .kd-button-submit:visited { color: #FFF; }
 
+.kd-button.selected {
+	background-color: #EEEEEE;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#EEEEEE),to(#E0E0E0));
+	background-image: -webkit-linear-gradient(top,#EEEEEE,#E0E0E0);
+	background-image: linear-gradient(top,#EEEEEE,#E0E0E0);
+	-webkit-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+	border: 1px solid #CCC;
+	color: #333;
+}
+
 /************ Animations ************/
 
 .animate { -webkit-transition: all 0.5s ease-out; }
@@ -180,16 +191,15 @@ body div { padding-top: 0px; }
 .mode { margin-right: 10px; }
 	.mode .km-button {
 		border-radius: 0;
-		border-right: 1px;
+		border-right-width: 1px;
 	}
 	.mode .km-button:hover { box-shadow: none; }
-	.mode .km-button.selected { background: #bbb; }
 	.mode .km-button img { width: 20px; }
 
 .mode .km-button:first-child {
 	border-bottom-left-radius: 2px;
 	border-top-left-radius: 2px;
-	border-right: 0px;
+	border-right-width: 0px;
 }
 .mode .km-button:last-child {
 	border-top-right-radius: 2px;
@@ -500,7 +510,7 @@ body div { padding-top: 0px; }
 	.wrapper canvas { 
 		position: absolute;
 		border: 1px solid #2d2d2d;
-		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, .25);
+		box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 23px 5px, rgba(0, 0, 0, 0.14902) 0px 2px 6px;
 	}
 	.full .flash {
 		position: absolute;
