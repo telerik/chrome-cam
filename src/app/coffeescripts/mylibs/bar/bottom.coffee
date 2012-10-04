@@ -51,8 +51,10 @@ define [
 		filters: 
 			visible: false
 			open: false
+			css: ->
 			click: ->
-				viewModel.filters.open = not viewModel.filters.open
+				@set "filters.open", not viewModel.filters.open
+				view.el.filters.toggleClass "selected", viewModel.filters.open
 				$.publish "/full/filters/show", [viewModel.filters.open]
 
 	countdown = (position, callback) ->
@@ -141,5 +143,6 @@ define [
 			view.find(".stop", "stop")
 			view.find(".counter", "counters")
 			view.find(".bar", "bar")
+			view.find(".filters", "filters")
 	
 			return view

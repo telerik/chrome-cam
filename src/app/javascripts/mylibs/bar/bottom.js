@@ -48,8 +48,10 @@
       filters: {
         visible: false,
         open: false,
+        css: function() {},
         click: function() {
-          viewModel.filters.open = !viewModel.filters.open;
+          this.set("filters.open", !viewModel.filters.open);
+          view.el.filters.toggleClass("selected", viewModel.filters.open);
           return $.publish("/full/filters/show", [viewModel.filters.open]);
         }
       }
@@ -124,6 +126,7 @@
         view.find(".stop", "stop");
         view.find(".counter", "counters");
         view.find(".bar", "bar");
+        view.find(".filters", "filters");
         return view;
       }
     };
