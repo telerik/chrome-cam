@@ -7,20 +7,14 @@
 		<a data-role="button" class="button filters" data-bind="click: filters.click, visible: filters.visible">Filters</a> 
 	</section>
 	<section class="center">
-		<div>
-			<div class="capture" data-bind="visible: capture.visible" title="Record">
-				<div class="gray circle" data-bind="events: { click: capture.click } ">
-					<div class="red-dot circle stop"></div>
-				</div>
-			</div>
-			<div class="countdown">
-				<span class="red-dot circle counter"></span>
-				<span class="red-dot circle counter"></span>
-				<span class="red-dot circle counter"></span>
-			</div>
-			<div class="saving" data-bind="visible: processing.visible">
-				<h3>Processing...</h3>
-			</div>
+		<a class="km-button" data-bind="events: { click: capture.click } "><img src="styles/images/cameraMode.png"></a>
+		<div class="countdown">
+			<span class="red-dot circle counter"></span>
+			<span class="red-dot circle counter"></span>
+			<span class="red-dot circle counter"></span>
+		</div>
+		<div class="saving" data-bind="visible: processing.visible">
+			<h3>Processing...</h3>
 		</div>
 	</section>
 	<section class="right">

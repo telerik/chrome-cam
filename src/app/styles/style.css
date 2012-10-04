@@ -132,6 +132,8 @@ body div { padding-top: 0px; }
 	color: #333;
 }
 
+.km-button img { width: 20px; }
+
 /************ Animations ************/
 
 .animate { -webkit-transition: all 0.5s ease-out; }
@@ -141,8 +143,7 @@ body div { padding-top: 0px; }
 /* Bar Structure */
 
 .footer { 
-	/*margin-top: -60px;  negative value of footer height */
-	height: 60px;
+	height: 72px;
 	clear: both;
 }
 
@@ -166,7 +167,11 @@ body div { padding-top: 0px; }
 
 .km-header .left, .km-footer .left { padding-left: 15px; }
 
-.km-header .center, .km-footer .center { text-align: center; }
+.km-header .center, .km-footer .center {
+	text-align: center;
+	display: -webkit-box;
+	-webkit-box-pack: center;
+}
 
 	.km-header .center > div, .km-footer .center > div {
 		width: 150px;
@@ -194,7 +199,6 @@ body div { padding-top: 0px; }
 		border-right-width: 1px;
 	}
 	.mode .km-button:hover { box-shadow: none; }
-	.mode .km-button img { width: 20px; }
 
 .mode .km-button:first-child {
 	border-bottom-left-radius: 2px;
@@ -205,42 +209,6 @@ body div { padding-top: 0px; }
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
-
-.capture {
-	position: absolute;
-	width: 150px;
-	height: 100%;
-}
-
-.bar .gray {
-	position: absolute;
-	margin-left: 53px;
-	background-color: #575757;
-	background-image: -webkit-linear-gradient(bottom, silver 22%, #EBEBEB 61%);
-	background-image: linear-gradient(bottom, silver 22%, #EBEBEB 61%);
-	border: 1px solid #AAA;
-	opacity: 1;
-	width: 40px;
-	height: 40px;
-	margin-top: 10px;
-	cursor: pointer;
-}
-	.bar .gray:hover { -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .5); }
-	.bar .gray:after {
-		display: block;
-		content: '';
-		position: absolute;
-		border: 1px solid #EBEBEB;
-		opacity: 1;
-		width: 38px;
-		height: 38px;
-		margin-top: 5px;
-		border-radius: 50%;
-		top: -5px;
-		left: 0px;
-		z-index: 1;
-	}
-	.gray:active { background: #eee; }
 
 .bar .countdown {
 	margin: auto;
