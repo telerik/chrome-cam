@@ -1,8 +1,7 @@
 define([
-  'mylibs/preview/preview'
   'mylibs/utils/utils'
   'libs/face/track'
-], (preview, utils, face) ->
+], (utils, face) ->
 
     ###     Camera
 

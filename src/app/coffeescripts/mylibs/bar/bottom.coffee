@@ -107,11 +107,6 @@ define [
 
 	states = 
 
-		preview: ->
-			viewModel.set("mode.visible", false)
-			viewModel.set("capture.visible", false)
-			viewModel.set("filters.visible", false)
-			viewModel.set("thumbnail.active", true)
 		capture: ->
 			viewModel.set("thumbnail.active", true)
 			viewModel.set("mode.visible", false)

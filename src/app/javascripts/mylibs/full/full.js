@@ -2,13 +2,12 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/config/config', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, config, template, transferImg) {
-    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, preview, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
+    var SECONDS_TO_RECORD, canvas, capture, ctx, draw, effect, flash, frame, frames, full, index, paparazzi, paused, pub, recording, scaleCanvas, startTime, transfer, video, videoCtx;
     SECONDS_TO_RECORD = 6;
     canvas = {};
     ctx = {};
     video = {};
     videoCtx = {};
-    preview = {};
     paused = true;
     frame = 0;
     frames = [];

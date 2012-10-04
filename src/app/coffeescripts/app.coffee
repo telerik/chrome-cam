@@ -1,11 +1,10 @@
-define([
+define [
   'Kendo'
   'Glfx'
   'mylibs/camera/camera'
   'mylibs/bar/bottom'
   'mylibs/bar/top'
   'mylibs/popover/popover'
-  'mylibs/preview/preview'
   'mylibs/full/full'
   'mylibs/postman/postman'
   'mylibs/utils/utils'
@@ -19,7 +18,7 @@ define([
   'mylibs/assets/assets'
   'mylibs/effects/effects'
   'libs/record/record'
-], (kendo, glfx, camera, bottom, top, popover, preview, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, effects, record ) ->
+], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, settings, about, confirm, assets, effects, record ) ->
 	
 	pub = 
 		    
@@ -28,7 +27,6 @@ define([
 			APP = window.APP = {}
 
 			APP.full = full
-			APP.filters = preview
 			APP.gallery = gallery
 			APP.settings = settings
 			APP.about = about
@@ -83,5 +81,3 @@ define([
 				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
 
 				window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
-
-)

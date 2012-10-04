@@ -83,12 +83,6 @@
       });
     };
     states = {
-      preview: function() {
-        viewModel.set("mode.visible", false);
-        viewModel.set("capture.visible", false);
-        viewModel.set("filters.visible", false);
-        return viewModel.set("thumbnail.active", true);
-      },
       capture: function() {
         viewModel.set("thumbnail.active", true);
         viewModel.set("mode.visible", false);

@@ -13,7 +13,6 @@ define([
     ctx = {}
     video = {}
     videoCtx = {}
-    preview = {}
     paused = true
     frame = 0
     frames = []
@@ -123,7 +122,7 @@ define([
         init: (selector) ->
 
             $.publish "/postman/deliver", [null, "/camera/request"]
-            
+
             full = new kendo.View(selector, template)
 
             # create a new canvas for drawing
