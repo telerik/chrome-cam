@@ -282,15 +282,19 @@ define [
             pages.previous = page1.render().addClass("page gallery")
             active = pages.next = page2.render().addClass("page gallery")
 
+            page1.container.on "click", ->
+                deselect()
+
             #delegate some events to the gallery
-            page1.container.on "dblclick", ".thumbnail", ->
+            page1.container.on "dblclick", ".thumbnail", (e) ->
                 thumb = $(@).children(":first")            
                 $.publish "/details/show", [ get("#{thumb.data("name")}") ]
 
-            page1.container.on "click", ".thumbnail", ->
+            page1.container.on "click", ".thumbnail", (e) ->
                 thumb = $(@).children(":first")            
                 $.publish "/top/update", ["selected"]
                 select thumb.data("name")
+                e.stopPropagation()
 
             $.subscribe "/pictures/bulk", (message) =>
                 @ds = dataSource.create(message.message)

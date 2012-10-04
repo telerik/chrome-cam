@@ -274,16 +274,20 @@
         arrows.init($(selector).parent());
         pages.previous = page1.render().addClass("page gallery");
         active = pages.next = page2.render().addClass("page gallery");
-        page1.container.on("dblclick", ".thumbnail", function() {
+        page1.container.on("click", function() {
+          return deselect();
+        });
+        page1.container.on("dblclick", ".thumbnail", function(e) {
           var thumb;
           thumb = $(this).children(":first");
           return $.publish("/details/show", [get("" + (thumb.data("name")))]);
         });
-        page1.container.on("click", ".thumbnail", function() {
+        page1.container.on("click", ".thumbnail", function(e) {
           var thumb;
           thumb = $(this).children(":first");
           $.publish("/top/update", ["selected"]);
-          return select(thumb.data("name"));
+          select(thumb.data("name"));
+          return e.stopPropagation();
         });
         $.subscribe("/pictures/bulk", function(message) {
           _this.ds = dataSource.create(message.message);
