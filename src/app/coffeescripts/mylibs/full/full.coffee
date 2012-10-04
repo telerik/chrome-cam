@@ -96,9 +96,6 @@ define [
         $.subscribe "/full/show", (item) ->
             pub.show(item)
 
-        $.subscribe "/full/hide", ->
-            pub.hide()
-            
         $.subscribe "/capture/photo", ->
             pub.photo()
         
@@ -110,9 +107,6 @@ define [
 
         $.subscribe "/capture/video", ->
             pub.video()
-
-        $.subscribe "/keyboard/esc", ->
-            $.publish "/full/hide" unless paused
 
         $.subscribe "/full/filters/show", (show) ->
             full.el.filters.toggle show
@@ -185,19 +179,6 @@ define [
 
         filter: (e) ->
             index.select $(e.target).data("filter-index")
-
-        hide: ->
-
-            paused = true
-
-            $.publish "/bottom/update", ["preview"]
-
-            full.container.kendoStop(true).kendoAnimate
-                effects: "zoomOut fadeOut"
-                hide: true,
-                complete: ->
-                    $.publish "/preview/pause", [false]
-                    $.publish "/postman/deliver", [null, "/camera/request"]
 
         photo: ->
 

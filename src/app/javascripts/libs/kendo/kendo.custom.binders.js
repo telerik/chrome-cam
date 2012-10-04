@@ -25,22 +25,4 @@
     }
   });
 
-  kendo.data.binders.slideUpDown = kendo.data.Binder.extend({
-    refresh: function() {
-      var value;
-      value = this.bindings["slideUpDown"].get();
-      if (value) {
-        return $(this.element).kendoStop(true).kendoAnimate({
-          effects: "slideIn:up",
-          show: true
-        });
-      } else {
-        return $(this.element).kendoStop(true).kendoAnimate({
-          effects: "slide:down",
-          show: true
-        });
-      }
-    }
-  });
-
 }).call(this);

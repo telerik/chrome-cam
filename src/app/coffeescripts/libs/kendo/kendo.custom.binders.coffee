@@ -17,16 +17,16 @@ kendo.data.binders.zoom = kendo.data.Binder.extend
             	effects: "zoomOut fadeOut",
             	show: true
 
-# custom bindings
-kendo.data.binders.slideUpDown = kendo.data.Binder.extend
-    refresh: ->
-        value = this.bindings["slideUpDown"].get();
+# # custom bindings
+# kendo.data.binders.slideUpDown = kendo.data.Binder.extend
+#     refresh: ->
+#         value = this.bindings["slideUpDown"].get();
 
-        if value
-            $(this.element).kendoStop(true).kendoAnimate
-                effects: "slideIn:up",
-                show: true
-        else
-            $(this.element).kendoStop(true).kendoAnimate
-                effects: "slide:down",
-                show: true
+#         if value
+#             $(this.element).kendoStop(true).kendoAnimate
+#                 effects: "slideIn:up",
+#                 show: true
+#         else
+#             $(this.element).kendoStop(true).kendoAnimate
+#                 effects: "slide:down",
+#                 show: true

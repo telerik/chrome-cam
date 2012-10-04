@@ -89,9 +89,6 @@
       $.subscribe("/full/show", function(item) {
         return pub.show(item);
       });
-      $.subscribe("/full/hide", function() {
-        return pub.hide();
-      });
       $.subscribe("/capture/photo", function() {
         return pub.photo();
       });
@@ -103,11 +100,6 @@
       });
       $.subscribe("/capture/video", function() {
         return pub.video();
-      });
-      $.subscribe("/keyboard/esc", function() {
-        if (!paused) {
-          return $.publish("/full/hide");
-        }
       });
       $.subscribe("/full/filters/show", function(show) {
         return full.el.filters.toggle(show);
@@ -172,18 +164,6 @@
       },
       filter: function(e) {
         return index.select($(e.target).data("filter-index"));
-      },
-      hide: function() {
-        paused = true;
-        $.publish("/bottom/update", ["preview"]);
-        return full.container.kendoStop(true).kendoAnimate({
-          effects: "zoomOut fadeOut",
-          hide: true,
-          complete: function() {
-            $.publish("/preview/pause", [false]);
-            return $.publish("/postman/deliver", [null, "/camera/request"]);
-          }
-        });
       },
       photo: function() {
         var callback;
