@@ -82,8 +82,7 @@
         return effects.data.length;
       },
       select: function(i) {
-        effect = effects.data[i].filter;
-        return $.publish("/postman/deliver", [effects.data[i].tracks, "/tracking/enable"]);
+        return pub.select(effects.data[i]);
       }
     };
     subscribe = function(pub) {
@@ -109,6 +108,9 @@
         if (!paused) {
           return $.publish("/full/hide");
         }
+      });
+      $.subscribe("/full/filters/show", function(show) {
+        return full.el.filters.toggle(show);
       });
       return $.subscribe("/keyboard/arrow", function(dir) {
         if (paused) {
@@ -143,7 +145,7 @@
         full.find(".transfer img", "source");
         full.find(".wrapper", "wrapper");
         full.find(".paparazzi", "paparazzi");
-        full.find(".filters", "filters");
+        full.find(".filters-list", "filters");
         subscribe(pub);
         return draw();
       },
@@ -151,7 +153,7 @@
         if (!paused) {
           return;
         }
-        effect = item.filter;
+        pub.select(item);
         paused = false;
         full.el.transfer.height(full.content.height());
         full.el.transfer.width(full.content.width());
@@ -162,6 +164,11 @@
             return $.publish("/bottom/update", ["full"]);
           }
         });
+      },
+      select: function(item) {
+        effect = item.filter;
+        full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
+        return $.publish("/postman/deliver", [item.tracks, "/tracking/enable"]);
       },
       hide: function() {
         paused = true;

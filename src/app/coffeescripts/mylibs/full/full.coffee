@@ -88,8 +88,7 @@ define [
         max: ->
             effects.data.length
         select: (i) ->
-            effect = effects.data[i].filter
-            $.publish "/postman/deliver", [ effects.data[i].tracks, "/tracking/enable" ]
+            pub.select effects.data[i]
 
     subscribe = (pub) ->
         # subscribe to external events an map them to internal functions
@@ -114,6 +113,9 @@ define [
 
         $.subscribe "/keyboard/esc", ->
             $.publish "/full/hide" unless paused
+
+        $.subscribe "/full/filters/show", (show) ->
+            full.el.filters.toggle show
 
         $.subscribe "/keyboard/arrow", (dir) ->
             return if paused
@@ -152,7 +154,7 @@ define [
             full.find(".transfer img", "source")
             full.find(".wrapper", "wrapper")
             full.find(".paparazzi", "paparazzi")
-            full.find(".filters", "filters")
+            full.find(".filters-list", "filters")
 
             subscribe pub
 
@@ -162,7 +164,7 @@ define [
 
             return unless paused
 
-            effect = item.filter
+            pub.select item
 
             paused = false
 
@@ -175,6 +177,11 @@ define [
                 complete: ->
                     # show the record controls in the footer
                     $.publish "/bottom/update", [ "full" ]
+
+        select: (item) ->
+            effect = item.filter
+            full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
+            $.publish "/postman/deliver", [ item.tracks, "/tracking/enable" ]
 
         hide: ->
 

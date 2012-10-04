@@ -9,19 +9,17 @@ define [
 	view = {}
 
 	# create a view model for the top bar
-	viewModel = kendo.observable {
-	
+	viewModel = kendo.observable
 		processing: 
 			visible: false
 
 		mode:
-
 			visible: false
 			active: "photo"
 			click: (e) ->
 				a = $(e.target).closest("a")
 
-				@.set("mode.active", a.data("mode"))
+				@set("mode.active", a.data("mode"))
 
 				# loop through all of the buttons and remove the active class
 				a.closest(".bar").find("a").removeClass "selected"
@@ -30,55 +28,32 @@ define [
 				a.addClass "selected"
 
 		capture:
-
 			visible: false
 			click: (e) ->
 
 				mode = this.get("mode.active")
 
-				if mode == "photo" or mode == "paparazzi"
+				states.capture()
 
-					states.capture()
-
-					# start the countdown
-					capture = -> $.publish "/capture/#{mode}"
-					$.publish "/countdown/#{mode}"
-					if e.ctrlKey
-						capture()
-					else
-						countdown 0, capture
-				else
-
-					states.record()
-					
-					# set the start time to right now
-					startTime = Date.now()
-
-					token = $.subscribe "/recording/done", ->
-						$.unsubscribe token
-						states.full()
-
-					# publish the capture method
-					$.publish "/capture/#{mode}"
-
-					view.el.stop.css "border-radius", 0
-
-					view.el.bar.addClass("recording")
+				# start the countdown
+				capture = -> $.publish "/capture/#{mode}"
+				$.publish "/countdown/#{mode}"
+				if e.ctrlKey then capture() else countdown 0, capture
 
 
 		thumbnail:
 			src: BROKEN_IMAGE
 			visible: ->
-				return @.get("enabled") && @.get("active")
+				return @get("enabled") && @get("active")
 			enabled: false
 			active: true
 
 		filters: 
 			visible: false
+			open: false
 			click: ->
-				$.publish "/full/hide"
-
-	}
+				viewModel.filters.open = not viewModel.filters.open
+				$.publish "/full/filters/show", [viewModel.filters.open]
 
 	countdown = (position, callback) ->
 
@@ -154,10 +129,8 @@ define [
 				if file
 					thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file)
 					thumbnail.render()
-					
-					viewModel.set("thumbnail.enabled", true)
-				else
-					viewModel.set("thumbnail.enabled", false)
+				
+				viewModel.set("thumbnail.enabled", file)
 
 			$.subscribe "/keyboard/space", (e) ->
 				viewModel.capture.click.call viewModel, e

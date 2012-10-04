@@ -23,29 +23,17 @@
       capture: {
         visible: false,
         click: function(e) {
-          var capture, mode, startTime, token;
+          var capture, mode;
           mode = this.get("mode.active");
-          if (mode === "photo" || mode === "paparazzi") {
-            states.capture();
-            capture = function() {
-              return $.publish("/capture/" + mode);
-            };
-            $.publish("/countdown/" + mode);
-            if (e.ctrlKey) {
-              return capture();
-            } else {
-              return countdown(0, capture);
-            }
+          states.capture();
+          capture = function() {
+            return $.publish("/capture/" + mode);
+          };
+          $.publish("/countdown/" + mode);
+          if (e.ctrlKey) {
+            return capture();
           } else {
-            states.record();
-            startTime = Date.now();
-            token = $.subscribe("/recording/done", function() {
-              $.unsubscribe(token);
-              return states.full();
-            });
-            $.publish("/capture/" + mode);
-            view.el.stop.css("border-radius", 0);
-            return view.el.bar.addClass("recording");
+            return countdown(0, capture);
           }
         }
       },
@@ -59,8 +47,10 @@
       },
       filters: {
         visible: false,
+        open: false,
         click: function() {
-          return $.publish("/full/hide");
+          viewModel.filters.open = !viewModel.filters.open;
+          return $.publish("/full/filters/show", [viewModel.filters.open]);
         }
       }
     });
@@ -125,10 +115,8 @@
           if (file) {
             thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file);
             thumbnail.render();
-            return viewModel.set("thumbnail.enabled", true);
-          } else {
-            return viewModel.set("thumbnail.enabled", false);
           }
+          return viewModel.set("thumbnail.enabled", file);
         });
         $.subscribe("/keyboard/space", function(e) {
           return viewModel.capture.click.call(viewModel, e);
