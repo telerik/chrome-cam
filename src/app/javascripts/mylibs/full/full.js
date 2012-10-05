@@ -81,7 +81,14 @@
       },
       select: function(i) {
         return pub.select(effects.data[i]);
-      }
+      },
+      preview: function(i) {
+        return pub.select(effects.data[i], true);
+      },
+      unpreview: function() {
+        return pub.select(effects.data[index.saved]);
+      },
+      saved: 0
     };
     subscribe = function(pub) {
       $.subscribe("/full/show", function(item) {
@@ -155,13 +162,26 @@
           }
         });
       },
-      select: function(item) {
+      select: function(item, temp) {
         effect = item.filter;
-        full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
+        if (!temp) {
+          full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
+        }
         return $.publish("/postman/deliver", [item.tracks, "/tracking/enable"]);
       },
-      filter: function(e) {
-        return index.select($(e.target).data("filter-index"));
+      filter: {
+        click: function(e) {
+          var i;
+          i = $(e.target).data("filter-index");
+          index.saved = i;
+          return index.select(i);
+        },
+        mouseover: function(e) {
+          return index.preview($(e.target).data("filter-index"));
+        },
+        mouseout: function(e) {
+          return index.unpreview();
+        }
       },
       photo: function() {
         var callback;

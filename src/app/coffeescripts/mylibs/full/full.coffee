@@ -88,6 +88,11 @@ define [
             effects.data.length
         select: (i) ->
             pub.select effects.data[i]
+        preview: (i) ->
+            pub.select effects.data[i], true
+        unpreview: ->
+            pub.select effects.data[index.saved]
+        saved: 0
 
     subscribe = (pub) ->
         # subscribe to external events an map them to internal functions
@@ -171,14 +176,21 @@ define [
                     # show the record controls in the footer
                     $.publish "/bottom/update", [ "full" ]
 
-        select: (item) ->
+        select: (item, temp) ->
             effect = item.filter
-            full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
+            unless temp
+                full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
             $.publish "/postman/deliver", [ item.tracks, "/tracking/enable" ]
 
-        filter: (e) ->
-            index.select $(e.target).data("filter-index")
-
+        filter:
+            click: (e) ->
+                i = $(e.target).data("filter-index")
+                index.saved = i
+                index.select i
+            mouseover: (e) ->
+                index.preview $(e.target).data("filter-index")
+            mouseout: (e) ->
+                index.unpreview()
         photo: ->
 
             callback = ->
