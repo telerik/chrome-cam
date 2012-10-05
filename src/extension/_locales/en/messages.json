@@ -25,7 +25,25 @@
     "backButton": {
         "message": "Back"
     },
-    
+    "backToCameraButton": {
+        "message": "Back to Camera"
+    },
+    "saveButton": {
+        "message": "Save"
+    },
+    "deleteDialogTitle": {
+        "message": "Delete"
+    },
+    "deleteConfirmation": {
+        "message": "Are you sure you want to delete this priceless photo?"
+    },
+    "yesButton": {
+        "message": "Yes"
+    },
+    "noButton": {
+        "message": "No"
+    },
+
     "normal": { "message": "Normal" },
     "andy": { "message": "Andy" },
     "blockhead": { "message": "Blockhead" },
