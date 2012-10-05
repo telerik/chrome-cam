@@ -110,6 +110,9 @@ define [
 			$.subscribe "/tab/open", (url) ->
 				chrome.tabs.create url: url
 
+			$.subscribe "/localization/request", ->
+				$.publish "/postman/deliver", [ localization, "/localization/response" ]
+
 			#initialize notifications
 			notify.init()
 

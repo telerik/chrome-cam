@@ -46,34 +46,41 @@ define [
 
 			$.publish "/postman/deliver", [ true, "/menu/enable" ]
 
-			# initialize the camera
-			camera.init "countdown", ->
+			$.subscribe "/localization/response", (dict) ->
 
-				# create the top and bottom bars
-				APP.bottom = bottom.init(".bottom")
-				APP.top = top.init(".top")
-				APP.popover = popover.init("#gallery")
+				console.log dict
 
-				# initialize the full screen capture mode
-				full.init "#capture"
+				ready = ->
+					# create the top and bottom bars
+					APP.bottom = bottom.init(".bottom")
+					APP.top = top.init(".top")
+					APP.popover = popover.init("#gallery")
 
-				# initialize gallery details view
-				details.init "#details"
+					# initialize the full screen capture mode
+					full.init "#capture"
 
-				# initialize the thumbnail gallery
-				gallery.init "#thumbnails"
+					# initialize gallery details view
+					details.init "#details"
 
-				# initialize the about view
-				about.init "#about"
+					# initialize the thumbnail gallery
+					gallery.init "#thumbnails"
 
-				# initialize the confirm window
-				confirm.init "#confirm"
+					# initialize the about view
+					about.init "#about"
 
-				# start up camera
-				effects.init()
-				full.show effects.data[0]
+					# initialize the confirm window
+					confirm.init "#confirm"
 
-				# we are done loading the app. have the postman deliver that msg.
-				$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
+					# start up camera
+					effects.init()
+					full.show effects.data[0]
 
-				window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
+					# we are done loading the app. have the postman deliver that msg.
+					$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
+
+					window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
+
+				# initialize the camera
+				camera.init "countdown", ready
+
+			$.publish "/postman/deliver", [ null, "/localization/request" ]

@@ -19,26 +19,32 @@
           return $('#pictures').append(intro);
         });
         $.publish("/postman/deliver", [true, "/menu/enable"]);
-        return camera.init("countdown", function() {
-          APP.bottom = bottom.init(".bottom");
-          APP.top = top.init(".top");
-          APP.popover = popover.init("#gallery");
-          full.init("#capture");
-          details.init("#details");
-          gallery.init("#thumbnails");
-          about.init("#about");
-          confirm.init("#confirm");
-          effects.init();
-          full.show(effects.data[0]);
-          $.publish("/postman/deliver", [
-            {
-              message: ""
-            }, "/app/ready"
-          ]);
-          return window.APP.app = new kendo.mobile.Application(document.body, {
-            platform: "android"
-          });
+        $.subscribe("/localization/response", function(dict) {
+          var ready;
+          console.log(dict);
+          ready = function() {
+            APP.bottom = bottom.init(".bottom");
+            APP.top = top.init(".top");
+            APP.popover = popover.init("#gallery");
+            full.init("#capture");
+            details.init("#details");
+            gallery.init("#thumbnails");
+            about.init("#about");
+            confirm.init("#confirm");
+            effects.init();
+            full.show(effects.data[0]);
+            $.publish("/postman/deliver", [
+              {
+                message: ""
+              }, "/app/ready"
+            ]);
+            return window.APP.app = new kendo.mobile.Application(document.body, {
+              platform: "android"
+            });
+          };
+          return camera.init("countdown", ready);
         });
+        return $.publish("/postman/deliver", [null, "/localization/request"]);
       }
     };
   });

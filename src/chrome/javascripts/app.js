@@ -109,6 +109,9 @@
             url: url
           });
         });
+        $.subscribe("/localization/request", function() {
+          return $.publish("/postman/deliver", [localization, "/localization/response"]);
+        });
         notify.init();
         intents.init();
         file.init();
