@@ -31,4 +31,10 @@
     }
   });
 
+  kendo.data.binders.localeHtml = kendo.data.Binder.extend({
+    refresh: function() {
+      return $(this.element).html(APP.localization[this.bindings.localeHtml.path]);
+    }
+  });
+
 }).call(this);

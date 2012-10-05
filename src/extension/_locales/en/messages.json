@@ -56,6 +56,18 @@
         "message": "Cancel"
     },
 
+    "aboutCredits": {
+        "message": "Built by Burke Holland, Caitlin Steinert, Chris Wagner, and Josh Woodward"
+    },
+
+    "aboutKendoLicense": {
+        "message": "Visit <a href='http:/www.kendoui.com' title='KendoUI' target='_blank'>KendoUI.com</a> for app license and details."
+    },
+
+    "aboutKendo": {
+        "message": "Created using <a href='http://www.kendoui.com' title='KendoUI' target='_blank'>KendoUI</a> from <a href='http://www.telerik.com' title='Telerik' target='_blank'>Telerik</a>."
+    },
+
     "normal": { "message": "Normal" },
     "andy": { "message": "Andy" },
     "blockhead": { "message": "Blockhead" },

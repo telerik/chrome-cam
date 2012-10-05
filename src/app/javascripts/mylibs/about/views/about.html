@@ -1,17 +1,12 @@
 <section class="about">
 	<hgroup class="appInfoHeader">
-		<h1>Camera</h1>
+		<h1 data-bind="localeText: appName"></h1>
 		<h2>Version 1.0</h2>
 	</hgroup>
 	<hgroup>
-		<h3>
-			Created using
-			<a href="http://www.kendoui.com" title="KendoUI" target="_blank">KendoUI</a>
-			from
-			<a href="http://www.telerik.com" title="Telerik" target="_blank">Telerik</a>.
-		</h3>
-		<h4>Visit <a href="http:/www.kendoui.com" title="KendoUI" target="_blank">KendoUI.com</a> for app license and details.</h4>
-		<h5>Built by Burke Holland, Caitlin Steinert, Chris Wagner, and Josh Woodward</h5>
+		<h3 data-bind="localeHtml: aboutKendo"></h3>
+		<h4 data-bind="localeHtml: aboutKendoLicense"></h4>
+		<h5 data-bind="localeText: aboutCredits"></h5>
 	</hgroup>
 	<button data-role="button" data-bind="click: back, localeText: backButton" class="button back"></button>
 	<button data-role="button" data-bind="click: gallery.clear, localeText: clearGalleryButton" class="button"></button>
