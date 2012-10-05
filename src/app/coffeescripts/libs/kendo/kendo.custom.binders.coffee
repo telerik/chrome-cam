@@ -25,6 +25,10 @@ kendo.data.binders.localeHtml = kendo.data.Binder.extend
     refresh: ->
         $(this.element).html APP.localization[this.bindings.localeHtml.path]
 
+kendo.data.binders.localeTitle = kendo.data.Binder.extend
+    refresh: ->
+        $(this.element).attr "title", APP.localization[this.bindings.localeTitle.path]
+
 # # custom bindings
 # kendo.data.binders.slideUpDown = kendo.data.Binder.extend
 #     refresh: ->

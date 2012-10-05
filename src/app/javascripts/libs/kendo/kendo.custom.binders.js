@@ -37,4 +37,10 @@
     }
   });
 
+  kendo.data.binders.localeTitle = kendo.data.Binder.extend({
+    refresh: function() {
+      return $(this.element).attr("title", APP.localization[this.bindings.localeTitle.path]);
+    }
+  });
+
 }).call(this);

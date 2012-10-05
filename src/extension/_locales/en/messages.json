@@ -68,6 +68,17 @@
         "message": "Created using <a href='http://www.kendoui.com' title='KendoUI' target='_blank'>KendoUI</a> from <a href='http://www.telerik.com' title='Telerik' target='_blank'>Telerik</a>."
     },
 
+    "photo": {
+        "message": "Photo"
+    },
+    "paparazzi": {
+        "message": "Paparazzi"
+    },
+
+    "gallery": {
+        "message": "Gallery"
+    },
+
     "normal": { "message": "Normal" },
     "andy": { "message": "Andy" },
     "blockhead": { "message": "Blockhead" },
