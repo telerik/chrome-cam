@@ -406,10 +406,9 @@ body div { padding-top: 0px; }
 	text-align: center;
 	width: 270px;
 	height: 180px;
-	background: url('images/photoPlaceholder.png');
 	-webkit-transition: -webkit-transform .02s ease-in-out;
-	background-size: 270px 180px;
-	margin: 0 10px 20px 10px;
+	margin: 0 9px 18px 9px;
+	border: 1px solid #2D2D2D;
 }
 
 .gallery .thumbnail:hover, .preview:hover {
