@@ -12,12 +12,7 @@
     'use strict';
 
     var assets, pub;
-    assets = [
-      {
-        name: "pox",
-        src: "chrome/images/pox.png"
-      }
-    ];
+    assets = [];
     return pub = {
       init: function() {
         return $.subscribe("/assets/get", function() {

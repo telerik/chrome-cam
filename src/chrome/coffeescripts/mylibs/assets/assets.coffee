@@ -13,12 +13,7 @@ define [
 	'use strict'
 
 	# array of assets that gets sent down to the application
-	assets = [
-		{
-			name: "pox"
-			src: "chrome/images/pox.png"
-		}
-	]
+	assets = [ ]
 
 	# anything under here is public
 	pub = 

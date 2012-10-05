@@ -13,9 +13,6 @@ define([
 
     webgl = fx.canvas()
 
-    pox = new Image()
-    pox.src = "images/pox.png"
-
     texture = null
 
     draw = (canvas, element, effect) ->

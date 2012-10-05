@@ -2,14 +2,12 @@
 (function() {
 
   define(['mylibs/assets/assets', 'libs/face/ccv', 'libs/face/face'], function(assets) {
-    var draw, eyeFactor, faces, ghostBuffer, pox, pub, simple, texture, timeStripsBuffer, webgl;
+    var draw, eyeFactor, faces, ghostBuffer, pub, simple, texture, timeStripsBuffer, webgl;
     faces = [];
     eyeFactor = .05;
     timeStripsBuffer = [];
     ghostBuffer = [];
     webgl = fx.canvas();
-    pox = new Image();
-    pox.src = "images/pox.png";
     texture = null;
     draw = function(canvas, element, effect) {
       var ctx;
