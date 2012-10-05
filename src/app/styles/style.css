@@ -419,13 +419,14 @@ body div { padding-top: 0px; }
 	-webkit-transition: -webkit-transform .02s ease-in-out;
 	margin: 0 9px 18px 9px;
 	border: 1px solid #2D2D2D;
+	box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, .15);
 }
 
 .gallery .thumbnail:hover, .preview:hover {
 	cursor: pointer;
 	-webkit-transform: scale(1.1);
 	transform: scale(1.1);
-	box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, .75);
+	box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, .5);
 }
 
 .gallery .selected {
