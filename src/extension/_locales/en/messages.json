@@ -25,6 +25,9 @@
     "backButton": {
         "message": "Back"
     },
+    "backToGalleryButton": {
+        "message": "Back to Gallery"
+    },
     "backToCameraButton": {
         "message": "Back to Camera"
     },
