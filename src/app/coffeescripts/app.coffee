@@ -48,7 +48,7 @@ define [
 
 			$.subscribe "/localization/response", (dict) ->
 
-				console.log dict
+				APP.localization = dict
 
 				ready = ->
 					# create the top and bottom bars

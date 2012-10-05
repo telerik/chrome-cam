@@ -21,7 +21,7 @@
         $.publish("/postman/deliver", [true, "/menu/enable"]);
         $.subscribe("/localization/response", function(dict) {
           var ready;
-          console.log(dict);
+          APP.localization = dict;
           ready = function() {
             APP.bottom = bottom.init(".bottom");
             APP.top = top.init(".top");
