@@ -92,7 +92,6 @@
     };
     return pub = {
       init: function() {
-        var thumbnailWorker;
         utils.init();
         $.subscribe("/camera/pause", function(message) {
           return paused = message.paused;
@@ -105,19 +104,6 @@
         }, hollaback, errback);
         iframe.src = "app/index.html";
         postman.init(iframe.contentWindow);
-        console.log(localization);
-        thumbnailWorker = new Worker("chrome/javascripts/mylibs/workers/bitmapWorker.js");
-        thumbnailWorker.onmessage = function(e) {
-          return $.publish("/postman/deliver", [e.data, "/preview/thumbnail/response/"]);
-        };
-        $.subscribe("/preview/thumbnail/request", function(e) {
-          return thumbnailWorker.postMessage({
-            width: e.data.width,
-            height: e.data.height,
-            data: e.data.data,
-            key: e.data.key
-          });
-        });
         $.subscribe("/tab/open", function(url) {
           return chrome.tabs.create({
             url: url
