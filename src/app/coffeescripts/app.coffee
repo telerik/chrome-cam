@@ -73,6 +73,7 @@ define [
 
 					# start up camera
 					effects.init()
+					effect.name = APP.localization[effect.id] for effect in effects.data
 					full.show effects.data[0]
 
 					# we are done loading the app. have the postman deliver that msg.

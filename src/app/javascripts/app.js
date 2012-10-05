@@ -23,6 +23,7 @@
           var ready;
           APP.localization = dict;
           ready = function() {
+            var effect, _i, _len, _ref;
             APP.bottom = bottom.init(".bottom");
             APP.top = top.init(".top");
             APP.popover = popover.init("#gallery");
@@ -32,6 +33,11 @@
             about.init("#about");
             confirm.init("#confirm");
             effects.init();
+            _ref = effects.data;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              effect = _ref[_i];
+              effect.name = APP.localization[effect.id];
+            }
             full.show(effects.data[0]);
             $.publish("/postman/deliver", [
               {
