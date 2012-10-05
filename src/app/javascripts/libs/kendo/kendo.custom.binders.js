@@ -27,7 +27,7 @@
 
   kendo.data.binders.localeText = kendo.data.Binder.extend({
     refresh: function() {
-      return $(this.element).text(APP.localization[$(this.element).attr("data-locale-string")]);
+      return $(this.element).text(APP.localization[this.bindings.localeText.path]);
     }
   });
 

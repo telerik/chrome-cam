@@ -19,7 +19,11 @@ kendo.data.binders.zoom = kendo.data.Binder.extend
 
 kendo.data.binders.localeText = kendo.data.Binder.extend
     refresh: ->
-        $(this.element).text APP.localization[$(this.element).attr("data-locale-string")]
+        $(this.element).text APP.localization[this.bindings.localeText.path]
+
+# kendo.data.binders.localeTitle = kendo.data.Binder.extend
+#     refresh: ->
+#         $(this.element).attr "title", APP.localization[$(this.element).attr("data-locale-string")]
 
 # kendo.data.binders.localeHtml = kendo.data.Binder.extend
 #     refresh: ->
