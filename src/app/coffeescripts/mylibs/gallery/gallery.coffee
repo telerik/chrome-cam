@@ -72,7 +72,7 @@ define [
         name = selected.children(":first").attr("data-name")
         
         selected.kendoStop(true).kendoAnimate
-            effects: "zoomOut fadOut"
+            effects: "zoomOut fadeOut"
             hide: true
             complete: =>
                 filewrapper.deleteFile(name).done => 

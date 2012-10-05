@@ -2,9 +2,8 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/bar/views/top.html'], function(kendo, template) {
-    var CONFIRM_TEXT, pub, states, viewModel,
+    var pub, states, viewModel,
       _this = this;
-    CONFIRM_TEXT = "Are you sure you want to delete this priceless photo?";
     viewModel = kendo.observable({
       current: null,
       selected: false,
@@ -20,7 +19,7 @@
       destroy: {
         click: function(e) {
           return $.publish("/confirm/show", [
-            "Delete", CONFIRM_TEXT, function() {
+            window.APP.localization.deleteDialogTitle, window.APP.localization.deleteConfirmation, function() {
               return $.publish("/gallery/delete");
             }
           ]);

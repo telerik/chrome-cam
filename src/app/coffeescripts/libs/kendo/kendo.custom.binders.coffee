@@ -19,7 +19,6 @@ kendo.data.binders.zoom = kendo.data.Binder.extend
 
 kendo.data.binders.localeText = kendo.data.Binder.extend
     refresh: ->
-        console.log "refresh: " + $(this.element).attr("data-locale-string")
         $(this.element).text APP.localization[$(this.element).attr("data-locale-string")]
 
 # kendo.data.binders.localeHtml = kendo.data.Binder.extend

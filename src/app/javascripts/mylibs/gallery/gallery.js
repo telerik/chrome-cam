@@ -67,7 +67,7 @@
         _this = this;
       name = selected.children(":first").attr("data-name");
       return selected.kendoStop(true).kendoAnimate({
-        effects: "zoomOut fadOut",
+        effects: "zoomOut fadeOut",
         hide: true,
         complete: function() {
           return filewrapper.deleteFile(name).done(function() {

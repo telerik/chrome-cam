@@ -2,9 +2,8 @@
 (function() {
 
   define(['Kendo', 'text!mylibs/about/views/about.html'], function(kendo, template) {
-    var CONFIRM_TEXT, previous, pub, viewModel;
+    var previous, pub, viewModel;
     previous = "#home";
-    CONFIRM_TEXT = "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?";
     viewModel = kendo.observable({
       back: function() {
         $.publish("/postman/deliver", [true, "/menu/enable"]);
@@ -15,8 +14,9 @@
       },
       gallery: {
         clear: function() {
+          console.log(window.APP.localization.clearGalleryDialogTitle);
           return $.publish("/confirm/show", [
-            "Remove All", CONFIRM_TEXT, function() {
+            window.APP.localization.clearGalleryDialogTitle, window.APP.localization.clearGalleryConfirmation, function() {
               return $.publish("/gallery/clear");
             }
           ]);

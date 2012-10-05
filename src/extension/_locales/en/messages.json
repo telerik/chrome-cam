@@ -14,6 +14,9 @@
     "clearGalleryButton": {
         "message": "Clear Gallery"
     },
+    "clearGalleryDialogTitle": {
+        "message": "Remove All"
+    },
     "clearGalleryConfirmation": {
         "message": "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?",
         "description": "This is the message displayed to users to confirm whether to delete all images from the gallery."
@@ -45,6 +48,12 @@
     },
     "noButton": {
         "message": "No"
+    },
+    "okButton": {
+        "message": "OK"
+    },
+    "cancelButton": {
+        "message": "Cancel"
     },
 
     "normal": { "message": "Normal" },

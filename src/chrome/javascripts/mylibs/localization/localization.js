@@ -4,7 +4,7 @@
   define([], function() {
     var key, keys, pub, _i, _len;
     pub = {};
-    keys = ["appName", "appDesc", "aboutMenuItem", "clearGalleryButton", "clearGalleryConfirmation", "filtersButton", "backButton", "backToCameraButton", "saveButton", "deleteDialogTitle", "deleteConfirmation", "yesButton", "noButton", "normal", "andy", "blockhead", "blueberry", "bulge", "colorHalfTone", "chubbyBunny", "dent", "flush", "frogman", "ghost", "giraffe", "inverted", "kaleidoscope", "mirrorLeft", "oldFilm", "photocopy", "pinch", "pixelate", "quad", "reflection", "sepia", "swirl", "zoomBlur"];
+    keys = ["appName", "appDesc", "aboutMenuItem", "clearGalleryButton", "clearGalleryDialogTitle", "clearGalleryConfirmation", "filtersButton", "backButton", "backToGalleryButton", "backToCameraButton", "saveButton", "deleteDialogTitle", "deleteConfirmation", "yesButton", "noButton", "okButton", "cancelButton", "normal", "andy", "blockhead", "blueberry", "bulge", "colorHalfTone", "chubbyBunny", "dent", "flush", "frogman", "ghost", "giraffe", "inverted", "kaleidoscope", "mirrorLeft", "oldFilm", "photocopy", "pinch", "pixelate", "quad", "reflection", "sepia", "swirl", "zoomBlur"];
     for (_i = 0, _len = keys.length; _i < _len; _i++) {
       key = keys[_i];
       pub[key] = chrome.i18n.getMessage(key);
