@@ -17,15 +17,21 @@ define [
 			visible: false
 			active: "photo"
 			click: (e) ->
+				# remove capture element's old class
+				view.el.capture.removeClass @get("mode.active")
+
 				a = $(e.target).closest("a")
 
-				@set("mode.active", a.data("mode"))
+				@set "mode.active", a.data("mode")
 
 				# loop through all of the buttons and remove the active class
 				a.closest(".bar").find("a").removeClass "selected"
 
 				# add the active class to this anchor
 				a.addClass "selected"
+
+				# add capture element's new class
+				view.el.capture.addClass a.data("mode")
 
 		capture:
 			visible: true
@@ -143,5 +149,6 @@ define [
 			view.find(".counter", "counters")
 			view.find(".bar", "bar")
 			view.find(".filters", "filters")
+			view.find(".capture", "capture")
 	
 			return view

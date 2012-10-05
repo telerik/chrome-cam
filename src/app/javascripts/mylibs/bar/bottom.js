@@ -14,10 +14,12 @@
         active: "photo",
         click: function(e) {
           var a;
+          view.el.capture.removeClass(this.get("mode.active"));
           a = $(e.target).closest("a");
           this.set("mode.active", a.data("mode"));
           a.closest(".bar").find("a").removeClass("selected");
-          return a.addClass("selected");
+          a.addClass("selected");
+          return view.el.capture.addClass(a.data("mode"));
         }
       },
       capture: {
@@ -127,6 +129,7 @@
         view.find(".counter", "counters");
         view.find(".bar", "bar");
         view.find(".filters", "filters");
+        view.find(".capture", "capture");
         return view;
       }
     };
