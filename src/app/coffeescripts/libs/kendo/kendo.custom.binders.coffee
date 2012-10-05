@@ -17,6 +17,17 @@ kendo.data.binders.zoom = kendo.data.Binder.extend
             	effects: "zoomOut fadeOut",
             	show: true
 
+kendo.data.binders.localeText = kendo.data.Binder.extend
+    refresh: ->
+        console.log "refresh: " + $(this.element).attr("data-locale-string")
+        $(this.element).text APP.localization[$(this.element).attr("data-locale-string")]
+
+# kendo.data.binders.localeHtml = kendo.data.Binder.extend
+#     refresh: ->
+#         key = this.bindings["localeHtml"].get()
+
+#         $(this.element).html APP.localization[key]
+
 # # custom bindings
 # kendo.data.binders.slideUpDown = kendo.data.Binder.extend
 #     refresh: ->
