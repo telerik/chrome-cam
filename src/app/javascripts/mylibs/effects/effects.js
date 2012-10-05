@@ -192,9 +192,7 @@
               };
               createBuffers(32);
               ghostBuffer[frame++ % ghostBuffer.length].loadContentsOf(element);
-              canvas.matrixWarp([1, 0, 0, 1], false, true);
-              canvas.blend(ghostBuffer[frame % ghostBuffer.length], .5);
-              return canvas.matrixWarp([-1, 0, 0, 1], false, true);
+              return canvas.blend(ghostBuffer[frame % ghostBuffer.length], .5);
             };
             return draw(canvas, element, effect);
           }
