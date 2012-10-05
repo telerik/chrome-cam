@@ -43,6 +43,7 @@
         var view;
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
+        view.find("a[target=_blank]").on("click", viewModel.goto);
         return $.subscribe('/menu/click/chrome-cam-about-menu', function() {
           $.publish("/postman/deliver", [false, "/menu/enable"]);
           previous = window.APP.app.view().id;

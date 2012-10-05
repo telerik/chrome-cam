@@ -39,6 +39,8 @@ define [
 			view = new kendo.View(selector, template)
 			view.render(viewModel, true)
 
+			view.find("a[target=_blank]").on "click", viewModel.goto
+
 			# subscribe to the about event from the context menu
 			$.subscribe '/menu/click/chrome-cam-about-menu', ->
 				$.publish "/postman/deliver", [ false, "/menu/enable" ]
