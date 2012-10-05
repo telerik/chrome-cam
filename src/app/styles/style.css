@@ -508,7 +508,7 @@ body div { padding-top: 0px; }
 		background-color: #EDEDED;
 	}
 
-.timer, .paparazzi { top: 30px; }
+.timer, .wrapper .paparazzi { top: 30px; }
 
 .timer {
 	background: #2d2d2d;
@@ -537,8 +537,8 @@ body div { padding-top: 0px; }
 		border-radius: 50%;
 	}
 
-.paparazzi { left: 50px; }
-.paparazzi, .paparazzi:before, .paparazzi:after {
+.wrapper .paparazzi { left: 50px; }
+.wrapper .paparazzi, .wrapper .paparazzi:before, .wrapper .paparazzi:after {
 	border: 1px solid #ddd;
 	height: 20px;
 	content: '';
@@ -547,13 +547,13 @@ body div { padding-top: 0px; }
 	position: relative;
 	z-index: 99999;
 }
-	.paparazzi:before {
+	.wrapper .paparazzi:before {
 		top: 4px;
 		left: -8px;
 		display: block;
 	}
 
-	.paparazzi:after {
+	.wrapper .paparazzi:after {
 		top: -12px;
 		left: -15px;
 		display: block;
