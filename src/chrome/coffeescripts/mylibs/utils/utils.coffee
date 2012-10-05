@@ -1,6 +1,4 @@
-define([
-	'mylibs/utils/BlobBuilder.min'
-], () ->
+define [], () ->
 	
 	canvas = document.createElement("canvas")
 	ctx = canvas.getContext("2d")
@@ -33,12 +31,7 @@ define([
 		for bytes in byteString
 			ia[_i] = byteString.charCodeAt(_i)
 
-		blobBuilder = new BlobBuilder()
-
-		blobBuilder.append(ab);
-
-		# return the blob
-		blobBuilder.getBlob mimeString
+		new Blob([ab], { type: mimeString })
 
 	pub = 
 	
@@ -64,7 +57,3 @@ define([
 	        window.mozRequestAnimationFrame || window.oRequestAnimationFrame || 
 	        window.msRequestAnimationFrame || (callback, element) ->
 	          return window.setTimeout(callback, 1000 / 60)
-
-		
-
-)
