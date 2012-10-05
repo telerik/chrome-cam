@@ -186,8 +186,6 @@ body div { padding-top: 0px; }
 
 /* Bar Contents */
 
-.delete { background-image: url('images/cameraModeSpritex2.png'); }
-
 .saving h3 { 
 	padding: 20px 0;
 	color: white;
@@ -271,22 +269,6 @@ body div { padding-top: 0px; }
 	-webkit-box-align: center;
 }
 	.details .bar .right { -webkit-box-pack: end; }
-
-.bar .delete {
-	background-repeat: no-repeat;
-	background-size: 24px 140px;
-	width: 21px;
-	height: 24px;
-	overflow: hidden;
-	text-indent: 999px;
-	direction: rtl;
-	background-position: 0 -116px;
-	margin: 0 20px;
-	cursor: pointer;
-	display: block;
-}
-	.delete.hidden { display: none; }
-	.delete:hover { opacity: .7; }
 
 /* Popover Styles */
 

@@ -1,11 +1,11 @@
 <section class="bar">
 	<section class="left">
-		<a data-role="button" href="\#home" data-bind="invisible: back.details">&lt; Camera</a>
-		<a data-role="button" data-bind="visible: back.details, click: back.click" class="back button">&lt; Gallery</a>
+		<a data-role="button" href="\#home" data-bind="invisible: back.details">Back to Camera</a>
+		<a data-role="button" data-bind="visible: back.details, click: back.click" class="back button">Back to Gallery</a>
 	</section>
 	<section class="center"></section>
 	<section class="right">
-		<a class="delete" data-bind="click: destroy.click, visible: selected" data-rel="popover" ></a>
+		<a class="km-button" data-bind="click: destroy.click, visible: selected" data-rel="popover" ><img src="styles/images/trashcan.png"></a>
 		<a data-role="button" data-bind="visible: selected, click: share.save" class="kd-button-action">Save</a>
 	</section>
 </section>
