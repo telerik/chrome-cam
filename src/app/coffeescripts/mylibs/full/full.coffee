@@ -140,6 +140,8 @@ define [
             canvas.height = 240
             $(canvas).attr("style", "width: 720px; height: 480px;")
             ctx = canvas.getContext "2d"
+            ctx.scale -1, 1
+            ctx.translate -canvas.width, 0
             videoCtx = video.getContext "2d"
             videoCtx.scale 0.5, 0.5
 
