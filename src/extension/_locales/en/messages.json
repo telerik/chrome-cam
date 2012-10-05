@@ -1,0 +1,53 @@
+{
+    "appName": {
+        "message": "My App",
+        "description": "The title of the application, displayed in the web store."
+    },
+    "appDesc": {
+        "message": "This app does something awesome.",
+        "description": "The description of the application, displayed in the web store."
+    },
+    "aboutMenuItem": {
+        "message": "About...",
+        "description": "The item in the app's context menu that opens the about page."
+    },
+    "clearGalleryButton": {
+        "message": "Clear Gallery"
+    },
+    "clearGalleryConfirmation": {
+        "message": "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?",
+        "description": "This is the message displayed to users to confirm whether to delete all images from the gallery."
+    },
+    "filtersButton": {
+        "message": "Filters",
+        "description": "Label of the filters button"
+    },
+    "backButton": {
+        "message": "Back"
+    },
+    
+    "normal": { "message": "Normal" },
+    "andy": { "message": "Andy" },
+    "blockhead": { "message": "Blockhead" },
+    "blueberry": { "message": "Blueberry" },
+    "bulge": { "message": "Bulge" },
+    "colorHalfTone": { "message": "Color Half Tone" },
+    "chubbyBunny": { "message": "Chubby Bunny" },
+    "dent": { "message": "Dent" },
+    "flush": { "message": "Flush" },
+    "frogman": { "message": "Frogman" },
+    "ghost": { "message": "Ghost" },
+    "giraffe": { "message": "Giraffe" },
+    "inverted": { "message": "Inverted" },
+    "kaleidoscope": { "message": "Kaleidoscope" },
+    "mirrorLeft": { "message": "Mirror Left" },
+    "oldFilm": { "message": "Old Film" },
+    "photocopy": { "message": "Photocopy" },
+    "pinch": { "message": "Pinch" },
+    "pixelate": { "message": "Pixelate" },
+    "quad": { "message": "Quad" },
+    "reflection": { "message": "Reflection" },
+    "sepia": { "message": "Sepia" },
+    "swirl": { "message": "Swirl" },
+    "zoomBlur": { "message": "Zoom Blur" }
+}
