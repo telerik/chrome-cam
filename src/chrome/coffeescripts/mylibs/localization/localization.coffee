@@ -1,0 +1,6 @@
+define [], ->
+	pub = {}
+
+	
+
+	return pub
