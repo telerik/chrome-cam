@@ -26,10 +26,12 @@
         visible: true,
         click: function(e) {
           var capture, mode;
+          $.publish("/full/capture/begin");
           mode = this.get("mode.active");
           states.capture();
           capture = function() {
-            return $.publish("/capture/" + mode);
+            $.publish("/capture/" + mode);
+            return $.publish("/full/capture/end");
           };
           $.publish("/countdown/" + mode);
           if (e.ctrlKey) {

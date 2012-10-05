@@ -115,6 +115,12 @@ define [
         $.subscribe "/full/filters/show", (show) ->
             full.el.filters.toggle show
 
+        $.subscribe "/full/capture/begin", ->
+            full.el.wrapper.addClass "capturing"
+
+        $.subscribe "/full/capture/end", ->
+            full.el.wrapper.removeClass "capturing"
+
         $.subscribe "/keyboard/arrow", (dir) ->
             return if paused
 

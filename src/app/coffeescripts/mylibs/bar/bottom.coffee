@@ -36,15 +36,19 @@ define [
 		capture:
 			visible: true
 			click: (e) ->
+				$.publish "/full/capture/begin"
+
 				mode = this.get("mode.active")
 
 				states.capture()
 
 				# start the countdown
-				capture = -> $.publish "/capture/#{mode}"
+				capture = ->
+					$.publish "/capture/#{mode}"
+					$.publish "/full/capture/end"
+				
 				$.publish "/countdown/#{mode}"
 				if e.ctrlKey then capture() else countdown 0, capture
-
 
 		thumbnail:
 			src: BROKEN_IMAGE

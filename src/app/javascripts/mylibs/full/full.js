@@ -109,6 +109,12 @@
       $.subscribe("/full/filters/show", function(show) {
         return full.el.filters.toggle(show);
       });
+      $.subscribe("/full/capture/begin", function() {
+        return full.el.wrapper.addClass("capturing");
+      });
+      $.subscribe("/full/capture/end", function() {
+        return full.el.wrapper.removeClass("capturing");
+      });
       return $.subscribe("/keyboard/arrow", function(dir) {
         if (paused) {
           return;

@@ -327,6 +327,10 @@ body div { padding-top: 0px; }
 
 /************ Filter List ************/
 
+.capturing .filters-list {
+	display: none !important;
+}
+
 .filters-list {
 	position: absolute;
 	left: -270px;
