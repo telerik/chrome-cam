@@ -26,6 +26,8 @@
           _this.callback = callback;
           view.find(".title").html(title);
           view.find(".message").html(message);
+          view.find(".yes").text(window.APP.localization.yesButton);
+          view.find(".no").text(window.APP.localization.noButton);
           view.data("kendoMobileModalView").open();
           return open = true;
         });

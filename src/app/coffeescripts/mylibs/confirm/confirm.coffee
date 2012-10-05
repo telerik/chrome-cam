@@ -18,7 +18,7 @@ define [
 		no: (e) ->
 			open = false
 			view.data("kendoMobileModalView").close()
-	
+
 		init: (selector) =>
 
 			# view = new kendo.View(selector, template)
@@ -31,6 +31,9 @@ define [
 
 				view.find(".title").html(title)
 				view.find(".message").html(message)
+
+				view.find(".yes").text window.APP.localization.yesButton
+				view.find(".no").text window.APP.localization.noButton
 
 				view.data("kendoMobileModalView").open()
 				open = true
