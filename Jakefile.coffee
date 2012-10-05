@@ -67,8 +67,8 @@ task 'default', (params) ->
 			jake.cpR "#{app}javascripts/build/require.js", "#{folder}/app/javascripts/require.js"
 			jake.cpR "#{app}javascripts/build/jquery.min.js", "#{folder}/app/javascripts/jquery.min.js"
 			jake.cpR "#{app}javascripts/build/kendo.all.min.js", "#{folder}/app/javascripts/kendo.all.min.js"
-			jake.cpR "#{app}images", "#{folder}/app/images"
-			jake.cpR "#{chrome}images", "#{folder}/chrome/images"
+			#jake.cpR "#{app}images", "#{folder}/app/images"
+			#jake.cpR "#{chrome}images", "#{folder}/chrome/images"
 
 			fatLog "Building Extension"
 			chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
