@@ -5,8 +5,9 @@ define [
 	'mylibs/intents/intents'
 	'mylibs/notify/notify'
 	'mylibs/assets/assets'
+	'mylibs/localization/localization'
 	'libs/face/track'
-], (postman, utils, file, intents, notify, assets, face) ->
+], (postman, utils, file, intents, notify, assets, localization, face) ->
 	
 	'use strict'
 
@@ -105,6 +106,8 @@ define [
 
 			# cue up the postman!
 			postman.init iframe.contentWindow
+
+			console.log localization
 
 			# TODO: move to own file
 			thumbnailWorker = new Worker("chrome/javascripts/mylibs/workers/bitmapWorker.js")
