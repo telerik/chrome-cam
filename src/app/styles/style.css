@@ -220,6 +220,16 @@ body div { padding-top: 0px; }
 		background: #fe2d38;
 	}
 
+	.capture img {
+		display: none;
+	}
+
+	.capture.photo .photo,
+	.capture.paparazzi .paparazzi,
+	.capture.video .video {
+		display: inline;
+	}
+
 .bar .countdown {
 	margin: auto;
 	position: absolute;
