@@ -4,7 +4,7 @@ define [
     'mylibs/file/filewrapper'
     'text!mylibs/gallery/views/thumb.html'
 ], (kendo, utils, filewrapper, template) ->
-    columns = 3
+    columns = 4
     rows = 3
     pageSize = columns * rows
 
