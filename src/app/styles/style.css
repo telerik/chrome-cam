@@ -1,4 +1,4 @@
-/************ Global Styles ************/
+/************ Global ************/
 
 * { margin:0; padding:0; } 
 
@@ -131,7 +131,7 @@ body div { padding-top: 0px; }
 
 .animate { -webkit-transition: all 0.5s ease-out; }
 
-/************ Bar Styles ************/
+/************ Bar ************/
 
 /* Bar Structure */
 
@@ -268,7 +268,7 @@ body div { padding-top: 0px; }
 }
 	.details .bar .right { -webkit-box-pack: end; }
 
-/* Popover Styles */
+/* Popover */
 
 .km-blackberry .km-popup.km-pane .km-content {
 	background-image: none !important;
@@ -285,7 +285,7 @@ body div { padding-top: 0px; }
 	.km-scroll-container .cancel { background-color: #E15613; }
 	.km-scroll-container a:hover { background: #bbb; }
 
-/************ Preview Styles ************/
+/************ Preview view ************/
 
 #preview { height: 100%; }
 
@@ -325,7 +325,7 @@ body div { padding-top: 0px; }
 	height: 240px;
 }
 
-/************ Filter list styles ************/
+/************ Filter List ************/
 
 .filters-list {
 	position: absolute;
@@ -349,7 +349,7 @@ body div { padding-top: 0px; }
 		padding-left: 8px;
 	}
 
-/************ Gallery styles ************/
+/************ Gallery view ************/
 
 .gallery {
 	height: 800px;
@@ -386,7 +386,7 @@ body div { padding-top: 0px; }
 	background: #1A5EFF;
 }
 
-/* Details styles */
+/* Details view */
 
 .details {
 	position: absolute;
@@ -404,6 +404,8 @@ body div { padding-top: 0px; }
 	border: 1px solid #2d2d2d;
 	box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, .25);
 }
+
+/* Previous/Next Arrows */
 
 .previous, .next {
 	display: block;
@@ -424,7 +426,7 @@ body div { padding-top: 0px; }
 		right: 0;
 	}
 
-/************ Full Styles ************/
+/************ Full view ************/
 
 .full {
 	background: #f5f5f5;
@@ -516,7 +518,7 @@ body div { padding-top: 0px; }
 .paparazzi-3 .paparazzi:after
  { background: #ddd; }
 
-/************ Loader Styles ************/
+/************ Loader ************/
 
 #circleG { width:149.33333333333334px; }
 
@@ -558,19 +560,15 @@ a.canvas {
 	display: block;
 	width: 360px;
 	height: 240px;
-	background: url('images/photoPlaceholder.png');
-	background-size: 270px 180px;
-	background-repeat: no-repeat;
-	background-position: center center;
 }
 
 .flipping a.canvas canvas { display: none; }
 
 .flipping a.canvas img { display: block; }
 
-/************ About and Settings Pages ************/
+/************ About view ************/
 
-.about, .settings {
+.about {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-box-pack: center;
@@ -631,30 +629,12 @@ a.canvas {
 	width: 100%;
 	padding: 60px 0;
 }
-	.settings .back, .about .back {
+	.about .back {
 		position: absolute;
 		top: 90%;
 		margin-left: -26px;
 		left: 50%;
 	}
-	.settings label {
-		position: relative;
-		top: -10px;
-		margin-right: 10px;
-	}
-
-	.settings .km-switch {
-		cursor: pointer;
-	}
-
-	.settings ul { 
-		width: 265px;
-		list-style-type: none;
-	}
-		.settings ul li {
-			margin: 50px 0;
-			text-align: center;
-		}
 
 /************ Clearfix ************/
 
