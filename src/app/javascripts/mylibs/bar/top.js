@@ -19,7 +19,7 @@
       destroy: {
         click: function(e) {
           return $.publish("/confirm/show", [
-            window.APP.localization.deleteDialogTitle, window.APP.localization.deleteConfirmation, function() {
+            window.APP.localization.delete_dialog_title, window.APP.localization.delete_confirmation, function() {
               return $.publish("/gallery/delete");
             }
           ]);

@@ -18,8 +18,8 @@ define [
 		destroy:
 			click: (e) ->
 				$.publish "/confirm/show", [
-					window.APP.localization.deleteDialogTitle,
-					window.APP.localization.deleteConfirmation,
+					window.APP.localization.delete_dialog_title,
+					window.APP.localization.delete_confirmation,
 					-> $.publish("/gallery/delete")
 				]
 		share:

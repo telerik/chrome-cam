@@ -7,64 +7,64 @@
         "message": "This app does something awesome.",
         "description": "The description of the application, displayed in the web store."
     },
-    "aboutMenuItem": {
+    "about_menu_item": {
         "message": "About...",
         "description": "The item in the app's context menu that opens the about page."
     },
-    "clearGalleryButton": {
+    "clear_gallery_button": {
         "message": "Clear Gallery"
     },
-    "clearGalleryDialogTitle": {
+    "clear_gallery_dialog_title": {
         "message": "Remove All"
     },
-    "clearGalleryConfirmation": {
+    "clear_gallery_confirmation": {
         "message": "You are about to delete all media from your gallery. You will not be able to get these items back. Are you sure you want to do this?",
         "description": "This is the message displayed to users to confirm whether to delete all images from the gallery."
     },
-    "filtersButton": {
+    "filters_button": {
         "message": "Filters",
         "description": "Label of the filters button"
     },
-    "backButton": {
+    "back_button": {
         "message": "Back"
     },
-    "backToGalleryButton": {
+    "back_to_gallery_button": {
         "message": "Back to Gallery"
     },
-    "backToCameraButton": {
+    "back_to_camera_button": {
         "message": "Back to Camera"
     },
-    "saveButton": {
+    "save_button": {
         "message": "Save"
     },
-    "deleteDialogTitle": {
+    "delete_dialog_title": {
         "message": "Delete"
     },
-    "deleteConfirmation": {
+    "delete_confirmation": {
         "message": "Are you sure you want to delete this priceless photo?"
     },
-    "yesButton": {
+    "yes_button": {
         "message": "Yes"
     },
-    "noButton": {
+    "no_button": {
         "message": "No"
     },
-    "okButton": {
+    "ok_button": {
         "message": "OK"
     },
-    "cancelButton": {
+    "cancel_button": {
         "message": "Cancel"
     },
 
-    "aboutCredits": {
+    "about_credits": {
         "message": "Built by Burke Holland, Caitlin Steinert, Chris Wagner, and Josh Woodward"
     },
 
-    "aboutKendoLicense": {
+    "about_kendo_license": {
         "message": "Visit <a href='http:/www.kendoui.com' title='KendoUI' target='_blank'>KendoUI.com</a> for app license and details."
     },
 
-    "aboutKendo": {
+    "about_kendo": {
         "message": "Created using <a href='http://www.kendoui.com' title='KendoUI' target='_blank'>KendoUI</a> from <a href='http://www.telerik.com' title='Telerik' target='_blank'>Telerik</a>."
     },
 

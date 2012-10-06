@@ -16,10 +16,10 @@ define [
 
 		gallery:
 			clear: ->
-				console.log window.APP.localization.clearGalleryDialogTitle
+				console.log window.APP.localization.clear_gallery_dialog_title
 				$.publish "/confirm/show", [
-					window.APP.localization.clearGalleryDialogTitle,
-					window.APP.localization.clearGalleryConfirmation,
+					window.APP.localization.clear_gallery_dialog_title,
+					window.APP.localization.clear_gallery_confirmation,
 					-> $.publish("/gallery/clear")
 				]
 
