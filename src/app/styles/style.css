@@ -617,8 +617,8 @@ a.canvas {
 		position: relative;
 		top: -27px;
 		font-size: .7em;
-		left: 28px;
 		color: #777;
+		margin: 0;
 	}
 
 .appInfoHeader + * {
