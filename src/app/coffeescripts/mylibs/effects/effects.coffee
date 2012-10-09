@@ -97,7 +97,7 @@ define([
 
             {
                 id: "colorHalfTone"
-                name: "Color Half Tone"
+                name: "Color half tone"
                 kind: "webgl"
                 filter: (canvas, element) -> 
                     effect = (canvas, element) ->
@@ -107,7 +107,7 @@ define([
 
             {
                 id: "chubbyBunny"
-                name: "Chubby Bunny"
+                name: "Chubby bunny"
                 tracks: true
                 filter: (canvas, element, frame, stream) ->
 
@@ -264,7 +264,7 @@ define([
 
             {
                 id: "mirrorLeft"
-                name: "Mirror Left"
+                name: "Mirror left"
                 filter: (canvas, element) -> 
                     effect = (canvas, element) ->
                         canvas.mirror 0
@@ -273,7 +273,7 @@ define([
 
             {
                 id: "oldFilm"
-                name: "Old Film"
+                name: "Old film"
                 filter: (canvas, element, frame) -> 
                     effect = (canvas, element) ->
                         canvas.oldFilm frame
@@ -348,7 +348,7 @@ define([
 
             {
                 id: "zoomBlur"
-                name: "Zoom Blur"
+                name: "Zoom blur"
                 filter: (canvas, element) -> 
                     effect = (canvas, element) ->
                         canvas.zoomBlur canvas.width / 2,  canvas.height / 2, 2, canvas.height / 5

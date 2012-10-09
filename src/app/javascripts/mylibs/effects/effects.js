@@ -89,7 +89,7 @@
           }
         }, {
           id: "colorHalfTone",
-          name: "Color Half Tone",
+          name: "Color half tone",
           kind: "webgl",
           filter: function(canvas, element) {
             var effect;
@@ -100,7 +100,7 @@
           }
         }, {
           id: "chubbyBunny",
-          name: "Chubby Bunny",
+          name: "Chubby bunny",
           tracks: true,
           filter: function(canvas, element, frame, stream) {
             var effect;
@@ -243,7 +243,7 @@
           }
         }, {
           id: "mirrorLeft",
-          name: "Mirror Left",
+          name: "Mirror left",
           filter: function(canvas, element) {
             var effect;
             effect = function(canvas, element) {
@@ -253,7 +253,7 @@
           }
         }, {
           id: "oldFilm",
-          name: "Old Film",
+          name: "Old film",
           filter: function(canvas, element, frame) {
             var effect;
             effect = function(canvas, element) {
@@ -336,7 +336,7 @@
           }
         }, {
           id: "zoomBlur",
-          name: "Zoom Blur",
+          name: "Zoom blur",
           filter: function(canvas, element) {
             var effect;
             effect = function(canvas, element) {
