@@ -24,7 +24,7 @@ define [
 				]
 		share:
 			save: (e) ->
-				file = @.get("current")
+				file = @get("current")
 				$.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
 	}
 

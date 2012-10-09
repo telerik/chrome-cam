@@ -107,7 +107,23 @@
         return pub.video();
       });
       $.subscribe("/full/filters/show", function(show) {
-        return full.el.filters.toggle(show);
+        var duration;
+        duration = 200;
+        if (show) {
+          return full.el.filters.kendoStop().kendoAnimate({
+            effects: "slideIn:right",
+            show: true,
+            hide: false,
+            duration: duration
+          });
+        } else {
+          return full.el.filters.kendoStop().kendoAnimate({
+            effects: "slide:left",
+            hide: true,
+            show: false,
+            duration: duration
+          });
+        }
       });
       $.subscribe("/full/capture/begin", function() {
         return full.el.wrapper.addClass("capturing");

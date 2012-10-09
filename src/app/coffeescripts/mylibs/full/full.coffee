@@ -113,7 +113,19 @@ define [
             pub.video()
 
         $.subscribe "/full/filters/show", (show) ->
-            full.el.filters.toggle show
+            duration = 200
+            if show
+                full.el.filters.kendoStop().kendoAnimate
+                    effects: "slideIn:right"
+                    show: true
+                    hide: false
+                    duration: duration
+            else
+                full.el.filters.kendoStop().kendoAnimate
+                    effects: "slide:left"
+                    hide: true
+                    show: false
+                    duration: duration
 
         $.subscribe "/full/capture/begin", ->
             full.el.wrapper.addClass "capturing"
