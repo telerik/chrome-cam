@@ -253,10 +253,9 @@
     margin-right: 0px;
     vertical-align: middle;
     width: 100%;
+    opacity: 0.9;
 }
-    .km-button.selected img { opacity: 1.0; }
-    .km-button:hover img { opacity: 0.72; }
-    .km-button:active img { opacity: 1.0; }
+    .km-button.selected img, .km-button:hover img, .km-button:active img { opacity: 1.0; }
 
 .km-toolbar,.km-navbar,.km-buttongroup,.km-tabstrip {
     padding: .4rem .7rem
