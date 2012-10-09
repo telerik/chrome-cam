@@ -146,7 +146,7 @@ body div { padding-top: 0px; }
 /* Bar Structure */
 
 .footer { 
-	height: 72px;
+	height: 60px;
 	clear: both;
 }
 
@@ -181,7 +181,7 @@ body div { padding-top: 0px; }
 	}
 
 .km-footer .right {
-	padding-right: 35px;
+	padding-right: 15px;
 	-webkit-box-pack: end;
 }
 
@@ -340,14 +340,14 @@ body div { padding-top: 0px; }
 	position: absolute;
 	left: -270px;
 	font-size: 13px;
-	top: -83px;
+	top: -60px;
 }
 
 	.filters-list ul {
 		list-style-type: none;
 	}
 
-	.filters-list li { padding: 6px 12px; }
+	.filters-list li { padding: 5px 12px; }
 		.filters-list li:hover { 
 			background: #eee;
 			cursor: pointer;
