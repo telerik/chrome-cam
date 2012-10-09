@@ -12,13 +12,16 @@ chrome.app.runtime.onLaunched.addListener(function() {
     APP = win;
   }
 
+  var width = 1280;
+  var height = 768 - 75;
+
   var dimensions = { 
-    width: 1280,
-    minWidth: 1280,
-    maxWidth: 1280,
-    height: 750,
-    minHeight: 750,
-    maxHeight: 750
+    width: width,
+    minWidth: width,
+    maxWidth: width,
+    height: height,
+    minHeight: height,
+    maxHeight: height
   };
   
   var win = chrome.app.window.create('main.html', dimensions, onWindowLoaded);
