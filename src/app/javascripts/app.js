@@ -23,7 +23,7 @@
           var ready;
           APP.localization = dict;
           ready = function() {
-            var effect, _i, _len, _ref;
+            var effect, hideSplash, _i, _len, _ref;
             APP.bottom = bottom.init(".bottom");
             APP.top = top.init(".top");
             APP.popover = popover.init("#gallery");
@@ -44,9 +44,16 @@
                 message: ""
               }, "/app/ready"
             ]);
-            return window.APP.app = new kendo.mobile.Application(document.body, {
+            window.APP.app = new kendo.mobile.Application(document.body, {
               platform: "android"
             });
+            hideSplash = function() {
+              return $("#splash").kendoAnimate({
+                effects: "fade:out",
+                duration: 1000
+              });
+            };
+            return setTimeout(hideSplash, 100);
           };
           return camera.init("countdown", ready);
         });

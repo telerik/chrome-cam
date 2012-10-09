@@ -33,6 +33,13 @@ body > #wrap { height: 100%;}
 
 body div { padding-top: 0px; }
 
+#splash {
+	height: 100%;
+	width: 100%;
+	background: white;
+	z-index: 1000;
+}
+
 .hidden { display: none }
 
 .circle { border-radius: 50%; }

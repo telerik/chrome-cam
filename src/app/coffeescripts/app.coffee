@@ -81,6 +81,12 @@ define [
 
 					window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
 
+					hideSplash = ->
+						$("#splash").kendoAnimate
+							effects: "fade:out"
+							duration: 1000
+					setTimeout hideSplash, 100
+
 				# initialize the camera
 				camera.init "countdown", ready
 
