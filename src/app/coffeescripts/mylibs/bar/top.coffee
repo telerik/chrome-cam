@@ -5,7 +5,7 @@ define [
 
 	# create a view model for the top bar
 	# VIEW MODEL ISN'T WORKING. WHY NOT?
-	viewModel = kendo.observable {
+	viewModel = kendo.observable
 		current: null
 		selected: false
 		back:
@@ -26,7 +26,6 @@ define [
 			save: (e) ->
 				file = @get("current")
 				$.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
-	}
 
 	# TODO: Refactor Once View Model Is Working
 	states = 
@@ -72,8 +71,3 @@ define [
 					back.trigger "click"
 
 			return @view
-
-			
-
-	
-		
