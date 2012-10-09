@@ -164,11 +164,10 @@ body div { padding-top: 0px; }
 	text-align: center;
 	display: -webkit-box;
 	-webkit-box-pack: center;
+	-webkit-box-orient: vertical;
 }
 	.km-footer .center > div {
-		width: 150px;
-		height: 200px;
-		margin: auto;
+		width: 120px;
 	}
 
 .km-footer .right {
@@ -219,25 +218,21 @@ body div { padding-top: 0px; }
 	.capture.video .video { display: inline; }
 
 .bar .countdown {
-	margin: auto;
-	position: absolute;
-	width: 50px;
+	text-align: center;
 	display: -webkit-box;
-	-webkit-box-align: center;
-	-webkit-box-pack: center;
-	margin-top: 5px;
+	-webkit-box-orient: horizontal;
 }
 	.countdown > span { display: none; }
 
 .red-dot {
 	position: relative;
 	display: block;
-	top: 12px;
 	left: 0;
 	background-color: #BA000D;
 	width: 18px;
 	height: 18px;
-	margin: auto !important;
+	margin: auto 10px;
+	text-align: center;
 	box-shadow: inset 0px 0px 5px 0 rgba(0, 0, 0, .9);
 	-webkit-transition: border-radius 0.5s ease-out;
 }
