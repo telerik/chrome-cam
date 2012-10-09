@@ -41,8 +41,8 @@ define [
         container.find(".thumbnail").removeClass "selected"
         selected.addClass "selected"
 
-        $.publish "/item/selected", [get(name)]
-
+        $.publish "/item/selected", [ get(name) ]
+        $.publish "/top/update", [ "selected" ]
 
     page = (direction) =>
 

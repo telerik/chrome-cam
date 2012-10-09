@@ -37,7 +37,8 @@
       selected = container.find("[data-name='" + name + "']").parent(":first");
       container.find(".thumbnail").removeClass("selected");
       selected.addClass("selected");
-      return $.publish("/item/selected", [get(name)]);
+      $.publish("/item/selected", [get(name)]);
+      return $.publish("/top/update", ["selected"]);
     };
     page = function(direction) {
       if (flipping) {
