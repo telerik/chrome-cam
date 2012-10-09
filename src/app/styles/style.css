@@ -33,11 +33,14 @@ body > #wrap { height: 100%;}
 
 body div { padding-top: 0px; }
 
-#splash {
+.splash {
 	height: 100%;
 	width: 100%;
 	background: white;
 	z-index: 1000;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
 }
 
 .hidden { display: none }
