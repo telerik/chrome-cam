@@ -47,6 +47,11 @@
         reader.readAsDataURL(blob);
         return deferred.promise();
       },
+      placeholder: {
+        image: function() {
+          return "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+        }
+      },
       oppositeDirectionOf: function(dir) {
         switch (dir) {
           case "left":

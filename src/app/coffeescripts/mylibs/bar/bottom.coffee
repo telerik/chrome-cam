@@ -1,10 +1,11 @@
 define [
   'Kendo'
+  'mylibs/utils/utils'
   'text!mylibs/bar/views/bottom.html'
   'text!mylibs/bar/views/thumbnail.html'
-], (kendo, template, thumbnailTemplate) ->
+], (kendo, utils, template, thumbnailTemplate) ->
 
-	BROKEN_IMAGE = "styles/images/photoPlaceholder.png"
+	BROKEN_IMAGE = utils.placeholder.image()
 	
 	view = {}
 

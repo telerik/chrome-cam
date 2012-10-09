@@ -47,6 +47,10 @@ define [ 'mylibs/file/filewrapper' ] , (filewrapper) ->
 
             deferred.promise()
 
+        placeholder:
+            image: ->
+                "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+
         oppositeDirectionOf: (dir) ->
             switch dir
                 when "left" then "right"

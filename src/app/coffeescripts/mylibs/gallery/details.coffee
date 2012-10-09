@@ -1,7 +1,8 @@
 define [
-  'Kendo' 	
+  'Kendo'
+  'mylibs/utils/utils'
   'text!mylibs/gallery/views/details.html'
-], (kendo, template) ->
+], (kendo, utils, template) ->
 
     index = 0
 
@@ -9,9 +10,9 @@ define [
 
     viewModel = kendo.observable {
         video: 
-            src: -> "styles/images/photoPlaceholder.png"
+            src: -> utils.placeholder.image()
         img:
-            src: -> "styles/images/photoPlaceholder.png"
+            src: -> utils.placeholder.image()
         type: "jpeg"
         isVideo: ->
             @get("type") == "webm"
