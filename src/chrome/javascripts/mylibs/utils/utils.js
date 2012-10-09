@@ -29,7 +29,7 @@
         bytes = byteString[_i];
         ia[_i] = byteString.charCodeAt(_i);
       }
-      return new Blob([ab], {
+      return new Blob([ia], {
         type: mimeString
       });
     };

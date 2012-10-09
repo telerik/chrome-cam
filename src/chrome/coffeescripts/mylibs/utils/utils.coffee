@@ -31,7 +31,7 @@ define [], () ->
 		for bytes in byteString
 			ia[_i] = byteString.charCodeAt(_i)
 
-		new Blob([ab], { type: mimeString })
+		new Blob([ia], { type: mimeString })
 
 	pub = 
 	
