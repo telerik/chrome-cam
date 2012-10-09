@@ -3,11 +3,13 @@
 		<h1 data-bind="localeText: appName"></h1>
 		<h2>Version 1.0</h2>
 	</hgroup>
-	<hgroup>
-		<h3 data-bind="localeHtml: about_kendo"></h3>
-		<h4 data-bind="localeHtml: about_kendo_license"></h4>
-		<h5 data-bind="localeText: about_credits"></h5>
-	</hgroup>
+	<div>
+		<hgroup>
+			<h3 data-bind="localeHtml: about_kendo"></h3>
+			<h4 data-bind="localeHtml: about_kendo_license"></h4>
+			<h5 data-bind="localeText: about_credits"></h5>
+		</hgroup>
+	</div>
 	<button data-role="button" data-bind="click: back, localeText: back_button" class="button back"></button>
 	<button data-role="button" data-bind="click: gallery.clear, localeText: clear_gallery_button" class="button"></button>
 </section>

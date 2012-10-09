@@ -600,25 +600,18 @@ a.canvas {
 		color: #666;
 		font-weight: normal;
 	}
-	.about h3 { 
-		background: url("images/kendoUILogo.png") -12px 0 no-repeat;
-		padding: 20px 0 40px 60px;
-		background-size: 80px 80px;
-		width: 440px;
-	}
+	.about h3 { margin: 0; }
 	.about h4 { 
 		font-weight: normal;
 		position: relative;
-		top: -38px;
-		left: -53px;
+		margin: 2px 0 0;
 		font-size: 13px; 
 	}
 	.about h5 {
 		position: relative;
-		top: -27px;
 		font-size: .7em;
 		color: #777;
-		margin: 0;
+		margin: 10px 0 0;
 	}
 
 .appInfoHeader + * {
@@ -632,6 +625,12 @@ a.canvas {
 	-webkit-box-orient: vertical;
 	width: 100%;
 	padding: 60px 0;
+}
+.appInfoHeader + * hgroup {
+	background: url("images/kendoUILogo.png") -12px 0 no-repeat;
+	padding: 20px 0 40px 60px;
+	background-size: 80px 80px;
+	width: 440px;
 }
 	.about .back {
 		position: absolute;
