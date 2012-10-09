@@ -237,7 +237,7 @@
           filter: function(canvas, element) {
             var effect;
             effect = function(canvas, element) {
-              return canvas.kaleidoscope(canvas.width / 2, canvas.height / 2, 200, 0);
+              return canvas.kaleidoscope(canvas.width / 2, canvas.height / 2, 120, 0);
             };
             return draw(canvas, element, effect);
           }
