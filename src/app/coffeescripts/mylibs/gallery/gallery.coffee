@@ -118,7 +118,7 @@ define [
                 data: data
                 pageSize: pageSize
                 change: ->
-                    deselect()                   
+                    deselect()
                 sort:
                     dir: "desc" 
                     field: "name"  
@@ -139,18 +139,12 @@ define [
 
         element = {}
         fadeIn = (e) ->
-            $(e).kendoAnimate {
-                effects: "fadeIn",
+            $(e).kendoAnimate
+                effects: "fadeIn"
                 show: true
-            }
 
-        if item.type == "webm"
-            element = document.createElement "video"
-            element.setAttribute("controls", "")
-            element.loadeddata = fadeIn(element)
-        else 
-            element = new Image()
-            element.onload = fadeIn(element)
+        element = new Image()
+        element.onload = fadeIn(element)
         
         element.src = item.file
         element.setAttribute("data-name", item.name)
@@ -175,12 +169,12 @@ define [
 
         complete = =>
 
-            setTimeout(->
+            setTimeout ->
                 for item in thumbs
                     do ->
                         element = create(item.data)
                         item.dom.append(element)
-            , 50)
+            , 50
 
             # the current page becomes the next page
             pages.next.show()
@@ -200,18 +194,16 @@ define [
             $("#gallery").css "pointer-events", "auto"
 
         if flip
-
             # move the current page out and the next page in
-            container.kendoAnimate {
+            container.kendoAnimate
                 effects: animation.effects
                 face: if animation.reverse then pages.next else pages.previous
                 back: if animation.reverse then pages.previous else pages.next
                 duration: animation.duration
                 reverse: animation.reverse
                 complete: complete
-            }
-
-        else complete()
+        else
+            complete()
 
     arrows =
         left: null
@@ -233,11 +225,7 @@ define [
 
         before: (e) ->
 
-            # container.parent().height($(window).height() - 50)
-            # container.parent().width($(window).width())
-
-            # pause the camera. there is no need for it
-            # right now.
+            # pause the camera. there is no need for it right now.
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
             # listen to keyboard events
@@ -257,9 +245,7 @@ define [
             pages.previous.empty()
 
         show: (e) =>
-            setTimeout(->
-                render()
-            , 420)
+            setTimeout render, 420
         
         swipe: (e) ->    
             page (e.direction == "right") - (e.direction == "left")
@@ -285,11 +271,11 @@ define [
 
             #delegate some events to the gallery
             page1.container.on "dblclick", ".thumbnail", (e) ->
-                thumb = $(@).children(":first")            
+                thumb = $(@).children(":first")
                 $.publish "/details/show", [ get("#{thumb.data("name")}") ]
 
             page1.container.on "click", ".thumbnail", (e) ->
-                thumb = $(@).children(":first")            
+                thumb = $(@).children(":first")
                 $.publish "/top/update", ["selected"]
                 select thumb.data("name")
                 e.stopPropagation()

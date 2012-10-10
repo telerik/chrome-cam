@@ -8,7 +8,7 @@ define [
 
     visible = false
 
-    viewModel = kendo.observable {
+    viewModel = kendo.observable
         video: 
             src: -> utils.placeholder.image()
         img:
@@ -24,8 +24,6 @@ define [
             visible: false
             click: (e) ->
                 $.publish "/gallery/at", [index - 1]
-
-    }
 
     hide = =>
         $.publish "/top/update", ["gallery"]
@@ -47,10 +45,7 @@ define [
 
     update = (message) ->
         viewModel.set("type", message.item.type)
-        if viewModel.get("type") == "webm"
-            viewModel.set("video.src", message.item.file)
-        else
-            viewModel.set("img.src", message.item.file)
+        viewModel.set("img.src", message.item.file)
         viewModel.set("next.visible", message.index < message.length - 1)
         viewModel.set("previous.visible", message.index > 0 and message.length > 1)
         index = message.index
@@ -76,9 +71,11 @@ define [
 
             page = (direction) ->
                 return unless visible
+
                 if direction is "left" and viewModel.previous.visible
                     viewModel.previous.click()
                 if direction is "right" and viewModel.next.visible
                     viewModel.next.click()
                 return false
+
             $.subscribe "/keyboard/arrow", page, true

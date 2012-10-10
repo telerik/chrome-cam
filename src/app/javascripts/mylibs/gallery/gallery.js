@@ -149,14 +149,8 @@
           show: true
         });
       };
-      if (item.type === "webm") {
-        element = document.createElement("video");
-        element.setAttribute("controls", "");
-        element.loadeddata = fadeIn(element);
-      } else {
-        element = new Image();
-        element.onload = fadeIn(element);
-      }
+      element = new Image();
+      element.onload = fadeIn(element);
       element.src = item.file;
       element.setAttribute("data-name", item.name);
       element.setAttribute("draggable", true);
@@ -259,9 +253,7 @@
         return pages.previous.empty();
       },
       show: function(e) {
-        return setTimeout(function() {
-          return render();
-        }, 420);
+        return setTimeout(render, 420);
       },
       swipe: function(e) {
         return page((e.direction === "right") - (e.direction === "left"));
