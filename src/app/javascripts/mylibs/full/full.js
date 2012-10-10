@@ -135,10 +135,10 @@
         if (paused) {
           return;
         }
-        if (dir === "left" && index.current() > 0) {
+        if (dir === "up" && index.current() > 0) {
           index.select(index.current() - 1);
         }
-        if (dir === "right" && index.current() + 1 < index.max()) {
+        if (dir === "down" && index.current() + 1 < index.max()) {
           return index.select(index.current() + 1);
         }
       });

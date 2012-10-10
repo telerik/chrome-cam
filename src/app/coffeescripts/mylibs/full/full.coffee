@@ -135,9 +135,9 @@ define [
         $.subscribe "/keyboard/arrow", (dir) ->
             return if paused
 
-            if dir is "left" and index.current() > 0
+            if dir is "up" and index.current() > 0
                 index.select index.current() - 1
-            if dir is "right" and index.current() + 1 < index.max()
+            if dir is "down" and index.current() + 1 < index.max()
                 index.select index.current() + 1
 
     pub = 
@@ -164,7 +164,7 @@ define [
 
             full.render().prepend(canvas)
 
-            # find and cache the flash element
+            # find and the necessary elements
             full.find(".flash", "flash")
             full.find(".timer", "timer")
             full.find(".transfer", "transfer")
