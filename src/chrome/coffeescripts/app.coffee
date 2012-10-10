@@ -2,17 +2,15 @@ define [
 	'mylibs/postman/postman'
 	'mylibs/utils/utils'
 	'mylibs/file/file'
-	'mylibs/intents/intents'
 	'mylibs/notify/notify'
 	'mylibs/assets/assets'
 	'mylibs/localization/localization'
 	'libs/face/track'
-], (postman, utils, file, intents, notify, assets, localization, face) ->
-	
+], (postman, utils, file, notify, assets, localization, face) ->
 	'use strict'
 
 	iframe = iframe = document.getElementById("iframe")
-	canvas = document.getElementById("canvas")	
+	canvas = document.getElementById("canvas")
 	ctx = canvas.getContext("2d")
 	track = {}
 	paused = false
@@ -22,24 +20,7 @@ define [
 	skipBit = 0
 	skipMax = 10
 
-	# TODO: Move the settings to it's own file
-	config =
-		get: (key, fn) ->
-			chrome.storage.local.get key, (storage) ->
-				$.publish "/postman/deliver", [ storage[key], "/config/value/#{key}" ]
-		set: (key, value) ->
-			obj = {}
-			obj[key] = value
-			chrome.storage.local.set obj
-		init: ->
-			$.subscribe "/config/get", (key) ->
-				config.get key
-			$.subscribe "/config/set", (e) ->
-				config.set e.key, e.value
-			$.subscribe "/config/all", ->
-				$.publish "/postman/deliver", [ config.values, "/config/values" ]
-
-	# TODO: Move the context menu to it's own file
+	# TODO: Move the context menu to its own file
 	menu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
 			$.publish "/postman/deliver", [{}, "/menu/click/#{info.menuItemId}"]
@@ -49,30 +30,27 @@ define [
 			for menu in menus
 				chrome.contextMenus.update menu, enabled: isEnabled
 
-	# TODO: Move the camera to it's own file
+	# TODO: Move the camera to its own file
 	draw = -> 
-
-		# utils.getAnimationFrame()(draw)
 		update()
 
 	update = ->
-
 		# the camera is paused when it isn't being used to increase app performance
-		if not paused
+		return if paused
 
-			if skipBit == 0
-				track = face.track video
+		if skipBit == 0
+			track = face.track video
 
-			ctx.drawImage(video, 0, 0, video.width, video.height)
-			img = ctx.getImageData(0, 0, canvas.width, canvas.height)
-			buffer = img.data.buffer
+		ctx.drawImage(video, 0, 0, video.width, video.height)
+		img = ctx.getImageData(0, 0, canvas.width, canvas.height)
+		buffer = img.data.buffer
 
-			$.publish "/postman/deliver", [ image: buffer, track: track, "/camera/update", [ buffer ]]
+		$.publish "/postman/deliver", [ image: buffer, track: track, "/camera/update", [ buffer ]]
 
-			if skipBit < 4
-				skipBit++
-			else
-				skipBit = 0
+		if skipBit < 4
+			skipBit++
+		else
+			skipBit = 0
 
 	hollaback = (stream) ->
 
@@ -88,7 +66,6 @@ define [
 
 	pub = 
 		init: ->
-
 			# initialize utils
 			utils.init()
 
@@ -107,17 +84,16 @@ define [
 			# cue up the postman!
 			postman.init iframe.contentWindow
 
+			# used to open new tabs, as _blank does not work from the sandboxed frame
 			$.subscribe "/tab/open", (url) ->
 				chrome.tabs.create url: url
 
+			# get the localization dictionary from the app
 			$.subscribe "/localization/request", ->
 				$.publish "/postman/deliver", [ localization, "/localization/response" ]
 
 			#initialize notifications
 			notify.init()
-
-			# intialize intents
-			intents.init()
 
 			# get the files
 			file.init()
@@ -125,12 +101,11 @@ define [
 			# initialize the asset pipeline
 			assets.init()
 
-			config.init()
-
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
 
 			# setup the context menu
 			menu()
 
+			# this ensures that keyboard shortcut works without manually focusing the iframe
 			$(iframe).focus()
