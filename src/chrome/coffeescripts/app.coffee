@@ -3,10 +3,9 @@ define [
 	'mylibs/utils/utils'
 	'mylibs/file/file'
 	'mylibs/notify/notify'
-	'mylibs/assets/assets'
 	'mylibs/localization/localization'
 	'libs/face/track'
-], (postman, utils, file, notify, assets, localization, face) ->
+], (postman, utils, file, notify, localization, face) ->
 	'use strict'
 
 	iframe = iframe = document.getElementById("iframe")
@@ -97,9 +96,6 @@ define [
 
 			# get the files
 			file.init()
-
-			# initialize the asset pipeline
-			assets.init()
 
 			# initialize the face tracking
 			face.init 0, 0, 0, 0
