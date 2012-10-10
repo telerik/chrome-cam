@@ -16,7 +16,7 @@
       }
     };
     toBlob = function(dataURL) {
-      var ab, byteString, bytes, ia, mimeString, _i, _len;
+      var ab, byteString, i, ia, mimeString, _i, _ref;
       if (dataURL.split(',')[0].indexOf('base64') >= 0) {
         byteString = atob(dataURL.split(',')[1]);
       } else {
@@ -25,9 +25,8 @@
       mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
       ab = new ArrayBuffer(byteString.length, 'binary');
       ia = new Uint8Array(ab);
-      for (_i = 0, _len = byteString.length; _i < _len; _i++) {
-        bytes = byteString[_i];
-        ia[_i] = byteString.charCodeAt(_i);
+      for (i = _i = 0, _ref = byteString.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        ia[i] = byteString.charCodeAt(i);
       }
       return new Blob([ia], {
         type: mimeString

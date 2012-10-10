@@ -28,8 +28,8 @@ define [], () ->
 		
 		ia = new Uint8Array(ab)
 
-		for bytes in byteString
-			ia[_i] = byteString.charCodeAt(_i)
+		for i in [0...byteString.length]
+			ia[i] = byteString.charCodeAt(i)
 
 		new Blob([ia], { type: mimeString })
 
