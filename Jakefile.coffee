@@ -70,24 +70,24 @@ task 'default', (params) ->
 			#jake.cpR "#{app}images", "#{folder}/app/images"
 			#jake.cpR "#{chrome}images", "#{folder}/chrome/images"
 
-			fatLog "Building Extension"
-			chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
-			jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->			
-				fatLog "Copying Extension To Google Drive - No worries if this fails"
-				if system and system.env.HOME
-					try
-						jake.cpR "#{folder}.crx", "#{system.env.HOME}/Google Drive/#{folder}.crx"
-					catch error
-						log "Couldn't find your Google Drive folder"
-				fatLog "FINISHED!"
-				# display a growl notification. this will fail pretty much everywhere
-				# but my machine
-				try
-					jake.exec "growlnotify Buildage -m 'Build Is Done Man'"
-				catch error
-					log "Tried to growl at you, but Y U NO GROWL?"
+			# fatLog "Building Extension"
+			# chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
+			# jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->			
+			# 	fatLog "Copying Extension To Google Drive - No worries if this fails"
+			# 	if system and system.env.HOME
+			# 		try
+			# 			jake.cpR "#{folder}.crx", "#{system.env.HOME}/Google Drive/#{folder}.crx"
+			# 		catch error
+			# 			log "Couldn't find your Google Drive folder"
+			# 	fatLog "FINISHED!"
+			# 	# display a growl notification. this will fail pretty much everywhere
+			# 	# but my machine
+			# 	try
+			# 		jake.exec "growlnotify Buildage -m 'Build Is Done Man'"
+			# 	catch error
+			# 		log "Tried to growl at you, but Y U NO GROWL?"
 
-			, { printStdout: true }
+			# , { printStdout: true }
 
 		, { printStdout: true }
 
