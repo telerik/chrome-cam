@@ -7,12 +7,12 @@ kendo.data.binders.zoom = kendo.data.Binder.extend
         if value
             if not visible
                 $(this.element).kendoStop(true).kendoAnimate
-                	effects: "zoomIn fadeIn",
-                	show: true
+                    effects: "zoomIn fadeIn",
+                    show: true
         if not value and visible
             $(this.element).kendoStop(true).kendoAnimate
-            	effects: "zoomOut fadeOut",
-            	show: true
+                effects: "zoomOut fadeOut",
+                show: true
 
 kendo.data.binders.localeText = kendo.data.Binder.extend
     refresh: ->
