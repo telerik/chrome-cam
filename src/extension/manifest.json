@@ -17,11 +17,9 @@
    "128": "icon_128.png"
  },
  "permissions": [
-   "experimental",
    "unlimitedStorage",
    "videoCapture",
    { "fileSystem": ["write"] },
-   "notifications",
    "contextMenus",
    "storage"
  ],
