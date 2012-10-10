@@ -8,8 +8,7 @@
     It also handles the coutdown that is intitiated
     */
 
-    var $counter, canvas, ctx, paused, pub, turnOn;
-    $counter = {};
+    var canvas, ctx, paused, pub, turnOn;
     canvas = {};
     ctx = {};
     paused = false;
@@ -17,23 +16,18 @@
       var track;
       track = {};
       $.subscribe("/camera/update", function(message) {
-        var imgData, skip, videoData;
+        var imgData, videoData;
         if (!paused) {
-          skip = false;
-          if (window.testing) {
-            message.track = face.track(canvas);
-          }
           imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           videoData = new Uint8ClampedArray(message.image);
           imgData.data.set(videoData);
           ctx.putImageData(imgData, 0, 0);
-          $.publish("/camera/stream", [
+          return $.publish("/camera/stream", [
             {
               canvas: canvas,
               track: message.track
             }
           ]);
-          return skip = !skip;
         }
       });
       return callback();

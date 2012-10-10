@@ -12,11 +12,11 @@ define [
 
     # object level vars
 
-    $counter = {}
     canvas = {}
     ctx = {}
     paused = false
 
+    # turns on the camera by causing it to listen for the incoming stream
     turnOn = (callback, testing) ->
 
         track = {}
@@ -26,12 +26,8 @@ define [
         
         $.subscribe "/camera/update", (message) ->
 
+            # if the camera isn't paused
             if not paused
-
-                skip = false
-
-                if window.testing
-                    message.track = face.track canvas
 
                 # create a new image data object
                 imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
@@ -45,12 +41,8 @@ define [
                 # draw the image data to the canvas
                 ctx.putImageData(imgData, 0, 0)
 
-                $.publish "/camera/stream", [{ 
-                    canvas: canvas, 
-                    track: message.track
-                }]
-
-                skip = not skip
+                # publish the camera stream out to the rest of the app
+                $.publish "/camera/stream", [{ canvas: canvas, track: message.track }]
 
         # execute the callback that happens when the camera successfully turns on
         callback()
