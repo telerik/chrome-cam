@@ -3,10 +3,9 @@ define [
   'mylibs/effects/effects'
   'mylibs/utils/utils'
   'mylibs/file/filewrapper'
-  'mylibs/config/config'
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
-], (kendo, effects, utils, filewrapper, config, template, transferImg) ->
+], (kendo, effects, utils, filewrapper, template, transferImg) ->
     
     canvas = {}
     ctx = {}
