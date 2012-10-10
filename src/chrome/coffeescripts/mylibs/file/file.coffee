@@ -73,7 +73,6 @@ define ['mylibs/utils/utils'],
       blob = utils.toBlob blob
 
     window.theBlob = blob
-    console.log blob
 
     onwrite = (e) ->
       $.publish "/share/gdrive/upload", [ blob ]

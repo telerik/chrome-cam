@@ -226,7 +226,6 @@
         arrows.left.hide();
         arrows.right = parent.find(".next");
         arrows.both = $([arrows.left[0], arrows.right[0]]);
-        console.log(arrows);
         arrows.left.on("click", function() {
           return page(1);
         });

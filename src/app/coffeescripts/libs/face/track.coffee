@@ -1,4 +1,4 @@
-define([
+define [
   'libs/face/ccv'
   'libs/face/face'
 ], () ->
@@ -40,7 +40,6 @@ define([
 
 			if comp.length
 
-#				console.log("FACE!")
 				cache.comp = comp
 
 			for i in cache.comp
@@ -52,6 +51,4 @@ define([
 					height: i.height
 				}
 
-			return track;
-
-)
+			return track

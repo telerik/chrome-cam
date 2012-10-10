@@ -14,7 +14,6 @@
       },
       gallery: {
         clear: function() {
-          console.log(window.APP.localization.clear_gallery_dialog_title);
           return $.publish("/confirm/show", [
             window.APP.localization.clear_gallery_dialog_title, window.APP.localization.clear_gallery_confirmation, function() {
               return $.publish("/gallery/clear");

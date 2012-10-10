@@ -26,7 +26,6 @@ define([
 			}]
 
 			$.subscribe "/tracking/enable", (set) ->
-				console.log "Face tracking: #{set}"
 				enabled = set
 
 		track: (video) ->
@@ -47,8 +46,6 @@ define([
 			}
 
 			if comp.length
-
-#				console.log("FACE!")
 				cache.comp = comp
 
 			for i in cache.comp

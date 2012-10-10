@@ -72,7 +72,6 @@
         blob = utils.toBlob(blob);
       }
       window.theBlob = blob;
-      console.log(blob);
       onwrite = function(e) {
         $.publish("/share/gdrive/upload", [blob]);
         return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);

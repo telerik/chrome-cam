@@ -54,7 +54,6 @@ define [
         viewModel.set("next.visible", message.index < message.length - 1)
         viewModel.set("previous.visible", message.index > 0 and message.length > 1)
         index = message.index
-        console.log message.index
 
     pub = 
 

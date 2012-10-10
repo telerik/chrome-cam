@@ -223,8 +223,6 @@ define [
             arrows.right = parent.find(".next")
             arrows.both = $([arrows.left[0], arrows.right[0]])
 
-            console.log arrows
-
             # in this case, "right" means "previous" and "left" means "next" because of the "natural" scrolling
             arrows.left.on "click", ->
                 page 1

@@ -66,8 +66,7 @@
       }
       viewModel.set("next.visible", message.index < message.length - 1);
       viewModel.set("previous.visible", message.index > 0 && message.length > 1);
-      index = message.index;
-      return console.log(message.index);
+      return index = message.index;
     };
     return pub = {
       init: function(selector) {

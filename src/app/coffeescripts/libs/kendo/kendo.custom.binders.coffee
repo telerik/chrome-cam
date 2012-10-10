@@ -4,9 +4,6 @@ kendo.data.binders.zoom = kendo.data.Binder.extend
         value = this.bindings["zoom"].get()
         visible = $(this.element).is(":visible")
 
-        console.log(value)
-        console.log(visible)
-
         if value
             if not visible
                 $(this.element).kendoStop(true).kendoAnimate
@@ -28,17 +25,3 @@ kendo.data.binders.localeHtml = kendo.data.Binder.extend
 kendo.data.binders.localeTitle = kendo.data.Binder.extend
     refresh: ->
         $(this.element).attr "title", APP.localization[this.bindings.localeTitle.path]
-
-# # custom bindings
-# kendo.data.binders.slideUpDown = kendo.data.Binder.extend
-#     refresh: ->
-#         value = this.bindings["slideUpDown"].get();
-
-#         if value
-#             $(this.element).kendoStop(true).kendoAnimate
-#                 effects: "slideIn:up",
-#                 show: true
-#         else
-#             $(this.element).kendoStop(true).kendoAnimate
-#                 effects: "slide:down",
-#                 show: true

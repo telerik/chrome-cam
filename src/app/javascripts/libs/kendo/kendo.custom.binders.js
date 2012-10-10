@@ -6,8 +6,6 @@
       var value, visible;
       value = this.bindings["zoom"].get();
       visible = $(this.element).is(":visible");
-      console.log(value);
-      console.log(visible);
       if (value) {
         if (!visible) {
           $(this.element).kendoStop(true).kendoAnimate({

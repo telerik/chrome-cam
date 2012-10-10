@@ -22,7 +22,6 @@
           }
         ];
         return $.subscribe("/tracking/enable", function(set) {
-          console.log("Face tracking: " + set);
           return enabled = set;
         });
       },
