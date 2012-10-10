@@ -7,7 +7,7 @@
     The file module takes care of all the reading and writing to and from the file system
     */
 
-    var blobBuiler, clear, compare, destroy, download, errorHandler, fileSystem, getFileExtension, list, myPicturesDir, pub, read, readSingleFile, save, withFileSystem;
+    var blobBuiler, clear, compare, destroy, download, errorHandler, fileSystem, getFileExtension, myPicturesDir, pub, read, save, withFileSystem;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
     fileSystem = null;
     myPicturesDir = {};
@@ -124,59 +124,6 @@
         });
       });
     };
-    list = function() {
-      return withFileSystem(function(fs) {
-        var dirReader;
-        dirReader = fs.root.createReader();
-        return dirReader.readEntries(function(results) {
-          var entry, files;
-          files = (function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = results.length; _i < _len; _i++) {
-              entry = results[_i];
-              if (entry.isFile) {
-                _results.push({
-                  name: entry.name,
-                  type: getFileExtension(entry.name)
-                });
-              }
-            }
-            return _results;
-          })();
-          files.sort(compare);
-          return $.publish("/postman/deliver", [
-            {
-              message: files
-            }, "/file/listResult", []
-          ]);
-        });
-      });
-    };
-    readSingleFile = function(filename) {
-      return withFileSystem(function() {
-        return fileSystem.root.getFile(filename, null, function(fileEntry) {
-          return fileEntry.file(function(file) {
-            var reader;
-            reader = new FileReader();
-            reader.onloadend = function(e) {
-              var result;
-              result = {
-                name: filename,
-                type: getFileExtension(filename),
-                file: this.result
-              };
-              return $.publish("/postman/deliver", [
-                {
-                  message: result
-                }, "/pictures/" + filename, []
-              ]);
-            };
-            return reader.readAsDataURL(file);
-          });
-        });
-      });
-    };
     read = function() {
       return withFileSystem(function(fs) {
         return fs.root.getDirectory("MyPictures", {
@@ -279,12 +226,6 @@
         });
         $.subscribe("/file/download", function(message) {
           return download(message.name, message.file);
-        });
-        $.subscribe("/file/list", function(message) {
-          return list();
-        });
-        $.subscribe("/file/readFile", function(message) {
-          return readSingleFile(message.name);
         });
         return $.subscribe("/file/clear", function(message) {
           return clear();

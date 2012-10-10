@@ -1,9 +1,5 @@
-define([
-
-  'mylibs/utils/utils'
-
-], (utils) ->
-
+define ['mylibs/utils/utils'],
+(utils) ->
   ###   File
 
   The file module takes care of all the reading and writing to and from the file system
@@ -148,33 +144,6 @@ define([
         # save the file to the user specified file and folder
         fileWriter.write blob
 
-  list = ->
-    withFileSystem (fs) ->
-      dirReader = fs.root.createReader()
-      dirReader.readEntries (results) ->
-        files = (name: entry.name, type: getFileExtension(entry.name) for entry in results when entry.isFile)
-        files.sort(compare)
-
-        $.publish "/postman/deliver", [ { message: files }, "/file/listResult", [] ]
-
-  readSingleFile = (filename) ->
-    withFileSystem ->
-      fileSystem.root.getFile filename, null, (fileEntry) ->
-        fileEntry.file (file) ->
-          reader = new FileReader()
-
-          reader.onloadend = (e) ->
-            result =
-              name: filename
-              type: getFileExtension filename
-              file: this.result
-
-            # send it down to the app
-            $.publish "/postman/deliver", [ { message: result }, "/pictures/#{filename}", [] ]
-
-          reader.readAsDataURL file
-
-
   # reads all images from the "MyPictures" folder in the file system
   read = ->
 
@@ -293,13 +262,5 @@ define([
       $.subscribe "/file/download", (message) ->
         download message.name, message.file
 
-      $.subscribe "/file/list", (message) ->
-        list()
-      
-      $.subscribe "/file/readFile", (message) ->
-        readSingleFile message.name
-
       $.subscribe "/file/clear", (message) ->
         clear()
-
-)

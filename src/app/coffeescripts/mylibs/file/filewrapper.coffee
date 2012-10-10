@@ -12,9 +12,6 @@ define [], (file) ->
 		deferred.promise()
 	
 	pub = window.filewrapper = 
-		list: ->
-			asyncFileRequest "/file/list", "/file/listResult", {}
-
 		readAll: ->
 			asyncFileRequest "/file/read", "/pictures/bulk", {}
 
@@ -26,6 +23,3 @@ define [], (file) ->
 
 		save: (filename, blob) ->
 			asyncFileRequest "/file/save", "/file/saved/#{filename}", name: filename, file: blob
-
-		readFile: (filename) ->
-			asyncFileRequest "/file/readFile", "/pictures/#{filename}", name: filename

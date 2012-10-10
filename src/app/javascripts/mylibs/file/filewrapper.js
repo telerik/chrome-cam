@@ -14,9 +14,6 @@
       return deferred.promise();
     };
     return pub = window.filewrapper = {
-      list: function() {
-        return asyncFileRequest("/file/list", "/file/listResult", {});
-      },
       readAll: function() {
         return asyncFileRequest("/file/read", "/pictures/bulk", {});
       },
@@ -32,11 +29,6 @@
         return asyncFileRequest("/file/save", "/file/saved/" + filename, {
           name: filename,
           file: blob
-        });
-      },
-      readFile: function(filename) {
-        return asyncFileRequest("/file/readFile", "/pictures/" + filename, {
-          name: filename
         });
       }
     };
