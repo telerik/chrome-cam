@@ -1,4 +1,4 @@
 define [
-  # Load the original jQuery source file
+  # load jQuery plugins
   'order!libs/jquery/pubsub'
 ], ->
