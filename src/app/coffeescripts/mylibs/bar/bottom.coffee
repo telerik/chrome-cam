@@ -69,12 +69,11 @@ define [
 
 	countdown = (position, callback) ->
 
-		$(view.el.counters[position]).kendoStop(true).kendoAnimate {
+		$(view.el.counters[position]).kendoStop(true).kendoAnimate
 			effects: "zoomIn fadeIn",
 			duration: 200,
 			show: true,
 			complete: ->
-
 				# fade in the next dot!
 				++position
 
@@ -82,15 +81,11 @@ define [
 					setTimeout -> 
 						countdown position, callback
 					, 500
-
 				else
-
 					callback()
 
 					# hide the counters
 					view.el.counters.hide()
-
-		}
 
 	states = 
 
@@ -117,11 +112,9 @@ define [
 		set: (state) ->
 			this[state]()
 
-
 	pub =
 
 		init: (container) ->
-			
 			# create the bottom bar for the gallery
 			view = new kendo.View(container, template)
 
@@ -155,5 +148,5 @@ define [
 			view.find(".bar", "bar")
 			view.find(".filters", "filters")
 			view.find(".capture", "capture")
-	
+
 			return view

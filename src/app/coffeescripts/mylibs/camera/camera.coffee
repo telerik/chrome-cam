@@ -1,4 +1,4 @@
-define([
+define [
   'mylibs/utils/utils'
   'libs/face/track'
 ], (utils, face) ->
@@ -17,7 +17,7 @@ define([
     ctx = {}
     paused = false
 
-    turnOn = (callback, testing) ->       
+    turnOn = (callback, testing) ->
 
         track = {}
 
@@ -56,8 +56,7 @@ define([
         callback()
 
     pub =
-    	
-    	init: (counter, callback) ->
+        init: (counter, callback) ->
 
             # create a blank canvas element and set it's size
             canvas = document.createElement("canvas")
@@ -66,11 +65,9 @@ define([
 
             # get the canvas context for drawing and reading
             ctx = canvas.getContext("2d")
-    		
+
             # subscribe to the pause event
             $.subscribe "/camera/pause", (isPaused) ->
                 paused = isPaused
 
             turnOn(callback)
-
-)
