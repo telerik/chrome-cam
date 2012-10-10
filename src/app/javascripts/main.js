@@ -8,7 +8,7 @@
     }
   });
 
-  require(['app', 'order!libs/jquery/plugins', 'order!libs/whammy/whammy'], function(app) {
+  require(['app', 'order!libs/jquery/plugins'], function(app) {
     return app.init();
   });
 
