@@ -1,5 +1,5 @@
 define [], () ->
-	
+
 	canvas = document.createElement("canvas")
 	ctx = canvas.getContext("2d")
 
@@ -34,9 +34,8 @@ define [], () ->
 		new Blob([ia], { type: mimeString })
 
 	pub = 
-	
+
 		init: ->
-	
 			Image.prototype.toDataURL = (format) ->
 
 				toDataURL(this, format)
@@ -52,8 +51,4 @@ define [], () ->
 			toBlob(dataURL)
 
 		getAnimationFrame: -> 
-	    
-	        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || 
-	        window.mozRequestAnimationFrame || window.oRequestAnimationFrame || 
-	        window.msRequestAnimationFrame || (callback, element) ->
-	          return window.setTimeout(callback, 1000 / 60)
+			window.requestAnimationFrame || window.webkitRequestAnimationFrame
