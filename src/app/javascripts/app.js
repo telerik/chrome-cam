@@ -53,7 +53,10 @@
                 duration: 1000
               });
             };
-            return setTimeout(hideSplash, 100);
+            setTimeout(hideSplash, 100);
+            return $.subscribe("/keyboard/close", function() {
+              return $.publish("/postman/deliver", [null, "/window/close"]);
+            });
           };
           return camera.init("countdown", ready);
         });

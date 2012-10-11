@@ -89,6 +89,9 @@
         $.subscribe("/localization/request", function() {
           return $.publish("/postman/deliver", [localization, "/localization/response"]);
         });
+        $.subscribe("/window/close", function() {
+          return window.close();
+        });
         notify.init();
         file.init();
         face.init(0, 0, 0, 0);

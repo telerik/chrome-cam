@@ -86,6 +86,9 @@ define [
 							duration: 1000
 					setTimeout hideSplash, 100
 
+					$.subscribe "/keyboard/close", ->
+						$.publish "/postman/deliver", [ null, "/window/close" ]
+
 				# initialize the camera
 				camera.init "countdown", ready
 

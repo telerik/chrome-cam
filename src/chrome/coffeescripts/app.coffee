@@ -91,6 +91,9 @@ define [
 			$.subscribe "/localization/request", ->
 				$.publish "/postman/deliver", [ localization, "/localization/response" ]
 
+			$.subscribe "/window/close", ->
+				window.close()
+
 			#initialize notifications
 			notify.init()
 

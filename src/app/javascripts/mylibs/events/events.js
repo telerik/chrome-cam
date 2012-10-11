@@ -2,7 +2,18 @@
 (function() {
 
   define([], function() {
-    var pub;
+    var key, pub;
+    key = {
+      arrows: {
+        up: 38,
+        down: 40,
+        left: 37,
+        right: 39
+      },
+      esc: 27,
+      space: ' '.charCodeAt(0),
+      w: 'W'.charCodeAt(0)
+    };
     return pub = {
       init: function() {
         var p;
@@ -11,20 +22,24 @@
         };
         return $(document).keydown(function(e) {
           switch (e.which) {
-            case 37:
+            case key.arrows.left:
               return p("arrow", "left");
-            case 39:
+            case key.arrows.right:
               return p("arrow", "right");
-            case 38:
+            case key.arrows.up:
               return p("arrow", "up");
-            case 40:
+            case key.arrows.down:
               return p("arrow", "down");
-            case 27:
+            case key.esc:
               return p("esc", "esc");
-            case 32:
+            case key.space:
               return p("space", {
                 ctrlKey: e.ctrlKey || e.metaKey
               });
+            case key.w:
+              if (e.ctrlKey || e.metaKey) {
+                return p("close");
+              }
           }
         });
       }
