@@ -222,7 +222,10 @@
         callback = function() {
           return $.publish("/bottom/update", ["full"]);
         };
-        return capture(callback);
+        return capture(callback, {
+          index: 1,
+          count: 1
+        });
       },
       paparazzi: function() {
         var advance, callback, left;
@@ -240,13 +243,22 @@
               return full.el.paparazzi.addClass("hidden");
             };
             advance();
-            return capture(callback);
+            return capture(callback, {
+              index: 3,
+              count: 3
+            });
           };
           advance();
-          return capture(callback);
+          return capture(callback, {
+            index: 2,
+            count: 3
+          });
         };
         advance();
-        return capture(callback);
+        return capture(callback, {
+          index: 1,
+          count: 3
+        });
       }
     };
   });

@@ -224,7 +224,7 @@ define [
             callback = ->
                 $.publish "/bottom/update", [ "full" ]
                 
-            capture(callback)
+            capture callback, index: 1, count: 1
 
         paparazzi: ->
 
@@ -245,10 +245,10 @@ define [
                         full.el.paparazzi.addClass "hidden"
                     
                     advance()
-                    capture(callback)
+                    capture callback, index: 3, count: 3
 
                 advance()
-                capture(callback)
+                capture callback, index: 2, count: 3
 
             advance()
-            capture(callback)
+            capture callback, index: 1, count: 3
