@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, template, transferImg) {
-    var canvas, capture, ctx, draw, effect, flash, frame, full, index, paparazzi, paused, pub, subscribe, transfer, video, videoCtx;
+    var canvas, canvases, capture, ctx, draw, effect, elements, flash, frame, full, index, paparazzi, paused, pub, subscribe, transfer, video, videoCtx;
     canvas = {};
     ctx = {};
     video = {};
@@ -143,10 +143,19 @@
         }
       });
     };
-    return pub = {
-      init: function(selector) {
-        $.publish("/postman/deliver", [null, "/camera/request"]);
-        full = new kendo.View(selector, template);
+    elements = {
+      cache: function(full) {
+        full.find(".flash", "flash");
+        full.find(".timer", "timer");
+        full.find(".transfer", "transfer");
+        full.find(".transfer img", "source");
+        full.find(".wrapper", "wrapper");
+        full.find(".paparazzi", "paparazzi");
+        return full.find(".filters-list", "filters");
+      }
+    };
+    canvases = {
+      setup: function() {
         canvas = document.createElement("canvas");
         video = document.createElement("canvas");
         video.width = 720;
@@ -158,15 +167,16 @@
         ctx.scale(-1, 1);
         ctx.translate(-canvas.width, 0);
         videoCtx = video.getContext("2d");
-        videoCtx.scale(0.5, 0.5);
+        return videoCtx.scale(0.5, 0.5);
+      }
+    };
+    return pub = {
+      init: function(selector) {
+        $.publish("/postman/deliver", [null, "/camera/request"]);
+        full = new kendo.View(selector, template);
+        canvases.setup();
         full.render().prepend(canvas);
-        full.find(".flash", "flash");
-        full.find(".timer", "timer");
-        full.find(".transfer", "transfer");
-        full.find(".transfer img", "source");
-        full.find(".wrapper", "wrapper");
-        full.find(".paparazzi", "paparazzi");
-        full.find(".filters-list", "filters");
+        elements.cache(full);
         subscribe(pub);
         return draw();
       },

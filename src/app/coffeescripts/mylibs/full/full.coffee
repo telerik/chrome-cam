@@ -94,8 +94,6 @@ define [
         saved: 0
 
     subscribe = (pub) ->
-        # subscribe to external events an map them to internal functions
-
         $.subscribe "/full/show", (item) ->
             pub.show(item)
 
@@ -140,14 +138,18 @@ define [
             if dir is "down" and index.current() + 1 < index.max()
                 index.select index.current() + 1
 
-    pub = 
+    elements =
+        cache: (full) ->
+            full.find(".flash", "flash")
+            full.find(".timer", "timer")
+            full.find(".transfer", "transfer")
+            full.find(".transfer img", "source")
+            full.find(".wrapper", "wrapper")
+            full.find(".paparazzi", "paparazzi")
+            full.find(".filters-list", "filters")
 
-        init: (selector) ->
-
-            $.publish "/postman/deliver", [null, "/camera/request"]
-
-            full = new kendo.View(selector, template)
-
+    canvases = 
+        setup: ->
             # create a new canvas for drawing
             canvas = document.createElement "canvas"
             video = document.createElement "canvas"
@@ -162,17 +164,24 @@ define [
             videoCtx = video.getContext "2d"
             videoCtx.scale 0.5, 0.5
 
+    pub = 
+
+        init: (selector) ->
+
+            # start the camera ping/pong
+            $.publish "/postman/deliver", [ null, "/camera/request" ]
+
+            full = new kendo.View(selector, template)
+
+            # set up canvases for receiving the video feed and applying effects
+            canvases.setup()
+
             full.render().prepend(canvas)
 
-            # find and the necessary elements
-            full.find(".flash", "flash")
-            full.find(".timer", "timer")
-            full.find(".transfer", "transfer")
-            full.find(".transfer img", "source")
-            full.find(".wrapper", "wrapper")
-            full.find(".paparazzi", "paparazzi")
-            full.find(".filters-list", "filters")
+            # find and cache the necessary elements
+            elements.cache full
 
+            # subscribe to external events an map them to internal functions
             subscribe pub
 
             draw()
