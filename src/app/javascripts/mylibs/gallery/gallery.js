@@ -301,11 +301,9 @@
           return at(index);
         });
         $.subscribe("/gallery/clear", function() {
-          window.APP.app.showLoading();
+          $.publish("/bottom/thumbnail");
           return filewrapper.clear().done(function() {
-            clear();
-            window.APP.app.hideLoading();
-            return $.publish("/bottom/thumbnail");
+            return clear();
           });
         });
         $.publish("/postman/deliver", [{}, "/file/read"]);

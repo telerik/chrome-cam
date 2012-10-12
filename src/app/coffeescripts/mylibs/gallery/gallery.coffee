@@ -299,11 +299,9 @@ define [
                 at(index)
 
             $.subscribe "/gallery/clear", =>
-                window.APP.app.showLoading()
+                $.publish "/bottom/thumbnail"
                 filewrapper.clear().done =>
                     clear()
-                    window.APP.app.hideLoading()
-                    $.publish "/bottom/thumbnail"
 
             $.publish "/postman/deliver", [ {}, "/file/read" ]
 

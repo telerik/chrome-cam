@@ -13,7 +13,8 @@
         clear: function() {
           return $.publish("/confirm/show", [
             window.APP.localization.clear_gallery_dialog_title, window.APP.localization.clear_gallery_confirmation, function() {
-              return $.publish("/gallery/clear");
+              $.publish("/gallery/clear");
+              return window.APP.app.navigate("#home");
             }
           ]);
         }

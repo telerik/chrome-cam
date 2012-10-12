@@ -16,7 +16,9 @@ define [
 				$.publish "/confirm/show", [
 					window.APP.localization.clear_gallery_dialog_title,
 					window.APP.localization.clear_gallery_confirmation,
-					-> $.publish("/gallery/clear")
+					-> 
+						$.publish("/gallery/clear")
+						window.APP.app.navigate "#home"
 				]
 
 	pub = 
