@@ -2,10 +2,9 @@ define [
 	'mylibs/postman/postman'
 	'mylibs/utils/utils'
 	'mylibs/file/file'
-	'mylibs/notify/notify'
 	'mylibs/localization/localization'
 	'libs/face/track'
-], (postman, utils, file, notify, localization, face) ->
+], (postman, utils, file, localization, face) ->
 	'use strict'
 
 	iframe = iframe = document.getElementById("iframe")
@@ -87,19 +86,12 @@ define [
 			# cue up the postman!
 			postman.init iframe.contentWindow
 
-			# used to open new tabs, as _blank does not work from the sandboxed frame
-			$.subscribe "/tab/open", (url) ->
-				chrome.tabs.create url: url
-
 			# get the localization dictionary from the app
 			$.subscribe "/localization/request", ->
 				$.publish "/postman/deliver", [ localization, "/localization/response" ]
 
 			$.subscribe "/window/close", ->
 				window.close()
-
-			#initialize notifications
-			notify.init()
 
 			# get the files
 			file.init()

@@ -9,9 +9,6 @@
         $.publish("/postman/deliver", [true, "/menu/enable"]);
         return window.APP.app.navigate(previous);
       },
-      goto: function(e) {
-        return $.publish("/postman/deliver", [$(e.currentTarget).attr("href"), "/tab/open"]);
-      },
       gallery: {
         clear: function() {
           return $.publish("/confirm/show", [
@@ -42,7 +39,6 @@
         var view;
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
-        view.find("a[target=_blank]").on("click", viewModel.goto);
         return $.subscribe('/menu/click/chrome-cam-about-menu', function() {
           $.publish("/postman/deliver", [false, "/menu/enable"]);
           previous = window.APP.app.view().id;
