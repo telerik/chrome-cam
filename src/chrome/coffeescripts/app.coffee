@@ -39,7 +39,7 @@ define [
 
 		if skipBit == 0
 			track = face.track video
-
+		
 		ctx.drawImage(video, 0, 0, video.width, video.height)
 		img = ctx.getImageData(0, 0, canvas.width, canvas.height)
 		buffer = img.data.buffer

@@ -5,14 +5,19 @@
     
     The file module takes care of all the reading and writing to and from the file system
     */
-    var blobBuiler, compare, destroy, download, errorHandler, fileSystem, getFileExtension, list, myPicturesDir, pub, read, readSingleFile, save, withFileSystem;
+
+    var blobBuiler, clear, compare, destroy, download, errorHandler, fileSystem, getFileExtension, myPicturesDir, pub, read, save, withFileSystem;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
     fileSystem = null;
     myPicturesDir = {};
     blobBuiler = {};
     compare = function(a, b) {
-      if (a.name < b.name) return -1;
-      if (a.name > b.name) return 1;
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
       return 0;
     };
     getFileExtension = function(filename) {
@@ -21,24 +26,27 @@
     errorHandler = function(e) {
       var msg;
       msg = '';
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = 'QUOTA_EXCEEDED_ERR';
-          break;
-        case FileError.NOT_FOUND_ERR:
-          msg = 'NOT_FOUND_ERR';
-          break;
-        case FileError.SECURITY_ERR:
-          msg = 'SECURITY_ERR';
-          break;
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = 'INVALID_MODIFICATION_ERR';
-          break;
-        case FileError.INVALID_STATE_ERR:
-          msg = 'INVALID_STATE_ERR';
-          break;
-        default:
-          msg = 'Unknown Error';
+      console.log(e);
+      if (e.type === "error") {
+        switch (e.code || e.target.error.code) {
+          case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'QUOTA_EXCEEDED_ERR';
+            break;
+          case FileError.NOT_FOUND_ERR:
+            msg = 'NOT_FOUND_ERR';
+            break;
+          case FileError.SECURITY_ERR:
+            msg = 'SECURITY_ERR';
+            break;
+          case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'INVALID_MODIFICATION_ERR';
+            break;
+          case FileError.INVALID_STATE_ERR:
+            msg = 'INVALID_STATE_ERR';
+            break;
+          default:
+            msg = 'Unknown Error';
+        }
       }
       $.publish("/notify/show", ["File Error", msg, true]);
       return $.publish("/notify/show", ["File Access Denied", "Access to the file system could not be obtained.", false]);
@@ -58,19 +66,23 @@
       }
     };
     save = function(name, blob) {
-      if (typeof blob === "string") blob = utils.toBlob(blob);
-      return withFileSystem(function() {
-        return fileSystem.root.getFile(name, {
+      var onwrite;
+      if (typeof blob === "string") {
+        blob = utils.toBlob(blob);
+      }
+      window.theBlob = blob;
+      onwrite = function(e) {
+        $.publish("/share/gdrive/upload", [blob]);
+        return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
+      };
+      return withFileSystem(function(fs) {
+        return fs.root.getFile(name, {
           create: true
         }, function(fileEntry) {
           return fileEntry.createWriter(function(fileWriter) {
-            fileWriter.onwrite = function(e) {
-              $.publish("/share/gdrive/upload", [blob]);
-              return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
-            };
-            fileWriter.onerror = function(e) {
-              return errorHandler(e);
-            };
+            fileWriter.onwrite = onwrite;
+            fileWriter.onerror = errorHandler;
+            fileWriter.abort();
             return fileWriter.write(blob);
           });
         }, errorHandler);
@@ -82,7 +94,6 @@
           create: false
         }, function(fileEntry) {
           return fileEntry.remove(function() {
-            $.publish("/notify/show", ["File Deleted!", "The picture was deleted successfully", false]);
             return $.publish("/postman/deliver", [
               {
                 message: ""
@@ -95,70 +106,19 @@
     download = function(name, dataURL) {
       var blob;
       blob = utils.toBlob(dataURL);
-      return chrome.fileSystem.chooseFile({
-        type: "saveFile"
+      return chrome.fileSystem.chooseEntry({
+        type: "saveFile",
+        suggestedName: name
       }, function(fileEntry) {
+        if (fileEntry == null) {
+          return;
+        }
         return fileEntry.createWriter(function(fileWriter) {
-          fileWriter.onwriteend = function(e) {
-            return $.publish("/notify/show", ["File Saved", "The picture was saved succesfully", false]);
-          };
+          fileWriter.onwriteend = function(e) {};
           fileWriter.onerror = function(e) {
             return errorHandler(e);
           };
           return fileWriter.write(blob);
-        });
-      });
-    };
-    list = function() {
-      return withFileSystem(function(fs) {
-        var dirReader;
-        dirReader = fs.root.createReader();
-        return dirReader.readEntries(function(results) {
-          var entry, files;
-          files = (function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = results.length; _i < _len; _i++) {
-              entry = results[_i];
-              if (entry.isFile) {
-                _results.push({
-                  name: entry.name,
-                  type: getFileExtension(entry.name)
-                });
-              }
-            }
-            return _results;
-          })();
-          files.sort(compare);
-          return $.publish("/postman/deliver", [
-            {
-              message: files
-            }, "/file/listResult", []
-          ]);
-        });
-      });
-    };
-    readSingleFile = function(filename) {
-      return withFileSystem(function() {
-        return fileSystem.root.getFile(filename, null, function(fileEntry) {
-          return fileEntry.file(function(file) {
-            var reader;
-            reader = new FileReader();
-            reader.onloadend = function(e) {
-              var result;
-              result = {
-                name: filename,
-                type: getFileExtension(filename),
-                file: this.result
-              };
-              return $.publish("/postman/deliver", [
-                {
-                  message: result
-                }, "/pictures/" + filename, []
-              ]);
-            };
-            return reader.readAsDataURL(file);
-          });
         });
       });
     };
@@ -177,7 +137,9 @@
               var entry, readFile, _i, _len;
               for (_i = 0, _len = results.length; _i < _len; _i++) {
                 entry = results[_i];
-                if (entry.isFile) entries.push(entry);
+                if (entry.isFile) {
+                  entries.push(entry);
+                }
               }
               readFile = function(i) {
                 var name, type;
@@ -225,6 +187,30 @@
         }, errorHandler);
       });
     };
+    clear = function() {
+      return withFileSystem(function(fs) {
+        var dirReader;
+        dirReader = fs.root.createReader();
+        return dirReader.readEntries(function(entries) {
+          var deletedCount, entry, totalCount, _i, _len, _results;
+          deletedCount = 0;
+          totalCount = entries.length;
+          _results = [];
+          for (_i = 0, _len = entries.length; _i < _len; _i++) {
+            entry = entries[_i];
+            _results.push((function(entry) {
+              return entry.remove(function() {
+                ++deletedCount;
+                if (deletedCount === totalCount) {
+                  return $.publish("/postman/deliver", [{}, "/file/cleared"]);
+                }
+              });
+            })(entry));
+          }
+          return _results;
+        });
+      });
+    };
     return pub = {
       init: function(kb) {
         $.subscribe("/file/save", function(message) {
@@ -239,11 +225,8 @@
         $.subscribe("/file/download", function(message) {
           return download(message.name, message.file);
         });
-        $.subscribe("/file/list", function(message) {
-          return list();
-        });
-        return $.subscribe("/file/readFile", function(message) {
-          return readSingleFile(message.name);
+        return $.subscribe("/file/clear", function(message) {
+          return clear();
         });
       }
     };
