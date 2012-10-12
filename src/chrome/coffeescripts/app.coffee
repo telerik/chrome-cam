@@ -40,7 +40,11 @@ define [
 		if skipBit == 0
 			track = face.track video
 		
-		ctx.drawImage(video, 0, 0, video.width, video.height)
+		# HACK: need to eliminate race condition that can cause this to get hit before video is ready.
+		try
+			ctx.drawImage(video, 0, 0, video.width, video.height)
+		catch ex
+
 		img = ctx.getImageData(0, 0, canvas.width, canvas.height)
 		buffer = img.data.buffer
 
