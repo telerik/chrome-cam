@@ -18,8 +18,6 @@ define [
 			visible: false
 			active: "photo"
 			click: (e) ->
-				# remove capture element's old class
-				view.el.capture.removeClass @get("mode.active")
 
 				a = $(e.target).closest("a")
 
@@ -30,9 +28,6 @@ define [
 
 				# add the active class to this anchor
 				a.addClass "selected"
-
-				# add capture element's new class
-				view.el.capture.addClass a.data("mode")
 
 		capture:
 			visible: true
