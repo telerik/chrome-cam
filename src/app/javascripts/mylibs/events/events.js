@@ -12,6 +12,7 @@
       },
       esc: 27,
       space: ' '.charCodeAt(0),
+      enter: 13,
       w: 'W'.charCodeAt(0)
     };
     return pub = {
@@ -40,6 +41,9 @@
               if (e.ctrlKey || e.metaKey) {
                 return p("close");
               }
+              break;
+            case key.enter:
+              return p("enter");
           }
         });
       }
