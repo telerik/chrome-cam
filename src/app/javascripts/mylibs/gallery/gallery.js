@@ -4,7 +4,7 @@
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
     var active, add, animation, arrows, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, rows, select, selected, total,
       _this = this;
-    columns = 4;
+    columns = 3;
     rows = 3;
     pageSize = columns * rows;
     files = [];
@@ -154,7 +154,7 @@
       element.src = item.file;
       element.setAttribute("data-name", item.name);
       element.setAttribute("draggable", true);
-      element.width = 270;
+      element.width = 240;
       element.height = 180;
       element.setAttribute("class", "hidden");
       return element;

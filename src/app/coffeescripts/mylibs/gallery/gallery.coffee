@@ -4,7 +4,7 @@ define [
     'mylibs/file/filewrapper'
     'text!mylibs/gallery/views/thumb.html'
 ], (kendo, utils, filewrapper, template) ->
-    columns = 4
+    columns = 3
     rows = 3
     pageSize = columns * rows
 
@@ -150,7 +150,7 @@ define [
         element.setAttribute("data-name", item.name)
         element.setAttribute("draggable", true)
 
-        element.width = 270
+        element.width = 240
         element.height = 180
         
         element.setAttribute("class", "hidden")

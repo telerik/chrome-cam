@@ -256,13 +256,13 @@ body div { padding-top: 0px; }
 }
 
 #destination {
-	height: 48px;
+	height: 54px;
 	width: 72px;
 }
 
 .thumbnail {
 	width: 72px;
-	height: 48px;
+	height: 54px;
 }
 
 .details .bar .right, .details .bar .left {
@@ -318,7 +318,7 @@ body div { padding-top: 0px; }
 		height: 600px;
 	}
 
-.flip, .flip > .page { width: 989px; }
+.flip, .flip > .page { width: 780px; padding-top: 12px; }
 
 .thumbnail { margin-left: 13px; }
 	.thumbnail:first-child { margin-left: 0; }
@@ -362,19 +362,18 @@ body div { padding-top: 0px; }
 
 .gallery {
 	height: 800px;
-	padding: 28px 0 0;
 	-webkit-box-pack: center;
 	-webkit-box-align: center;
 	-webkit-box-orient: vertical;
 	background-color: #f1f1f1;
-	width: 1155px;
+	width: 989px;
 	margin: 0 auto;
 }
 
 .gallery .thumbnail {
 	float: left;
 	text-align: center;
-	width: 270px;
+	width: 240px;
 	height: 180px;
 	-webkit-transition: -webkit-transform .02s ease-in-out;
 	margin: 0 9px 18px 9px;
