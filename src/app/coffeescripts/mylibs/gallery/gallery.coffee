@@ -95,7 +95,9 @@ define [
 
         select name
 
-    at = (index) =>
+    at = (newIndex) =>
+        index = newIndex
+
         # we may need to page the data before grabbing the item.
         # to get the current page, divide the index by the pageSize. then
         target = Math.ceil((index + 1) / pageSize)
@@ -230,22 +232,19 @@ define [
 
             # listen to keyboard events
             keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
+                position = index % pageSize
                 if key == "left"
-                    if index % columns == 0
-                        page 1
-                    else if index > 0
+                    if index % columns > 0
                         at index - 1
                 if key == "right"
-                    if index % columns == columns - 1
-                        page -1
-                    else # if condition...
-                        at index+1
-                if key == "up" and index >= columns
-                    at index-columns
-                if key == "down" # condition
-                    at index+columns
-                #unless flipping or details
-                    #page (key == "right") - (key == "left")
+                    if index % columns < columns - 1
+                        at index + 1
+                if key == "up"
+                    if position >= columns
+                        at index-columns
+                if key == "down"
+                    if position < (rows-1)*columns
+                        at index+columns
 
         hide: (e) ->
             # unpause the camera

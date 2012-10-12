@@ -92,8 +92,9 @@
       };
       return select(name);
     };
-    at = function(index) {
+    at = function(newIndex) {
       var match, position, target;
+      index = newIndex;
       target = Math.ceil((index + 1) / pageSize);
       if (target !== _this.ds.page()) {
         _this.ds.page(target);
@@ -236,25 +237,27 @@
           }, "/camera/pause"
         ]);
         return keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
+          var position;
+          position = index % pageSize;
           if (key === "left") {
-            if (index % columns === 0) {
-              page(1);
-            } else if (index > 0) {
+            if (index % columns > 0) {
               at(index - 1);
             }
           }
           if (key === "right") {
-            if (index % columns === columns - 1) {
-              page(-1);
-            } else {
+            if (index % columns < columns - 1) {
               at(index + 1);
             }
           }
-          if (key === "up" && index >= columns) {
-            at(index - columns);
+          if (key === "up") {
+            if (position >= columns) {
+              at(index - columns);
+            }
           }
           if (key === "down") {
-            return at(index + columns);
+            if (position < (rows - 1) * columns) {
+              return at(index + columns);
+            }
           }
         });
       },
