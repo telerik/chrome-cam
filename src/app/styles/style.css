@@ -336,7 +336,7 @@ body div { padding-top: 0px; }
 
 .filters-list {
 	position: absolute;
-	left: -270px;
+	left: -280px;
 	font-size: 13px;
 	top: -60px;
 }
@@ -354,6 +354,8 @@ body div { padding-top: 0px; }
 	.filters-list .selected {
 		border-left: 4px solid #DD4B39;
 		padding-left: 8px;
+		font-weight: bold;
+		color: #DD4B39;
 	}
 
 /************ Gallery view ************/

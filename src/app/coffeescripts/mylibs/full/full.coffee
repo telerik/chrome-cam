@@ -206,6 +206,10 @@ define [
                 i = $(e.target).data("filter-index")
                 index.saved = i
                 index.select i
+                # remove the selected class from any other filters
+                # $(e.target).parent().children().removeClass("selected")
+                # set this filter as selected
+                # $(e.target).addClass("selected")
             mouseover: (e) ->
                 index.preview $(e.target).data("filter-index")
             mouseout: (e) ->
