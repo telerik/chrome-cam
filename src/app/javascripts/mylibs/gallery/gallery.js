@@ -45,16 +45,16 @@
         return;
       }
       arrows.both.hide();
-      if (direction > 0 && _this.ds.page() > 1) {
+      if (direction > 0 && ds.page() > 1) {
         flipping = true;
         animation.reverse = true;
-        _this.ds.page(_this.ds.page() - 1);
+        ds.page(ds.page() - 1);
         render(true);
       }
-      if (direction < 0 && _this.ds.page() < _this.ds.totalPages()) {
+      if (direction < 0 && ds.page() < ds.totalPages()) {
         flipping = true;
         animation.reverse = false;
-        _this.ds.page(_this.ds.page() + 1);
+        ds.page(ds.page() + 1);
         return render(true);
       }
     };
@@ -74,7 +74,7 @@
           return filewrapper.deleteFile(name).done(function() {
             $.publish("/top/update", ["deselected"]);
             selected.remove();
-            _this.ds.remove(_this.ds.get(name));
+            ds.remove(ds.get(name));
             return render();
           });
         }
@@ -82,35 +82,35 @@
     };
     get = function(name) {
       var match, position;
-      match = _this.ds.get(name);
-      index = _this.ds.view().indexOf(match);
-      position = _this.ds.page() > 1 ? pageSize * (_this.ds.page() - 1) + index : index;
+      match = ds.get(name);
+      index = ds.view().indexOf(match);
+      position = ds.page() > 1 ? pageSize * (ds.page() - 1) + index : index;
       return {
-        length: _this.ds.data().length,
+        length: ds.data().length,
         index: position,
         item: match
       };
-      return select(name);
     };
-    at = function(index) {
+    at = function(newIndex) {
       var match, position, target;
+      index = newIndex;
       target = Math.ceil((index + 1) / pageSize);
-      if (target !== _this.ds.page()) {
-        _this.ds.page(target);
+      if (target !== ds.page()) {
+        ds.page(target);
         render();
       }
       position = index - pageSize * (target - 1);
       match = {
-        length: _this.ds.data().length,
+        length: ds.data().length,
         index: index,
-        item: _this.ds.view()[position]
+        item: ds.view()[position]
       };
       $.publish("/details/update", [match]);
       return select(match.item.name);
     };
     dataSource = {
       create: function(data) {
-        return _this.ds = new kendo.data.DataSource({
+        return ds = new kendo.data.DataSource({
           data: data,
           pageSize: pageSize,
           change: function() {
@@ -134,10 +134,10 @@
         file: item.file,
         type: item.type
       };
-      if (!_this.ds) {
-        return _this.ds = dataSource.create([item]);
+      if (!ds) {
+        return ds = dataSource.create([item]);
       } else {
-        return _this.ds.add(item);
+        return ds.add(item);
       }
     };
     create = function(item) {
@@ -162,7 +162,7 @@
     render = function(flip) {
       var complete, item, thumbnail, thumbs, _i, _len, _ref;
       thumbs = [];
-      _ref = _this.ds.view();
+      _ref = ds.view();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>");
@@ -194,8 +194,8 @@
         pages.previous = pages.next;
         pages.next = justPaged;
         flipping = false;
-        arrows.left.toggle(_this.ds.page() > 1);
-        arrows.right.toggle(_this.ds.page() < _this.ds.totalPages());
+        arrows.left.toggle(ds.page() > 1);
+        arrows.right.toggle(ds.page() < ds.totalPages());
         return $("#gallery").css("pointer-events", "auto");
       };
       if (flip) {
@@ -235,10 +235,39 @@
             paused: true
           }, "/camera/pause"
         ]);
-        return keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
-          if (!(flipping || details)) {
-            return page((key === "right") - (key === "left"));
+        keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
+          var position;
+          position = index % pageSize;
+          switch (key) {
+            case "left":
+              if (index % columns > 0) {
+                return at(index - 1);
+              }
+              break;
+            case "right":
+              if (index % columns < columns - 1) {
+                return at(index + 1);
+              }
+              break;
+            case "up":
+              if (position >= columns) {
+                return at(index - columns);
+              }
+              break;
+            case "down":
+              if (position < (rows - 1) * columns) {
+                return at(index + columns);
+              }
           }
+        });
+        return $.subscribe("/keyboard/enter", function() {
+          var item;
+          item = ds.view()[index % pageSize];
+          return $.publish("/details/show", [
+            {
+              item: item
+            }
+          ]);
         });
       },
       hide: function(e) {
@@ -282,10 +311,10 @@
           return e.stopPropagation();
         });
         $.subscribe("/pictures/bulk", function(message) {
-          _this.ds = dataSource.create(message.message);
-          _this.ds.read();
-          if (_this.ds.view().length > 0) {
-            return $.publish("/bottom/thumbnail", [_this.ds.view()[0]]);
+          ds = dataSource.create(message.message);
+          ds.read();
+          if (ds.view().length > 0) {
+            return $.publish("/bottom/thumbnail", [ds.view()[0]]);
           }
         });
         $.subscribe("/gallery/details", function(d) {

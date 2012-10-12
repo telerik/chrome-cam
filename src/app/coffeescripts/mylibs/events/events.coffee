@@ -8,6 +8,7 @@ define [], () ->
             right: 39
         esc: 27
         space: ' '.charCodeAt(0)
+        enter: 13
         w: 'W'.charCodeAt(0)
 
     pub = 
@@ -27,3 +28,4 @@ define [], () ->
                     when key.esc then p("esc", "esc")
                     when key.space then p("space", ctrlKey: e.ctrlKey or e.metaKey)
                     when key.w then p("close") if e.ctrlKey or e.metaKey
+                    when key.enter then p("enter")
