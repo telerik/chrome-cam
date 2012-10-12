@@ -53,7 +53,7 @@ define [
             # create a blank canvas element and set it's size
             canvas = document.createElement("canvas")
             canvas.width = 360
-            canvas.height = 240
+            canvas.height = 270
 
             # get the canvas context for drawing and reading
             ctx = canvas.getContext("2d")

@@ -150,10 +150,10 @@
         canvas = document.createElement("canvas");
         video = document.createElement("canvas");
         video.width = 720;
-        video.height = 480;
+        video.height = 540;
         canvas.width = 360;
-        canvas.height = 240;
-        $(canvas).attr("style", "width: 720px; height: 480px;");
+        canvas.height = 270;
+        $(canvas).attr("style", "width: " + video.width + "px; height: " + video.height + "px;");
         ctx = canvas.getContext("2d");
         ctx.scale(-1, 1);
         ctx.translate(-canvas.width, 0);

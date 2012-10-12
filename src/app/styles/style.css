@@ -318,7 +318,7 @@ body div { padding-top: 0px; }
 		height: 600px;
 	}
 
-.flip, .flip > .page { width: 1160px; }
+.flip, .flip > .page { width: 989px; }
 
 .thumbnail { margin-left: 13px; }
 	.thumbnail:first-child { margin-left: 0; }
@@ -336,7 +336,7 @@ body div { padding-top: 0px; }
 
 .filters-list {
 	position: absolute;
-	left: -280px;
+	left: -135px;
 	font-size: 13px;
 	top: -60px;
 }
@@ -450,7 +450,7 @@ body div { padding-top: 0px; }
 	.full > div { 
 		margin: auto;
 		width: 720px;
-		height: 480px;
+		height: 540px;
 		position: relative;
 		top: 50%;
 		margin-top: -240px;
@@ -459,6 +459,7 @@ body div { padding-top: 0px; }
 		position: absolute;
 		border: 1px solid #2d2d2d;
 		box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 23px 5px, rgba(0, 0, 0, 0.14902) 0px 2px 6px;
+		margin-top: -30px;
 	}
 	.full .flash {
 		position: absolute;

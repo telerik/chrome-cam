@@ -4,7 +4,7 @@
   define(['mylibs/assets/assets', 'libs/face/ccv', 'libs/face/face'], function(assets) {
     var draw, eyeFactor, faces, ghostBuffer, pub, simple, texture, timeStripsBuffer, webgl;
     faces = [];
-    eyeFactor = .05;
+    eyeFactor = .09;
     timeStripsBuffer = [];
     ghostBuffer = [];
     webgl = fx.canvas();
@@ -64,16 +64,6 @@
             var effect;
             effect = function(canvas, element) {
               return canvas.blockhead(canvas.width / 2, canvas.height / 2, 200, 300, 1);
-            };
-            return draw(canvas, element, effect);
-          }
-        }, {
-          id: "blueberry",
-          name: "Blueberry",
-          filter: function(canvas, element) {
-            var effect;
-            effect = function(canvas, element) {
-              return canvas.blueberry();
             };
             return draw(canvas, element, effect);
           }
