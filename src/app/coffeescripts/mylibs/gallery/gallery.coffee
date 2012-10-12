@@ -231,17 +231,14 @@ define [
             # listen to keyboard events
             keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
                 position = index % pageSize
-                if key == "left"
-                    if index % columns > 0
+                switch key
+                    when "left" then if index % columns > 0
                         at index - 1
-                if key == "right"
-                    if index % columns < columns - 1
+                    when "right" then if index % columns < columns - 1
                         at index + 1
-                if key == "up"
-                    if position >= columns
+                    when "up" then if position >= columns
                         at index-columns
-                if key == "down"
-                    if position < (rows-1)*columns
+                    when "down" then if position < (rows-1)*columns
                         at index+columns
 
             $.subscribe "/keyboard/enter", ->

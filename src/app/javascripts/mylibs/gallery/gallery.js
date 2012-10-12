@@ -238,25 +238,26 @@
         keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
           var position;
           position = index % pageSize;
-          if (key === "left") {
-            if (index % columns > 0) {
-              at(index - 1);
-            }
-          }
-          if (key === "right") {
-            if (index % columns < columns - 1) {
-              at(index + 1);
-            }
-          }
-          if (key === "up") {
-            if (position >= columns) {
-              at(index - columns);
-            }
-          }
-          if (key === "down") {
-            if (position < (rows - 1) * columns) {
-              return at(index + columns);
-            }
+          switch (key) {
+            case "left":
+              if (index % columns > 0) {
+                return at(index - 1);
+              }
+              break;
+            case "right":
+              if (index % columns < columns - 1) {
+                return at(index + 1);
+              }
+              break;
+            case "up":
+              if (position >= columns) {
+                return at(index - columns);
+              }
+              break;
+            case "down":
+              if (position < (rows - 1) * columns) {
+                return at(index + columns);
+              }
           }
         });
         return $.subscribe("/keyboard/enter", function() {
