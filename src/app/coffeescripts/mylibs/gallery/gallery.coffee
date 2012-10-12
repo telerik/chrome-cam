@@ -230,8 +230,22 @@ define [
 
             # listen to keyboard events
             keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
-                unless flipping or details
-                    page (key == "right") - (key == "left")
+                if key == "left"
+                    if index % columns == 0
+                        page 1
+                    else if index > 0
+                        at index - 1
+                if key == "right"
+                    if index % columns == columns - 1
+                        page -1
+                    else # if condition...
+                        at index+1
+                if key == "up" and index >= columns
+                    at index-columns
+                if key == "down" # condition
+                    at index+columns
+                #unless flipping or details
+                    #page (key == "right") - (key == "left")
 
         hide: (e) ->
             # unpause the camera
