@@ -10,6 +10,9 @@ define [], () ->
         space: ' '.charCodeAt(0)
         enter: 13
         w: 'W'.charCodeAt(0)
+        page:
+            up: 34
+            down: 35
 
     pub = 
 
@@ -29,3 +32,5 @@ define [], () ->
                     when key.space then p("space", ctrlKey: e.ctrlKey or e.metaKey)
                     when key.w then p("close") if e.ctrlKey or e.metaKey
                     when key.enter then p("enter")
+                    when key.page.up then p("page", "up")
+                    when key.page.down then p("page", "down")

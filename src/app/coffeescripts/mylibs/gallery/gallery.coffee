@@ -27,7 +27,7 @@ define [
     animation = 
         effects: "pageturn:horizontal"
         reverse: false
-        duration: 800   
+        duration: 800
 
     deselect = =>
         container.find(".thumbnail").removeClass "selected"
@@ -240,6 +240,9 @@ define [
                         at index-columns
                     when "down" then if position < (rows-1)*columns
                         at index+columns
+
+            $.subscribe "/keyboard/page", (dir) ->
+                console.log dir
 
             $.subscribe "/keyboard/enter", ->
                 item = ds.view()[index % pageSize]

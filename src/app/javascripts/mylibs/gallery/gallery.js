@@ -260,6 +260,9 @@
               }
           }
         });
+        $.subscribe("/keyboard/page", function(dir) {
+          return console.log(dir);
+        });
         return $.subscribe("/keyboard/enter", function() {
           var item;
           item = ds.view()[index % pageSize];
