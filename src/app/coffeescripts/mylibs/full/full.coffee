@@ -154,10 +154,10 @@ define [
             canvas = document.createElement "canvas"
             video = document.createElement "canvas"
             video.width = 720
-            video.height = 480
+            video.height = 540
             canvas.width = 360
-            canvas.height = 240
-            $(canvas).attr("style", "width: 720px; height: 480px;")
+            canvas.height = 270
+            $(canvas).attr("style", "width: #{video.width}px; height: #{video.height}px;")
             ctx = canvas.getContext "2d"
             ctx.scale -1, 1
             ctx.translate -canvas.width, 0
@@ -215,6 +215,10 @@ define [
                 i = $(e.target).data("filter-index")
                 index.saved = i
                 index.select i
+                # remove the selected class from any other filters
+                # $(e.target).parent().children().removeClass("selected")
+                # set this filter as selected
+                # $(e.target).addClass("selected")
             mouseover: (e) ->
                 index.preview $(e.target).data("filter-index")
             mouseout: (e) ->

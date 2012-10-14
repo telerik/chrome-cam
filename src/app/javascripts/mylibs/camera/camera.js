@@ -36,7 +36,7 @@
       init: function(counter, callback) {
         canvas = document.createElement("canvas");
         canvas.width = 360;
-        canvas.height = 240;
+        canvas.height = 270;
         ctx = canvas.getContext("2d");
         $.subscribe("/camera/pause", function(isPaused) {
           return paused = isPaused;

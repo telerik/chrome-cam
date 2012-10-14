@@ -4,7 +4,7 @@ define [
     'mylibs/file/filewrapper'
     'text!mylibs/gallery/views/thumb.html'
 ], (kendo, utils, filewrapper, template) ->
-    columns = 4
+    columns = 3
     rows = 3
     pageSize = columns * rows
 
@@ -27,7 +27,7 @@ define [
     animation = 
         effects: "pageturn:horizontal"
         reverse: false
-        duration: 800   
+        duration: 800
 
     deselect = =>
         container.find(".thumbnail").removeClass "selected"
@@ -50,15 +50,15 @@ define [
 
         arrows.both.hide()
 
-        if direction > 0 and @ds.page() > 1
+        if direction > 0 and ds.page() > 1
             flipping = true
             animation.reverse = true
-            @ds.page @ds.page() - 1
+            ds.page ds.page() - 1
             render(true)
-        if direction < 0 and @ds.page() < @ds.totalPages()
+        if direction < 0 and ds.page() < ds.totalPages()
             flipping = true
             animation.reverse = false
-            @ds.page @ds.page() + 1
+            ds.page ds.page() + 1
             render(true)
 
     clear = ->
@@ -78,43 +78,43 @@ define [
                 filewrapper.deleteFile(name).done => 
                     $.publish "/top/update", ["deselected"]
                     selected.remove()
-                    @ds.remove(@ds.get(name))
+                    ds.remove(ds.get(name))
                     render()
 
 
     get = (name) => 
         # find the match in the data source
-        match = @ds.get(name)
+        match = ds.get(name)
         # now get its index in the current view
-        index = @ds.view().indexOf(match)
+        index = ds.view().indexOf(match)
         # the actual index of this item in relation to the whole set
         # of data is the page number times. it's zero based so we have to do
         # some funky calculations
-        position = if @ds.page() > 1 then pageSize * (@ds.page() - 1) + index else index 
-        return { length: @ds.data().length, index: position, item: match }
+        position = if ds.page() > 1 then pageSize * (ds.page() - 1) + index else index 
+        return { length: ds.data().length, index: position, item: match }
 
-        select name
+    at = (newIndex) =>
+        index = newIndex
 
-    at = (index) =>
         # we may need to page the data before grabbing the item.
         # to get the current page, divide the index by the pageSize. then
         target = Math.ceil((index + 1) / pageSize)
         # go ahead and go to that page if needed
-        if (target != @ds.page()) 
-            @ds.page(target)
+        if (target != ds.page()) 
+            ds.page(target)
             render()
         # the actual index of the item within the page has to be recalculated if
         # the current page is greater than 1
         position = index - pageSize * (target - 1)
         # now we can search the current datasource view for the item at the correct index
-        match = { length: @ds.data().length, index: index, item: @ds.view()[position] }
+        match = { length: ds.data().length, index: index, item: ds.view()[position] }
         $.publish "/details/update", [match]
         
         select match.item.name
 
     dataSource =
         create: (data) =>
-            @ds = new kendo.data.DataSource
+            ds = new kendo.data.DataSource
                 data: data
                 pageSize: pageSize
                 change: ->
@@ -129,11 +129,11 @@ define [
     add = (item) =>
         item = { name: item.name, file: item.file, type: item.type }
         # check to make sure there is a data source before trying to add to it
-        if not @ds
-            @ds = dataSource.create([item])
+        if not ds
+            ds = dataSource.create([item])
         else
             # add the item to the datasource
-            @ds.add(item)
+            ds.add(item)
 
     create = (item) ->
 
@@ -150,7 +150,7 @@ define [
         element.setAttribute("data-name", item.name)
         element.setAttribute("draggable", true)
 
-        element.width = 270
+        element.width = 240
         element.height = 180
         
         element.setAttribute("class", "hidden")
@@ -161,7 +161,7 @@ define [
 
         thumbs = []
 
-        for item in @ds.view()
+        for item in ds.view()
             thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
             thumbs.push(dom: thumbnail.render(), data: item)
 
@@ -188,8 +188,8 @@ define [
 
             flipping = false
 
-            arrows.left.toggle @ds.page() > 1
-            arrows.right.toggle @ds.page() < @ds.totalPages()
+            arrows.left.toggle ds.page() > 1
+            arrows.right.toggle ds.page() < ds.totalPages()
 
             $("#gallery").css "pointer-events", "auto"
 
@@ -230,8 +230,23 @@ define [
 
             # listen to keyboard events
             keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
-                unless flipping or details
-                    page (key == "right") - (key == "left")
+                position = index % pageSize
+                switch key
+                    when "left" then if index % columns > 0
+                        at index - 1
+                    when "right" then if index % columns < columns - 1
+                        at index + 1
+                    when "up" then if position >= columns
+                        at index-columns
+                    when "down" then if position < (rows-1)*columns
+                        at index+columns
+
+            $.subscribe "/keyboard/page", (dir) ->
+                console.log dir
+
+            $.subscribe "/keyboard/enter", ->
+                item = ds.view()[index % pageSize]
+                $.publish "/details/show", [ item: item ]
 
         hide: (e) ->
             # unpause the camera
@@ -281,10 +296,10 @@ define [
                 e.stopPropagation()
 
             $.subscribe "/pictures/bulk", (message) =>
-                @ds = dataSource.create(message.message)
-                @ds.read()
-                if @ds.view().length > 0
-                    $.publish "/bottom/thumbnail", [@ds.view()[0]]
+                ds = dataSource.create(message.message)
+                ds.read()
+                if ds.view().length > 0
+                    $.publish "/bottom/thumbnail", [ds.view()[0]]
 
             $.subscribe "/gallery/details", (d) ->
                 details = d
@@ -299,11 +314,9 @@ define [
                 at(index)
 
             $.subscribe "/gallery/clear", =>
-                window.APP.app.showLoading()
+                $.publish "/bottom/thumbnail"
                 filewrapper.clear().done =>
                     clear()
-                    window.APP.app.hideLoading()
-                    $.publish "/bottom/thumbnail"
 
             $.publish "/postman/deliver", [ {}, "/file/read" ]
 

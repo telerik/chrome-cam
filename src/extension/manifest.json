@@ -24,6 +24,7 @@
    "storage"
  ],
   "sandbox": {
-    "pages": [ "app/index.html" ]
+    "pages": [ "app/index.html" ],
+    "content_security_policy": "sandbox allow-scripts; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src 'self' data:"
   }
 }

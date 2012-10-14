@@ -12,7 +12,12 @@
       },
       esc: 27,
       space: ' '.charCodeAt(0),
-      w: 'W'.charCodeAt(0)
+      enter: 13,
+      w: 'W'.charCodeAt(0),
+      page: {
+        up: 34,
+        down: 35
+      }
     };
     return pub = {
       init: function() {
@@ -40,6 +45,13 @@
               if (e.ctrlKey || e.metaKey) {
                 return p("close");
               }
+              break;
+            case key.enter:
+              return p("enter");
+            case key.page.up:
+              return p("page", "up");
+            case key.page.down:
+              return p("page", "down");
           }
         });
       }

@@ -6,7 +6,7 @@ define([
 
     faces = []
 
-    eyeFactor = .05
+    eyeFactor = .09
 
     timeStripsBuffer = []
     ghostBuffer = []
@@ -77,14 +77,14 @@ define([
                     draw(canvas, element, effect)
             }
 
-            {
-                id: "blueberry"
-                name: "Blueberry"
-                filter: (canvas, element) -> 
-                    effect = (canvas, element) ->
-                        canvas.blueberry()
-                    draw(canvas, element, effect)
-            }
+            # {
+            #     id: "blueberry"
+            #     name: "Blueberry"
+            #     filter: (canvas, element) -> 
+            #         effect = (canvas, element) ->
+            #             canvas.blueberry()
+            #         draw(canvas, element, effect)
+            # }
 
             {
                 id: "bulge"

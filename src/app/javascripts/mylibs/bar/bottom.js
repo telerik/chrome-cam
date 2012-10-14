@@ -14,12 +14,10 @@
         active: "photo",
         click: function(e) {
           var a;
-          view.el.capture.removeClass(this.get("mode.active"));
           a = $(e.target).closest("a");
           this.set("mode.active", a.data("mode"));
           a.closest(".bar").find("a").removeClass("selected");
-          a.addClass("selected");
-          return view.el.capture.addClass(a.data("mode"));
+          return a.addClass("selected");
         }
       },
       capture: {
@@ -121,8 +119,10 @@
           if (file) {
             thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file);
             thumbnail.render();
+            return viewModel.set("thumbnail.enabled", true);
+          } else {
+            return viewModel.set("thumbnail.enabled", false);
           }
-          return viewModel.set("thumbnail.enabled", file);
         });
         $.subscribe("/keyboard/space", function(e) {
           return viewModel.capture.click.call(viewModel, e);

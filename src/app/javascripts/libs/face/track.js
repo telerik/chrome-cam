@@ -11,7 +11,7 @@
     return pub = {
       init: function(x, y, width, height) {
         backCanvas.width = 120;
-        backCanvas.height = 80;
+        backCanvas.height = 90;
         return cache.comp = [
           {
             x: x,

@@ -83,7 +83,8 @@ define [
 					hideSplash = ->
 						$("#splash").kendoAnimate
 							effects: "fade:out"
-							duration: 1000
+							duration: 1000,
+							hide: true
 					setTimeout hideSplash, 100
 
 					$.subscribe "/keyboard/close", ->

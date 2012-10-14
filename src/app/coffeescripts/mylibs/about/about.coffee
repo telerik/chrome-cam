@@ -11,15 +11,14 @@ define [
 			$.publish "/postman/deliver", [ true, "/menu/enable" ]
 			window.APP.app.navigate previous
 
-		goto: (e) ->
-			$.publish "/postman/deliver", [$(e.currentTarget).attr("href"), "/tab/open"]
-
 		gallery:
 			clear: ->
 				$.publish "/confirm/show", [
 					window.APP.localization.clear_gallery_dialog_title,
 					window.APP.localization.clear_gallery_confirmation,
-					-> $.publish("/gallery/clear")
+					-> 
+						$.publish("/gallery/clear")
+						window.APP.app.navigate "#home"
 				]
 
 	pub = 
@@ -37,8 +36,6 @@ define [
 			# create the about view
 			view = new kendo.View(selector, template)
 			view.render(viewModel, true)
-
-			view.find("a[target=_blank]").on "click", viewModel.goto
 
 			# subscribe to the about event from the context menu
 			$.subscribe '/menu/click/chrome-cam-about-menu', ->
