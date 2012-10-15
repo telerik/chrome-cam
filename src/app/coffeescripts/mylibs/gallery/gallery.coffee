@@ -193,6 +193,11 @@ define [
 
             $("#gallery").css "pointer-events", "auto"
 
+            if flip
+                setTimeout ->
+                    at (ds.page() - 1) * pageSize
+                , 50
+
         if flip
             # move the current page out and the next page in
             container.kendoAnimate
@@ -202,6 +207,7 @@ define [
                 duration: animation.duration
                 reverse: animation.reverse
                 complete: complete
+
         else
             complete()
 
@@ -242,7 +248,10 @@ define [
                         at index+columns
 
             $.subscribe "/keyboard/page", (dir) ->
-                console.log dir
+                if dir == "down"
+                    page -1
+                if dir == "up"
+                    page 1
 
             $.subscribe "/keyboard/enter", ->
                 item = ds.view()[index % pageSize]

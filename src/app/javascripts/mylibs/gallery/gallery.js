@@ -196,7 +196,12 @@
         flipping = false;
         arrows.left.toggle(ds.page() > 1);
         arrows.right.toggle(ds.page() < ds.totalPages());
-        return $("#gallery").css("pointer-events", "auto");
+        $("#gallery").css("pointer-events", "auto");
+        if (flip) {
+          return setTimeout(function() {
+            return at((ds.page() - 1) * pageSize);
+          }, 50);
+        }
       };
       if (flip) {
         return container.kendoAnimate({
@@ -261,7 +266,12 @@
           }
         });
         $.subscribe("/keyboard/page", function(dir) {
-          return console.log(dir);
+          if (dir === "down") {
+            page(-1);
+          }
+          if (dir === "up") {
+            return page(1);
+          }
         });
         return $.subscribe("/keyboard/enter", function() {
           var item;

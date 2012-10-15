@@ -15,8 +15,8 @@
       enter: 13,
       w: 'W'.charCodeAt(0),
       page: {
-        up: 34,
-        down: 35
+        up: 33,
+        down: 34
       }
     };
     return pub = {
