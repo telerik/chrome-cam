@@ -41,7 +41,7 @@ define [
 
     flash = (callback, file) ->
 
-        # TODO: use enabled value
+        #  TODO: use enabled value
         full.el.flash.show()
 
         transfer.content.kendoStop().kendoAnimate 
@@ -65,8 +65,9 @@ define [
 
         data = { src: image, height: full.content.height(), width: full.content.width() }
 
-        transfer = new kendo.View(full.content, transferImg, data)
+        transfer = new kendo.View(full.container, transferImg, data)
         transfer.render()
+        transfer.content.offset({ left: full.el.wrapper.offset().left })
         
         transfer.find("img").load ->
 
@@ -184,9 +185,6 @@ define [
             pub.select item
 
             paused = false
-
-            full.el.transfer.height(full.content.height())
-            full.el.transfer.width(full.content.width())
 
             full.container.kendoStop(true).kendoAnimate
                 effects: "zoomIn fadeIn"

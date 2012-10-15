@@ -53,8 +53,11 @@
         height: full.content.height(),
         width: full.content.width()
       };
-      transfer = new kendo.View(full.content, transferImg, data);
+      transfer = new kendo.View(full.container, transferImg, data);
       transfer.render();
+      transfer.content.offset({
+        left: full.el.wrapper.offset().left
+      });
       return transfer.find("img").load(function() {
         var file;
         file = {
@@ -176,8 +179,6 @@
         }
         pub.select(item);
         paused = false;
-        full.el.transfer.height(full.content.height());
-        full.el.transfer.width(full.content.width());
         return full.container.kendoStop(true).kendoAnimate({
           effects: "zoomIn fadeIn",
           show: true,
