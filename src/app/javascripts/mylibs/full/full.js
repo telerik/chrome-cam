@@ -114,14 +114,14 @@
         duration = 200;
         if (show) {
           return full.el.filters.kendoStop().kendoAnimate({
-            effects: "slideIn:right",
+            effects: "slideIn:right fade:in",
             show: true,
             hide: false,
             duration: duration
           });
         } else {
           return full.el.filters.kendoStop().kendoAnimate({
-            effects: "slide:left",
+            effects: "slide:left fade:out",
             hide: true,
             show: false,
             duration: duration
