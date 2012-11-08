@@ -70,7 +70,6 @@
       return draw();
     };
     errback = function() {
-      console.log("Camera not supported.");
       return update = function() {
         paused = true;
         return $.publish("/postman/deliver", [{}, "/camera/unsupported"]);

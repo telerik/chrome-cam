@@ -15,8 +15,9 @@ define [
   'mylibs/about/about'
   'mylibs/confirm/confirm'
   'mylibs/assets/assets'
-  'mylibs/effects/effects'
-], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects) ->
+  'mylibs/effects/effects',
+	"text!mylibs/nocamera/views/nocamera.html"
+], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects, nocamera) ->
 
 	pub =
 
@@ -40,6 +41,7 @@ define [
 			assets.init()
 
 			$.subscribe '/camera/unsupported', ->
+				new kendo.View("#no-camera", nocamera).render(kendo.observable({}), true)
 				APP.app.navigate "#no-camera"
 
 			$.publish "/postman/deliver", [ true, "/menu/enable" ]

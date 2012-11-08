@@ -56,6 +56,18 @@
         "message": "Cancel"
     },
 
+    "no_camera_heading": {
+        "message": "No Camera"
+    },
+
+    "no_camera_description": {
+        "message": "No supported cameras were found on this device."
+    },
+
+    "no_camera_resolution": {
+        "message": ""
+    },
+
     "about_credits": {
         "message": "Built by Burke Holland, Caitlin Steinert, Chris Wagner, and Josh Woodward"
     },
