@@ -53,8 +53,11 @@
         height: full.content.height(),
         width: full.content.width()
       };
-      transfer = new kendo.View(full.content, transferImg, data);
+      transfer = new kendo.View(full.container, transferImg, data);
       transfer.render();
+      transfer.content.offset({
+        left: full.el.wrapper.offset().left
+      });
       return transfer.find("img").load(function() {
         var file;
         file = {
@@ -111,14 +114,14 @@
         duration = 200;
         if (show) {
           return full.el.filters.kendoStop().kendoAnimate({
-            effects: "slideIn:right",
+            effects: "slideIn:right fade:in",
             show: true,
             hide: false,
             duration: duration
           });
         } else {
           return full.el.filters.kendoStop().kendoAnimate({
-            effects: "slide:left",
+            effects: "slide:left fade:out",
             hide: true,
             show: false,
             duration: duration
@@ -186,8 +189,6 @@
         }
         pub.select(item);
         paused = false;
-        full.el.transfer.height(full.content.height());
-        full.el.transfer.width(full.content.width());
         return full.container.kendoStop(true).kendoAnimate({
           effects: "zoomIn fadeIn",
           show: true,

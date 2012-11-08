@@ -16,12 +16,13 @@ chrome.app.runtime.onLaunched.addListener(function() {
   var height = 689;
 
   var dimensions = { 
-    width: width,
+    defaultWidth: width,
     minWidth: width,
     maxWidth: width,
-    height: height,
+    defaultHeight: height,
     minHeight: height,
-    maxHeight: height
+    maxHeight: height,
+    id: 'camera'
   };
   
   var win = chrome.app.window.create('main.html', dimensions, onWindowLoaded);

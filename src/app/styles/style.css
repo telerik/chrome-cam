@@ -255,7 +255,7 @@ body div { padding-top: 0px; }
 .bar .galleryLink {
 	display: block;
 	background: white;
-	height: 48px;
+	height: 54px;
 	width: 72px;
     box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, .75);
 }
@@ -631,4 +631,9 @@ html[xmlns] .clearfix {
  
 * html .clearfix {
 	height: 1%;
+}
+
+#transfer {
+	position: fixed;
+	z-index: 999999999;
 }

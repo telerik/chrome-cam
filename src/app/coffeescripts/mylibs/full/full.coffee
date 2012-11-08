@@ -41,7 +41,7 @@ define [
 
     flash = (callback, file) ->
 
-        # TODO: use enabled value
+        #  TODO: use enabled value
         full.el.flash.show()
 
         transfer.content.kendoStop().kendoAnimate 
@@ -65,8 +65,11 @@ define [
 
         data = { src: image, height: full.content.height(), width: full.content.width() }
 
-        transfer = new kendo.View(full.content, transferImg, data)
+        transfer = new kendo.View(full.container, transferImg, data)
         transfer.render()
+
+        # transfer image is fixed position so we have to give it a left offset
+        transfer.content.offset({ left: full.el.wrapper.offset().left })
         
         transfer.find("img").load ->
 
@@ -113,13 +116,13 @@ define [
             duration = 200
             if show
                 full.el.filters.kendoStop().kendoAnimate
-                    effects: "slideIn:right"
+                    effects: "slideIn:right fade:in"
                     show: true
                     hide: false
                     duration: duration
             else
                 full.el.filters.kendoStop().kendoAnimate
-                    effects: "slide:left"
+                    effects: "slide:left fade:out"
                     hide: true
                     show: false
                     duration: duration
@@ -193,9 +196,6 @@ define [
             pub.select item
 
             paused = false
-
-            full.el.transfer.height(full.content.height())
-            full.el.transfer.width(full.content.width())
 
             full.container.kendoStop(true).kendoAnimate
                 effects: "zoomIn fadeIn"
