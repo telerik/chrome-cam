@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/localization/localization', 'libs/face/track'], function(postman, utils, file, localization, face) {
     'use strict';
 
-    var canvas, ctx, draw, errback, hollaback, iframe, menu, paused, pub, skip, skipBit, skipMax, track, update;
+    var canvas, ctx, draw, errback, hollaback, iframe, menu, paused, pub, skip, skipBit, skipMax, supported, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -13,6 +13,7 @@
     skip = false;
     skipBit = 0;
     skipMax = 10;
+    supported = true;
     menu = function() {
       chrome.contextMenus.onClicked.addListener(function(info, tab) {
         return $.publish("/postman/deliver", [{}, "/menu/click/" + info.menuItemId]);
@@ -69,7 +70,11 @@
       return draw();
     };
     errback = function() {
-      return console.log("Couldn't Get The Video");
+      console.log("Camera not supported.");
+      return update = function() {
+        paused = true;
+        return $.publish("/postman/deliver", [{}, "/camera/unsupported"]);
+      };
     };
     return pub = {
       init: function() {
@@ -80,11 +85,11 @@
         $.subscribe("/camera/request", function() {
           return update();
         });
+        iframe.src = "app/index.html";
+        postman.init(iframe.contentWindow);
         navigator.webkitGetUserMedia({
           video: true
         }, hollaback, errback);
-        iframe.src = "app/index.html";
-        postman.init(iframe.contentWindow);
         $.subscribe("/localization/request", function() {
           return $.publish("/postman/deliver", [localization, "/localization/response"]);
         });

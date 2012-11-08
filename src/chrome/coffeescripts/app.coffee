@@ -18,6 +18,8 @@ define [
 	skipBit = 0
 	skipMax = 10
 
+	supported = true
+
 	# TODO: Move the context menu to its own file
 	menu = ->
 		chrome.contextMenus.onClicked.addListener (info, tab) ->
@@ -29,7 +31,7 @@ define [
 				chrome.contextMenus.update menu, enabled: isEnabled
 
 	# TODO: Move the camera to its own file
-	draw = -> 
+	draw = ->
 		update()
 
 	update = ->
@@ -38,7 +40,7 @@ define [
 
 		if skipBit == 0
 			track = face.track video
-		
+
 		# HACK: need to eliminate race condition that can cause this to get hit before video is ready.
 		try
 			ctx.drawImage(video, 0, 0, video.width, video.height)
@@ -64,9 +66,11 @@ define [
 		draw()
 
 	errback = ->
-		console.log("Couldn't Get The Video");
+		update = ->
+			paused = true
+			$.publish "/postman/deliver", [ {}, "/camera/unsupported" ]
 
-	pub = 
+	pub =
 		init: ->
 			# initialize utils
 			utils.init()
@@ -78,13 +82,13 @@ define [
 			$.subscribe "/camera/request", ->
 				update()
 
-			# start the camera
-			navigator.webkitGetUserMedia { video: true }, hollaback, errback
-
 			iframe.src = "app/index.html"
 
 			# cue up the postman!
 			postman.init iframe.contentWindow
+
+			# start the camera
+			navigator.webkitGetUserMedia { video: true }, hollaback, errback
 
 			# get the localization dictionary from the app
 			$.subscribe "/localization/request", ->

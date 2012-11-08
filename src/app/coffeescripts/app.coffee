@@ -17,9 +17,9 @@ define [
   'mylibs/assets/assets'
   'mylibs/effects/effects'
 ], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects) ->
-	
-	pub = 
-		    
+
+	pub =
+
 		init: ->
 
 			APP = window.APP = {}
@@ -32,16 +32,15 @@ define [
 
 			# bind document level events
 			events.init()
-			
+
 			# fire up the postman!
 			postman.init window.top
-			
+
 			# initialize the asset pipeline
 			assets.init()
-			
-			$.subscribe('/camera/unsupported', ->
-			    $('#pictures').append(intro)
-			)
+
+			$.subscribe '/camera/unsupported', ->
+				APP.app.navigate "#no-camera"
 
 			$.publish "/postman/deliver", [ true, "/menu/enable" ]
 

@@ -16,7 +16,8 @@
         postman.init(window.top);
         assets.init();
         $.subscribe('/camera/unsupported', function() {
-          return $('#pictures').append(intro);
+          console.log("No camera for you!");
+          return APP.app.navigate("#no-camera");
         });
         $.publish("/postman/deliver", [true, "/menu/enable"]);
         $.subscribe("/localization/response", function(dict) {
