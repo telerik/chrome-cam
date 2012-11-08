@@ -91,13 +91,15 @@
         item: match
       };
     };
-    at = function(newIndex) {
+    at = function(newIndex, noPage) {
       var match, position, target;
       index = newIndex;
       target = Math.ceil((index + 1) / pageSize);
       if (target !== ds.page()) {
-        ds.page(target);
-        render();
+        if (!noPage) {
+          ds.page(target);
+          render();
+        }
       }
       position = index - pageSize * (target - 1);
       match = {
@@ -246,22 +248,22 @@
           switch (key) {
             case "left":
               if (index % columns > 0) {
-                return at(index - 1);
+                return at(index - 1, true);
               }
               break;
             case "right":
               if (index % columns < columns - 1) {
-                return at(index + 1);
+                return at(index + 1, true);
               }
               break;
             case "up":
               if (position >= columns) {
-                return at(index - columns);
+                return at(index - columns, true);
               }
               break;
             case "down":
               if (position < (rows - 1) * columns) {
-                return at(index + columns);
+                return at(index + columns, true);
               }
           }
         });

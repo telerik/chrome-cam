@@ -13,18 +13,18 @@ define [
     data = []
     container = {}
     el = {}
-    selected = {} 
+    selected = {}
     total = 0
     index = 0
     flipping = false
-    pages = 
+    pages =
         previous: {}
         next: {}
     active = {}
     details = false
     keyboard = {}
 
-    animation = 
+    animation =
         effects: "pageturn:horizontal"
         reverse: false
         duration: 800
@@ -70,19 +70,19 @@ define [
     destroy = ->
 
         name = selected.children(":first").attr("data-name")
-        
+
         selected.kendoStop(true).kendoAnimate
             effects: "zoomOut fadeOut"
             hide: true
             complete: =>
-                filewrapper.deleteFile(name).done => 
+                filewrapper.deleteFile(name).done =>
                     $.publish "/top/update", ["deselected"]
                     selected.remove()
                     ds.remove(ds.get(name))
                     render()
 
 
-    get = (name) => 
+    get = (name) =>
         # find the match in the data source
         match = ds.get(name)
         # now get its index in the current view
@@ -90,26 +90,27 @@ define [
         # the actual index of this item in relation to the whole set
         # of data is the page number times. it's zero based so we have to do
         # some funky calculations
-        position = if ds.page() > 1 then pageSize * (ds.page() - 1) + index else index 
+        position = if ds.page() > 1 then pageSize * (ds.page() - 1) + index else index
         return { length: ds.data().length, index: position, item: match }
 
-    at = (newIndex) =>
+    at = (newIndex, noPage) =>
         index = newIndex
 
         # we may need to page the data before grabbing the item.
         # to get the current page, divide the index by the pageSize. then
         target = Math.ceil((index + 1) / pageSize)
         # go ahead and go to that page if needed
-        if (target != ds.page()) 
-            ds.page(target)
-            render()
+        if (target != ds.page())
+            unless noPage
+                ds.page(target)
+                render()
         # the actual index of the item within the page has to be recalculated if
         # the current page is greater than 1
         position = index - pageSize * (target - 1)
         # now we can search the current datasource view for the item at the correct index
         match = { length: ds.data().length, index: index, item: ds.view()[position] }
         $.publish "/details/update", [match]
-        
+
         select match.item.name
 
     dataSource =
@@ -120,11 +121,11 @@ define [
                 change: ->
                     deselect()
                 sort:
-                    dir: "desc" 
-                    field: "name"  
-                schema: 
+                    dir: "desc"
+                    field: "name"
+                schema:
                     model:
-                        id: "name" 
+                        id: "name"
 
     add = (item) =>
         item = { name: item.name, file: item.file, type: item.type }
@@ -145,14 +146,14 @@ define [
 
         element = new Image()
         element.onload = fadeIn(element)
-        
+
         element.src = item.file
         element.setAttribute("data-name", item.name)
         element.setAttribute("draggable", true)
 
         element.width = 240
         element.height = 180
-        
+
         element.setAttribute("class", "hidden")
 
         return element
@@ -239,13 +240,13 @@ define [
                 position = index % pageSize
                 switch key
                     when "left" then if index % columns > 0
-                        at index - 1
+                        at index - 1, true
                     when "right" then if index % columns < columns - 1
-                        at index + 1
+                        at index + 1, true
                     when "up" then if position >= columns
-                        at index-columns
+                        at index-columns, true
                     when "down" then if position < (rows-1)*columns
-                        at index+columns
+                        at index+columns, true
 
             $.subscribe "/keyboard/page", (dir) ->
                 if dir == "down"
@@ -270,8 +271,8 @@ define [
 
         show: (e) =>
             setTimeout render, 420
-        
-        swipe: (e) ->    
+
+        swipe: (e) ->
             page (e.direction == "right") - (e.direction == "left")
 
         init: (selector) =>
