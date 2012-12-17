@@ -11,21 +11,7 @@ define [
 		back:
 			details: false
 			text: "< Camera"
-			click: (e) ->
-				$.publish "/details/hide"
-				states.gallery()
-				e.preventDefault()
-		destroy:
-			click: (e) ->
-				$.publish "/confirm/show", [
-					window.APP.localization.delete_dialog_title,
-					window.APP.localization.delete_confirmation,
-					-> $.publish("/gallery/delete")
-				]
-		share:
-			save: (e) ->
-				file = @get("current")
-				$.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
+				
 
 	# TODO: Refactor Once View Model Is Working
 	states = 
@@ -70,4 +56,21 @@ define [
 					states.set "gallery"
 					back.trigger "click"
 
-			return @view
+		back: (e) ->
+
+			$.publish "/details/hide"
+			states.gallery()
+			e.preventDefault()
+
+		destroy: (e) ->
+
+			$.publish "/confirm/show", [
+				window.APP.localization.delete_dialog_title,
+				window.APP.localization.delete_confirmation,
+				-> $.publish("/gallery/delete")
+			]
+
+		save: (e) ->
+			
+			file = viewModel.get("current")
+			$.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]

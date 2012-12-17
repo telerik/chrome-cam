@@ -30,6 +30,9 @@ define [
 			APP.gallery = gallery
 			APP.about = about
 			APP.confirm = confirm
+			APP.bottom = bottom
+			APP.top = top
+			APP.details = details
 
 			# bind document level events
 			events.init()
@@ -52,8 +55,8 @@ define [
 
 				ready = ->
 					# create the top and bottom bars
-					APP.bottom = bottom.init(".bottom")
-					APP.top = top.init(".top")
+					bottom.init(".bottom")
+					top.init(".top")
 					APP.popover = popover.init("#gallery")
 
 					# initialize the full screen capture mode

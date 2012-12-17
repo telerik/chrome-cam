@@ -270,6 +270,14 @@ body div { padding-top: 0px; }
 	height: 54px;
 }
 
+/* BH: added to stop flip from jumping to the right on the first flip
+   still not sure why this is happening. thinking it has something
+   to do with the CSS flip animation
+*/
+#thumbnails {
+	-webkit-transform-style: preserve-3d;
+}
+
 .details .bar .right, .details .bar .left {
 	display: -webkit-box;
 	-webkit-box-align: center;

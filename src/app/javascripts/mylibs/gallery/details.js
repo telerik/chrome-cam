@@ -2,10 +2,10 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, template) {
-    var hide, index, pub, show, update, viewModel, visible,
-      _this = this;
+    var details, hide, index, pub, show, update, viewModel, visible;
     index = 0;
     visible = false;
+    details = {};
     viewModel = kendo.observable({
       video: {
         src: function() {
@@ -22,21 +22,15 @@
         return this.get("type") === "webm";
       },
       next: {
-        visible: false,
-        click: function(e) {
-          return $.publish("/gallery/at", [index + 1]);
-        }
+        visible: false
       },
       previous: {
-        visible: false,
-        click: function(e) {
-          return $.publish("/gallery/at", [index - 1]);
-        }
+        visible: false
       }
     });
     hide = function() {
       $.publish("/top/update", ["gallery"]);
-      return _this.details.container.kendoStop(true).kendoAnimate({
+      return details.container.kendoStop(true).kendoAnimate({
         effects: "zoomOut",
         hide: true,
         complete: function() {
@@ -46,7 +40,7 @@
     };
     show = function(message) {
       update(message);
-      return _this.details.container.kendoStop(true).kendoAnimate({
+      return details.container.kendoStop(true).kendoAnimate({
         effects: "zoomIn",
         show: true,
         complete: function() {
@@ -66,9 +60,11 @@
     };
     return pub = {
       init: function(selector) {
-        var page;
-        _this.details = new kendo.View(selector, template);
-        _this.details.render(viewModel, true);
+        var page, that,
+          _this = this;
+        that = this;
+        details = new kendo.View(selector, template);
+        details.render(viewModel, true);
         $.subscribe("/details/hide", function() {
           visible = false;
           return hide();
@@ -85,14 +81,20 @@
             return;
           }
           if (direction === "left" && viewModel.previous.visible) {
-            viewModel.previous.click();
+            that.previous();
           }
           if (direction === "right" && viewModel.next.visible) {
-            viewModel.next.click();
+            that.next();
           }
           return false;
         };
         return $.subscribe("/keyboard/arrow", page, true);
+      },
+      next: function(e) {
+        return $.publish("/gallery/at", [index + 1]);
+      },
+      previous: function(e) {
+        return $.publish("/gallery/at", [index - 1]);
       }
     };
   });

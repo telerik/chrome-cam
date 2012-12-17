@@ -11,33 +11,10 @@
       },
       mode: {
         visible: false,
-        active: "photo",
-        click: function(e) {
-          var a;
-          a = $(e.target).closest("a");
-          this.set("mode.active", a.data("mode"));
-          a.closest(".bar").find("a").removeClass("selected");
-          return a.addClass("selected");
-        }
+        active: "photo"
       },
       capture: {
-        visible: true,
-        click: function(e) {
-          var capture, mode;
-          $.publish("/full/capture/begin");
-          mode = this.get("mode.active");
-          states.capture();
-          capture = function() {
-            $.publish("/capture/" + mode);
-            return $.publish("/full/capture/end");
-          };
-          $.publish("/countdown/" + mode);
-          if (e.ctrlKey) {
-            return capture();
-          } else {
-            return countdown(0, capture);
-          }
-        }
+        visible: true
       },
       thumbnail: {
         src: BROKEN_IMAGE,
@@ -50,12 +27,7 @@
       filters: {
         visible: false,
         open: false,
-        css: function() {},
-        click: function() {
-          this.set("filters.open", !viewModel.filters.open);
-          view.el.filters.toggleClass("selected", viewModel.filters.open);
-          return $.publish("/full/filters/show", [viewModel.filters.open]);
-        }
+        css: function() {}
       }
     });
     countdown = function(position, callback) {
@@ -133,6 +105,34 @@
         view.find(".filters", "filters");
         view.find(".capture", "capture");
         return view;
+      },
+      capture: function(e) {
+        var capture, mode;
+        $.publish("/full/capture/begin");
+        mode = viewModel.get("mode.active");
+        states.capture();
+        capture = function() {
+          $.publish("/capture/" + mode);
+          return $.publish("/full/capture/end");
+        };
+        $.publish("/countdown/" + mode);
+        if (event.ctrlKey || event.metaKey) {
+          return capture();
+        } else {
+          return countdown(0, capture);
+        }
+      },
+      filters: function(e) {
+        viewModel.set("filters.open", !viewModel.filters.open);
+        view.el.filters.toggleClass("selected", viewModel.filters.open);
+        return $.publish("/full/filters/show", [viewModel.filters.open]);
+      },
+      mode: function(e) {
+        var a;
+        a = $(e.target).closest("a");
+        viewModel.set("mode.active", a.data("mode"));
+        a.closest(".bar").find("a").removeClass("selected");
+        return a.addClass("selected");
       }
     };
   });

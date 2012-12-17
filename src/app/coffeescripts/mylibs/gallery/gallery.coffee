@@ -222,12 +222,6 @@ define [
             arrows.right = parent.find(".next")
             arrows.both = $([arrows.left[0], arrows.right[0]])
 
-            # in this case, "right" means "previous" and "left" means "next" because of the "natural" scrolling
-            arrows.left.on "click", ->
-                page 1
-            arrows.right.on "click", ->
-                page -1
-
     pub =
 
         before: (e) ->
@@ -271,6 +265,12 @@ define [
 
         show: (e) =>
             setTimeout render, 420
+
+        previous: (e) ->
+            page 1
+
+        next: (e) ->
+            page -1
 
         swipe: (e) ->
             page (e.direction == "right") - (e.direction == "left")
@@ -331,3 +331,4 @@ define [
             $.publish "/postman/deliver", [ {}, "/file/read" ]
 
             return gallery
+

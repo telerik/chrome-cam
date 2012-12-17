@@ -17,34 +17,9 @@ define [
 		mode:
 			visible: false
 			active: "photo"
-			click: (e) ->
-
-				a = $(e.target).closest("a")
-
-				@set "mode.active", a.data("mode")
-
-				# loop through all of the buttons and remove the active class
-				a.closest(".bar").find("a").removeClass "selected"
-
-				# add the active class to this anchor
-				a.addClass "selected"
-
+				
 		capture:
 			visible: true
-			click: (e) ->
-				$.publish "/full/capture/begin"
-
-				mode = this.get("mode.active")
-
-				states.capture()
-
-				# start the countdown
-				capture = ->
-					$.publish "/capture/#{mode}"
-					$.publish "/full/capture/end"
-				
-				$.publish "/countdown/#{mode}"
-				if e.ctrlKey then capture() else countdown 0, capture
 
 		thumbnail:
 			src: BROKEN_IMAGE
@@ -57,10 +32,6 @@ define [
 			visible: false
 			open: false
 			css: ->
-			click: ->
-				@set "filters.open", not viewModel.filters.open
-				view.el.filters.toggleClass "selected", viewModel.filters.open
-				$.publish "/full/filters/show", [viewModel.filters.open]
 
 	countdown = (position, callback) ->
 
@@ -146,3 +117,38 @@ define [
 			view.find(".capture", "capture")
 
 			return view
+
+		capture: (e) ->
+
+			$.publish "/full/capture/begin"
+
+			mode = viewModel.get("mode.active")
+
+			states.capture()
+
+			# start the countdown
+			capture = ->
+				$.publish "/capture/#{mode}"
+				$.publish "/full/capture/end"
+			
+			$.publish "/countdown/#{mode}"
+			if event.ctrlKey or event.metaKey then capture() else countdown 0, capture
+
+		filters: (e) ->
+
+			viewModel.set "filters.open", not viewModel.filters.open
+			view.el.filters.toggleClass "selected", viewModel.filters.open
+			$.publish "/full/filters/show", [viewModel.filters.open]
+
+		mode: (e) ->
+
+			a = $(e.target).closest("a")
+
+			viewModel.set "mode.active", a.data("mode")
+
+			# loop through all of the buttons and remove the active class
+			a.closest(".bar").find("a").removeClass "selected"
+
+			# add the active class to this anchor
+			a.addClass "selected"
+

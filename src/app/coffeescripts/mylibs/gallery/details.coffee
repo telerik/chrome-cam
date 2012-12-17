@@ -7,6 +7,7 @@ define [
     index = 0
 
     visible = false
+    details = {}
 
     viewModel = kendo.observable
         video: 
@@ -18,24 +19,20 @@ define [
             @get("type") == "webm"
         next: 
             visible: false
-            click: (e) ->
-                $.publish "/gallery/at", [index + 1]
         previous:
             visible: false
-            click: (e) ->
-                $.publish "/gallery/at", [index - 1]
 
-    hide = =>
+    hide = ->
         $.publish "/top/update", ["gallery"]
-        @details.container.kendoStop(true).kendoAnimate
+        details.container.kendoStop(true).kendoAnimate
             effects: "zoomOut"
             hide: true
             complete: ->
                 $.unsubscribe "/gallery/delete"
 
-    show = (message) =>
+    show = (message) ->
         update(message)
-        @details.container.kendoStop(true).kendoAnimate
+        details.container.kendoStop(true).kendoAnimate
             effects: "zoomIn"
             show: true 	
             complete: ->
@@ -52,10 +49,12 @@ define [
 
     pub = 
 
-        init: (selector) =>
+        init: (selector) ->
 
-            @details = new kendo.View(selector, template)
-            @details.render(viewModel, true)
+            that = @
+
+            details = new kendo.View(selector, template)
+            details.render(viewModel, true)
 
             # subscribe to events
             $.subscribe "/details/hide", ->
@@ -73,9 +72,15 @@ define [
                 return unless visible
 
                 if direction is "left" and viewModel.previous.visible
-                    viewModel.previous.click()
+                    that.previous()
                 if direction is "right" and viewModel.next.visible
-                    viewModel.next.click()
+                    that.next()
                 return false
 
             $.subscribe "/keyboard/arrow", page, true
+
+        next: (e) ->
+            $.publish "/gallery/at", [index + 1]
+        
+        previous: (e) ->
+            $.publish "/gallery/at", [index - 1]

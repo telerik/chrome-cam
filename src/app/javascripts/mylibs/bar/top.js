@@ -9,33 +9,7 @@
       selected: false,
       back: {
         details: false,
-        text: "< Camera",
-        click: function(e) {
-          $.publish("/details/hide");
-          states.gallery();
-          return e.preventDefault();
-        }
-      },
-      destroy: {
-        click: function(e) {
-          return $.publish("/confirm/show", [
-            window.APP.localization.delete_dialog_title, window.APP.localization.delete_confirmation, function() {
-              return $.publish("/gallery/delete");
-            }
-          ]);
-        }
-      },
-      share: {
-        save: function(e) {
-          var file;
-          file = this.get("current");
-          return $.publish("/postman/deliver", [
-            {
-              name: file.name,
-              file: file.file
-            }, "/file/download"
-          ]);
-        }
+        text: "< Camera"
       }
     });
     states = {
@@ -72,13 +46,34 @@
         $.subscribe("/item/selected", function(message) {
           return viewModel.set("current", message.item);
         });
-        $.subscribe("/keyboard/esc", function() {
+        return $.subscribe("/keyboard/esc", function() {
           if (states.current === "details") {
             states.set("gallery");
             return back.trigger("click");
           }
         });
-        return _this.view;
+      },
+      back: function(e) {
+        $.publish("/details/hide");
+        states.gallery();
+        return e.preventDefault();
+      },
+      destroy: function(e) {
+        return $.publish("/confirm/show", [
+          window.APP.localization.delete_dialog_title, window.APP.localization.delete_confirmation, function() {
+            return $.publish("/gallery/delete");
+          }
+        ]);
+      },
+      save: function(e) {
+        var file;
+        file = viewModel.get("current");
+        return $.publish("/postman/deliver", [
+          {
+            name: file.name,
+            file: file.file
+          }, "/file/download"
+        ]);
       }
     };
   });

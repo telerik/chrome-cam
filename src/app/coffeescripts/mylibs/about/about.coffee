@@ -5,21 +5,7 @@ define [
 	
 	previous = "#home"
 
-	viewModel = kendo.observable
-
-		back: ->
-			$.publish "/postman/deliver", [ true, "/menu/enable" ]
-			window.APP.app.navigate previous
-
-		gallery:
-			clear: ->
-				$.publish "/confirm/show", [
-					window.APP.localization.clear_gallery_dialog_title,
-					window.APP.localization.clear_gallery_confirmation,
-					-> 
-						$.publish("/gallery/clear")
-						window.APP.app.navigate "#home"
-				]
+	viewModel = kendo.observable({})
 
 	pub = 
 
@@ -42,4 +28,18 @@ define [
 				$.publish "/postman/deliver", [ false, "/menu/enable" ]
 				previous = window.APP.app.view().id
 				window.APP.app.navigate selector
+
+		back: ->
+			$.publish "/postman/deliver", [ true, "/menu/enable" ]
+			window.APP.app.navigate previous
+
+		clear: ->
+			$.publish "/confirm/show", [
+				window.APP.localization.clear_gallery_dialog_title,
+				window.APP.localization.clear_gallery_confirmation,
+				-> 
+					$.publish("/gallery/clear")
+					window.APP.app.navigate "#home"
+			]
+
 

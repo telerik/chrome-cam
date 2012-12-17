@@ -4,22 +4,7 @@
   define(['Kendo', 'text!mylibs/about/views/about.html'], function(kendo, template) {
     var previous, pub, viewModel;
     previous = "#home";
-    viewModel = kendo.observable({
-      back: function() {
-        $.publish("/postman/deliver", [true, "/menu/enable"]);
-        return window.APP.app.navigate(previous);
-      },
-      gallery: {
-        clear: function() {
-          return $.publish("/confirm/show", [
-            window.APP.localization.clear_gallery_dialog_title, window.APP.localization.clear_gallery_confirmation, function() {
-              $.publish("/gallery/clear");
-              return window.APP.app.navigate("#home");
-            }
-          ]);
-        }
-      }
-    });
+    viewModel = kendo.observable({});
     return pub = {
       before: function() {
         return $.publish("/postman/deliver", [
@@ -45,6 +30,18 @@
           previous = window.APP.app.view().id;
           return window.APP.app.navigate(selector);
         });
+      },
+      back: function() {
+        $.publish("/postman/deliver", [true, "/menu/enable"]);
+        return window.APP.app.navigate(previous);
+      },
+      clear: function() {
+        return $.publish("/confirm/show", [
+          window.APP.localization.clear_gallery_dialog_title, window.APP.localization.clear_gallery_confirmation, function() {
+            $.publish("/gallery/clear");
+            return window.APP.app.navigate("#home");
+          }
+        ]);
       }
     };
   });

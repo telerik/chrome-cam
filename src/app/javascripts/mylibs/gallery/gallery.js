@@ -226,13 +226,7 @@
         arrows.left = parent.find(".previous");
         arrows.left.hide();
         arrows.right = parent.find(".next");
-        arrows.both = $([arrows.left[0], arrows.right[0]]);
-        arrows.left.on("click", function() {
-          return page(1);
-        });
-        return arrows.right.on("click", function() {
-          return page(-1);
-        });
+        return arrows.both = $([arrows.left[0], arrows.right[0]]);
       }
     };
     return pub = {
@@ -298,6 +292,12 @@
       },
       show: function(e) {
         return setTimeout(render, 420);
+      },
+      previous: function(e) {
+        return page(1);
+      },
+      next: function(e) {
+        return page(-1);
       },
       swipe: function(e) {
         return page((e.direction === "right") - (e.direction === "left"));

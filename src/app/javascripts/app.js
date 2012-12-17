@@ -12,6 +12,9 @@
         APP.gallery = gallery;
         APP.about = about;
         APP.confirm = confirm;
+        APP.bottom = bottom;
+        APP.top = top;
+        APP.details = details;
         events.init();
         postman.init(window.top);
         assets.init();
@@ -25,8 +28,8 @@
           APP.localization = dict;
           ready = function() {
             var effect, hideSplash, _i, _len, _ref;
-            APP.bottom = bottom.init(".bottom");
-            APP.top = top.init(".top");
+            bottom.init(".bottom");
+            top.init(".top");
             APP.popover = popover.init("#gallery");
             full.init("#capture");
             details.init("#details");
