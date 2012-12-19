@@ -152,3 +152,6 @@ define [
 			# add the active class to this anchor
 			a.addClass "selected"
 
+		gallery: ->
+			APP.app.navigate("#gallery")
+

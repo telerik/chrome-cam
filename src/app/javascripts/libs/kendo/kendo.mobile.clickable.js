@@ -22,6 +22,9 @@
                 .on("mouseover", "_mouseover")
                 .on("mouseout", "_mouseout")
 
+            // add a pointer
+            that.element.css("cursor", "pointer")
+
             if (ANDROID3UP) {
                 that.element.on("move", "_timeoutDeactivate");
             }

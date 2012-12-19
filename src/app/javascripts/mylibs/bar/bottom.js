@@ -133,6 +133,9 @@
         viewModel.set("mode.active", a.data("mode"));
         a.closest(".bar").find("a").removeClass("selected");
         return a.addClass("selected");
+      },
+      gallery: function() {
+        return APP.app.navigate("#gallery");
       }
     };
   });

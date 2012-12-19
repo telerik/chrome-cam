@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, arrows, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, page, pageSize, pages, pub, render, rows, select, selected, total,
+    var active, add, animation, arrows, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, keys, page, pageSize, pages, pub, render, rows, select, selected, total,
       _this = this;
     columns = 3;
     rows = 3;
@@ -34,11 +34,18 @@
       return $.publish("/top/update", ["deselected"]);
     };
     select = function(name) {
-      selected = container.find("[data-name='" + name + "']").parent(":first");
-      container.find(".thumbnail").removeClass("selected");
-      selected.addClass("selected");
-      $.publish("/item/selected", [get(name)]);
-      return $.publish("/top/update", ["selected"]);
+      var item;
+      item = container.find("[data-name='" + name + "']");
+      selected = item.parent(":first");
+      if (selected.hasClass("selected")) {
+        keys.unbind();
+        return $.publish("/details/show", [get("" + (item.data("name")))]);
+      } else {
+        container.find(".thumbnail").removeClass("selected");
+        selected.addClass("selected");
+        $.publish("/item/selected", [get(name)]);
+        return $.publish("/top/update", ["selected"]);
+      }
     };
     page = function(direction) {
       if (flipping) {
@@ -159,6 +166,9 @@
       element.width = 240;
       element.height = 180;
       element.setAttribute("class", "hidden");
+      $(element).kendoMobileClickable({
+        click: pub.click
+      });
       return element;
     };
     render = function(flip) {
@@ -167,9 +177,9 @@
       _ref = ds.view();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>");
+        thumbnail = new kendo.View(pages.next, template);
         thumbs.push({
-          dom: thumbnail.render(),
+          dom: thumbnail.render({}, true),
           data: item
         });
       }
@@ -218,25 +228,10 @@
         return complete();
       }
     };
-    arrows = {
-      left: null,
-      right: null,
-      both: null,
-      init: function(parent) {
-        arrows.left = parent.find(".previous");
-        arrows.left.hide();
-        arrows.right = parent.find(".next");
-        return arrows.both = $([arrows.left[0], arrows.right[0]]);
-      }
-    };
-    return pub = {
-      before: function(e) {
-        $.publish("/postman/deliver", [
-          {
-            paused: true
-          }, "/camera/pause"
-        ]);
-        keyboard.token = $.subscribe("/keyboard/arrow", function(key) {
+    keys = {
+      tokens: [],
+      bind: function() {
+        this.tokens.push($.subscribe("/keyboard/arrow", function(key) {
           var position;
           position = index % pageSize;
           switch (key) {
@@ -260,24 +255,44 @@
                 return at(index + columns, true);
               }
           }
-        });
-        $.subscribe("/keyboard/page", function(dir) {
+        }));
+        this.tokens.push($.subscribe("/keyboard/page", function(dir) {
           if (dir === "down") {
             page(-1);
           }
           if (dir === "up") {
             return page(1);
           }
+        }));
+        return this.tokens.push($.subscribe("/keyboard/enter", function() {
+          return at(index % pageSize);
+        }));
+      },
+      unbind: function() {
+        return this.tokens = $.map(this.tokens, function(item) {
+          return $.unsubscribe(item);
         });
-        return $.subscribe("/keyboard/enter", function() {
-          var item;
-          item = ds.view()[index % pageSize];
-          return $.publish("/details/show", [
-            {
-              item: item
-            }
-          ]);
-        });
+      }
+    };
+    arrows = {
+      left: null,
+      right: null,
+      both: null,
+      init: function(parent) {
+        arrows.left = parent.find(".previous");
+        arrows.left.hide();
+        arrows.right = parent.find(".next");
+        return arrows.both = $([arrows.left[0], arrows.right[0]]);
+      }
+    };
+    return pub = {
+      before: function(e) {
+        $.publish("/postman/deliver", [
+          {
+            paused: true
+          }, "/camera/pause"
+        ]);
+        return keys.bind();
       },
       hide: function(e) {
         $.publish("/postman/deliver", [
@@ -286,7 +301,7 @@
           }, "/camera/pause"
         ]);
         $.publish("/postman/deliver", [null, "/camera/request"]);
-        $.unsubscribe(keyboard.token);
+        keys.unbind();
         pages.next.empty();
         return pages.previous.empty();
       },
@@ -302,6 +317,12 @@
       swipe: function(e) {
         return page((e.direction === "right") - (e.direction === "left"));
       },
+      click: function(e) {
+        var thumb;
+        thumb = this.element;
+        $.publish("/top/update", ["selected"]);
+        return select(thumb.data("name"));
+      },
       init: function(selector) {
         var page1, page2;
         page1 = new kendo.View(selector, null);
@@ -310,21 +331,6 @@
         arrows.init($(selector).parent());
         pages.previous = page1.render().addClass("page gallery");
         active = pages.next = page2.render().addClass("page gallery");
-        page1.container.on("click", function() {
-          return deselect();
-        });
-        page1.container.on("dblclick", ".thumbnail", function(e) {
-          var thumb;
-          thumb = $(this).children(":first");
-          return $.publish("/details/show", [get("" + (thumb.data("name")))]);
-        });
-        page1.container.on("click", ".thumbnail", function(e) {
-          var thumb;
-          thumb = $(this).children(":first");
-          $.publish("/top/update", ["selected"]);
-          select(thumb.data("name"));
-          return e.stopPropagation();
-        });
         $.subscribe("/pictures/bulk", function(message) {
           ds = dataSource.create(message.message);
           ds.read();
@@ -349,6 +355,9 @@
           return filewrapper.clear().done(function() {
             return clear();
           });
+        });
+        $.subscribe("/gallery/keyboard", function() {
+          return keys.bind();
         });
         $.publish("/postman/deliver", [{}, "/file/read"]);
         return gallery;

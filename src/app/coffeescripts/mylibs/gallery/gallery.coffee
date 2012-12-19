@@ -35,14 +35,22 @@ define [
         $.publish "/top/update", [ "deselected" ]
 
     select = (name) =>
-
         # find the item with the specified name
-        selected = container.find("[data-name='#{name}']").parent(":first")
-        container.find(".thumbnail").removeClass "selected"
-        selected.addClass "selected"
+        item = container.find("[data-name='#{name}']")
+        selected = item.parent(":first")
 
-        $.publish "/item/selected", [ get(name) ]
-        $.publish "/top/update", [ "selected" ]
+        # if this item already has the "selected class", this is the second
+        # click which will open the details view
+        if selected.hasClass("selected")
+            keys.unbind()
+            $.publish "/details/show", [ get("#{item.data("name")}") ]
+
+        else 
+            container.find(".thumbnail").removeClass "selected"
+            selected.addClass "selected"
+
+            $.publish "/item/selected", [ get(name) ]
+            $.publish "/top/update", [ "selected" ]
 
     page = (direction) =>
 
@@ -156,6 +164,10 @@ define [
 
         element.setAttribute("class", "hidden")
 
+        $(element).kendoMobileClickable {
+            click: pub.click
+        }
+
         return element
 
     render = (flip) =>
@@ -163,8 +175,11 @@ define [
         thumbs = []
 
         for item in ds.view()
-            thumbnail = new kendo.View(pages.next, "<div class='thumbnail'></div>")
-            thumbs.push(dom: thumbnail.render(), data: item)
+            thumbnail = new kendo.View(pages.next, template)
+            thumbs.push(dom: thumbnail.render({}, true), data: item)
+
+            # turn the thumbnail into something clickable
+
 
         $("#gallery").css "pointer-events", "none"
 
@@ -212,6 +227,44 @@ define [
         else
             complete()
 
+    keys = {
+        tokens: [],
+        bind: ->
+            @tokens.push(
+                $.subscribe "/keyboard/arrow", (key) ->
+                    position = index % pageSize
+                    switch key
+                        when "left" then if index % columns > 0
+                            at index - 1, true
+                        when "right" then if index % columns < columns - 1
+                            at index + 1, true
+                        when "up" then if position >= columns
+                            at index-columns, true
+                        when "down" then if position < (rows-1)*columns
+                            at index+columns, true
+            ) 
+
+            @tokens.push(
+                $.subscribe "/keyboard/page", (dir) ->
+                    if dir == "down"
+                        page -1
+                    if dir == "up"
+                        page 1
+            )
+
+            @tokens.push(
+                $.subscribe "/keyboard/enter", ->
+                    at index % pageSize
+                    # keys.unbind()
+                    # $.publish "/details/show", [ item: item ]
+            )
+
+        unbind: ->
+            @tokens = $.map(@tokens, (item) ->
+                $.unsubscribe(item)
+            )
+    }   
+
     arrows =
         left: null
         right: null
@@ -230,27 +283,7 @@ define [
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
             # listen to keyboard events
-            keyboard.token = $.subscribe "/keyboard/arrow", (key) ->
-                position = index % pageSize
-                switch key
-                    when "left" then if index % columns > 0
-                        at index - 1, true
-                    when "right" then if index % columns < columns - 1
-                        at index + 1, true
-                    when "up" then if position >= columns
-                        at index-columns, true
-                    when "down" then if position < (rows-1)*columns
-                        at index+columns, true
-
-            $.subscribe "/keyboard/page", (dir) ->
-                if dir == "down"
-                    page -1
-                if dir == "up"
-                    page 1
-
-            $.subscribe "/keyboard/enter", ->
-                item = ds.view()[index % pageSize]
-                $.publish "/details/show", [ item: item ]
+            keys.bind()
 
         hide: (e) ->
             # unpause the camera
@@ -258,7 +291,7 @@ define [
             $.publish "/postman/deliver", [null, "/camera/request"]
 
             # don't respond to the keyboard events anymore
-            $.unsubscribe keyboard.token
+            keys.unbind()
 
             pages.next.empty()
             pages.previous.empty()
@@ -274,6 +307,11 @@ define [
 
         swipe: (e) ->
             page (e.direction == "right") - (e.direction == "left")
+
+        click: (e) ->
+            thumb = @.element
+            $.publish "/top/update", ["selected"]
+            select thumb.data("name")
 
         init: (selector) =>
 
@@ -291,19 +329,19 @@ define [
             pages.previous = page1.render().addClass("page gallery")
             active = pages.next = page2.render().addClass("page gallery")
 
-            page1.container.on "click", ->
-                deselect()
+            # page1.container.on "click", ->
+            #     deselect()
 
             #delegate some events to the gallery
-            page1.container.on "dblclick", ".thumbnail", (e) ->
-                thumb = $(@).children(":first")
-                $.publish "/details/show", [ get("#{thumb.data("name")}") ]
+            # page1.container.on "dblclick", ".thumbnail", (e) ->
+            #     thumb = $(@).children(":first")
+            #     $.publish "/details/show", [ get("#{thumb.data("name")}") ]
 
-            page1.container.on "click", ".thumbnail", (e) ->
-                thumb = $(@).children(":first")
-                $.publish "/top/update", ["selected"]
-                select thumb.data("name")
-                e.stopPropagation()
+            # page1.container.on "click", ".thumbnail", (e) ->
+            #     thumb = $(@).children(":first")
+            #     $.publish "/top/update", ["selected"]
+            #     select thumb.data("name")
+            #     e.stopPropagation()
 
             $.subscribe "/pictures/bulk", (message) =>
                 ds = dataSource.create(message.message)
@@ -327,6 +365,9 @@ define [
                 $.publish "/bottom/thumbnail"
                 filewrapper.clear().done =>
                     clear()
+
+            $.subscribe "/gallery/keyboard", ->
+                keys.bind()
 
             $.publish "/postman/deliver", [ {}, "/file/read" ]
 

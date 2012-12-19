@@ -24,6 +24,7 @@ define [
 
     hide = ->
         $.publish "/top/update", ["gallery"]
+        $.publish "/gallery/keyboard"
         details.container.kendoStop(true).kendoAnimate
             effects: "zoomOut"
             hide: true
@@ -78,6 +79,7 @@ define [
                 return false
 
             $.subscribe "/keyboard/arrow", page, true
+            $.subscribe "/keyboard/esc", hide
 
         next: (e) ->
             $.publish "/gallery/at", [index + 1]

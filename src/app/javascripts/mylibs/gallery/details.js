@@ -30,6 +30,7 @@
     });
     hide = function() {
       $.publish("/top/update", ["gallery"]);
+      $.publish("/gallery/keyboard");
       return details.container.kendoStop(true).kendoAnimate({
         effects: "zoomOut",
         hide: true,
@@ -88,7 +89,8 @@
           }
           return false;
         };
-        return $.subscribe("/keyboard/arrow", page, true);
+        $.subscribe("/keyboard/arrow", page, true);
+        return $.subscribe("/keyboard/esc", hide);
       },
       next: function(e) {
         return $.publish("/gallery/at", [index + 1]);
