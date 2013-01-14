@@ -9,6 +9,7 @@ folder = "chrome-cam"
 src = "src"
 chrome = "#{src}/chrome/"
 app = "#{src}/app/"
+isWindows = /^win/.test(process.platform)
 
 log = (msg) ->
 
@@ -59,7 +60,8 @@ task 'default', (params) ->
 
 	jake.exec "coffee -c -o #{app}javascripts #{app}coffeescripts", () ->
 
-		jake.exec "r.js -o src/app/javascripts/app.build.js", () -> 
+		requireCmd = unless isWindows then "r.js" else "r.js.cmd"
+		jake.exec "#{requireCmd} -o src/app/javascripts/app.build.js", () -> 
 
 			fatLog "Copying App Scripts"
 
