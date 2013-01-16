@@ -14,6 +14,7 @@ define [
 
     canvas = {}
     ctx = {}
+    imgData = null
     paused = false
 
     # turns on the camera by causing it to listen for the incoming stream
@@ -28,10 +29,6 @@ define [
 
             # if the camera isn't paused
             if not paused
-
-                # create a new image data object
-                imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
-                
                 # convert the incoming message to a typed array
                 videoData = new Uint8ClampedArray(message.image)
                 
@@ -57,6 +54,9 @@ define [
 
             # get the canvas context for drawing and reading
             ctx = canvas.getContext("2d")
+
+            # create a new image data object
+            imgData = ctx.getImageData 0, 0, canvas.width, canvas.height
 
             # subscribe to the pause event
             $.subscribe "/camera/pause", (isPaused) ->
