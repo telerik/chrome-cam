@@ -57,8 +57,8 @@ define [
         file = { type: "jpg", name: "#{name}.jpg", file: image }
 
         $.publish "/file/save", [file]
-        once = $.subscribe "/file/saved/{#file.name}", ->
-            $.unsubscribe once
+        saveFinished = $.subscribe "/file/saved/{#file.name}", ->
+            $.unsubscribe saveFinished
             $.publish "/gallery/add", [file]
 
     hollaback = (stream) ->
@@ -97,7 +97,13 @@ define [
             $.subscribe "/window/close", ->
                 window.close()
 
-            $.subscribe "/capture", capture
+            $.subscribe "/camera/capture", capture
+
+            $.subscribe "/camera/pause", (message) ->
+                if message.paused
+                    $(canvas).hide()
+                else
+                    $(canvas).show()
 
             # get the files
             file.init()

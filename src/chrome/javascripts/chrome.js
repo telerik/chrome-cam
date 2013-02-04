@@ -42,7 +42,7 @@
       return ctx.drawImage(video, 0, 0, video.width, video.height);
     };
     capture = function() {
-      var image, name, once;
+      var image, name, saveFinished;
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       file = {
@@ -51,8 +51,8 @@
         file: image
       };
       $.publish("/file/save", [file]);
-      return once = $.subscribe("/file/saved/{#file.name}", function() {
-        $.unsubscribe(once);
+      return saveFinished = $.subscribe("/file/saved/{#file.name}", function() {
+        $.unsubscribe(saveFinished);
         return $.publish("/gallery/add", [file]);
       });
     };
@@ -86,7 +86,14 @@
         $.subscribe("/window/close", function() {
           return window.close();
         });
-        $.subscribe("/capture", capture);
+        $.subscribe("/camera/capture", capture);
+        $.subscribe("/camera/pause", function(message) {
+          if (message.paused) {
+            return $(canvas).hide();
+          } else {
+            return $(canvas).show();
+          }
+        });
         file.init();
         face.init(0, 0, 0, 0);
         menu();

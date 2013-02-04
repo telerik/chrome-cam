@@ -38,7 +38,7 @@ define [
         full.el.flash.hide()
 
     capture = (callback) ->
-        $.publish "/postman/deliver", [ [], "/capture" ]
+        $.publish "/postman/deliver", [ [], "/camera/capture" ]
 
         # TODO: reimplement transfer
         # transfer.content.kendoStop().kendoAnimate

@@ -24,7 +24,7 @@
       return full.el.flash.hide();
     };
     capture = function(callback) {
-      $.publish("/postman/deliver", [[], "/capture"]);
+      $.publish("/postman/deliver", [[], "/camera/capture"]);
       return flash();
     };
     index = {
