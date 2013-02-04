@@ -2,3 +2,4 @@
 *.coffee eol=lf
 *.css eol=lf
 *.html eol=lf
+*.json eol=lf
