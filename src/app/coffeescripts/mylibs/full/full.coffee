@@ -105,6 +105,7 @@ define [
         init: (selector) ->
 
             full = new kendo.View(selector, template)
+            full.render()
 
             # find and cache the necessary elements
             elements.cache full

@@ -137,7 +137,6 @@ define [
 				countdown 0, capture
 
 		filters: (e) ->
-
 			viewModel.set "filters.open", not viewModel.filters.open
 			view.el.filters.toggleClass "selected", viewModel.filters.open
 			$.publish "/full/filters/show", [viewModel.filters.open]

@@ -111,6 +111,7 @@
     return pub = {
       init: function(selector) {
         full = new kendo.View(selector, template);
+        full.render();
         elements.cache(full);
         return subscribe(pub);
       },
