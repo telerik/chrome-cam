@@ -1,8 +1,8 @@
-define([
-  'mylibs/assets/assets'
-  'libs/face/ccv'
-  'libs/face/face'
-], (assets) ->
+define [
+    'libs/glfx/glfx'
+    'libs/face/ccv'
+    'libs/face/face'
+], () ->
 
     faces = []
 
@@ -48,7 +48,6 @@ define([
                 texture = webgl.texture(element)
 
         data: [
-
             {
                 id: "normal"
                 name: "Normal"
@@ -346,4 +345,3 @@ define([
                     draw(canvas, element, effect)
             }
         ]
-)

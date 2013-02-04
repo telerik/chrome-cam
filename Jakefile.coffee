@@ -26,7 +26,7 @@ fatLog = (msg) ->
 	"""
 
 desc 'Builds the application to /extension'
-task 'default', (params) ->	
+task 'default', (params) ->
 
 	fatLog "Removing Build Folder"
 	jake.rmRf folder
@@ -61,7 +61,7 @@ task 'default', (params) ->
 	jake.exec "coffee -c -o #{app}javascripts #{app}coffeescripts", () ->
 
 		requireCmd = unless isWindows then "r.js" else "r.js.cmd"
-		jake.exec "#{requireCmd} -o src/app/javascripts/app.build.js", () -> 
+		jake.exec "#{requireCmd} -o src/app/javascripts/app.build.js", () ->
 
 			fatLog "Copying App Scripts"
 
@@ -74,7 +74,7 @@ task 'default', (params) ->
 
 			# fatLog "Building Extension"
 			# chromePath = (system && system.env.CHROME_BIN_PATH) || "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
-			# jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->			
+			# jake.exec "'#{chromePath}' --pack-extension=#{folder} --pack-extension-key=#{folder}.pem --no-message-box", () ->
 			# 	fatLog "Copying Extension To Google Drive - No worries if this fails"
 			# 	if system and system.env.HOME
 			# 		try

@@ -1,14 +1,13 @@
 define [
   'Kendo'
-  'mylibs/effects/effects'
   'mylibs/utils/utils'
   'mylibs/file/filewrapper'
   'text!mylibs/full/views/full.html'
-], (kendo, effects, utils, filewrapper, template) ->
+], (kendo, utils, filewrapper, template) ->
     paused = true
     frame = 0
     full = {}
-    effect = {}
+    effectId = ""
 
     paparazzi = {}
 
@@ -40,15 +39,15 @@ define [
     index =
         current: ->
             # return is compulsory here; otherwise CoffeeScript will build an array.
-            return i for i in [0...effects.data.length] when effects.data[i].filter is effect
+            return i for i in [0...APP.filters.length] when APP.filters.id is effectId
         max: ->
-            effects.data.length
+            APP.filters.length
         select: (i) ->
-            pub.select effects.data[i]
+            pub.select APP.filters[i]
         preview: (i) ->
-            pub.select effects.data[i], true
+            pub.select APP.filters[i], true
         unpreview: ->
-            pub.select effects.data[index.saved]
+            pub.select APP.filters[index.saved]
         saved: 0
 
     subscribe = (pub) ->
@@ -129,7 +128,7 @@ define [
                     $.publish "/bottom/update", [ "full" ]
 
         select: (item, temp) ->
-            effect = item.filter
+            effectId = item.id
             unless temp
                 full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
             $.publish "/postman/deliver", [ item.tracks, "/tracking/enable" ]

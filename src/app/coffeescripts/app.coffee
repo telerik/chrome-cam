@@ -1,31 +1,26 @@
 define [
-  'Kendo'
-  'Glfx'
-  'mylibs/bar/bottom'
-  'mylibs/bar/top'
-  'mylibs/popover/popover'
-  'mylibs/full/full'
-  'mylibs/postman/postman'
-  'mylibs/utils/utils'
-  'mylibs/gallery/gallery'
-  'mylibs/gallery/details'
-  'mylibs/events/events'
-  'mylibs/file/filewrapper'
-  'mylibs/about/about'
-  'mylibs/confirm/confirm'
-  'mylibs/assets/assets'
-  'mylibs/effects/effects',
-  "text!mylibs/nocamera/views/nocamera.html"
-], (kendo, glfx, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects, nocamera) ->
+    'Kendo'
+    'mylibs/bar/bottom'
+    'mylibs/bar/top'
+    'mylibs/popover/popover'
+    'mylibs/full/full'
+    'mylibs/postman/postman'
+    'mylibs/utils/utils'
+    'mylibs/gallery/gallery'
+    'mylibs/gallery/details'
+    'mylibs/events/events'
+    'mylibs/file/filewrapper'
+    'mylibs/about/about'
+    'mylibs/confirm/confirm'
+    'mylibs/assets/assets'
+    "text!mylibs/nocamera/views/nocamera.html"
+], (kendo, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, nocamera) ->
 
     pub =
-
         init: ->
-
             APP = window.APP = {}
 
             APP.full = full
-            APP.filters = effects.data
             APP.gallery = gallery
             APP.about = about
             APP.confirm = confirm
@@ -52,52 +47,56 @@ define [
             #$.subscribe "/camera/pause", (isPaused) ->
             #    paused = isPaused
 
+            promises =
+                effects: $.Deferred()
+                localization: $.Deferred()
+
+            $.subscribe "/effects/response", (filters) ->
+                APP.filters = filters
+                promises.effects.resolve()
+
             $.subscribe "/localization/response", (dict) ->
-
                 APP.localization = dict
+                promises.localization.resolve()
 
-                ready = ->
-                    # create the top and bottom bars
-                    bottom.init(".bottom")
-                    top.init(".top")
-                    APP.popover = popover.init("#gallery")
+            $.when(promises.effects.promise(), promises.localization.promise()).then ->
+                # create the top and bottom bars
+                bottom.init(".bottom")
+                top.init(".top")
+                APP.popover = popover.init("#gallery")
 
-                    # initialize the full screen capture mode
-                    full.init "#capture"
+                # initialize the full screen capture mode
+                full.init "#capture"
 
-                    # initialize gallery details view
-                    details.init "#details"
+                # initialize gallery details view
+                details.init "#details"
 
-                    # initialize the thumbnail gallery
-                    gallery.init "#thumbnails"
+                # initialize the thumbnail gallery
+                gallery.init "#thumbnails"
 
-                    # initialize the about view
-                    about.init "#about"
+                # initialize the about view
+                about.init "#about"
 
-                    # initialize the confirm window
-                    confirm.init "#confirm"
+                # initialize the confirm window
+                confirm.init "#confirm"
 
-                    # start up camera
-                    effects.init()
-                    effect.name = APP.localization[effect.id] for effect in effects.data
-                    full.show effects.data[0]
+                # start up full view
+                full.show APP.filters[0]
 
-                    # we are done loading the app. have the postman deliver that msg.
-                    $.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
+                # we are done loading the app. have the postman deliver that msg.
+                $.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
 
-                    window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
+                window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
 
-                    hideSplash = ->
-                        $("#splash").kendoAnimate
-                            effects: "fade:out"
-                            duration: 1000,
-                            hide: true
-                    setTimeout hideSplash, 100
+                hideSplash = ->
+                    $("#splash").kendoAnimate
+                        effects: "fade:out"
+                        duration: 1000,
+                        hide: true
+                setTimeout hideSplash, 100
 
-                    $.subscribe "/keyboard/close", ->
-                        $.publish "/postman/deliver", [ null, "/window/close" ]
-
-                # initialize the camera
-                ready()
+                $.subscribe "/keyboard/close", ->
+                    $.publish "/postman/deliver", [ null, "/window/close" ]
 
             $.publish "/postman/deliver", [ null, "/localization/request" ]
+            $.publish "/postman/deliver", [ null, "/effects/request" ]

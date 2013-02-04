@@ -4,7 +4,8 @@ define [
     'mylibs/file/file'
     'mylibs/localization/localization'
     'libs/face/track'
-], (postman, utils, file, localization, face) ->
+    'mylibs/effects/effects'
+], (postman, utils, file, localization, face, effects) ->
     'use strict'
 
     iframe = iframe = document.getElementById("iframe")
@@ -94,6 +95,10 @@ define [
             $.subscribe "/localization/request", ->
                 $.publish "/postman/deliver", [ localization, "/localization/response" ]
 
+            $.subscribe "/effects/request", ->
+                filters = ( id: e.id, name: e.name, tracks: !!e.tracks for e in effects.data )
+                $.publish "/postman/deliver", [ filters, "/effects/response" ]
+
             $.subscribe "/window/close", ->
                 window.close()
 
@@ -107,6 +112,9 @@ define [
 
             # get the files
             file.init()
+
+            #effects.init()
+            #effect.name = APP.localization[effect.id] for effect in effects.data
 
             # initialize the face tracking
             face.init 0, 0, 0, 0

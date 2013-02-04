@@ -1,62 +1,54 @@
-define([
-  'libs/face/ccv'
-  'libs/face/face'
+define [
+    'libs/face/ccv'
+    'libs/face/face'
 ], () ->
-	
-	backCanvas = document.createElement "canvas"
-	backContext = backCanvas.getContext "2d"
-	w = 300 / 4 * 0.8
-	h = 270 / 4 * 0.8
-	cache = {}
 
-	enabled = false
+    backCanvas = document.createElement "canvas"
+    backContext = backCanvas.getContext "2d"
+    w = 300 / 4 * 0.8
+    h = 270 / 4 * 0.8
+    cache = {}
 
-	pub = 
+    pub =
 
-		init: (x, y, width, height) ->
-			
-			backCanvas.width = 120
-			backCanvas.height = 80
+        init: (x, y, width, height) ->
 
-			cache.comp = [{
-				x: x
-				y: y
-				width: backCanvas.width
-				height: backCanvas.height
-			}]
+            backCanvas.width = 120
+            backCanvas.height = 90
 
-			$.subscribe "/tracking/enable", (set) ->
-				enabled = set
+            cache.comp = [{
+                x: x
+                y: y
+                width: backCanvas.width
+                height: backCanvas.height
+            }]
 
-		track: (video) ->
+        track: (video) ->
 
-			track = 
-				faces: []
-				trackWidth: backCanvas.width
-			
-			return track unless enabled
+            track =
+                faces: []
+                trackWidth: backCanvas.width
 
-			backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
+            backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
 
-			comp = ccv.detect_objects cache.ccv = cache.ccv || {
-				canvas: ccv.grayscale(backCanvas)
-				cascade: cascade,
-				interval: 5,
-				min_neighbors: 1
-			}
+            comp = ccv.detect_objects cache.ccv = cache.ccv || {
+                canvas: ccv.grayscale(backCanvas)
+                cascade: cascade,
+                interval: 5,
+                min_neighbors: 1
+            }
 
-			if comp.length
-				cache.comp = comp
+            if comp.length
 
-			for i in cache.comp
+                cache.comp = comp
 
-				track.faces.push {
-					x: i.x
-					y: i.y
-					width: i.width
-					height: i.height
-				}
+            for i in cache.comp
 
-			return track;
+                track.faces.push {
+                    x: i.x
+                    y: i.y
+                    width: i.width
+                    height: i.height
+                }
 
-)
+            return track
