@@ -1,7 +1,6 @@
 define [
   'Kendo'
   'Glfx'
-  'mylibs/camera/camera'
   'mylibs/bar/bottom'
   'mylibs/bar/top'
   'mylibs/popover/popover'
@@ -16,85 +15,89 @@ define [
   'mylibs/confirm/confirm'
   'mylibs/assets/assets'
   'mylibs/effects/effects',
-	"text!mylibs/nocamera/views/nocamera.html"
-], (kendo, glfx, camera, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects, nocamera) ->
+  "text!mylibs/nocamera/views/nocamera.html"
+], (kendo, glfx, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, effects, nocamera) ->
 
-	pub =
+    pub =
 
-		init: ->
+        init: ->
 
-			APP = window.APP = {}
+            APP = window.APP = {}
 
-			APP.full = full
-			APP.filters = effects.data
-			APP.gallery = gallery
-			APP.about = about
-			APP.confirm = confirm
-			APP.bottom = bottom
-			APP.top = top
-			APP.details = details
+            APP.full = full
+            APP.filters = effects.data
+            APP.gallery = gallery
+            APP.about = about
+            APP.confirm = confirm
+            APP.bottom = bottom
+            APP.top = top
+            APP.details = details
 
-			# bind document level events
-			events.init()
+            # bind document level events
+            events.init()
 
-			# fire up the postman!
-			postman.init window.top
+            # fire up the postman!
+            postman.init window.top
 
-			# initialize the asset pipeline
-			assets.init()
+            # initialize the asset pipeline
+            assets.init()
 
-			$.subscribe '/camera/unsupported', ->
-				new kendo.View("#no-camera", nocamera).render(kendo.observable({}), true)
-				APP.app.navigate "#no-camera"
+            $.subscribe '/camera/unsupported', ->
+                new kendo.View("#no-camera", nocamera).render(kendo.observable({}), true)
+                APP.app.navigate "#no-camera"
 
-			$.publish "/postman/deliver", [ true, "/menu/enable" ]
+            $.publish "/postman/deliver", [ true, "/menu/enable" ]
 
-			$.subscribe "/localization/response", (dict) ->
+            # subscribe to the pause event
+            #$.subscribe "/camera/pause", (isPaused) ->
+            #    paused = isPaused
 
-				APP.localization = dict
+            $.subscribe "/localization/response", (dict) ->
 
-				ready = ->
-					# create the top and bottom bars
-					bottom.init(".bottom")
-					top.init(".top")
-					APP.popover = popover.init("#gallery")
+                APP.localization = dict
 
-					# initialize the full screen capture mode
-					full.init "#capture"
+                ready = ->
+                    # create the top and bottom bars
+                    bottom.init(".bottom")
+                    top.init(".top")
+                    APP.popover = popover.init("#gallery")
 
-					# initialize gallery details view
-					details.init "#details"
+                    # initialize the full screen capture mode
+                    full.init "#capture"
 
-					# initialize the thumbnail gallery
-					gallery.init "#thumbnails"
+                    # initialize gallery details view
+                    details.init "#details"
 
-					# initialize the about view
-					about.init "#about"
+                    # initialize the thumbnail gallery
+                    gallery.init "#thumbnails"
 
-					# initialize the confirm window
-					confirm.init "#confirm"
+                    # initialize the about view
+                    about.init "#about"
 
-					# start up camera
-					effects.init()
-					effect.name = APP.localization[effect.id] for effect in effects.data
-					full.show effects.data[0]
+                    # initialize the confirm window
+                    confirm.init "#confirm"
 
-					# we are done loading the app. have the postman deliver that msg.
-					$.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
+                    # start up camera
+                    effects.init()
+                    effect.name = APP.localization[effect.id] for effect in effects.data
+                    full.show effects.data[0]
 
-					window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
+                    # we are done loading the app. have the postman deliver that msg.
+                    $.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
 
-					hideSplash = ->
-						$("#splash").kendoAnimate
-							effects: "fade:out"
-							duration: 1000,
-							hide: true
-					setTimeout hideSplash, 100
+                    window.APP.app = new kendo.mobile.Application document.body, { platform: "android" }
 
-					$.subscribe "/keyboard/close", ->
-						$.publish "/postman/deliver", [ null, "/window/close" ]
+                    hideSplash = ->
+                        $("#splash").kendoAnimate
+                            effects: "fade:out"
+                            duration: 1000,
+                            hide: true
+                    setTimeout hideSplash, 100
 
-				# initialize the camera
-				camera.init "countdown", ready
+                    $.subscribe "/keyboard/close", ->
+                        $.publish "/postman/deliver", [ null, "/window/close" ]
 
-			$.publish "/postman/deliver", [ null, "/localization/request" ]
+                # initialize the camera
+                ready()
+
+            $.publish "/postman/deliver", [ null, "/localization/request" ]

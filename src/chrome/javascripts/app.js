@@ -45,7 +45,6 @@
       if (paused) {
         return;
       }
-      console.log("update");
       return ctx.drawImage(video, 0, 0, video.width, video.height);
     };
     hollaback = function(stream) {

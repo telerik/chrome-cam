@@ -47,14 +47,7 @@ define [
         #if skipBit == 0
         #   track = face.track video
 
-        # HACK: need to eliminate race condition that can cause this to get hit before video is ready.
-        console.log "update"
         ctx.drawImage video, 0, 0, video.width, video.height
-
-        #img = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        #buffer = img.data.buffer
-
-        #$.publish "/postman/deliver", [ image: buffer, track: track, "/camera/update", [ buffer ]]
 
         #if skipBit < 4
         #   skipBit++
