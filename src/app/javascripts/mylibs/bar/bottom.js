@@ -97,7 +97,9 @@
           }
         });
         $.subscribe("/keyboard/space", function(e) {
-          return viewModel.capture.click.call(viewModel, e);
+          if (viewModel.get("capture.visible")) {
+            return pub.capture(e);
+          }
         });
         view.find(".stop", "stop");
         view.find(".counter", "counters");

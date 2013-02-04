@@ -105,7 +105,7 @@ define [
 					viewModel.set("thumbnail.enabled", false)
 
 			$.subscribe "/keyboard/space", (e) ->
-				viewModel.capture.click.call viewModel, e
+				pub.capture e if viewModel.get("capture.visible")
 
 			# get a reference to the dots.
 			# TODO: this sucks. fix it with custom
