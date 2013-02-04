@@ -41,8 +41,10 @@
         return;
       }
       ctx.drawImage(video, 0, 0, video.width, video.height);
-      if (effect.tracks && frame % 4 === 0) {
-        track = face.track(canvas);
+      if (effect.tracks) {
+        face.track(canvas, function(result) {
+          return track = result;
+        });
       }
       frame++;
       effects.advance(canvas);
@@ -131,7 +133,7 @@
           }
         });
         file.init();
-        face.init(0, 0, 0, 0);
+        face.init();
         menu();
         return $(iframe).focus();
       }
