@@ -6,18 +6,18 @@ define [
 ], (kendo, utils, template, thumbnailTemplate) ->
 
 	BROKEN_IMAGE = utils.placeholder.image()
-	
+
 	view = {}
 
 	# create a view model for the top bar
 	viewModel = kendo.observable
-		processing: 
+		processing:
 			visible: false
 
 		mode:
 			visible: false
 			active: "photo"
-				
+
 		capture:
 			visible: true
 
@@ -28,7 +28,7 @@ define [
 			enabled: false
 			active: true
 
-		filters: 
+		filters:
 			visible: false
 			open: false
 			css: ->
@@ -44,7 +44,7 @@ define [
 				++position
 
 				if position < 3
-					setTimeout -> 
+					setTimeout ->
 						countdown position, callback
 					, 500
 				else
@@ -53,7 +53,7 @@ define [
 					# hide the counters
 					view.el.counters.hide()
 
-	states = 
+	states =
 
 		capture: ->
 			viewModel.set("thumbnail.active", true)
@@ -66,7 +66,7 @@ define [
 			viewModel.set("filters.visible", false)
 		full: ->
 			viewModel.set("processing.visible", false)
-			viewModel.set("thumbnail.active", true)	
+			viewModel.set("thumbnail.active", true)
 			viewModel.set("mode.visible", true)
 			viewModel.set("capture.visible", true)
 			viewModel.set("filters.visible", true)
@@ -96,12 +96,12 @@ define [
 
 			$.subscribe "/bottom/thumbnail", (file) ->
 				view.el.galleryLink.empty()
-				
+
 				if file
 					thumbnail = new kendo.View(view.el.galleryLink, thumbnailTemplate, file)
 					thumbnail.render()
 					viewModel.set("thumbnail.enabled", true)
-				else 
+				else
 					viewModel.set("thumbnail.enabled", false)
 
 			$.subscribe "/keyboard/space", (e) ->
@@ -119,7 +119,6 @@ define [
 			return view
 
 		capture: (e) ->
-
 			$.publish "/full/capture/begin"
 
 			mode = viewModel.get("mode.active")
@@ -130,9 +129,12 @@ define [
 			capture = ->
 				$.publish "/capture/#{mode}"
 				$.publish "/full/capture/end"
-			
+
 			$.publish "/countdown/#{mode}"
-			if event.ctrlKey or event.metaKey then capture() else countdown 0, capture
+			if event.ctrlKey or event.metaKey
+				capture()
+			else
+				countdown 0, capture
 
 		filters: (e) ->
 

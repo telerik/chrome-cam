@@ -13,11 +13,6 @@ define [
     track = {}
     paused = false
 
-    if not canvas
-        throw "No no no no no no"
-    if not ctx
-        throw "no no :("
-
     # skip frames for face detection. grasping at straws.
     skip = false
     skipBit = 0
@@ -38,7 +33,7 @@ define [
     # TODO: Move the camera to its own file
     draw = ->
         update()
-        utils.getAnimationFrame() draw
+        window.requestAnimationFrame draw
 
     update = ->
         # the camera is paused when it isn't being used to increase app performance
@@ -54,14 +49,24 @@ define [
         #else
         #   skipBit = 0
 
-    hollaback = (stream) ->
+    capture = ->
+        image = canvas.toDataURL("image/jpeg", 1.0)
+        name = new Date().getTime()
 
-        url = window.URL || window.webkitURL
+        # set the name of this image to the current time string
+        file = { type: "jpg", name: "#{name}.jpg", file: image }
+
+        $.publish "/file/save", [file]
+        once = $.subscribe "/file/saved/{#file.name}", ->
+            $.unsubscribe once
+            $.publish "/gallery/add", [file]
+
+    hollaback = (stream) ->
         video = document.getElementById("video")
-        video.src = if url then url.createObjectURL(stream) else stream
+        video.src = window.URL.createObjectURL(stream)
         video.play()
 
-        utils.getAnimationFrame() draw
+        window.requestAnimationFrame draw
 
     errback = ->
         update = ->
@@ -91,6 +96,8 @@ define [
 
             $.subscribe "/window/close", ->
                 window.close()
+
+            $.subscribe "/capture", capture
 
             # get the files
             file.init()

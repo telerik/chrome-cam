@@ -1,13 +1,13 @@
 <section class="bar">
 	<section class="left">
-		<a data-role="button" class="button filters" data-click="APP.bottom.filters" data-bind="visible: filters.visible, localeText: filters_button"></a> 
+		<a data-role="button" class="button filters" data-click="APP.bottom.filters" data-bind="visible: filters.visible, localeText: filters_button"></a>
 		<span class="mode" data-bind="visible: mode.visible">
 			<a data-role="button" data-click="APP.bottom.mode" data-bind="localeTitle: photo" class="selected" data-mode="photo"><img src="styles/images/singleMode.png"></a><a data-role="button" data-click="APP.bottom.mode" data-mode="paparazzi" data-bind="localeTitle: paparazzi" data-mode="paparazzi"><img src="styles/images/papparazziMode.png"></a>
 			<!-- <a data-mode="video" class="km-button" data-bind="click: mode.click" data-mode="video" alt="Video" title="Video"><img src="styles/images/videoMode.png"></a> -->
 		</span>
 	</section>
 	<section class="center">
-		<a data-role="button" data-click="APP.bottom.capture" class="km-button capture photo" data-bind="events: { click: capture.click }, visible: capture.visible "><img src="styles/images/capture.png" class="photo"></a>
+		<a data-role="button" data-click="APP.bottom.capture" class="km-button capture photo" data-bind="visible: capture.visible"><img src="styles/images/capture.png" class="photo"></a>
 		<div class="countdown">
 			<span class="red-dot circle counter"></span>
 			<span class="red-dot circle counter"></span>

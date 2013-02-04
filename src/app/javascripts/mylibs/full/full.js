@@ -2,11 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, template, transferImg) {
-    var canvas, canvases, capture, ctx, draw, effect, elements, flash, frame, full, index, paparazzi, paused, pub, subscribe, transfer, video, videoCtx;
-    canvas = {};
-    ctx = {};
-    video = {};
-    videoCtx = {};
+    var capture, draw, effect, elements, flash, frame, full, index, paparazzi, paused, pub, subscribe, transfer;
     paused = true;
     frame = 0;
     full = {};
@@ -15,60 +11,21 @@
     paparazzi = {};
     draw = function() {
       return $.subscribe("/camera/stream", function(stream) {
-        var request;
         if (paused) {
           return;
         }
         frame++;
         effects.advance(stream.canvas);
-        effect(canvas, stream.canvas, frame, stream.track);
-        request = function() {
-          return $.publish("/postman/deliver", [null, "/camera/request"]);
-        };
-        return setTimeout(request, 1);
+        return effect(canvas, stream.canvas, frame, stream.track);
       });
     };
-    flash = function(callback, file) {
+    flash = function(callback) {
       full.el.flash.show();
-      transfer.content.kendoStop().kendoAnimate({
-        effects: "transfer",
-        target: $("#destination"),
-        duration: 1000,
-        ease: "ease-in",
-        complete: function() {
-          $.publish("/bottom/thumbnail", [file]);
-          transfer.destroy();
-          transfer = {};
-          return callback();
-        }
-      });
       return full.el.flash.hide();
     };
     capture = function(callback) {
-      var data, image, name;
-      image = canvas.toDataURL("image/jpeg", 1.0);
-      name = new Date().getTime();
-      data = {
-        src: image,
-        height: full.content.height(),
-        width: full.content.width()
-      };
-      transfer = new kendo.View(full.container, transferImg, data);
-      transfer.render();
-      transfer.content.offset({
-        left: full.el.wrapper.offset().left
-      });
-      return transfer.find("img").load(function() {
-        var file;
-        file = {
-          type: "jpg",
-          name: "" + name + ".jpg",
-          file: image
-        };
-        filewrapper.save(file.name, image);
-        $.publish("/gallery/add", [file]);
-        return flash(callback, file);
-      });
+      $.publish("/postman/deliver", [[], "/capture"]);
+      return flash();
     };
     index = {
       current: function() {
@@ -105,9 +62,6 @@
       });
       $.subscribe("/countdown/paparazzi", function() {
         return full.el.paparazzi.removeClass("hidden");
-      });
-      $.subscribe("/capture/video", function() {
-        return pub.video();
       });
       $.subscribe("/full/filters/show", function(show) {
         var duration;
@@ -157,31 +111,11 @@
         return full.find(".filters-list", "filters");
       }
     };
-    canvases = {
-      setup: function() {
-        canvas = document.createElement("canvas");
-        video = document.createElement("canvas");
-        video.width = 720;
-        video.height = 540;
-        canvas.width = 360;
-        canvas.height = 270;
-        $(canvas).attr("style", "width: " + video.width + "px; height: " + video.height + "px;");
-        ctx = canvas.getContext("2d");
-        ctx.scale(-1, 1);
-        ctx.translate(-canvas.width, 0);
-        videoCtx = video.getContext("2d");
-        return videoCtx.scale(0.5, 0.5);
-      }
-    };
     return pub = {
       init: function(selector) {
-        $.publish("/postman/deliver", [null, "/camera/request"]);
         full = new kendo.View(selector, template);
-        canvases.setup();
-        full.render().prepend(canvas);
         elements.cache(full);
-        subscribe(pub);
-        return draw();
+        return subscribe(pub);
       },
       show: function(item) {
         if (!paused) {

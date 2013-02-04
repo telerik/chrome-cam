@@ -10,12 +10,6 @@
     ctx = canvas.getContext("2d");
     track = {};
     paused = false;
-    if (!canvas) {
-      throw "No no no no no no";
-    }
-    if (!ctx) {
-      throw "no no :(";
-    }
     skip = false;
     skipBit = 0;
     skipMax = 10;
@@ -56,8 +50,7 @@
         name: "" + name + ".jpg",
         file: image
       };
-      filewrapper.save(file.name, image);
-      $.publish("/file/save", [file.name, image]);
+      $.publish("/file/save", [file]);
       return once = $.subscribe("/file/saved/{#file.name}", function() {
         $.unsubscribe(once);
         return $.publish("/gallery/add", [file]);

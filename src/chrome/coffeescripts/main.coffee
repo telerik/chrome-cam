@@ -1,11 +1,5 @@
-# Filename: main.js
-
-require([
-
-  # Load our app module and pass it to our definition function
-  'order!libs/jquery/jquery'
-  'app'
-
+require [
+    'order!libs/jquery/jquery'
+    'chrome'
 ], ($, app) ->
-	app.init()
-)
+    app.init()

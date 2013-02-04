@@ -16,13 +16,13 @@ define ['mylibs/utils/utils'],
 
   # custom compare function that sorts images by their date
   compare = (a,b) ->
-    
+
     if a.name < b.name
       return -1
-  
+
     if a.name > b.name
       return 1
-  
+
     return 0
 
   getFileExtension = (filename) ->
@@ -92,10 +92,8 @@ define ['mylibs/utils/utils'],
           fileWriter.onerror = errorHandler
 
           # write the blob to the file system
-
-          fileWriter.abort()
           fileWriter.write blob
-          
+
       # we didn't get access to the file system for some reason
       , errorHandler
 
@@ -126,7 +124,7 @@ define ['mylibs/utils/utils'],
 
     # invoke the chrome file chooser saying that we are going to save a file
     chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
-      
+
       return unless fileEntry?
 
       # create the writer
@@ -160,7 +158,7 @@ define ['mylibs/utils/utils'],
 
         # create an array for actual files
         files = []
-        
+
         # create a reader for reading files
         dirReader = fs.root.createReader()
 
@@ -172,7 +170,7 @@ define ['mylibs/utils/utils'],
 
             # get a count of how many files we are expecting by adding them to an array
             # if they are of type 'file'
-            for entry in results  
+            for entry in results
               if entry.isFile
                 entries.push(entry)
 
@@ -205,7 +203,7 @@ define ['mylibs/utils/utils'],
                       files.push({ name: name, file: this.result, type: type, strip: false })
 
                       if files.length == entries.length
-                          
+
                         # sort the files array by name
                         files.sort(compare)
 
@@ -244,7 +242,7 @@ define ['mylibs/utils/utils'],
               if deletedCount == totalCount
                 $.publish "/postman/deliver", [ {}, "/file/cleared" ]
 
-  pub = 
+  pub =
 
     init: (kb) ->
 

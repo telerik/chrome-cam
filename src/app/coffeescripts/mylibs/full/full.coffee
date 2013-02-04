@@ -6,11 +6,6 @@ define [
   'text!mylibs/full/views/full.html'
   'text!mylibs/full/views/transfer.html'
 ], (kendo, effects, utils, filewrapper, template, transferImg) ->
-    
-    canvas = {}
-    ctx = {}
-    video = {}
-    videoCtx = {}
     paused = true
     frame = 0
     full = {}
@@ -19,7 +14,7 @@ define [
 
     paparazzi = {}
 
-    # the main draw loop which renders the live video effects      
+    # the main draw loop which renders the live video effects
     draw = ->
         # subscribe to the app level draw event
         $.subscribe "/camera/stream", (stream) ->
@@ -30,57 +25,36 @@ define [
             # like old movie and vhs. most effects simply ignore this
             frame++
 
-            # pass in the webgl canvas, the canvas that contains the 
+            # pass in the webgl canvas, the canvas that contains the
             # video drawn from the application canvas and the current frame.
             effects.advance stream.canvas
             effect canvas, stream.canvas, frame, stream.track
 
-            request = ->
-                $.publish "/postman/deliver", [null, "/camera/request"]
-            setTimeout request, 1
+    flash = (callback) ->
 
-    flash = (callback, file) ->
-
-        #  TODO: use enabled value
+        # #  TODO: use enabled value
         full.el.flash.show()
-
-        transfer.content.kendoStop().kendoAnimate 
-            effects: "transfer",  
-            target: $("#destination"), 
-            duration: 1000, 
-            ease: "ease-in",
-            complete: ->
-                $.publish "/bottom/thumbnail", [file]
-                transfer.destroy()
-                transfer = {}
-
-                callback()
 
         full.el.flash.hide()
 
     capture = (callback) ->
+        $.publish "/postman/deliver", [ [], "/capture" ]
 
-        image = canvas.toDataURL("image/jpeg", 1.0)
-        name = new Date().getTime()
+        # TODO: reimplement transfer
+        # transfer.content.kendoStop().kendoAnimate
+        #     effects: "transfer",
+        #     target: $("#destination"),
+        #     duration: 1000,
+        #     ease: "ease-in",
+        #     complete: ->
+        #         $.publish "/bottom/thumbnail", [file]
+        #         transfer.destroy()
+        #         transfer = {}
 
-        data = { src: image, height: full.content.height(), width: full.content.width() }
+        #         callback()
 
-        transfer = new kendo.View(full.container, transferImg, data)
-        transfer.render()
-
-        # transfer image is fixed position so we have to give it a left offset
-        transfer.content.offset({ left: full.el.wrapper.offset().left })
-        
-        transfer.find("img").load ->
-
-            # set the name of this image to the current time string
-            file = { type: "jpg", name: "#{name}.jpg", file: image }
-
-            filewrapper.save(file.name, image)
-
-            $.publish "/gallery/add", [file]
-
-            flash(callback, file)
+        # TODO: bottom thumbnail update
+        flash()
 
     index =
         current: ->
@@ -102,15 +76,12 @@ define [
 
         $.subscribe "/capture/photo", ->
             pub.photo()
-        
+
         $.subscribe "/capture/paparazzi", ->
             pub.paparazzi()
 
         $.subscribe "/countdown/paparazzi", ->
              full.el.paparazzi.removeClass "hidden"
-
-        $.subscribe "/capture/video", ->
-            pub.video()
 
         $.subscribe "/full/filters/show", (show) ->
             duration = 200
@@ -151,43 +122,17 @@ define [
             full.find(".paparazzi", "paparazzi")
             full.find(".filters-list", "filters")
 
-    canvases = 
-        setup: ->
-            # create a new canvas for drawing
-            canvas = document.createElement "canvas"
-            video = document.createElement "canvas"
-            video.width = 720
-            video.height = 540
-            canvas.width = 360
-            canvas.height = 270
-            $(canvas).attr("style", "width: #{video.width}px; height: #{video.height}px;")
-            ctx = canvas.getContext "2d"
-            ctx.scale -1, 1
-            ctx.translate -canvas.width, 0
-            videoCtx = video.getContext "2d"
-            videoCtx.scale 0.5, 0.5
-
-    pub = 
+    pub =
 
         init: (selector) ->
 
-            # start the camera ping/pong
-            $.publish "/postman/deliver", [ null, "/camera/request" ]
-
             full = new kendo.View(selector, template)
-
-            # set up canvases for receiving the video feed and applying effects
-            canvases.setup()
-
-            full.render().prepend(canvas)
 
             # find and cache the necessary elements
             elements.cache full
 
             # subscribe to external events an map them to internal functions
             subscribe pub
-
-            draw()
 
         show: (item) ->
 
@@ -227,7 +172,7 @@ define [
 
             callback = ->
                 $.publish "/bottom/update", [ "full" ]
-                
+
             capture callback, index: 1, count: 1
 
         paparazzi: ->
@@ -240,14 +185,14 @@ define [
                 full.el.wrapper.addClass "paparazzi-#{left}"
 
             callback = ->
-                
+
                 callback = ->
 
                     callback = ->
                         $.publish "/bottom/update", [ "full" ]
                         full.el.wrapper.removeClass "paparazzi-1"
                         full.el.paparazzi.addClass "hidden"
-                    
+
                     advance()
                     capture callback, index: 3, count: 3
 

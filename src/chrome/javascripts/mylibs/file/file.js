@@ -83,7 +83,6 @@
           return fileEntry.createWriter(function(fileWriter) {
             fileWriter.onwrite = onwrite;
             fileWriter.onerror = errorHandler;
-            fileWriter.abort();
             return fileWriter.write(blob);
           });
         }, errorHandler);
