@@ -115,7 +115,6 @@ define [
             effectId = item.id
             unless temp
                 full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
-            $.publish "/postman/deliver", [ item.tracks, "/tracking/enable" ]
             $.publish "/postman/deliver", [ effectId, "/effects/select" ]
 
         filter:

@@ -124,7 +124,6 @@
         if (!temp) {
           full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
         }
-        $.publish("/postman/deliver", [item.tracks, "/tracking/enable"]);
         return $.publish("/postman/deliver", [effectId, "/effects/select"]);
       },
       filter: {

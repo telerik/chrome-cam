@@ -4,16 +4,15 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/localization/localization', 'libs/face/track', 'mylibs/effects/effects'], function(postman, utils, file, localization, face, effects) {
     'use strict';
 
-    var canvas, capture, ctx, draw, effect, errback, frame, hollaback, iframe, menu, paused, pub, skip, skipBit, skipMax, supported, track, update;
+    var canvas, capture, ctx, draw, effect, errback, frame, hollaback, iframe, menu, paused, pub, supported, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    track = {};
+    track = {
+      faces: []
+    };
     paused = false;
     frame = 0;
-    skip = false;
-    skipBit = 0;
-    skipMax = 10;
     supported = true;
     effect = effects.data[0];
     menu = function() {
@@ -38,17 +37,16 @@
       return window.requestAnimationFrame(draw);
     };
     update = function() {
-      var fakeTrackingInfo;
       if (paused) {
         return;
       }
       ctx.drawImage(video, 0, 0, video.width, video.height);
+      if (effect.tracks && frame % 4 === 0) {
+        track = face.track(canvas);
+      }
       frame++;
-      fakeTrackingInfo = {
-        faces: []
-      };
       effects.advance(canvas);
-      return effect.filter(canvas, canvas, frame, fakeTrackingInfo);
+      return effect.filter(canvas, canvas, frame, track);
     };
     capture = function() {
       var image, name, saveFinished;
@@ -102,8 +100,7 @@
               e = _ref[_i];
               _results.push({
                 id: e.id,
-                name: e.name,
-                tracks: !!e.tracks
+                name: e.name
               });
             }
             return _results;

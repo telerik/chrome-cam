@@ -11,15 +11,10 @@ define [
     iframe = iframe = document.getElementById("iframe")
     canvas = document.getElementById("canvas")
     ctx = canvas.getContext("2d")
-    track = {}
+    track = { faces: [] }
     paused = false
 
     frame = 0
-
-    # skip frames for face detection. grasping at straws.
-    skip = false
-    skipBit = 0
-    skipMax = 10
 
     supported = true
 
@@ -44,10 +39,10 @@ define [
         # the camera is paused when it isn't being used to increase app performance
         return if paused
 
-        #if skipBit == 0
-        #   track = face.track video
-
         ctx.drawImage video, 0, 0, video.width, video.height
+
+        if effect.tracks and frame % 4 == 0
+           track = face.track canvas
 
         # increment the curent frame counter. this is used for animated effects
         # like old movie and vhs. most effects simply ignore this
@@ -55,15 +50,8 @@ define [
 
         # pass in the webgl canvas, the canvas that contains the
         # video drawn from the application canvas and the current frame.
-        fakeTrackingInfo =
-            faces: []
         effects.advance canvas
-        effect.filter canvas, canvas, frame, fakeTrackingInfo
-
-        #if skipBit < 4
-        #   skipBit++
-        #else
-        #   skipBit = 0
+        effect.filter canvas, canvas, frame, track
 
     capture = ->
         image = canvas.toDataURL("image/jpeg", 1.0)
@@ -111,7 +99,7 @@ define [
                 $.publish "/postman/deliver", [ localization, "/localization/response" ]
 
             $.subscribe "/effects/request", ->
-                filters = ( id: e.id, name: e.name, tracks: !!e.tracks for e in effects.data )
+                filters = ( id: e.id, name: e.name for e in effects.data )
                 $.publish "/postman/deliver", [ filters, "/effects/response" ]
 
             $.subscribe "/effects/select", (id) ->
