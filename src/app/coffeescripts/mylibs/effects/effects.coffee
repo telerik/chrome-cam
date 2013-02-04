@@ -1,5 +1,5 @@
 define([
-  'mylibs/assets/assets' 
+  'mylibs/assets/assets'
   'libs/face/ccv'
   'libs/face/face'
 ], (assets) ->
@@ -32,7 +32,7 @@ define([
         ctx = canvas.getContext "2d"
         ctx.drawImage element, x, y, width, height
 
-    pub = 
+    pub =
 
         clearBuffer: ->
 
@@ -47,21 +47,21 @@ define([
             else
                 texture = webgl.texture(element)
 
-        data: [ 
+        data: [
 
             {
                 id: "normal"
                 name: "Normal"
                 filter: (canvas, element) ->
                     effect = (canvas) ->
-                        canvas                            
+                        canvas
                     draw(canvas, element, effect)
             }
 
             {
                 id: "andy"
                 name: "Andy"
-                filter: (canvas, element, frame) -> 
+                filter: (canvas, element, frame) ->
                     effect = (canvas, element) ->
                         canvas.quadRotate 0, 0, 0, 0
                         canvas.popArt()
@@ -71,27 +71,18 @@ define([
             {
                 id: "blockhead"
                 name: "Blockhead"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.blockhead canvas.width / 2,  canvas.height / 2, 200, 300, 1
                     draw(canvas, element, effect)
             }
 
-            # {
-            #     id: "blueberry"
-            #     name: "Blueberry"
-            #     filter: (canvas, element) -> 
-            #         effect = (canvas, element) ->
-            #             canvas.blueberry()
-            #         draw(canvas, element, effect)
-            # }
-
             {
                 id: "bulge"
                 name: "Bulge"
                 filter: (canvas, element) ->
-                    effect = (canvas) -> 
-                        canvas.bulgePinch canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, .65 
+                    effect = (canvas) ->
+                        canvas.bulgePinch canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, .65
                     draw(canvas, element, effect)
             }
 
@@ -99,7 +90,7 @@ define([
                 id: "colorHalfTone"
                 name: "Color half tone"
                 kind: "webgl"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.colorHalftone canvas.width / 2,  canvas.height / 2, .30, 3
                     draw(canvas, element, effect)
@@ -132,8 +123,8 @@ define([
 
                             eyeWidth = eyeFactor * element.width
 
-                            canvas.bulgePinch (x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
-                            canvas.bulgePinch (x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65 
+                            canvas.bulgePinch (x + width / 2) - eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65
+                            canvas.bulgePinch (x + width / 2) + eyeWidth, (y + height / 3) + eyeWidth, eyeWidth * 2, .65
                             canvas.bulgePinch (x + width / 2) - eyeWidth*2, (y + height / 3) + eyeWidth*1.8, eyeWidth * 2.25, .5
                             canvas.bulgePinch (x + width / 2) + eyeWidth*2, (y + height / 3) + eyeWidth*1.8, eyeWidth * 2.25, .5
 
@@ -144,7 +135,7 @@ define([
                 id: "dent"
                 name: "Dent"
                 kind: "webgl"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.bulgePinch canvas.width / 2 , canvas.height / 2, canvas.width / 4, -.4
                     draw(canvas, element, effect)
@@ -186,8 +177,8 @@ define([
 
                             eyeWidth = eyeFactor * element.width
 
-                            canvas.bulgePinch (x + width / 2) - eyeWidth, y + height / 3, eyeWidth * 2, .65 
-                            canvas.bulgePinch (x + width / 2) + eyeWidth, y + height / 3, eyeWidth * 2, .65 
+                            canvas.bulgePinch (x + width / 2) - eyeWidth, y + height / 3, eyeWidth * 2, .65
+                            canvas.bulgePinch (x + width / 2) + eyeWidth, y + height / 3, eyeWidth * 2, .65
 
                     draw(canvas, element, effect)
             }
@@ -246,7 +237,7 @@ define([
                 id: "inverted"
                 name: "Inverted"
                 kind: "webgl"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.invert()
                     draw(canvas, element, effect)
@@ -256,7 +247,7 @@ define([
                 id: "kaleidoscope"
                 name: "Kaleidoscope"
                 kind: "webgl"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.kaleidoscope canvas.width / 2,  canvas.height / 2, 120, 0
                     draw(canvas, element, effect)
@@ -265,7 +256,7 @@ define([
             {
                 id: "mirrorLeft"
                 name: "Mirror left"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.mirror 0
                     draw(canvas, element, effect)
@@ -274,7 +265,7 @@ define([
             {
                 id: "oldFilm"
                 name: "Old film"
-                filter: (canvas, element, frame) -> 
+                filter: (canvas, element, frame) ->
                     effect = (canvas, element) ->
                         canvas.oldFilm frame
                     draw(canvas, element, effect)
@@ -284,16 +275,16 @@ define([
                 id: "photocopy"
                 name: "Photocopy"
                 kind: "webgl"
-                filter: (canvas, element, frame) -> 
+                filter: (canvas, element, frame) ->
                     effect = (canvas, element) ->
                         canvas.photocopy .35, frame
                     draw(canvas, element, effect)
             }
 
             {
-                id: "pinch" 
+                id: "pinch"
                 name: "Pinch"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.bulgePinch canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, -.65
                     draw(canvas, element, effect)
@@ -313,7 +304,7 @@ define([
             {
                 id: "quad"
                 name: "Quad"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.quadRotate 0, 0, 0, 0
                     draw(canvas, element, effect)
@@ -322,7 +313,7 @@ define([
             {
                 id: "reflection"
                 name: "Reflection"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.mirror Math.PI * 1.5
                     draw(canvas, element, effect)
@@ -331,7 +322,7 @@ define([
             {
                 id: "sepia"
                 name: "Sepia"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.sepia 120
                     draw(canvas, element, effect)
@@ -340,7 +331,7 @@ define([
             {
                 id: "swirl"
                 name: "Swirl"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.swirl canvas.width / 2,  canvas.height / 2, (canvas.width / 2) / 2, 3
                     draw(canvas, element, effect)
@@ -349,7 +340,7 @@ define([
             {
                 id: "zoomBlur"
                 name: "Zoom blur"
-                filter: (canvas, element) -> 
+                filter: (canvas, element) ->
                     effect = (canvas, element) ->
                         canvas.zoomBlur canvas.width / 2,  canvas.height / 2, 2, canvas.height / 5
                     draw(canvas, element, effect)
