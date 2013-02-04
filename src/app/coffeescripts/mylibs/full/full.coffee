@@ -4,12 +4,10 @@ define [
   'mylibs/utils/utils'
   'mylibs/file/filewrapper'
   'text!mylibs/full/views/full.html'
-  'text!mylibs/full/views/transfer.html'
-], (kendo, effects, utils, filewrapper, template, transferImg) ->
+], (kendo, effects, utils, filewrapper, template) ->
     paused = true
     frame = 0
     full = {}
-    transfer = {}
     effect = {}
 
     paparazzi = {}
@@ -98,8 +96,6 @@ define [
     elements =
         cache: (full) ->
             full.find(".timer", "timer")
-            full.find(".transfer", "transfer")
-            full.find(".transfer img", "source")
             full.find(".wrapper", "wrapper")
             full.find(".paparazzi", "paparazzi")
             full.find(".filters-list", "filters")

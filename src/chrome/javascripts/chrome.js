@@ -52,7 +52,6 @@
       };
       $.publish("/file/save", [file]);
       return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
-        console.log(file);
         $.unsubscribe(saveFinished);
         return $.publish("/postman/deliver", [[file], "/captured/image"]);
       });
