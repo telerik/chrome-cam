@@ -57,9 +57,9 @@ define [
         file = { type: "jpg", name: "#{name}.jpg", file: image }
 
         $.publish "/file/save", [file]
-        saveFinished = $.subscribe "/file/saved/{#file.name}", ->
+        saveFinished = $.subscribe "/file/saved/#{file.name}", ->
             $.unsubscribe saveFinished
-            $.publish "/gallery/add", [file]
+            $.publish "/postman/deliver", [ [file], "/captured/image" ]
 
     hollaback = (stream) ->
         video = document.getElementById("video")

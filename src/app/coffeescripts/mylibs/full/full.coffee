@@ -30,31 +30,14 @@ define [
             effects.advance stream.canvas
             effect canvas, stream.canvas, frame, stream.track
 
-    flash = (callback) ->
-
-        # #  TODO: use enabled value
-        full.el.flash.show()
-
-        full.el.flash.hide()
-
     capture = (callback) ->
+
+        captured = $.subscribe "/captured/image", (file) ->
+            $.unsubscribe captured
+            $.publish "/gallery/add", [file]
+            callback()
+
         $.publish "/postman/deliver", [ [], "/camera/capture" ]
-
-        # TODO: reimplement transfer
-        # transfer.content.kendoStop().kendoAnimate
-        #     effects: "transfer",
-        #     target: $("#destination"),
-        #     duration: 1000,
-        #     ease: "ease-in",
-        #     complete: ->
-        #         $.publish "/bottom/thumbnail", [file]
-        #         transfer.destroy()
-        #         transfer = {}
-
-        #         callback()
-
-        # TODO: bottom thumbnail update
-        flash()
 
     index =
         current: ->
@@ -114,7 +97,6 @@ define [
 
     elements =
         cache: (full) ->
-            full.find(".flash", "flash")
             full.find(".timer", "timer")
             full.find(".transfer", "transfer")
             full.find(".transfer img", "source")
@@ -169,7 +151,6 @@ define [
             mouseout: (e) ->
                 index.unpreview()
         photo: ->
-
             callback = ->
                 $.publish "/bottom/update", [ "full" ]
 

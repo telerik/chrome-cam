@@ -77,6 +77,7 @@ define ['mylibs/utils/utils'],
     onwrite = (e) ->
       $.publish "/share/gdrive/upload", [ blob ]
       $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
+      $.publish "/file/saved/#{name}"
 
     # get the file from the file system, creating it if it doesn't exist
     withFileSystem (fs) ->

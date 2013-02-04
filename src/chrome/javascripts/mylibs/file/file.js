@@ -74,7 +74,8 @@
       window.theBlob = blob;
       onwrite = function(e) {
         $.publish("/share/gdrive/upload", [blob]);
-        return $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
+        $.publish("/postman/deliver", [{}, "/file/saved/" + name, []]);
+        return $.publish("/file/saved/" + name);
       };
       return withFileSystem(function(fs) {
         return fs.root.getFile(name, {

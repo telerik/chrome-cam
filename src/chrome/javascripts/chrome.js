@@ -51,9 +51,10 @@
         file: image
       };
       $.publish("/file/save", [file]);
-      return saveFinished = $.subscribe("/file/saved/{#file.name}", function() {
+      return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
+        console.log(file);
         $.unsubscribe(saveFinished);
-        return $.publish("/gallery/add", [file]);
+        return $.publish("/postman/deliver", [[file], "/captured/image"]);
       });
     };
     hollaback = function(stream) {

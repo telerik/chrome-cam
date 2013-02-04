@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/effects/effects', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html', 'text!mylibs/full/views/transfer.html'], function(kendo, effects, utils, filewrapper, template, transferImg) {
-    var capture, draw, effect, elements, flash, frame, full, index, paparazzi, paused, pub, subscribe, transfer;
+    var capture, draw, effect, elements, frame, full, index, paparazzi, paused, pub, subscribe, transfer;
     paused = true;
     frame = 0;
     full = {};
@@ -19,13 +19,15 @@
         return effect(canvas, stream.canvas, frame, stream.track);
       });
     };
-    flash = function(callback) {
-      full.el.flash.show();
-      return full.el.flash.hide();
-    };
     capture = function(callback) {
-      $.publish("/postman/deliver", [[], "/camera/capture"]);
-      return flash();
+      var captured;
+      captured = $.subscribe("/captured/image", function(file) {
+        console.log("Captured ", file);
+        $.unsubscribe(captured);
+        $.publish("/gallery/add", [file]);
+        return callback();
+      });
+      return $.publish("/postman/deliver", [[], "/camera/capture"]);
     };
     index = {
       current: function() {
@@ -102,7 +104,6 @@
     };
     elements = {
       cache: function(full) {
-        full.find(".flash", "flash");
         full.find(".timer", "timer");
         full.find(".transfer", "transfer");
         full.find(".transfer img", "source");
