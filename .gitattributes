@@ -1,1 +1,4 @@
-* eol=lf
+*.js eol=lf
+*.coffee eol=lf
+*.css eol=lf
+*.html eol=lf
