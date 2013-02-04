@@ -2,22 +2,12 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/full/views/full.html'], function(kendo, utils, filewrapper, template) {
-    var capture, draw, effectId, elements, frame, full, index, paparazzi, paused, pub, subscribe;
+    var capture, effectId, elements, frame, full, index, paparazzi, paused, pub, subscribe;
     paused = true;
     frame = 0;
     full = {};
     effectId = "";
     paparazzi = {};
-    draw = function() {
-      return $.subscribe("/camera/stream", function(stream) {
-        if (paused) {
-          return;
-        }
-        frame++;
-        effects.advance(stream.canvas);
-        return effect(canvas, stream.canvas, frame, stream.track);
-      });
-    };
     capture = function(callback) {
       var captured;
       captured = $.subscribe("/captured/image", function(file) {
@@ -134,7 +124,8 @@
         if (!temp) {
           full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
         }
-        return $.publish("/postman/deliver", [item.tracks, "/tracking/enable"]);
+        $.publish("/postman/deliver", [item.tracks, "/tracking/enable"]);
+        return $.publish("/postman/deliver", [effectId, "/effects/select"]);
       },
       filter: {
         click: function(e) {

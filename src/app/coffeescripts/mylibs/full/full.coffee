@@ -11,22 +11,6 @@ define [
 
     paparazzi = {}
 
-    # the main draw loop which renders the live video effects
-    draw = ->
-        # subscribe to the app level draw event
-        $.subscribe "/camera/stream", (stream) ->
-
-            return if paused
-
-            # increment the curent frame counter. this is used for animated effects
-            # like old movie and vhs. most effects simply ignore this
-            frame++
-
-            # pass in the webgl canvas, the canvas that contains the
-            # video drawn from the application canvas and the current frame.
-            effects.advance stream.canvas
-            effect canvas, stream.canvas, frame, stream.track
-
     capture = (callback) ->
 
         captured = $.subscribe "/captured/image", (file) ->
@@ -132,6 +116,7 @@ define [
             unless temp
                 full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=#{item.id}]").addClass("selected")
             $.publish "/postman/deliver", [ item.tracks, "/tracking/enable" ]
+            $.publish "/postman/deliver", [ effectId, "/effects/select" ]
 
         filter:
             click: (e) ->

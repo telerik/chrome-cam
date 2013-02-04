@@ -4,16 +4,18 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/localization/localization', 'libs/face/track', 'mylibs/effects/effects'], function(postman, utils, file, localization, face, effects) {
     'use strict';
 
-    var canvas, capture, ctx, draw, errback, hollaback, iframe, menu, paused, pub, skip, skipBit, skipMax, supported, track, update;
+    var canvas, capture, ctx, draw, effect, errback, frame, hollaback, iframe, menu, paused, pub, skip, skipBit, skipMax, supported, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     track = {};
     paused = false;
+    frame = 0;
     skip = false;
     skipBit = 0;
     skipMax = 10;
     supported = true;
+    effect = effects.data[0];
     menu = function() {
       chrome.contextMenus.onClicked.addListener(function(info, tab) {
         return $.publish("/postman/deliver", [{}, "/menu/click/" + info.menuItemId]);
@@ -36,10 +38,17 @@
       return window.requestAnimationFrame(draw);
     };
     update = function() {
+      var fakeTrackingInfo;
       if (paused) {
         return;
       }
-      return ctx.drawImage(video, 0, 0, video.width, video.height);
+      ctx.drawImage(video, 0, 0, video.width, video.height);
+      frame++;
+      fakeTrackingInfo = {
+        faces: []
+      };
+      effects.advance(canvas);
+      return effect.filter(canvas, canvas, frame, fakeTrackingInfo);
     };
     capture = function() {
       var image, name, saveFinished;
@@ -100,6 +109,18 @@
             return _results;
           })();
           return $.publish("/postman/deliver", [filters, "/effects/response"]);
+        });
+        $.subscribe("/effects/select", function(id) {
+          var e, _i, _len, _ref, _results;
+          _ref = effects.data;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            e = _ref[_i];
+            if (e.id === id) {
+              _results.push(effect = e);
+            }
+          }
+          return _results;
         });
         $.subscribe("/window/close", function() {
           return window.close();

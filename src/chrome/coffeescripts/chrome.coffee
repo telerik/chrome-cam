@@ -14,12 +14,16 @@ define [
     track = {}
     paused = false
 
+    frame = 0
+
     # skip frames for face detection. grasping at straws.
     skip = false
     skipBit = 0
     skipMax = 10
 
     supported = true
+
+    effect = effects.data[0]
 
     # TODO: Move the context menu to its own file
     menu = ->
@@ -44,6 +48,17 @@ define [
         #   track = face.track video
 
         ctx.drawImage video, 0, 0, video.width, video.height
+
+        # increment the curent frame counter. this is used for animated effects
+        # like old movie and vhs. most effects simply ignore this
+        frame++
+
+        # pass in the webgl canvas, the canvas that contains the
+        # video drawn from the application canvas and the current frame.
+        fakeTrackingInfo =
+            faces: []
+        effects.advance canvas
+        effect.filter canvas, canvas, frame, fakeTrackingInfo
 
         #if skipBit < 4
         #   skipBit++
@@ -98,6 +113,9 @@ define [
             $.subscribe "/effects/request", ->
                 filters = ( id: e.id, name: e.name, tracks: !!e.tracks for e in effects.data )
                 $.publish "/postman/deliver", [ filters, "/effects/response" ]
+
+            $.subscribe "/effects/select", (id) ->
+                effect = e for e in effects.data when e.id is id
 
             $.subscribe "/window/close", ->
                 window.close()

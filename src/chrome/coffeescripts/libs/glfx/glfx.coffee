@@ -1,7 +1,1 @@
-define([
-  'order!libs/glfx/glfx.min'
-], ->
-  
-  return fx
-
-)
+define [ 'order!libs/glfx/glfx.min' ], -> fx
