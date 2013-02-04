@@ -23,9 +23,9 @@ define [], () ->
 			byteString = unescape(dataURL.split(',')[1])
 
 		mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0]
-		
+
 		ab = new ArrayBuffer(byteString.length, 'binary')
-		
+
 		ia = new Uint8Array(ab)
 
 		for i in [0...byteString.length]
@@ -33,7 +33,7 @@ define [], () ->
 
 		new Blob([ia], { type: mimeString })
 
-	pub = 
+	pub =
 
 		init: ->
 			Image.prototype.toDataURL = (format) ->
@@ -50,5 +50,5 @@ define [], () ->
 
 			toBlob(dataURL)
 
-		getAnimationFrame: -> 
+		getAnimationFrame: ->
 			window.requestAnimationFrame || window.webkitRequestAnimationFrame

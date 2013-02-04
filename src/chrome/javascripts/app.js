@@ -10,6 +10,12 @@
     ctx = canvas.getContext("2d");
     track = {};
     paused = false;
+    if (!canvas) {
+      throw "No no no no no no";
+    }
+    if (!ctx) {
+      throw "no no :(";
+    }
     skip = false;
     skipBit = 0;
     skipMax = 10;
@@ -32,42 +38,23 @@
       });
     };
     draw = function() {
-      return update();
+      update();
+      return utils.getAnimationFrame()(draw);
     };
     update = function() {
-      var buffer, img;
       if (paused) {
         return;
       }
-      if (skipBit === 0) {
-        track = face.track(video);
-      }
-      try {
-        ctx.drawImage(video, 0, 0, video.width, video.height);
-      } catch (ex) {
-
-      }
-      img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      buffer = img.data.buffer;
-      $.publish("/postman/deliver", [
-        {
-          image: buffer,
-          track: track
-        }, "/camera/update", [buffer]
-      ]);
-      if (skipBit < 4) {
-        return skipBit++;
-      } else {
-        return skipBit = 0;
-      }
+      console.log("update");
+      return ctx.drawImage(video, 0, 0, video.width, video.height);
     };
     hollaback = function(stream) {
-      var e, video;
-      e = window.URL || window.webkitURL;
+      var url, video;
+      url = window.URL || window.webkitURL;
       video = document.getElementById("video");
-      video.src = e ? e.createObjectURL(stream) : stream;
+      video.src = url ? url.createObjectURL(stream) : stream;
       video.play();
-      return draw();
+      return utils.getAnimationFrame()(draw);
     };
     errback = function() {
       return update = function() {
@@ -80,9 +67,6 @@
         utils.init();
         $.subscribe("/camera/pause", function(message) {
           return paused = message.paused;
-        });
-        $.subscribe("/camera/request", function() {
-          return update();
         });
         iframe.src = "app/index.html";
         postman.init(iframe.contentWindow);
