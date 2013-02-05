@@ -118,10 +118,7 @@ define [
             $.subscribe "/camera/capture", capture
 
             $.subscribe "/camera/pause", (message) ->
-                if message.paused
-                    $(canvas).hide()
-                else
-                    $(canvas).show()
+                $(".wrapper").toggle (not message.paused)
 
             # get the files
             file.init()

@@ -133,11 +133,7 @@
         });
         $.subscribe("/camera/capture", capture);
         $.subscribe("/camera/pause", function(message) {
-          if (message.paused) {
-            return $(canvas).hide();
-          } else {
-            return $(canvas).show();
-          }
+          return $(".wrapper").toggle(!message.paused);
         });
         file.init();
         face.init(0, 0, 0, 0);

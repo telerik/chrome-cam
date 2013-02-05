@@ -10,7 +10,7 @@ iframe {
     overflow:hidden;
 }
 
-#video, #canvas {
+#video, #canvas, .wrapper {
     width: 720px;
     height: 540px;
 }
@@ -19,7 +19,7 @@ iframe {
     display: none;
 }
 
-#canvas {
+.wrapper {
     position: absolute;
     z-index: 1000000000;
     top: 43px;
