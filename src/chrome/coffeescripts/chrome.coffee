@@ -135,6 +135,8 @@ define [
 
             $.subscribe "/camera/pause", (message) ->
                 wrapper.toggle (not message.paused)
+                image = canvas.toDataURL("image/jpeg", 1.0)
+                $.publish "/postman/deliver", [ image, "/camera/snapshot" ]
 
             # get the files
             file.init()

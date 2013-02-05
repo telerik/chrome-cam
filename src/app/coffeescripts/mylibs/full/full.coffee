@@ -37,6 +37,9 @@ define [
         $.subscribe "/full/show", (item) ->
             pub.show(item)
 
+        $.subscribe "/camera/snapshot", (url) ->
+            full.el.snapshot.attr "src", url
+
         $.subscribe "/capture/photo", ->
             pub.photo()
 
@@ -79,6 +82,7 @@ define [
         cache: (full) ->
             full.find(".timer", "timer")
             full.find(".wrapper", "wrapper")
+            full.find(".snapshot", "snapshot")
             full.find(".paparazzi", "paparazzi")
             full.find(".filters-list", "filters")
 

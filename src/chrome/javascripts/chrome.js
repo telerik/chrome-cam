@@ -148,7 +148,10 @@
         });
         $.subscribe("/camera/capture", capture);
         $.subscribe("/camera/pause", function(message) {
-          return wrapper.toggle(!message.paused);
+          var image;
+          wrapper.toggle(!message.paused);
+          image = canvas.toDataURL("image/jpeg", 1.0);
+          return $.publish("/postman/deliver", [image, "/camera/snapshot"]);
         });
         file.init();
         face.init(0, 0, 0, 0);

@@ -44,6 +44,9 @@
       $.subscribe("/full/show", function(item) {
         return pub.show(item);
       });
+      $.subscribe("/camera/snapshot", function(url) {
+        return full.el.snapshot.attr("src", url);
+      });
       $.subscribe("/capture/photo", function() {
         return pub.photo();
       });
@@ -94,6 +97,7 @@
       cache: function(full) {
         full.find(".timer", "timer");
         full.find(".wrapper", "wrapper");
+        full.find(".snapshot", "snapshot");
         full.find(".paparazzi", "paparazzi");
         return full.find(".filters-list", "filters");
       }
