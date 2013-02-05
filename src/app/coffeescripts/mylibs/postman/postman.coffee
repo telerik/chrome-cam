@@ -1,40 +1,44 @@
-define [], () ->
+define([
 
-    ###     The Postman!
+], () ->
 
-    The postman is a super simple combination of pub/sub and post message.
+	###		The Postman!
 
-    outgoing: the postman simply listens for the /postman/deliver message and dispatches whatever
-    its contents are as the body of the 'message' object. The address is used by the receiver
-    to determine who should respond to the message.
+	The postman is a super simple combination of pub/sub and post message.
 
-    incoming: the postman listens to the post message event on the window and
-    dispatches the event with the address specified
+	outgoing: the postman simply listens for the /postman/deliver message and dispatches whatever
+	its contents are as the body of the 'message' object. The address is used by the receiver
+	to determine who should respond to the message.
 
-    ###
+	incoming: the postman listens to the post message event on the window and
+	dispatches the event with the address specified
 
-    # anything under this is public
-    pub =
+	###
 
-        init: (r) ->
+	# anything under this is public
+	pub =
 
-            recipient = r
+		init: (r) ->
 
-            # attach an event listener to the window for post messages
-            window.addEventListener "message", (event) ->
-                if event.data.address
-                    # receive the command to save a file
-                    $.publish event.data.address, [event.data.message]
+			recipient = r
 
-            # subscribe to the send event
-            $.subscribe "/postman/deliver", (message, address, block) ->
+			# attach an event listener to the window for post messages
+			window.onmessage = (event) ->
 
-                delivery = {}
+				# receive the command to save a file
+				$.publish event.data.address, [event.data.message]
 
-                # add the address on to the message object
-                delivery.address = address
-                delivery.message = message
 
-                # send the message as a post message to the extension outside
-                # of the sandbox
-                recipient.postMessage delivery, "*", block
+			# subscribe to the send event
+			$.subscribe "/postman/deliver", (message, address, block) ->
+
+				delivery = {}
+
+				# add the address on to the message object
+				delivery.address = address
+				delivery.message = message
+
+				# send the message as a post message to the extension outside
+				# of the sandbox
+				recipient.postMessage delivery, "*", block
+)

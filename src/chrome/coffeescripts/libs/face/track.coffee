@@ -5,34 +5,50 @@ define [
 
     backCanvas = document.createElement "canvas"
     backContext = backCanvas.getContext "2d"
-
-    ready = true
+    w = 300 / 4 * 0.8
+    h = 270 / 4 * 0.8
+    cache = {}
 
     pub =
-        init: () ->
-            backCanvas.width = 320
-            backCanvas.height = 240
 
-        track: (video, callback) ->
-            return unless ready
+        init: (x, y, width, height) ->
 
-            ready = false
+            backCanvas.width = 120
+            backCanvas.height = 90
+
+            cache.comp = [{
+                x: x
+                y: y
+                width: backCanvas.width
+                height: backCanvas.height
+            }]
+
+        track: (video) ->
+
+            track =
+                faces: []
+                trackWidth: backCanvas.width
 
             backContext.drawImage video, 0, 0, backCanvas.width, backCanvas.height
 
-            options =
-                canvas: ccv.grayscale(ccv.pre(backCanvas))
-                cascade: cascade
-                interval: 5
+            comp = ccv.detect_objects cache.ccv = cache.ccv || {
+                canvas: ccv.grayscale(backCanvas)
+                cascade: cascade,
+                interval: 5,
                 min_neighbors: 1
-                async: true
-                worker: 1
+            }
 
-            cb = ccv.detect_objects(options)
-            cb (comp) ->
-                track =
-                    faces: comp
-                    trackWidth: backCanvas.width
+            if comp.length
 
-                callback track
-                ready = true
+                cache.comp = comp
+
+            for i in cache.comp
+
+                track.faces.push {
+                    x: i.x
+                    y: i.y
+                    width: i.width
+                    height: i.height
+                }
+
+            return track

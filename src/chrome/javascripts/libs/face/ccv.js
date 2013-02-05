@@ -170,7 +170,7 @@ var ccv = {
 		return {"index" : idx, "cat" : class_idx};
 	},
 
-	detect_objects : parallable("chrome/javascripts/libs/face/ccv.js", function (canvas, cascade, interval, min_neighbors) {
+	detect_objects : parallable("ccv.js", function (canvas, cascade, interval, min_neighbors) {
 		if (this.shared !== undefined) {
 			var params = get_named_arguments(arguments, ["canvas", "cascade", "interval", "min_neighbors"]);
 			this.shared.canvas = params.canvas;
@@ -447,17 +447,3 @@ var ccv = {
 		return { "pre" : pre, "core" : core, "post" : post };
 	})
 }
-
-addEventListener("message", function (event) {
-	var data = (typeof event.data == "string") ? JSON.parse(event.data) : event.data;
-	if (!data.shared) {
-		return;
-	}
-	var scope = { "shared" : data.shared };
-	var result = parallable.core[data.name].apply(scope, [data.input, data.id, data.worker]);
-	try {
-		postMessage(result);
-	} catch (e) {
-		postMessage(JSON.stringify(result));
-	}
-});
