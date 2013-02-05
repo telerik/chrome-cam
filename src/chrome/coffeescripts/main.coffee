@@ -1,5 +1,4 @@
 require [
-    'order!libs/jquery/jquery'
     'chrome'
-], ($, app) ->
+], (app) ->
     app.init()
