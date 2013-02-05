@@ -1,6 +1,6 @@
 /************ Global ************/
 
-* { margin:0; padding:0; } 
+* { margin:0; padding:0; }
 
 /* Type */
 
@@ -57,11 +57,11 @@ body div { padding-top: 0px; }
 	color: #2d2d2d;
 }
 
-/************ Buttons ************/ 
+/************ Buttons ************/
 
-.km-button, button, .button { 
+.km-button, button, .button {
 	cursor: pointer;
-	text-decoration: none; 
+	text-decoration: none;
 	font-family: "Droid Sans Bold";
 }
 
@@ -70,7 +70,7 @@ body div { padding-top: 0px; }
 .kd-button-action:focus, .kd-button-action.focus{
 	box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
 	-webkit-box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
-}	
+}
 .kd-button-submit:focus, .kd-button-submit.focus,
 .kd-button-share:focus, .kd-button-share.focus,
 .kd-button-action:focus, .kd-button-action.focus {
@@ -150,7 +150,7 @@ body div { padding-top: 0px; }
 
 /* Bar Structure */
 
-.footer { 
+.footer {
 	height: 60px;
 	clear: both;
 }
@@ -162,7 +162,7 @@ body div { padding-top: 0px; }
 	height: 100%;
 	background-color: #fff;
 	border-top: 1px solid #EBEBEB;
-	display: -webkit-flex; 
+	display: -webkit-flex;
 	-webkit-box-align: center;
 	-webkit-box-pack: center;
 }
@@ -192,7 +192,7 @@ body div { padding-top: 0px; }
 
 /* Bar Contents */
 
-.saving h3 { 
+.saving h3 {
 	padding: 20px 0;
 	color: white;
 }
@@ -358,7 +358,7 @@ body div { padding-top: 0px; }
 	}
 
 	.filters-list li { padding: 5px 12px; }
-		.filters-list li:hover { 
+		.filters-list li:hover {
 			background: #eee;
 			cursor: pointer;
 		}
@@ -458,7 +458,7 @@ body div { padding-top: 0px; }
 	left: 0;
 }
 
-	.full > div { 
+	.full > div {
 		margin: auto;
 		width: 720px;
 		height: 540px;
@@ -466,7 +466,7 @@ body div { padding-top: 0px; }
 		top: 45%;
 		margin-top: -240px;
 	}
-	.wrapper canvas { 
+	.wrapper canvas {
 		position: absolute;
 		border: 1px solid #2d2d2d;
 		box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 23px 5px, rgba(0, 0, 0, 0.14902) 0px 2px 6px;
@@ -482,8 +482,6 @@ body div { padding-top: 0px; }
 		background-color: #EDEDED;
 	}
 
-.timer, .wrapper .paparazzi { top: 30px; }
-
 .timer {
 	background: #2d2d2d;
 	border-radius: 2px;
@@ -496,6 +494,7 @@ body div { padding-top: 0px; }
 	line-height: 17px;
 	position: relative;
 	left: 40px;
+	top: 30px;
 }
 	.timer:before {
 		content: "";
@@ -510,33 +509,6 @@ body div { padding-top: 0px; }
 		box-shadow: inset 0px 0px 3px 0 #000;
 		border-radius: 50%;
 	}
-
-.wrapper .paparazzi { left: 50px; }
-.wrapper .paparazzi, .wrapper .paparazzi:before, .wrapper .paparazzi:after {
-	border: 1px solid #ddd;
-	height: 20px;
-	content: '';
-	width: 20px;
-	background: #2d2d2d;
-	position: relative;
-	z-index: 99999;
-}
-	.wrapper .paparazzi:before {
-		top: 4px;
-		left: -8px;
-		display: block;
-	}
-
-	.wrapper .paparazzi:after {
-		top: -12px;
-		left: -15px;
-		display: block;
-	}
-
-.paparazzi-1 .paparazzi,
-.paparazzi-2 .paparazzi:before,
-.paparazzi-3 .paparazzi:after
- { background: #ddd; }
 
 a.canvas img { display: none; }
 
@@ -567,7 +539,7 @@ a.canvas {
 	background-size: 134px 134px;
 	margin-bottom: 80px;
 }
-	.km-content .appInfoHeader h1 { 
+	.km-content .appInfoHeader h1 {
 		margin-left: 115px;
 		font-size: 65px;
 	}
@@ -581,11 +553,11 @@ a.canvas {
 		font-weight: normal;
 	}
 	.about h3 { margin: 0; }
-	.about h4 { 
+	.about h4 {
 		font-weight: normal;
 		position: relative;
 		margin: 2px 0 0;
-		font-size: 13px; 
+		font-size: 13px;
 	}
 	.about h5 {
 		position: relative;
@@ -628,15 +600,15 @@ a.canvas {
 	line-height: 0;
 	height: 0;
 }
- 
+
 .clearfix {
 	display: inline-block;
 }
- 
+
 html[xmlns] .clearfix {
 	display: block;
 }
- 
+
 * html .clearfix {
 	height: 1%;
 }

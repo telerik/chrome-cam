@@ -159,20 +159,20 @@
             };
             return setTimeout((function() {
               return capture(callback, {
-                index: 3,
+                index: 2,
                 count: 3
               });
             }), 1000);
           };
           return setTimeout((function() {
             return capture(callback, {
-              index: 2,
+              index: 1,
               count: 3
             });
           }), 1000);
         };
         return capture(callback, {
-          index: 1,
+          index: 0,
           count: 3
         });
       }

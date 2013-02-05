@@ -14,6 +14,9 @@ define [
     track = { faces: [] }
     paused = false
 
+    wrapper = $(".wrapper")
+    paparazzi = $(".paparazzi", wrapper)
+
     frame = 0
 
     supported = true
@@ -53,8 +56,21 @@ define [
         effects.advance canvas
         effect.filter canvas, canvas, frame, track
 
-    capture = ->
+    capture = (progress) ->
         flash()
+
+        if progress.count > 1
+            if progress.index == 0
+                paparazzi.removeClass "hidden"
+            # HACK: this should be refactored if time permits
+            if progress.index == progress.count - 1
+                setTimeout (->
+                    wrapper.removeClass "paparazzi-1"
+                    paparazzi.addClass "hidden"
+                ), 1000
+
+            wrapper.removeClass "paparazzi-" + (1 + progress.count - progress.index)
+            wrapper.addClass "paparazzi-" + (progress.count - progress.index)
 
         image = canvas.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
@@ -118,7 +134,7 @@ define [
             $.subscribe "/camera/capture", capture
 
             $.subscribe "/camera/pause", (message) ->
-                $(".wrapper").toggle (not message.paused)
+                wrapper.toggle (not message.paused)
 
             # get the files
             file.init()

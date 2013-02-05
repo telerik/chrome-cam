@@ -10,6 +10,8 @@ iframe {
     overflow:hidden;
 }
 
+.hidden { display: none }
+
 #video, #canvas, .wrapper {
     width: 720px;
     height: 540px;
@@ -25,6 +27,37 @@ iframe {
     top: 43px;
     left: 145px;
 }
+
+.paparazzi-wrapper {
+    position: absolute;
+}
+
+.wrapper .paparazzi { left: 50px; }
+.wrapper .paparazzi, .wrapper .paparazzi:before, .wrapper .paparazzi:after {
+    border: 1px solid #ddd;
+    height: 20px;
+    content: '';
+    width: 20px;
+    background: #2d2d2d;
+    position: relative;
+    z-index: 99999;
+}
+    .wrapper .paparazzi:before {
+        top: 4px;
+        left: -8px;
+        display: block;
+    }
+
+    .wrapper .paparazzi:after {
+        top: -12px;
+        left: -15px;
+        display: block;
+    }
+
+.paparazzi-1 .paparazzi,
+.paparazzi-2 .paparazzi:before,
+.paparazzi-3 .paparazzi:after
+ { background: #ddd; }
 
 #flash {
     position: absolute;

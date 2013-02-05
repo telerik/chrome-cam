@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/localization/localization', 'libs/face/track', 'mylibs/effects/effects'], function(postman, utils, file, localization, face, effects) {
     'use strict';
 
-    var canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, iframe, menu, paused, pub, supported, track, update;
+    var canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, iframe, menu, paparazzi, paused, pub, supported, track, update, wrapper;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -12,6 +12,8 @@
       faces: []
     };
     paused = false;
+    wrapper = $(".wrapper");
+    paparazzi = $(".paparazzi", wrapper);
     frame = 0;
     supported = true;
     effect = effects.data[0];
@@ -48,9 +50,22 @@
       effects.advance(canvas);
       return effect.filter(canvas, canvas, frame, track);
     };
-    capture = function() {
+    capture = function(progress) {
       var image, name, saveFinished;
       flash();
+      if (progress.count > 1) {
+        if (progress.index === 0) {
+          paparazzi.removeClass("hidden");
+        }
+        if (progress.index === progress.count - 1) {
+          setTimeout((function() {
+            wrapper.removeClass("paparazzi-1");
+            return paparazzi.addClass("hidden");
+          }), 1000);
+        }
+        wrapper.removeClass("paparazzi-" + (1 + progress.count - progress.index));
+        wrapper.addClass("paparazzi-" + (progress.count - progress.index));
+      }
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       file = {
@@ -133,7 +148,7 @@
         });
         $.subscribe("/camera/capture", capture);
         $.subscribe("/camera/pause", function(message) {
-          return $(".wrapper").toggle(!message.paused);
+          return wrapper.toggle(!message.paused);
         });
         file.init();
         face.init(0, 0, 0, 0);
