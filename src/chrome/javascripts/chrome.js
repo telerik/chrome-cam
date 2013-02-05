@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/localization/localization', 'libs/face/track', 'mylibs/effects/effects'], function(postman, utils, file, localization, face, effects) {
     'use strict';
 
-    var canvas, capture, ctx, draw, effect, errback, frame, hollaback, iframe, menu, paused, pub, supported, track, update;
+    var canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, iframe, menu, paused, pub, supported, track, update;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -50,6 +50,7 @@
     };
     capture = function() {
       var image, name, saveFinished;
+      flash();
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       file = {
@@ -61,6 +62,14 @@
       return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
         $.unsubscribe(saveFinished);
         return $.publish("/postman/deliver", [file, "/captured/image"]);
+      });
+    };
+    flash = function() {
+      var anim, div, fx;
+      div = $("#flash");
+      fx = kendo.fx(div);
+      return anim = fx.fadeIn().play().done(function() {
+        return fx.fadeOut().play();
       });
     };
     hollaback = function(stream) {

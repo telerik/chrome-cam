@@ -54,6 +54,8 @@ define [
         effect.filter canvas, canvas, frame, track
 
     capture = ->
+        flash()
+
         image = canvas.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
 
@@ -64,6 +66,11 @@ define [
         saveFinished = $.subscribe "/file/saved/#{file.name}", ->
             $.unsubscribe saveFinished
             $.publish "/postman/deliver", [ file, "/captured/image" ]
+
+    flash = ->
+        div = $("#flash")
+        fx = kendo.fx(div)
+        anim = fx.fadeIn().play().done(-> fx.fadeOut().play())
 
     hollaback = (stream) ->
         video = document.getElementById("video")
