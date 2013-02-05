@@ -45,7 +45,7 @@ define [
             keys.unbind()
             $.publish "/details/show", [ get("#{item.data("name")}") ]
 
-        else 
+        else
             container.find(".thumbnail").removeClass "selected"
             selected.addClass "selected"
 
@@ -242,7 +242,7 @@ define [
                             at index-columns, true
                         when "down" then if position < (rows-1)*columns
                             at index+columns, true
-            ) 
+            )
 
             @tokens.push(
                 $.subscribe "/keyboard/page", (dir) ->
@@ -263,7 +263,7 @@ define [
             @tokens = $.map(@tokens, (item) ->
                 $.unsubscribe(item)
             )
-    }   
+    }
 
     arrows =
         left: null

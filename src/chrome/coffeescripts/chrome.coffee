@@ -63,7 +63,7 @@ define [
         $.publish "/file/save", [file]
         saveFinished = $.subscribe "/file/saved/#{file.name}", ->
             $.unsubscribe saveFinished
-            $.publish "/postman/deliver", [ [file], "/captured/image" ]
+            $.publish "/postman/deliver", [ file, "/captured/image" ]
 
     hollaback = (stream) ->
         video = document.getElementById("video")

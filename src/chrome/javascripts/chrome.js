@@ -60,7 +60,7 @@
       $.publish("/file/save", [file]);
       return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
         $.unsubscribe(saveFinished);
-        return $.publish("/postman/deliver", [[file], "/captured/image"]);
+        return $.publish("/postman/deliver", [file, "/captured/image"]);
       });
     };
     hollaback = function(stream) {
