@@ -8,14 +8,14 @@
     full = {};
     effectId = "";
     paparazzi = {};
-    capture = function(callback) {
+    capture = function(callback, progress) {
       var captured;
       captured = $.subscribe("/captured/image", function(file) {
         $.unsubscribe(captured);
         $.publish("/gallery/add", [file]);
         return callback();
       });
-      return $.publish("/postman/deliver", [[], "/camera/capture"]);
+      return $.publish("/postman/deliver", [progress, "/camera/capture"]);
     };
     index = {
       current: function() {
@@ -151,33 +151,26 @@
         });
       },
       paparazzi: function() {
-        var advance, callback, left;
-        left = 4;
-        advance = function() {
-          full.el.wrapper.removeClass("paparazzi-" + left);
-          left -= 1;
-          return full.el.wrapper.addClass("paparazzi-" + left);
-        };
+        var callback;
         callback = function() {
           callback = function() {
             callback = function() {
-              $.publish("/bottom/update", ["full"]);
-              full.el.wrapper.removeClass("paparazzi-1");
-              return full.el.paparazzi.addClass("hidden");
+              return $.publish("/bottom/update", ["full"]);
             };
-            advance();
+            return setTimeout((function() {
+              return capture(callback, {
+                index: 3,
+                count: 3
+              });
+            }), 1000);
+          };
+          return setTimeout((function() {
             return capture(callback, {
-              index: 3,
+              index: 2,
               count: 3
             });
-          };
-          advance();
-          return capture(callback, {
-            index: 2,
-            count: 3
-          });
+          }), 1000);
         };
-        advance();
         return capture(callback, {
           index: 1,
           count: 3

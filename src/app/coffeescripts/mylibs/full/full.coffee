@@ -11,14 +11,13 @@ define [
 
     paparazzi = {}
 
-    capture = (callback) ->
-
+    capture = (callback, progress) ->
         captured = $.subscribe "/captured/image", (file) ->
             $.unsubscribe captured
             $.publish "/gallery/add", [file]
             callback()
 
-        $.publish "/postman/deliver", [ [], "/camera/capture" ]
+        $.publish "/postman/deliver", [ progress, "/camera/capture" ]
 
     index =
         current: ->
@@ -139,26 +138,18 @@ define [
         paparazzi: ->
 
             # build a gross callback tree and fling poo
-            left = 4
-            advance = ->
-                full.el.wrapper.removeClass "paparazzi-#{left}"
-                left -= 1
-                full.el.wrapper.addClass "paparazzi-#{left}"
+            # left = 4
+            # advance = ->
+            #     full.el.wrapper.removeClass "paparazzi-#{left}"
+            #     left -= 1
+            #     full.el.wrapper.addClass "paparazzi-#{left}"
 
             callback = ->
-
                 callback = ->
-
                     callback = ->
                         $.publish "/bottom/update", [ "full" ]
-                        full.el.wrapper.removeClass "paparazzi-1"
-                        full.el.paparazzi.addClass "hidden"
-
-                    advance()
-                    capture callback, index: 3, count: 3
-
-                advance()
-                capture callback, index: 2, count: 3
-
-            advance()
+                        # full.el.wrapper.removeClass "paparazzi-1"
+                        # full.el.paparazzi.addClass "hidden"
+                    setTimeout (-> capture callback, index: 3, count: 3) , 1000
+                setTimeout (-> capture callback, index: 2, count: 3), 1000
             capture callback, index: 1, count: 3
