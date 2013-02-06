@@ -10,6 +10,8 @@ iframe {
     overflow:hidden;
 }
 
+.absolute { position: absolute; }
+
 .hidden { display: none }
 
 #video, #canvas, .wrapper {
@@ -59,9 +61,23 @@ iframe {
 .paparazzi-3 .paparazzi:after
  { background: #ddd; }
 
-#flash {
+.thumbnail {
+    top: 633px;
+    left: 902px;
+    visibility: hidden;
+    pointer-events: none;
+    height: 54px;
+    width: 72px;
+}
+
+.transfer {
     position: absolute;
     z-index: 1000000001;
+}
+
+#flash {
+    position: absolute;
+    z-index: 1000000002;
     top: 0px;
     left: 0px;
     width: 100%;

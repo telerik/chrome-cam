@@ -4,7 +4,7 @@
   define(['mylibs/postman/postman', 'mylibs/utils/utils', 'mylibs/file/file', 'mylibs/localization/localization', 'libs/face/track', 'mylibs/effects/effects'], function(postman, utils, file, localization, face, effects) {
     'use strict';
 
-    var canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, iframe, menu, paparazzi, paused, pub, supported, track, update, wrapper;
+    var canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, iframe, menu, paparazzi, paused, pub, supported, track, transfer, update, wrapper;
     iframe = iframe = document.getElementById("iframe");
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -74,10 +74,11 @@
         file: image
       };
       $.publish("/file/save", [file]);
-      return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
+      saveFinished = $.subscribe("/file/saved/" + file.name, function() {
         $.unsubscribe(saveFinished);
         return $.publish("/postman/deliver", [file, "/captured/image"]);
       });
+      return transfer(file);
     };
     flash = function() {
       var anim, div, fx;
@@ -85,6 +86,27 @@
       fx = kendo.fx(div);
       return anim = fx.fadeIn().play().done(function() {
         return fx.fadeOut().play();
+      });
+    };
+    transfer = function(file) {
+      var transferrer;
+      console.log(file);
+      transferrer = $("#transfer-animation-template div").clone();
+      transferrer.width(canvas.width);
+      transferrer.height(canvas.height);
+      transferrer.offset(wrapper.offset());
+      transferrer.appendTo($("body"));
+      $("<img />", {
+        src: file.file
+      }).appendTo(transferrer);
+      return transferrer.kendoStop().kendoAnimate({
+        effects: "transfer",
+        target: $("#destination"),
+        duration: 1000,
+        ease: "ease-in",
+        complete: function() {
+          return transferrer.remove();
+        }
       });
     };
     hollaback = function(stream) {

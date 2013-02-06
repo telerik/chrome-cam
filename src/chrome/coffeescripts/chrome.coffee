@@ -83,10 +83,32 @@ define [
             $.unsubscribe saveFinished
             $.publish "/postman/deliver", [ file, "/captured/image" ]
 
+        transfer file
+
     flash = ->
         div = $("#flash")
         fx = kendo.fx(div)
         anim = fx.fadeIn().play().done(-> fx.fadeOut().play())
+
+    transfer = (file) ->
+        console.log file
+        transferrer = $("#transfer-animation-template div").clone()
+
+        transferrer.width canvas.width
+        transferrer.height canvas.height
+        transferrer.offset wrapper.offset()
+
+        transferrer.appendTo $("body")
+
+        $("<img />", src: file.file).appendTo transferrer
+
+        transferrer.kendoStop().kendoAnimate
+            effects: "transfer",
+            target: $("#destination"),
+            duration: 1000,
+            ease: "ease-in",
+            complete: ->
+                transferrer.remove()
 
     hollaback = (stream) ->
         video = document.getElementById("video")
