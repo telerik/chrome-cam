@@ -23,6 +23,11 @@ define [
 
     effect = effects.data[0]
 
+    window.cleanup = ->
+        video.pause()
+        video.src = ""
+        stream.stop()
+
     # TODO: Move the context menu to its own file
     menu = ->
         chrome.contextMenus.onClicked.addListener (info, tab) ->
@@ -113,6 +118,7 @@ define [
                 $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
 
     hollaback = (stream) ->
+        window.stream = stream
         video = document.getElementById("video")
         video.src = window.URL.createObjectURL(stream)
         video.play()

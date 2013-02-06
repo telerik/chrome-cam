@@ -17,6 +17,11 @@
     frame = 0;
     supported = true;
     effect = effects.data[0];
+    window.cleanup = function() {
+      video.pause();
+      video.src = "";
+      return stream.stop();
+    };
     menu = function() {
       chrome.contextMenus.onClicked.addListener(function(info, tab) {
         return $.publish("/postman/deliver", [{}, "/menu/click/" + info.menuItemId]);
@@ -111,6 +116,7 @@
     };
     hollaback = function(stream) {
       var video;
+      window.stream = stream;
       video = document.getElementById("video");
       video.src = window.URL.createObjectURL(stream);
       video.play();
