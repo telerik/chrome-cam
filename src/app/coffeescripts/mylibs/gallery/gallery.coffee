@@ -278,7 +278,7 @@ define [
     pub =
 
         before: (e) ->
-
+            console.log "Binding to key events"
             # pause the camera. there is no need for it right now.
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
@@ -286,10 +286,6 @@ define [
             keys.bind()
 
         hide: (e) ->
-            # unpause the camera
-            $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
-            $.publish "/postman/deliver", [null, "/camera/request"]
-
             # don't respond to the keyboard events anymore
             keys.unbind()
 

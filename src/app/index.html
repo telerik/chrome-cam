@@ -13,11 +13,11 @@
 
 		<div id="splash" class="splash"><h1 id="loading">Loading...</h1></div>
 
-		<div data-role="view" data-stretch="true" id="home" data-layout="bottom" data-model="APP.full">
+		<div data-role="view" data-stretch="true" id="home" data-layout="bottom" data-model="APP.full" data-hide="APP.gallery.hide" data-before-show="APP.full.before">
 			<div class="full" id="capture"></div>
 		</div>
 
-		<div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before" data-hide="APP.gallery.hide" data-layout="top" data-scrollable="false">
+		<div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="top" data-scrollable="false">
 			<div data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
 				<div id="thumbnails" class="flip"></div>
 				<span data-role="clickable" data-click="APP.gallery.previous" class="previous">&#8249;</span>
@@ -29,7 +29,7 @@
 		<div data-role="view" id="no-camera" data-stretch="true" data-transition="none">
 		</div>
 
-		<div data-role="view" id="about" data-stretch="true" data-transition="slide:right" data-before-show="APP.about.before" data-hide="APP.about.hide"></div>
+		<div data-role="view" id="about" data-stretch="true" data-transition="slide:right" data-before-show="APP.about.before"></div>
 
 		<div data-role="view" id="settings" data-before-show="APP.settings.before" data-hide="APP.settings.hide" data-transition="slide:left" data-stretch="true"></div>
 

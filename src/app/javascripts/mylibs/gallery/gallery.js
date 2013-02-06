@@ -287,6 +287,7 @@
     };
     return pub = {
       before: function(e) {
+        console.log("Binding to key events");
         $.publish("/postman/deliver", [
           {
             paused: true
@@ -295,12 +296,6 @@
         return keys.bind();
       },
       hide: function(e) {
-        $.publish("/postman/deliver", [
-          {
-            paused: false
-          }, "/camera/pause"
-        ]);
-        $.publish("/postman/deliver", [null, "/camera/request"]);
         keys.unbind();
         pages.next.empty();
         return pages.previous.empty();

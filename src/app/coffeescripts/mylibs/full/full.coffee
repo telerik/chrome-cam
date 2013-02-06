@@ -99,6 +99,11 @@ define [
             # subscribe to external events an map them to internal functions
             subscribe pub
 
+        before: ->
+            setTimeout (->
+                $.publish "/postman/deliver", [{ paused: false }, "/camera/pause"]
+            ), 500
+
         show: (item) ->
 
             return unless paused

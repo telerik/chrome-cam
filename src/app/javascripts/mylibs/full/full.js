@@ -109,6 +109,15 @@
         elements.cache(full);
         return subscribe(pub);
       },
+      before: function() {
+        return setTimeout((function() {
+          return $.publish("/postman/deliver", [
+            {
+              paused: false
+            }, "/camera/pause"
+          ]);
+        }), 500);
+      },
       show: function(item) {
         if (!paused) {
           return;

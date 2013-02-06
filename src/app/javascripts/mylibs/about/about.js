@@ -13,14 +13,6 @@
           }, "/camera/pause"
         ]);
       },
-      hide: function() {
-        $.publish("/postman/deliver", [
-          {
-            paused: false
-          }, "/camera/pause"
-        ]);
-        return $.publish("/postman/deliver", [null, "/camera/request"]);
-      },
       init: function(selector) {
         var view;
         view = new kendo.View(selector, template);
