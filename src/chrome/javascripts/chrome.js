@@ -90,7 +90,6 @@
     };
     transfer = function(file) {
       var transferrer;
-      console.log(file);
       transferrer = $("#transfer-animation-template div").clone();
       transferrer.width(canvas.width);
       transferrer.height(canvas.height);
