@@ -16,8 +16,6 @@ define [
             $.unsubscribe captured
             $.publish "/gallery/add", [file]
 
-            $.publish "/bottom/thumbnail", [file]
-
             callback()
 
         $.publish "/postman/deliver", [ progress, "/camera/capture" ]

@@ -105,7 +105,8 @@
         duration: 1000,
         ease: "ease-in",
         complete: function() {
-          return transferrer.remove();
+          transferrer.remove();
+          return $.publish("/postman/deliver", [file, "/bottom/thumbnail"]);
         }
       });
     };

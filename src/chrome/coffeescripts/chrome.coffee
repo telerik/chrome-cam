@@ -91,7 +91,6 @@ define [
         anim = fx.fadeIn().play().done(-> fx.fadeOut().play())
 
     transfer = (file) ->
-        console.log file
         transferrer = $("#transfer-animation-template div").clone()
 
         transferrer.width canvas.width
@@ -109,6 +108,9 @@ define [
             ease: "ease-in",
             complete: ->
                 transferrer.remove()
+
+                # Update the thumbnail after the animation is complete.
+                $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
 
     hollaback = (stream) ->
         video = document.getElementById("video")
