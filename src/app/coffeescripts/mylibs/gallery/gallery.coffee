@@ -278,7 +278,6 @@ define [
     pub =
 
         before: (e) ->
-            console.log "Binding to key events"
             # pause the camera. there is no need for it right now.
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 

@@ -287,7 +287,6 @@
     };
     return pub = {
       before: function(e) {
-        console.log("Binding to key events");
         $.publish("/postman/deliver", [
           {
             paused: true
