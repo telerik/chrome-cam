@@ -5,7 +5,8 @@ define [
     'mylibs/localization/localization'
     'libs/face/track'
     'mylibs/effects/effects'
-], (postman, utils, file, localization, face, effects) ->
+    'mylibs/transfer/transfer'
+], (postman, utils, file, localization, face, effects, transfer) ->
     'use strict'
 
     iframe = iframe = document.getElementById("iframe")
@@ -88,34 +89,21 @@ define [
             $.unsubscribe saveFinished
             $.publish "/postman/deliver", [ file, "/captured/image" ]
 
-        transfer file
+        animate file
 
     flash = ->
         div = $("#flash")
         fx = kendo.fx(div)
         anim = fx.fadeIn().play().done(-> fx.fadeOut().play())
 
-    transfer = (file) ->
-        transferrer = $("#transfer-animation-template div").clone()
+    animate = (file) ->
 
-        transferrer.width canvas.width
-        transferrer.height canvas.height
-        transferrer.offset wrapper.offset()
+        callback = ->
+            $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
 
-        transferrer.appendTo $("body")
-
-        $("<img />", src: file.file).appendTo transferrer
-
-        transferrer.kendoStop().kendoAnimate
-            effects: "transfer",
-            target: $("#destination"),
-            duration: 1000,
-            ease: "ease-in",
-            complete: ->
-                transferrer.remove()
-
-                # Update the thumbnail after the animation is complete.
-                $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
+        transfer.setup()
+        transfer.add file
+        transfer.run callback
 
     hollaback = (stream) ->
         window.stream = stream
@@ -134,6 +122,8 @@ define [
         init: ->
             # initialize utils
             utils.init()
+
+            transfer.init()
 
             # subscribe to the pause event
             $.subscribe "/camera/pause", (message) ->
