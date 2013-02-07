@@ -16,7 +16,7 @@
         return wrapper = $(".wrapper");
       },
       setup: function() {
-        debugger;        transferrer = template.clone();
+        transferrer = template.clone();
         transferrer.offset(wrapper.offset());
         transferrer.width(wrapper.width());
         transferrer.height(wrapper.height());

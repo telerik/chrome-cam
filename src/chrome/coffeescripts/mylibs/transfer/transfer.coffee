@@ -13,7 +13,6 @@ define [], () ->
             wrapper = $(".wrapper")
 
         setup: ->
-            debugger
             transferrer = template.clone();
 
             transferrer.offset wrapper.offset()
