@@ -56,8 +56,7 @@
       return effect.filter(canvas, canvas, frame, track);
     };
     capture = function(progress) {
-      var image, name, saveFinished;
-      flash();
+      var flashCallback, image, name, saveFinished;
       if (progress.count > 1) {
         if (progress.index === 0) {
           paparazzi.removeClass("hidden");
@@ -78,22 +77,40 @@
         name: "" + name + ".jpg",
         file: image
       };
+      if (progress.index === 0) {
+        transfer.setup();
+      }
+      flashCallback = function() {
+        var callback;
+        transfer.add(file, progress);
+        callback = function() {
+          return $.publish("/postman/deliver", [file, "/bottom/thumbnail"]);
+        };
+        if (progress.index === progress.count - 1) {
+          return setTimeout((function() {
+            return transfer.run(callback);
+          }), 200);
+        }
+      };
+      flash(flashCallback);
       $.publish("/file/save", [file]);
       saveFinished = $.subscribe("/file/saved/" + file.name, function() {
         $.unsubscribe(saveFinished);
         return $.publish("/postman/deliver", [file, "/captured/image"]);
       });
-      return animate(file);
+      return console.log(progress.index, progress.count);
     };
-    flash = function() {
+    flash = function(callback) {
       var anim, div, fx;
       div = $("#flash");
       fx = kendo.fx(div);
       return anim = fx.fadeIn().play().done(function() {
-        return fx.fadeOut().play();
+        return fx.fadeOut().play().done(function() {
+          return callback();
+        });
       });
     };
-    animate = function(file) {
+    animate = function(file, progress) {
       var callback;
       callback = function() {
         return $.publish("/postman/deliver", [file, "/bottom/thumbnail"]);

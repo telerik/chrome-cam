@@ -63,8 +63,6 @@ define [
         effect.filter canvas, canvas, frame, track
 
     capture = (progress) ->
-        flash()
-
         if progress.count > 1
             if progress.index == 0
                 paparazzi.removeClass "hidden"
@@ -84,19 +82,35 @@ define [
         # set the name of this image to the current time string
         file = { type: "jpg", name: "#{name}.jpg", file: image }
 
+        if progress.index == 0
+            transfer.setup()
+
+        flashCallback = ->
+            transfer.add file, progress
+
+            callback = ->
+                $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
+
+            if progress.index == progress.count - 1
+                setTimeout (->
+                    transfer.run callback
+                ), 200
+
+        flash flashCallback
+
         $.publish "/file/save", [file]
         saveFinished = $.subscribe "/file/saved/#{file.name}", ->
             $.unsubscribe saveFinished
             $.publish "/postman/deliver", [ file, "/captured/image" ]
 
-        animate file
+        console.log progress.index, progress.count
 
-    flash = ->
+    flash = (callback) ->
         div = $("#flash")
         fx = kendo.fx(div)
-        anim = fx.fadeIn().play().done(-> fx.fadeOut().play())
+        anim = fx.fadeIn().play().done(-> fx.fadeOut().play().done(-> callback()))
 
-    animate = (file) ->
+    animate = (file, progress) ->
 
         callback = ->
             $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
