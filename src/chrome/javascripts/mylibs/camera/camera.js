@@ -131,7 +131,7 @@
           })();
           return $.publish("/postman/deliver", [filters, "/effects/response"]);
         });
-        $.subscribe("/effects/select", function(id) {
+        $.subscribe("/camera/effect", function(id) {
           var e, _i, _len, _ref, _results;
           _ref = effects.data;
           _results = [];

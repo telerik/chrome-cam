@@ -137,7 +137,7 @@
         if (!temp) {
           full.el.filters.find("li").removeClass("selected").filter("[data-filter-id=" + item.id + "]").addClass("selected");
         }
-        return $.publish("/postman/deliver", [effectId, "/effects/select"]);
+        return $.publish("/postman/deliver", [effectId, "/camera/effect"]);
       },
       filter: {
         click: function(e) {

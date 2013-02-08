@@ -128,7 +128,7 @@ define [
                 filters = ( id: e.id, name: e.name for e in effects.data )
                 $.publish "/postman/deliver", [ filters, "/effects/response" ]
 
-            $.subscribe "/effects/select", (id) ->
+            $.subscribe "/camera/effect", (id) ->
                 effect = e for e in effects.data when e.id is id
 
             # initialize the face tracking
