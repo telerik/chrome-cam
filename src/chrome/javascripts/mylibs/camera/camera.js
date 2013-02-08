@@ -95,11 +95,11 @@
       };
     };
     pause = function(message) {
-      var image;
+      if (paused === message.paused) {
+        return;
+      }
       paused = message.paused;
-      wrapper.toggle(!paused);
-      image = canvas.toDataURL("image/jpeg", 1.0);
-      return $.publish("/postman/deliver", [image, "/camera/snapshot"]);
+      return wrapper.toggle(!paused);
     };
     return pub = {
       cleanup: function() {
@@ -142,6 +142,11 @@
             }
           }
           return _results;
+        });
+        $.subscribe("/camera/snapshot/request", function() {
+          var image;
+          image = canvas.toDataURL("image/jpeg", 1.0);
+          return $.publish("/postman/deliver", [image, "/camera/snapshot/response"]);
         });
         return face.init(0, 0, 0, 0);
       }

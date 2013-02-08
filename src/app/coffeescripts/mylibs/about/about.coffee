@@ -1,7 +1,8 @@
 define [
     'Kendo'
+    'mylibs/navigation/navigation'
     'text!mylibs/about/views/about.html'
-], (kendo, template) ->
+], (kendo, navigation, template) ->
 
     previous = "#home"
 
@@ -23,11 +24,11 @@ define [
             $.subscribe '/menu/click/chrome-cam-about-menu', ->
                 $.publish "/postman/deliver", [ false, "/menu/enable" ]
                 previous = window.APP.app.view().id
-                window.APP.app.navigate selector
+                navigation.navigate selector
 
         back: ->
             $.publish "/postman/deliver", [ true, "/menu/enable" ]
-            window.APP.app.navigate previous
+            navigation.navigate previous
 
         clear: ->
             $.publish "/confirm/show", [
@@ -35,7 +36,7 @@ define [
                 window.APP.localization.clear_gallery_confirmation,
                 ->
                     $.publish("/gallery/clear")
-                    window.APP.app.navigate "#home"
+                    navigation.navigate "#home"
             ]
 
 

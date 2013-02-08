@@ -1,4 +1,4 @@
-/*	
+/*
 
 	jQuery pub/sub plugin by Peter Higgins (dante@dojotoolkit.org)
 
@@ -9,7 +9,7 @@
 
 	Minor tweak by us.
 
-*/	
+*/
 
 ;(function(d){
 
@@ -17,22 +17,24 @@
 	var cache = {};
 
 	d.publish = function(/* String */topic, /* Array? */args){
-		// summary: 
+		// summary:
 		//		Publish some data on a named topic.
 		// topic: String
 		//		The channel to publish on
 		// args: Array?
 		//		The data to publish. Each array item is converted into an ordered
-		//		arguments on the subscribed functions. 
+		//		arguments on the subscribed functions.
 		//
 		// example:
 		//		Publish stuff on '/some/topic'. Anything subscribed will be called
 		//		with a function signature like: function(a,b,c){ ... }
 		//
 		//	|		$.publish("/some/topic", ["a","b","c"]);
-		cache[topic] && d.each(cache[topic], function(){
-			return this.apply(d, args || []);
-		});
+		if (cache[topic]) {
+			cache[topic].forEach(function(fn) {
+				return fn.apply(null, args || []);
+			});
+		}
 	};
 
 	d.subscribe = function(/* String */topic, /* Function */callback, /* Boolean? */ first){
@@ -41,13 +43,13 @@
 		// topic: String
 		//		The channel to subscribe to
 		// callback: Function
-		//		The handler event. Anytime something is $.publish'ed on a 
+		//		The handler event. Anytime something is $.publish'ed on a
 		//		subscribed channel, the callback will be called with the
 		//		published array as ordered arguments.
 		//
 		// returns: Array
 		//		A handle which can be used to unsubscribe this particular subscription.
-		//	
+		//
 		// example:
 		//	|	$.subscribe("/some/topic", function(a, b, c){ /* handle data */ });
 		//

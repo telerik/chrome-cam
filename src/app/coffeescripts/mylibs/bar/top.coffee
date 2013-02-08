@@ -1,76 +1,79 @@
 define [
-  'Kendo' 	
-  'text!mylibs/bar/views/top.html'
-], (kendo, template) ->
+    'Kendo'
+    'mylibs/navigation/navigation'
+    'text!mylibs/bar/views/top.html'
+], (kendo, navigation, template) ->
 
-	# create a view model for the top bar
-	# VIEW MODEL ISN'T WORKING. WHY NOT?
-	viewModel = kendo.observable
-		current: null
-		selected: false
-		back:
-			details: false
-			text: "< Camera"
-				
+    # create a view model for the top bar
+    # VIEW MODEL ISN'T WORKING. WHY NOT?
+    viewModel = kendo.observable
+        current: null
+        selected: false
+        back:
+            details: false
+            text: "< Camera"
 
-	# TODO: Refactor Once View Model Is Working
-	states = 
-		selected: ->
-			viewModel.set("selected", true)
-		deselected: ->
-			viewModel.set("selected", false)
-		details: =>
-			viewModel.set("back.text", "< Gallery")
-			viewModel.set("back.details", true)
-			$.publish "/gallery/details", [true]
-		gallery: =>
-			viewModel.set("back.text", "< Camera")
-			viewModel.set("back.details", false)
-			$.publish "/gallery/details", [false]
-		set: (state) ->
-			states.current = state
-			states[state]()
+    # TODO: Refactor Once View Model Is Working
+    states =
+        selected: ->
+            viewModel.set("selected", true)
+        deselected: ->
+            viewModel.set("selected", false)
+        details: =>
+            viewModel.set("back.text", "< Gallery")
+            viewModel.set("back.details", true)
+            $.publish "/gallery/details", [true]
+        gallery: =>
+            viewModel.set("back.text", "< Camera")
+            viewModel.set("back.details", false)
+            $.publish "/gallery/details", [false]
+        set: (state) ->
+            states.current = state
+            states[state]()
 
-	pub =
+    pub =
 
-		init: (container) =>
-			
-			# create the bottom bar for the gallery
-			@view = new kendo.View(container, template)
+        init: (container) =>
 
-			# render the bar and binds it to the view model
-			@view.render(viewModel, true)
+            # create the bottom bar for the gallery
+            @view = new kendo.View(container, template)
 
-			# find and cache some DOM elements
-			back = @view.find(".back.button")
+            # render the bar and binds it to the view model
+            @view.render(viewModel, true)
 
-			# wire up events
-			$.subscribe "/top/update", (state) ->
-				states.set state
+            # find and cache some DOM elements
+            back = @view.find(".back.button")
 
-			$.subscribe "/item/selected", (message) ->
-				viewModel.set("current", message.item)
+            # wire up events
+            $.subscribe "/top/update", (state) ->
+                states.set state
 
-			$.subscribe "/keyboard/esc", ->
-				if states.current == "details"
-					states.set "gallery"
-					back.trigger "click"
+            $.subscribe "/item/selected", (message) ->
+                viewModel.set("current", message.item)
 
-		back: (e) ->
+            $.subscribe "/keyboard/esc", ->
+                if states.current == "details"
+                    states.set "gallery"
+                    back.trigger "click"
 
-			$.publish "/details/hide"
-			states.gallery()
-			e.preventDefault()
+        back: (e) ->
 
-		destroy: (e) ->
+            $.publish "/details/hide"
+            states.gallery()
+            e.preventDefault()
 
-			$.publish "/confirm/show", [
-				window.APP.localization.delete_dialog_title,
-				window.APP.localization.delete_confirmation,
-				-> $.publish("/gallery/delete")
-			]
+        destroy: (e) ->
 
-		save: (e) ->
-			
-			file = viewModel.get("current")
-			$.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
+            $.publish "/confirm/show", [
+                window.APP.localization.delete_dialog_title,
+                window.APP.localization.delete_confirmation,
+                -> $.publish("/gallery/delete")
+            ]
+
+        save: (e) ->
+
+            file = viewModel.get("current")
+            $.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
+
+        home: (e) ->
+            navigation.navigate "#home"

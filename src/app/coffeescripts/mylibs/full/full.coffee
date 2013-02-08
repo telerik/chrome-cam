@@ -1,9 +1,10 @@
 define [
-  'Kendo'
-  'mylibs/utils/utils'
-  'mylibs/file/filewrapper'
-  'text!mylibs/full/views/full.html'
-], (kendo, utils, filewrapper, template) ->
+    'Kendo'
+    'mylibs/utils/utils'
+    'mylibs/file/filewrapper'
+    'mylibs/navigation/navigation'
+    'text!mylibs/full/views/full.html'
+], (kendo, utils, filewrapper, navigation, template) ->
     paused = true
     frame = 0
     full = {}
@@ -87,12 +88,39 @@ define [
             full.find(".paparazzi", "paparazzi")
             full.find(".filters-list", "filters")
 
-    pub =
+    navigating =
+        to: ->
+            deferred = $.Deferred()
 
+            token = $.subscribe "/camera/snapshot/response", (url) ->
+                $.unsubscribe token
+                full.el.snapshot.attr "src", url
+                deferred.resolve()
+
+            $.publish "/postman/deliver", [ null, "/camera/snapshot/request" ]
+
+            return deferred.promise()
+
+        from: ->
+            deferred = $.Deferred()
+
+            token = $.subscribe "/camera/snapshot/response", (url) ->
+                $.unsubscribe token
+                full.el.snapshot.attr "src", url
+                deferred.resolve()
+
+            $.publish "/postman/deliver", [ null, "/camera/snapshot/request" ]
+
+            return deferred.promise()
+
+    pub =
         init: (selector) ->
 
             full = new kendo.View(selector, template)
             full.render()
+
+            navigation.navigating.to "#home", navigating.to
+            navigation.navigating.from "#home", navigating.from
 
             # find and cache the necessary elements
             elements.cache full

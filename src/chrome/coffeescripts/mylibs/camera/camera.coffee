@@ -100,11 +100,10 @@ define [
             $.publish "/postman/deliver", [ {}, "/camera/unsupported" ]
 
     pause = (message) ->
-        paused = message.paused
-        wrapper.toggle (not paused)
+        return unless paused != message.paused
 
-        image = canvas.toDataURL("image/jpeg", 1.0)
-        $.publish "/postman/deliver", [ image, "/camera/snapshot" ]
+        paused = message.paused
+        wrapper.toggle not paused
 
     pub =
         cleanup: ->
@@ -130,6 +129,11 @@ define [
 
             $.subscribe "/camera/effect", (id) ->
                 effect = e for e in effects.data when e.id is id
+
+            $.subscribe "/camera/snapshot/request", ->
+                image = canvas.toDataURL("image/jpeg", 1.0)
+
+                $.publish "/postman/deliver", [ image, "/camera/snapshot/response" ]
 
             # initialize the face tracking
             face.init 0, 0, 0, 0
