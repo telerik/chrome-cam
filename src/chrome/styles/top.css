@@ -75,6 +75,21 @@ iframe {
     z-index: 1000000001;
 }
 
+    .transfer.slide-in-0 {
+        -webkit-transition: all 0.5s ease-in-out;
+        -webkit-transform: translate(-14px, 14px);
+    }
+
+    .transfer.slide-in-1 {
+        -webkit-transition: 0.2s ease-in-out;
+        -webkit-transform: translate(-7px, 7px);
+    }
+
+    .transfer.slide-out {
+        -webkit-transition: 0.75s ease-in-out;
+        -webkit-transform: translate(7px, -7px);
+    }
+
 #flash {
     position: absolute;
     z-index: 1000000002;

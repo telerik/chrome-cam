@@ -4,21 +4,36 @@
   define([], function() {
     'use strict';
 
-    var OFFSET, adjust, count, destination, elements, pub, slideDestination, template, wrapper;
-    OFFSET = 10;
+    var OFFSET, destination, elements, pub, slideIn, slideOut, template, wrapper;
+    OFFSET = 7;
     template = null;
     destination = null;
-    slideDestination = null;
     elements = [];
     wrapper = null;
-    count = 0;
-    adjust = function(element, offset, zindex) {
-      var position;
-      position = element.offset();
-      position.top -= offset;
-      position.left += offset;
-      element.offset(position);
-      return element.css("z-index", zindex);
+    slideIn = function(element, index) {
+      var deferred, end;
+      deferred = $.Deferred();
+      end = function(event) {
+        element.off("webkitTransitionEnd", end);
+        return deferred.resolve();
+      };
+      element.on("webkitTransitionEnd", end);
+      element.addClass("slide-in-" + index);
+      return deferred.promise();
+    };
+    slideOut = function(element) {
+      var end;
+      end = function(event) {
+        var offset;
+        element.off("webkitTransitionEnd", end);
+        offset = element.offset();
+        offset.left += OFFSET;
+        offset.top -= OFFSET;
+        element.offset(offset);
+        return element.removeClass("slide-out");
+      };
+      element.on("webkitTransitionEnd", end);
+      return element.addClass("slide-out");
     };
     return pub = {
       init: function() {
@@ -37,20 +52,16 @@
         container.height(wrapper.height());
         container.appendTo($("body"));
         if (progress.count > 0 && progress.index < progress.count - 1) {
-          if (progress.index === 0) {
-            slideDestination = $("<div />");
-            slideDestination.width(wrapper.width() - 1);
-            slideDestination.height(wrapper.height() - 1);
-            slideDestination.css({
-              position: "absolute"
-            });
-            slideDestination.offset(wrapper.offset());
-            slideDestination.appendTo($("body"));
-          }
-          adjust(container, OFFSET, container.css("z-index") - 2);
+          container.css({
+            "z-index": container.css("z-index") - 2
+          });
+          slideOut(container);
           for (_i = 0, _len = elements.length; _i < _len; _i++) {
             element = elements[_i];
-            adjust(element, OFFSET, element.css("z-index") - 1);
+            element.css({
+              "z-index": element.css("z-index") - 1
+            });
+            slideOut(element);
           }
         }
         $("<img />", {
@@ -59,24 +70,22 @@
         return elements.push(container);
       },
       run: function(callback) {
-        var deferreds, element, last, _i, _len;
+        var deferreds, element, key, last;
         last = elements.pop();
         console.log(last);
         deferreds = [];
-        for (_i = 0, _len = elements.length; _i < _len; _i++) {
-          element = elements[_i];
-          deferreds.push(kendo.fx(element).transfer(slideDestination).duration(1000).play());
-          deferreds.push(kendo.fx(element).fade("out").duration(400).play());
-        }
+        deferreds = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (key = _i = 0, _len = elements.length; _i < _len; key = ++_i) {
+            element = elements[key];
+            _results.push(slideIn(element, key));
+          }
+          return _results;
+        })();
         return $.when.apply($, deferreds).done(function() {
           return kendo.fx(last).transfer(destination).duration(1000).play().done(function() {
-            var _j, _len1;
             last.remove();
-            slideDestination.remove();
-            for (_j = 0, _len1 = elements.length; _j < _len1; _j++) {
-              element = elements[_j];
-              element.remove();
-            }
             elements = [];
             return callback();
           });
