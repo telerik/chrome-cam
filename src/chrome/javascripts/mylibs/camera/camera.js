@@ -18,13 +18,12 @@
     supported = true;
     effect = effects.data[0];
     draw = function() {
-      update();
+      if (!paused) {
+        update();
+      }
       return window.requestAnimationFrame(draw);
     };
     update = function() {
-      if (paused) {
-        return;
-      }
       ctx.drawImage(video, canvas.width, 0, -canvas.width, canvas.height);
       if (effect.tracks && frame % 4 === 0) {
         track = face.track(canvas);
@@ -123,6 +122,10 @@
         }, hollaback, errback);
         $.subscribe("/camera/capture", capture);
         $.subscribe("/camera/pause", pause);
+        $.subscribe("/camera/update", function() {
+          update();
+          return $.publish("/postman/deliver", [null, "/camera/updated"]);
+        });
         $.subscribe("/effects/request", function() {
           var e, filters;
           filters = (function() {

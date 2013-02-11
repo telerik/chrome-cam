@@ -9,8 +9,9 @@ define [], ->
         navigate: (view) ->
             deferreds = []
 
-            if view of callbacks.from
-                deferreds.push callback() for callback in callbacks.from[view]
+            previous = window.APP.app.view().id
+            if previous of callbacks.from
+                deferreds.push callback() for callback in callbacks.from[previous]
 
             if view of callbacks.to
                 deferreds.push callback() for callback in callbacks.to[view]

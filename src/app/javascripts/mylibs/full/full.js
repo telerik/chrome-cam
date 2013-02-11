@@ -104,14 +104,19 @@
     };
     navigating = {
       to: function() {
-        var deferred, token;
+        var deferred, updated;
         deferred = $.Deferred();
-        token = $.subscribe("/camera/snapshot/response", function(url) {
-          $.unsubscribe(token);
-          full.el.snapshot.attr("src", url);
-          return deferred.resolve();
+        updated = $.subscribe("/camera/updated", function() {
+          var token;
+          $.unsubscribe(updated);
+          token = $.subscribe("/camera/snapshot/response", function(url) {
+            $.unsubscribe(token);
+            full.el.snapshot.attr("src", url);
+            return deferred.resolve();
+          });
+          return $.publish("/postman/deliver", [null, "/camera/snapshot/request"]);
         });
-        $.publish("/postman/deliver", [null, "/camera/snapshot/request"]);
+        $.publish("/postman/deliver", [null, "/camera/update"]);
         return deferred.promise();
       },
       from: function() {

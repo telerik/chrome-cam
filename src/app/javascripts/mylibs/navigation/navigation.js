@@ -11,10 +11,11 @@
     };
     return pub = {
       navigate: function(view) {
-        var callback, deferreds, _i, _j, _len, _len1, _ref, _ref1;
+        var callback, deferreds, previous, _i, _j, _len, _len1, _ref, _ref1;
         deferreds = [];
-        if (view in callbacks.from) {
-          _ref = callbacks.from[view];
+        previous = window.APP.app.view().id;
+        if (previous in callbacks.from) {
+          _ref = callbacks.from[previous];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             callback = _ref[_i];
             deferreds.push(callback());

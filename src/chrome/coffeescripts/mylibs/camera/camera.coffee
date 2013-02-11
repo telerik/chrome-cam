@@ -21,13 +21,11 @@ define [
     effect = effects.data[0]
 
     draw = ->
-        update()
+        update() unless paused
         window.requestAnimationFrame draw
 
     update = ->
         # the camera is paused when it isn't being used to increase app performance
-        return if paused
-
         ctx.drawImage video, canvas.width, 0, -canvas.width, canvas.height
 
         if effect.tracks and frame % 4 == 0
@@ -143,6 +141,11 @@ define [
 
             # subscribe to the pause event
             $.subscribe "/camera/pause", pause
+
+            # subscribe to the explicit update
+            $.subscribe "/camera/update", ->
+                update()
+                $.publish "/postman/deliver", [ null, "/camera/updated" ]
 
             # TODO: Move this into effects
             $.subscribe "/effects/request", ->

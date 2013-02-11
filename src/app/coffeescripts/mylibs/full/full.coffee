@@ -92,12 +92,17 @@ define [
         to: ->
             deferred = $.Deferred()
 
-            token = $.subscribe "/camera/snapshot/response", (url) ->
-                $.unsubscribe token
-                full.el.snapshot.attr "src", url
-                deferred.resolve()
+            updated = $.subscribe "/camera/updated", ->
+                $.unsubscribe updated
 
-            $.publish "/postman/deliver", [ null, "/camera/snapshot/request" ]
+                token = $.subscribe "/camera/snapshot/response", (url) ->
+                    $.unsubscribe token
+                    full.el.snapshot.attr "src", url
+                    deferred.resolve()
+
+                $.publish "/postman/deliver", [ null, "/camera/snapshot/request" ]
+
+            $.publish "/postman/deliver", [ null, "/camera/update" ]
 
             return deferred.promise()
 
