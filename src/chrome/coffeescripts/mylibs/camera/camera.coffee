@@ -43,18 +43,18 @@ define [
         effect.filter canvas, canvas, frame, track
 
     paparazziUpdate = (progress) ->
-            if progress.count > 1
-                if progress.index == 0
-                    paparazzi.removeClass "hidden"
-                # HACK: this should be refactored if time permits
-                if progress.index == progress.count - 1
-                    setTimeout (->
-                        wrapper.removeClass "paparazzi-1"
-                        paparazzi.addClass "hidden"
-                    ), 250
+        if progress.count > 1
+            if progress.index == 0
+                paparazzi.removeClass "hidden"
+            # HACK: this should be refactored if time permits
+            if progress.index == progress.count - 1
+                setTimeout (->
+                    wrapper.removeClass "paparazzi-1"
+                    paparazzi.addClass "hidden"
+                ), 250
 
-                wrapper.removeClass "paparazzi-" + (1 + progress.count - progress.index)
-                wrapper.addClass "paparazzi-" + (progress.count - progress.index)
+            wrapper.removeClass "paparazzi-" + (1 + progress.count - progress.index)
+            wrapper.addClass "paparazzi-" + (progress.count - progress.index)
 
     capture = (progress) ->
         paparazziUpdate progress
