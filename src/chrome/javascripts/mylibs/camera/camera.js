@@ -4,7 +4,7 @@
   define(['libs/face/track', 'mylibs/effects/effects', 'mylibs/transfer/transfer'], function(face, effects, transfer) {
     'use strict';
 
-    var animate, canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, paparazzi, pause, paused, pub, supported, track, update, video, wrapper;
+    var animate, canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, paparazzi, paparazziUpdate, pause, paused, pub, supported, track, update, video, wrapper;
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     track = {
@@ -33,8 +33,7 @@
       effects.advance(canvas);
       return effect.filter(canvas, canvas, frame, track);
     };
-    capture = function(progress) {
-      var file, flashCallback, image, name, saveFinished;
+    paparazziUpdate = function(progress) {
       if (progress.count > 1) {
         if (progress.index === 0) {
           paparazzi.removeClass("hidden");
@@ -43,11 +42,15 @@
           setTimeout((function() {
             wrapper.removeClass("paparazzi-1");
             return paparazzi.addClass("hidden");
-          }), 1000);
+          }), 250);
         }
         wrapper.removeClass("paparazzi-" + (1 + progress.count - progress.index));
-        wrapper.addClass("paparazzi-" + (progress.count - progress.index));
+        return wrapper.addClass("paparazzi-" + (progress.count - progress.index));
       }
+    };
+    capture = function(progress) {
+      var file, flashCallback, image, name, saveFinished;
+      paparazziUpdate(progress);
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       flashCallback = function() {
@@ -62,7 +65,8 @@
           }), 200);
         }
       };
-      flash(flashCallback);
+      flash((function() {}));
+      setTimeout(flashCallback, 1);
       file = {
         type: "jpg",
         name: "" + name + ".jpg",

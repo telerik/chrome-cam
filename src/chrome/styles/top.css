@@ -26,9 +26,11 @@ iframe {
 .wrapper {
     position: absolute;
     z-index: 1000;
-    top: 44px;
-    left: 136px;
+    top: 43px;
+    left: 135px;
 }
+
+#canvas, .transfer { border: 1px solid #2d2d2d; }
 
 .paparazzi-wrapper {
     position: absolute;
@@ -77,17 +79,17 @@ iframe {
 
     .transfer.slide-in-0 {
         -webkit-transition: all 0.5s ease-in-out;
-        -webkit-transform: translate(-14px, 14px);
+        -webkit-transform: translate(-20px, 20px);
     }
 
     .transfer.slide-in-1 {
         -webkit-transition: 0.2s ease-in-out;
-        -webkit-transform: translate(-7px, 7px);
+        -webkit-transform: translate(-10px, 10px);
     }
 
     .transfer.slide-out {
         -webkit-transition: 0.5s ease-in-out;
-        -webkit-transform: translate(7px, -7px);
+        -webkit-transform: translate(10px, -10px);
     }
 
 #flash {

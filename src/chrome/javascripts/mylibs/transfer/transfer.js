@@ -5,7 +5,7 @@
     'use strict';
 
     var OFFSET, destination, elements, pub, slideIn, slideOut, template, wrapper;
-    OFFSET = 7;
+    OFFSET = 10;
     template = null;
     destination = null;
     elements = [];
@@ -50,23 +50,25 @@
         container.offset(wrapper.offset());
         container.width(wrapper.width());
         container.height(wrapper.height());
+        $("<img />", {
+          src: file.file
+        }).appendTo(container);
         container.appendTo($("body"));
-        if (progress.count > 0 && progress.index < progress.count - 1) {
-          container.css({
-            "z-index": container.css("z-index") - 2
-          });
-          slideOut(container);
+        if (progress.count > 1 && progress.index < progress.count - 1) {
+          container.css("z-index", 999);
+          setTimeout((function() {
+            return slideOut(container);
+          }), 1);
           for (_i = 0, _len = elements.length; _i < _len; _i++) {
             element = elements[_i];
             element.css({
               "z-index": element.css("z-index") - 1
             });
-            slideOut(element);
+            setTimeout((function() {
+              return slideOut(element, 1);
+            }), 1);
           }
         }
-        $("<img />", {
-          src: file.file
-        }).appendTo(container);
         return elements.push(container);
       },
       run: function(callback) {
@@ -84,7 +86,12 @@
         })();
         return $.when.apply($, deferreds).done(function() {
           return kendo.fx(last).transfer(destination).duration(1000).play().done(function() {
+            var _i, _len;
             last.remove();
+            for (_i = 0, _len = elements.length; _i < _len; _i++) {
+              element = elements[_i];
+              element.remove();
+            }
             elements = [];
             return callback();
           });

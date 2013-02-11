@@ -1,7 +1,7 @@
 define [], () ->
     'use strict'
 
-    OFFSET = 7
+    OFFSET = 10
     template = null
     destination = null
     elements = []
@@ -48,18 +48,17 @@ define [], () ->
             container.offset wrapper.offset()
             container.width wrapper.width()
             container.height wrapper.height()
+            $("<img />", src: file.file).appendTo container
             container.appendTo $("body")
 
-            if progress.count > 0 and progress.index < progress.count-1
-                container.css "z-index": container.css("z-index")-2
-                slideOut container
+            if progress.count > 1 and progress.index < progress.count-1
+                container.css "z-index", 999
+                setTimeout (-> slideOut container), 1
 
                 # Adjust all of the images below it
                 for element in elements
                     element.css "z-index": element.css("z-index")-1
-                    slideOut element
-
-            $("<img />", src: file.file).appendTo container
+                    setTimeout (-> slideOut element, 1), 1
 
             elements.push container
 
@@ -73,8 +72,8 @@ define [], () ->
                 kendo.fx(last).transfer(destination).duration(1000).play().done ->
                     last.remove()
 
-                    #for element in elements
-                    #    element.remove()
+                    for element in elements
+                        element.remove()
 
                     elements = []
                     callback()

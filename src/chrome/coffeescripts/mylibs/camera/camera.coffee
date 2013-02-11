@@ -42,19 +42,22 @@ define [
         effects.advance canvas
         effect.filter canvas, canvas, frame, track
 
-    capture = (progress) ->
-        if progress.count > 1
-            if progress.index == 0
-                paparazzi.removeClass "hidden"
-            # HACK: this should be refactored if time permits
-            if progress.index == progress.count - 1
-                setTimeout (->
-                    wrapper.removeClass "paparazzi-1"
-                    paparazzi.addClass "hidden"
-                ), 1000
+    paparazziUpdate = (progress) ->
+            if progress.count > 1
+                if progress.index == 0
+                    paparazzi.removeClass "hidden"
+                # HACK: this should be refactored if time permits
+                if progress.index == progress.count - 1
+                    setTimeout (->
+                        wrapper.removeClass "paparazzi-1"
+                        paparazzi.addClass "hidden"
+                    ), 250
 
-            wrapper.removeClass "paparazzi-" + (1 + progress.count - progress.index)
-            wrapper.addClass "paparazzi-" + (progress.count - progress.index)
+                wrapper.removeClass "paparazzi-" + (1 + progress.count - progress.index)
+                wrapper.addClass "paparazzi-" + (progress.count - progress.index)
+
+    capture = (progress) ->
+        paparazziUpdate progress
 
         image = canvas.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
@@ -70,7 +73,9 @@ define [
                     transfer.run callback
                 ), 200
 
-        flash flashCallback
+        flash (->)
+
+        setTimeout flashCallback, 1
 
         # set the name of this image to the current time string
         file = { type: "jpg", name: "#{name}.jpg", file: image }
