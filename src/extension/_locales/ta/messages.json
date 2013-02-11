@@ -1,10 +1,10 @@
 {
     "appName": {
-        "message": "Camera",
+        "message": "கேமரா",
         "description": "The title of the application, displayed in the web store."
     },
     "appDesc": {
-        "message": "A camera app for Chrome.",
+        "message": "Chrome க்கான கேமரா பயன்பாடு.",
         "description": "The description of the application, displayed in the web store."
     },
     "about_menu_item": {

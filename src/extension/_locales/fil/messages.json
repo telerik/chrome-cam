@@ -4,7 +4,7 @@
         "description": "The title of the application, displayed in the web store."
     },
     "appDesc": {
-        "message": "A camera app for Chrome.",
+        "message": "Isang camera app para sa Chrome.",
         "description": "The description of the application, displayed in the web store."
     },
     "about_menu_item": {

@@ -1,10 +1,10 @@
 {
     "appName": {
-        "message": "Camera",
+        "message": "Камера",
         "description": "The title of the application, displayed in the web store."
     },
     "appDesc": {
-        "message": "A camera app for Chrome.",
+        "message": "Апликација камере за Chrome.",
         "description": "The description of the application, displayed in the web store."
     },
     "about_menu_item": {
