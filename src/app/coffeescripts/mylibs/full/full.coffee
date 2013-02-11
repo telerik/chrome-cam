@@ -171,7 +171,7 @@ define [
             callback = ->
                 $.publish "/bottom/update", [ "full" ]
 
-            capture callback, index: 1, count: 1
+            capture callback, index: 0, count: 1
 
         paparazzi: ->
 

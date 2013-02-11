@@ -185,7 +185,7 @@
           return $.publish("/bottom/update", ["full"]);
         };
         return capture(callback, {
-          index: 1,
+          index: 0,
           count: 1
         });
       },
