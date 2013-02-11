@@ -57,38 +57,40 @@ define [
             wrapper.addClass "paparazzi-" + (progress.count - progress.index)
 
     capture = (progress) ->
+        flash()
+
         paparazziUpdate progress
 
         image = canvas.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
 
-        flashCallback = ->
-            transfer.add file, progress
+        #flashCallback = ->
+        #    transfer.add file, progress
 
-            callback = ->
-                $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
+        #    callback = ->
+        #        $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
 
-            if progress.index == progress.count - 1
-                setTimeout (->
-                    transfer.run callback
-                ), 200
+        #    if progress.index == progress.count - 1
+        #        setTimeout (->
+        #            transfer.run callback
+        #        ), 200
 
-        flash (->)
-
-        setTimeout flashCallback, 1
+        #setTimeout flashCallback, 1
 
         # set the name of this image to the current time string
         file = { type: "jpg", name: "#{name}.jpg", file: image }
+
+        animate file, progress
 
         $.publish "/file/save", [file]
         saveFinished = $.subscribe "/file/saved/#{file.name}", ->
             $.unsubscribe saveFinished
             $.publish "/postman/deliver", [ file, "/captured/image" ]
 
-    flash = (callback) ->
+    flash = ->
         div = $("#flash")
         fx = kendo.fx(div)
-        anim = fx.fadeIn().play().done(-> fx.fadeOut().play().done(-> callback()))
+        anim = fx.fadeIn().play().done(-> fx.fadeOut().play().done())
 
     animate = (file, progress) ->
 
@@ -101,7 +103,9 @@ define [
         transfer.add file, progress
 
         if progress.index == progress.count-1
-            transfer.run callback
+            setTimeout (->
+                transfer.run callback
+            ), 200
 
     hollaback = (stream) ->
         window.stream = stream

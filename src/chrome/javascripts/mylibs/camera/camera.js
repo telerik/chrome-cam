@@ -49,43 +49,29 @@
       }
     };
     capture = function(progress) {
-      var file, flashCallback, image, name, saveFinished;
+      var file, image, name, saveFinished;
+      flash();
       paparazziUpdate(progress);
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
-      flashCallback = function() {
-        var callback;
-        transfer.add(file, progress);
-        callback = function() {
-          return $.publish("/postman/deliver", [file, "/bottom/thumbnail"]);
-        };
-        if (progress.index === progress.count - 1) {
-          return setTimeout((function() {
-            return transfer.run(callback);
-          }), 200);
-        }
-      };
-      flash((function() {}));
-      setTimeout(flashCallback, 1);
       file = {
         type: "jpg",
         name: "" + name + ".jpg",
         file: image
       };
+      animate(file, progress);
       $.publish("/file/save", [file]);
       return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
         $.unsubscribe(saveFinished);
         return $.publish("/postman/deliver", [file, "/captured/image"]);
       });
     };
-    flash = function(callback) {
+    flash = function() {
       var anim, div, fx;
       div = $("#flash");
       fx = kendo.fx(div);
       return anim = fx.fadeIn().play().done(function() {
-        return fx.fadeOut().play().done(function() {
-          return callback();
-        });
+        return fx.fadeOut().play().done();
       });
     };
     animate = function(file, progress) {
@@ -98,7 +84,9 @@
       }
       transfer.add(file, progress);
       if (progress.index === progress.count - 1) {
-        return transfer.run(callback);
+        return setTimeout((function() {
+          return transfer.run(callback);
+        }), 200);
       }
     };
     hollaback = function(stream) {
