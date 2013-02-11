@@ -34,8 +34,7 @@
       return effect.filter(canvas, canvas, frame, track);
     };
     capture = function(progress) {
-      var file, image, name, saveFinished;
-      flash();
+      var file, flashCallback, image, name, saveFinished;
       if (progress.count > 1) {
         if (progress.index === 0) {
           paparazzi.removeClass("hidden");
@@ -51,34 +50,52 @@
       }
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
+      flashCallback = function() {
+        var callback;
+        transfer.add(file, progress);
+        callback = function() {
+          return $.publish("/postman/deliver", [file, "/bottom/thumbnail"]);
+        };
+        if (progress.index === progress.count - 1) {
+          return setTimeout((function() {
+            return transfer.run(callback);
+          }), 200);
+        }
+      };
+      flash(flashCallback);
       file = {
         type: "jpg",
         name: "" + name + ".jpg",
         file: image
       };
       $.publish("/file/save", [file]);
-      saveFinished = $.subscribe("/file/saved/" + file.name, function() {
+      return saveFinished = $.subscribe("/file/saved/" + file.name, function() {
         $.unsubscribe(saveFinished);
         return $.publish("/postman/deliver", [file, "/captured/image"]);
       });
-      return animate(file);
     };
-    flash = function() {
+    flash = function(callback) {
       var anim, div, fx;
       div = $("#flash");
       fx = kendo.fx(div);
       return anim = fx.fadeIn().play().done(function() {
-        return fx.fadeOut().play();
+        return fx.fadeOut().play().done(function() {
+          return callback();
+        });
       });
     };
-    animate = function(file) {
+    animate = function(file, progress) {
       var callback;
       callback = function() {
         return $.publish("/postman/deliver", [file, "/bottom/thumbnail"]);
       };
-      transfer.setup();
-      transfer.add(file);
-      return transfer.run(callback);
+      if (progress.index === 0) {
+        transfer.setup();
+      }
+      transfer.add(file, progress);
+      if (progress.index === progress.count - 1) {
+        return transfer.run(callback);
+      }
     };
     hollaback = function(stream) {
       window.stream = stream;

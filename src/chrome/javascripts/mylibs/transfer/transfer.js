@@ -4,11 +4,37 @@
   define([], function() {
     'use strict';
 
-    var destination, pub, template, transferrer, wrapper;
+    var OFFSET, destination, elements, pub, slideIn, slideOut, template, wrapper;
+    OFFSET = 7;
     template = null;
     destination = null;
-    transferrer = null;
+    elements = [];
     wrapper = null;
+    slideIn = function(element, index) {
+      var deferred, end;
+      deferred = $.Deferred();
+      end = function(event) {
+        element.off("webkitTransitionEnd", end);
+        return deferred.resolve();
+      };
+      element.on("webkitTransitionEnd", end);
+      element.addClass("slide-in-" + index);
+      return deferred.promise();
+    };
+    slideOut = function(element) {
+      var end;
+      end = function(event) {
+        var offset;
+        element.off("webkitTransitionEnd", end);
+        offset = element.offset();
+        offset.left += OFFSET;
+        offset.top -= OFFSET;
+        element.offset(offset);
+        return element.removeClass("slide-out");
+      };
+      element.on("webkitTransitionEnd", end);
+      return element.addClass("slide-out");
+    };
     return pub = {
       init: function() {
         template = $("#transfer-animation-template div");
@@ -16,34 +42,52 @@
         return wrapper = $(".wrapper");
       },
       setup: function() {
-        transferrer = template.clone();
-        transferrer.offset(wrapper.offset());
-        transferrer.width(wrapper.width());
-        transferrer.height(wrapper.height());
-        return transferrer.appendTo($("body"));
+        return elements = [];
       },
-      add: function(file) {
-        if (transferrer === null) {
-          return;
+      add: function(file, progress) {
+        var container, element, _i, _len;
+        container = template.clone();
+        container.offset(wrapper.offset());
+        container.width(wrapper.width());
+        container.height(wrapper.height());
+        container.appendTo($("body"));
+        if (progress.count > 0 && progress.index < progress.count - 1) {
+          container.css({
+            "z-index": container.css("z-index") - 2
+          });
+          slideOut(container);
+          for (_i = 0, _len = elements.length; _i < _len; _i++) {
+            element = elements[_i];
+            element.css({
+              "z-index": element.css("z-index") - 1
+            });
+            slideOut(element);
+          }
         }
-        return $("<img />", {
+        $("<img />", {
           src: file.file
-        }).appendTo(transferrer);
+        }).appendTo(container);
+        return elements.push(container);
       },
       run: function(callback) {
-        if (transferrer === null) {
-          return;
-        }
-        return transferrer.kendoStop().kendoAnimate({
-          effects: "transfer",
-          target: destination,
-          duration: 1000,
-          ease: "ease-in",
-          complete: function() {
-            transferrer.remove();
-            transferrer = null;
-            return callback();
+        var deferreds, element, key, last;
+        last = elements.pop();
+        deferreds = [];
+        deferreds = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (key = _i = 0, _len = elements.length; _i < _len; key = ++_i) {
+            element = elements[key];
+            _results.push(slideIn(element, key));
           }
+          return _results;
+        })();
+        return $.when.apply($, deferreds).done(function() {
+          return kendo.fx(last).transfer(destination).duration(1000).play().done(function() {
+            last.remove();
+            elements = [];
+            return callback();
+          });
         });
       }
     };

@@ -1,10 +1,37 @@
 define [], () ->
     'use strict'
 
+    OFFSET = 7
     template = null
     destination = null
-    transferrer = null
+    elements = []
     wrapper = null
+
+    slideIn = (element, index) ->
+        deferred = $.Deferred()
+
+        end = (event) ->
+            element.off "webkitTransitionEnd", end
+            deferred.resolve()
+
+        element.on "webkitTransitionEnd", end
+
+        element.addClass "slide-in-#{index}"
+        return deferred.promise()
+
+    slideOut = (element) ->
+        end = (event) ->
+            element.off "webkitTransitionEnd", end
+
+            offset = element.offset()
+            offset.left += OFFSET
+            offset.top -= OFFSET
+
+            element.offset offset
+            element.removeClass "slide-out"
+
+        element.on "webkitTransitionEnd", end
+        element.addClass "slide-out"
 
     pub =
         init: ->
@@ -13,29 +40,41 @@ define [], () ->
             wrapper = $(".wrapper")
 
         setup: ->
-            transferrer = template.clone();
+            elements = []
 
-            transferrer.offset wrapper.offset()
-            transferrer.width wrapper.width()
-            transferrer.height wrapper.height()
+        add: (file, progress) ->
+            container = template.clone()
 
-            transferrer.appendTo $("body")
+            container.offset wrapper.offset()
+            container.width wrapper.width()
+            container.height wrapper.height()
+            container.appendTo $("body")
 
-        add: (file) ->
-            return unless transferrer != null
+            if progress.count > 0 and progress.index < progress.count-1
+                container.css "z-index": container.css("z-index")-2
+                slideOut container
 
-            $("<img />", src: file.file).appendTo transferrer
+                # Adjust all of the images below it
+                for element in elements
+                    element.css "z-index": element.css("z-index")-1
+                    slideOut element
+
+            $("<img />", src: file.file).appendTo container
+
+            elements.push container
 
         run: (callback) ->
-            return unless transferrer != null
+            last = elements.pop()
 
-            transferrer.kendoStop().kendoAnimate
-                effects: "transfer",
-                target: destination,
-                duration: 1000,
-                ease: "ease-in",
-                complete: ->
-                    transferrer.remove()
-                    transferrer = null
+            deferreds = []
 
+            deferreds = (slideIn element, key for element, key in elements)
+            $.when.apply($, deferreds).done ->
+                kendo.fx(last).transfer(destination).duration(1000).play().done ->
+                    last.remove()
+
+                    #for element in elements
+                    #    element.remove()
+
+                    elements = []
                     callback()
