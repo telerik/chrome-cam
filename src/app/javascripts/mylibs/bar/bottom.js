@@ -31,7 +31,7 @@
       }
     });
     countdown = function(position, callback) {
-      return $(view.el.counters[position]).kendoStop(true).kendoAnimate({
+      return $("span", view.el.counters[position]).kendoStop(true).kendoAnimate({
         effects: "zoomIn fadeIn",
         duration: 200,
         show: true,
@@ -43,7 +43,8 @@
             }, 500);
           } else {
             callback();
-            return view.el.counters.hide();
+            view.el.counters.hide();
+            return $("span", view.el.counters).hide();
           }
         }
       });
@@ -117,6 +118,9 @@
           $.publish("/capture/" + mode);
           return $.publish("/full/capture/end");
         };
+        view.el.counters.css({
+          "display": "block"
+        });
         $.publish("/countdown/" + mode);
         if (event.ctrlKey || event.metaKey) {
           return capture();

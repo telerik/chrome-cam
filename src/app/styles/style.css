@@ -45,8 +45,6 @@ body div { padding-top: 0px; }
 
 .hidden { display: none }
 
-.circle { border-radius: 50%; }
-
 [draggable] {
   -webkit-user-select: none;
   user-select: none;
@@ -237,19 +235,30 @@ body div { padding-top: 0px; }
     display: -webkit-box;
     -webkit-box-orient: horizontal;
 }
-    .countdown > span { display: none; }
+    .countdown span { display: none; }
+
+.circle {
+    border-radius: 50%;
+    display: block;
+    width: 18px;
+    height: 18px;
+    overflow: hidden;
+    border: 1px solid #2d2d2d;
+    margin: auto 10px;
+}
 
 .red-dot {
     position: relative;
     display: block;
-    left: 0;
+    left: -1px;
     background-color: #BA000D;
-    width: 18px;
-    height: 18px;
-    margin: auto 10px;
     text-align: center;
-    box-shadow: inset 0px 0px 5px 0 rgba(0, 0, 0, .9);
     -webkit-transition: border-radius 0.5s ease-out;
+    height: 20px;
+    width: 20px;
+    box-shadow: inset 0px 0px 5px 0 #2d2d2d;
+    border-radius: 50%;
+    top: -1px;
 }
 
 .bar .galleryLink {

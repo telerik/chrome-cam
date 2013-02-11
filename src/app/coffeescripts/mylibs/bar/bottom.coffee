@@ -36,7 +36,7 @@ define [
 
     countdown = (position, callback) ->
 
-        $(view.el.counters[position]).kendoStop(true).kendoAnimate
+        $("span", view.el.counters[position]).kendoStop(true).kendoAnimate
             effects: "zoomIn fadeIn",
             duration: 200,
             show: true,
@@ -53,6 +53,7 @@ define [
 
                     # hide the counters
                     view.el.counters.hide()
+                    $("span", view.el.counters).hide()
 
     states =
 
@@ -130,6 +131,8 @@ define [
             capture = ->
                 $.publish "/capture/#{mode}"
                 $.publish "/full/capture/end"
+
+            view.el.counters.css "display": "block"
 
             $.publish "/countdown/#{mode}"
             if event.ctrlKey or event.metaKey
