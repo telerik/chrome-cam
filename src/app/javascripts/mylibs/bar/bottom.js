@@ -4,7 +4,7 @@
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/navigation/navigation', 'text!mylibs/bar/views/bottom.html', 'text!mylibs/bar/views/thumbnail.html'], function(kendo, utils, navigation, template, thumbnailTemplate) {
     var BROKEN_IMAGE, countdown, paused, pub, states, view, viewModel;
     BROKEN_IMAGE = utils.placeholder.image();
-    paused = true;
+    paused = false;
     view = {};
     viewModel = kendo.observable({
       processing: {

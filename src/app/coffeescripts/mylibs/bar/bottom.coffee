@@ -8,7 +8,7 @@ define [
 
     BROKEN_IMAGE = utils.placeholder.image()
 
-    paused = true
+    paused = false
 
     view = {}
 
