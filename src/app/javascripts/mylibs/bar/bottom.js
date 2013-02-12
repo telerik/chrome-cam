@@ -111,13 +111,13 @@
           $.publish("/capture/" + mode);
           return $.publish("/full/capture/end");
         };
-        view.el.counters.css({
-          "display": "block"
-        });
         $.publish("/countdown/" + mode);
         if (event.ctrlKey || event.metaKey) {
           return capture();
         } else {
+          view.el.counters.css({
+            "display": "block"
+          });
           return countdown(0, capture);
         }
       },

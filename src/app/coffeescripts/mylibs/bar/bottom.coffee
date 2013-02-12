@@ -125,12 +125,11 @@ define [
                 $.publish "/capture/#{mode}"
                 $.publish "/full/capture/end"
 
-            view.el.counters.css "display": "block"
-
             $.publish "/countdown/#{mode}"
             if event.ctrlKey or event.metaKey
                 capture()
             else
+                view.el.counters.css "display": "block"
                 countdown 0, capture
 
         filters: (e) ->
