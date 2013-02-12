@@ -19,9 +19,7 @@ iframe {
     height: 540px;
 }
 
-#video {
-    display: none;
-}
+#video { display: none; }
 
 .wrapper {
     position: absolute;
@@ -32,9 +30,7 @@ iframe {
 
 #canvas, .transfer { border: 1px solid #2d2d2d; }
 
-.paparazzi-wrapper {
-    position: absolute;
-}
+.paparazzi-wrapper { position: absolute; }
 
 .wrapper .paparazzi { left: 50px; }
 .wrapper .paparazzi, .wrapper .paparazzi:before, .wrapper .paparazzi:after {
@@ -51,7 +47,6 @@ iframe {
         left: -8px;
         display: block;
     }
-
     .wrapper .paparazzi:after {
         top: -12px;
         left: -15px;
