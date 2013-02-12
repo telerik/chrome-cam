@@ -39,12 +39,12 @@
         }
         if (progress.index === progress.count - 1) {
           setTimeout((function() {
-            wrapper.removeClass("paparazzi-1");
+            wrapper.removeClass("paparazzi-3");
             return paparazzi.addClass("hidden");
           }), 250);
         }
-        wrapper.removeClass("paparazzi-" + (1 + progress.count - progress.index));
-        return wrapper.addClass("paparazzi-" + (progress.count - progress.index));
+        wrapper.removeClass("paparazzi-" + progress.index);
+        return wrapper.addClass("paparazzi-" + (progress.index + 1));
       }
     };
     capture = function(progress) {
