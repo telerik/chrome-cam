@@ -2,8 +2,9 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/navigation/navigation', 'text!mylibs/bar/views/bottom.html', 'text!mylibs/bar/views/thumbnail.html'], function(kendo, utils, navigation, template, thumbnailTemplate) {
-    var BROKEN_IMAGE, countdown, pub, states, view, viewModel;
+    var BROKEN_IMAGE, countdown, paused, pub, states, view, viewModel;
     BROKEN_IMAGE = utils.placeholder.image();
+    paused = true;
     view = {};
     viewModel = kendo.observable({
       processing: {
@@ -51,34 +52,23 @@
     };
     states = {
       capture: function() {
-        viewModel.set("thumbnail.active", true);
         viewModel.set("mode.visible", false);
         viewModel.set("capture.visible", false);
-        return viewModel.set("filters.visible", false);
-      },
-      record: function() {
-        viewModel.set("thumbnail.active", false);
-        viewModel.set("mode.visible", false);
         return viewModel.set("filters.visible", false);
       },
       full: function() {
-        viewModel.set("processing.visible", false);
-        viewModel.set("thumbnail.active", true);
         viewModel.set("mode.visible", true);
         viewModel.set("capture.visible", true);
         return viewModel.set("filters.visible", true);
-      },
-      processing: function() {
-        viewModel.set("processing.visible", true);
-        viewModel.set("capture.visible", false);
-        view.el.bar.removeClass("recording");
-        return view.el.stop.css("border-radius", 100);
       },
       set: function(state) {
         return this[state]();
       }
     };
     return pub = {
+      pause: function(pausing) {
+        return paused = pausing;
+      },
       init: function(container) {
         view = new kendo.View(container, template);
         view.render(viewModel, true);
@@ -98,6 +88,9 @@
           }
         });
         $.subscribe("/keyboard/space", function(e) {
+          if (paused) {
+            return;
+          }
           if (viewModel.get("capture.visible")) {
             return pub.capture(e);
           }

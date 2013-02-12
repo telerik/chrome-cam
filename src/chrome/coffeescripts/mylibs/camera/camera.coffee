@@ -62,19 +62,6 @@ define [
         image = canvas.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
 
-        #flashCallback = ->
-        #    transfer.add file, progress
-
-        #    callback = ->
-        #        $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
-
-        #    if progress.index == progress.count - 1
-        #        setTimeout (->
-        #            transfer.run callback
-        #        ), 200
-
-        #setTimeout flashCallback, 1
-
         # set the name of this image to the current time string
         file = { type: "jpg", name: "#{name}.jpg", file: image }
 

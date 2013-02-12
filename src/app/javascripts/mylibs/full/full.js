@@ -106,6 +106,7 @@
       to: function() {
         var deferred, updated;
         deferred = $.Deferred();
+        APP.bottom.pause(false);
         updated = $.subscribe("/camera/updated", function() {
           var token;
           $.unsubscribe(updated);
@@ -122,6 +123,7 @@
       from: function() {
         var deferred, token;
         deferred = $.Deferred();
+        APP.bottom.pause(true);
         token = $.subscribe("/camera/snapshot/response", function(url) {
           $.unsubscribe(token);
           full.el.snapshot.attr("src", url);

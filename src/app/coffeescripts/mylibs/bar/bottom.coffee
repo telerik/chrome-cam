@@ -8,6 +8,8 @@ define [
 
     BROKEN_IMAGE = utils.placeholder.image()
 
+    paused = true
+
     view = {}
 
     # create a view model for the top bar
@@ -56,31 +58,21 @@ define [
                     $("span", view.el.counters).hide()
 
     states =
-
         capture: ->
-            viewModel.set("thumbnail.active", true)
-            viewModel.set("mode.visible", false)
-            viewModel.set("capture.visible", false)
-            viewModel.set("filters.visible", false)
-        record: ->
-            viewModel.set("thumbnail.active", false)
-            viewModel.set("mode.visible", false)
-            viewModel.set("filters.visible", false)
+            viewModel.set "mode.visible", false
+            viewModel.set "capture.visible", false
+            viewModel.set "filters.visible", false
         full: ->
-            viewModel.set("processing.visible", false)
-            viewModel.set("thumbnail.active", true)
-            viewModel.set("mode.visible", true)
-            viewModel.set("capture.visible", true)
-            viewModel.set("filters.visible", true)
-        processing: ->
-            viewModel.set("processing.visible", true)
-            viewModel.set("capture.visible", false)
-            view.el.bar.removeClass("recording")
-            view.el.stop.css "border-radius", 100
+            viewModel.set "mode.visible", true
+            viewModel.set "capture.visible", true
+            viewModel.set "filters.visible", true
         set: (state) ->
             this[state]()
 
     pub =
+
+        pause: (pausing) ->
+            paused = pausing
 
         init: (container) ->
             # create the bottom bar for the gallery
@@ -107,6 +99,7 @@ define [
                     viewModel.set("thumbnail.enabled", false)
 
             $.subscribe "/keyboard/space", (e) ->
+                return if paused
                 pub.capture e if viewModel.get("capture.visible")
 
             # get a reference to the dots.

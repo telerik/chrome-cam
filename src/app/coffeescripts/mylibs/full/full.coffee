@@ -92,6 +92,8 @@ define [
         to: ->
             deferred = $.Deferred()
 
+            APP.bottom.pause false
+
             updated = $.subscribe "/camera/updated", ->
                 $.unsubscribe updated
 
@@ -108,6 +110,8 @@ define [
 
         from: ->
             deferred = $.Deferred()
+
+            APP.bottom.pause true
 
             token = $.subscribe "/camera/snapshot/response", (url) ->
                 $.unsubscribe token
