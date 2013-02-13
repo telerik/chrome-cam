@@ -42,9 +42,10 @@
             wrapper.removeClass("paparazzi-3");
             return paparazzi.addClass("hidden");
           }), 250);
+        } else {
+          wrapper.addClass("paparazzi-" + (progress.index + 2));
         }
-        wrapper.removeClass("paparazzi-" + (progress.index + 1));
-        return wrapper.addClass("paparazzi-" + (progress.index + 2));
+        return wrapper.removeClass("paparazzi-" + (progress.index + 1));
       }
     };
     capture = function(progress) {

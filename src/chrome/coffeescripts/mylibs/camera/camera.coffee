@@ -50,9 +50,10 @@ define [
                     wrapper.removeClass "paparazzi-3"
                     paparazzi.addClass "hidden"
                 ), 250
+            else
+                wrapper.addClass "paparazzi-" + (progress.index + 2)
 
             wrapper.removeClass "paparazzi-" + (progress.index + 1)
-            wrapper.addClass "paparazzi-" + (progress.index + 2)
 
     capture = (progress) ->
         callback = ->
