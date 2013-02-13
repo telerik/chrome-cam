@@ -2,7 +2,8 @@ define [
     'libs/face/track'
     'mylibs/effects/effects'
     'mylibs/transfer/transfer'
-], (face, effects, transfer) ->
+    'mylibs/localization/localization'
+], (face, effects, transfer, localization) ->
     'use strict'
 
     canvas = document.getElementById("canvas")
@@ -158,3 +159,7 @@ define [
 
             # initialize the face tracking
             face.init 0, 0, 0, 0
+
+            # HACK: This should be done some where else.
+            effects.init()
+            effect.name = localization[effect.id] for effect in effects.data
