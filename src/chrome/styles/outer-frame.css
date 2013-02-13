@@ -53,8 +53,8 @@ iframe {
     }
 
 .paparazzi-1 .paparazzi,
-.paparazzi-2 .paparazzi:before,
-.paparazzi-3 .paparazzi:after {
+.paparazzi-2 .paparazzi:before, .paparazzi-2 .paparazzi,
+.paparazzi-3 .paparazzi:after, .paparazzi-3 .paparazzi:before, .paparazzi-3 .paparazzi {
     background: rgb(45, 45, 45);
     border-color: rgb(255, 255, 255);
 }
