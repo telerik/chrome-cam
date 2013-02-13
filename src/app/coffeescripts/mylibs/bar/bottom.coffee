@@ -114,9 +114,9 @@ define [
             return view
 
         capture: (e) ->
-            $.publish "/full/capture/begin"
-
             mode = viewModel.get("mode.active")
+
+            $.publish "/full/capture/begin", [ mode ]
 
             states.capture()
 

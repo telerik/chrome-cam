@@ -51,13 +51,14 @@ define [
                     paparazzi.addClass "hidden"
                 ), 250
 
-            wrapper.removeClass "paparazzi-" + progress.index
-            wrapper.addClass "paparazzi-" + (progress.index + 1)
+            wrapper.removeClass "paparazzi-" + (progress.index + 1)
+            wrapper.addClass "paparazzi-" + (progress.index + 2)
 
     capture = (progress) ->
-        flash()
+        callback = ->
+            paparazziUpdate progress
 
-        paparazziUpdate progress
+        flash(callback)
 
         image = canvas.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
@@ -72,10 +73,10 @@ define [
             $.unsubscribe saveFinished
             $.publish "/postman/deliver", [ file, "/captured/image" ]
 
-    flash = ->
+    flash = (callback) ->
         div = $("#flash")
         fx = kendo.fx(div)
-        anim = fx.fadeIn().play().done(-> fx.fadeOut().play().done())
+        anim = fx.fadeIn().play().done(-> fx.fadeOut().play().done(callback))
 
     animate = (file, progress) ->
 
@@ -112,6 +113,11 @@ define [
         paused = message.paused
         wrapper.toggle not paused
 
+    prepare = (mode) ->
+        if mode == "paparazzi"
+            paparazzi.removeClass "hidden"
+            wrapper.addClass "paparazzi-1"
+
     pub =
         cleanup: ->
             video.pause()
@@ -146,6 +152,8 @@ define [
                 image = canvas.toDataURL("image/jpeg", 1.0)
 
                 $.publish "/postman/deliver", [ image, "/camera/snapshot/response" ]
+
+            $.subscribe "/camera/capture/prepare", prepare
 
             # initialize the face tracking
             face.init 0, 0, 0, 0

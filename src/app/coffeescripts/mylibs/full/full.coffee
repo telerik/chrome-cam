@@ -66,7 +66,8 @@ define [
                     show: false
                     duration: duration
 
-        $.subscribe "/full/capture/begin", ->
+        $.subscribe "/full/capture/begin", (mode) ->
+            $.publish "/postman/deliver", [ mode, "/camera/capture/prepare" ]
             full.el.wrapper.addClass "capturing"
 
         $.subscribe "/full/capture/end", ->

@@ -4,7 +4,7 @@
   define(['libs/face/track', 'mylibs/effects/effects', 'mylibs/transfer/transfer'], function(face, effects, transfer) {
     'use strict';
 
-    var animate, canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, paparazzi, paparazziUpdate, pause, paused, pub, supported, track, update, video, wrapper;
+    var animate, canvas, capture, ctx, draw, effect, errback, flash, frame, hollaback, paparazzi, paparazziUpdate, pause, paused, prepare, pub, supported, track, update, video, wrapper;
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     track = {
@@ -43,14 +43,16 @@
             return paparazzi.addClass("hidden");
           }), 250);
         }
-        wrapper.removeClass("paparazzi-" + progress.index);
-        return wrapper.addClass("paparazzi-" + (progress.index + 1));
+        wrapper.removeClass("paparazzi-" + (progress.index + 1));
+        return wrapper.addClass("paparazzi-" + (progress.index + 2));
       }
     };
     capture = function(progress) {
-      var file, image, name, saveFinished;
-      flash();
-      paparazziUpdate(progress);
+      var callback, file, image, name, saveFinished;
+      callback = function() {
+        return paparazziUpdate(progress);
+      };
+      flash(callback);
       image = canvas.toDataURL("image/jpeg", 1.0);
       name = new Date().getTime();
       file = {
@@ -65,12 +67,12 @@
         return $.publish("/postman/deliver", [file, "/captured/image"]);
       });
     };
-    flash = function() {
+    flash = function(callback) {
       var anim, div, fx;
       div = $("#flash");
       fx = kendo.fx(div);
       return anim = fx.fadeIn().play().done(function() {
-        return fx.fadeOut().play().done();
+        return fx.fadeOut().play().done(callback);
       });
     };
     animate = function(file, progress) {
@@ -108,6 +110,12 @@
       }
       paused = message.paused;
       return wrapper.toggle(!paused);
+    };
+    prepare = function(mode) {
+      if (mode === "paparazzi") {
+        paparazzi.removeClass("hidden");
+        return wrapper.addClass("paparazzi-1");
+      }
     };
     return pub = {
       cleanup: function() {
@@ -160,6 +168,7 @@
           image = canvas.toDataURL("image/jpeg", 1.0);
           return $.publish("/postman/deliver", [image, "/camera/snapshot/response"]);
         });
+        $.subscribe("/camera/capture/prepare", prepare);
         return face.init(0, 0, 0, 0);
       }
     };

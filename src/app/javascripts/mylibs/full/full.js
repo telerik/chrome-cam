@@ -75,7 +75,8 @@
           });
         }
       });
-      $.subscribe("/full/capture/begin", function() {
+      $.subscribe("/full/capture/begin", function(mode) {
+        $.publish("/postman/deliver", [mode, "/camera/capture/prepare"]);
         return full.el.wrapper.addClass("capturing");
       });
       $.subscribe("/full/capture/end", function() {
