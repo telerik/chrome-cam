@@ -34,11 +34,10 @@ iframe {
 
 .wrapper .paparazzi { left: 50px; }
 .wrapper .paparazzi, .wrapper .paparazzi:before, .wrapper .paparazzi:after {
-    border: 1px solid #ddd;
+    border: 1px solid rgba(225, 225, 225, .7);
     height: 20px;
     content: '';
     width: 20px;
-    background: #2d2d2d;
     position: relative;
     z-index: 5000;
 }
@@ -55,8 +54,10 @@ iframe {
 
 .paparazzi-1 .paparazzi,
 .paparazzi-2 .paparazzi:before,
-.paparazzi-3 .paparazzi:after
- { background: #ddd; }
+.paparazzi-3 .paparazzi:after {
+    background: rgb(45, 45, 45);
+    border-color: rgb(255, 255, 255);
+}
 
 .thumbnail {
     top: 633px;
