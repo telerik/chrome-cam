@@ -172,60 +172,77 @@ define [
 
     render = (flip) =>
 
-        thumbs = []
+        files = []
 
-        for item in ds.view()
-            thumbnail = new kendo.View(pages.next, template)
-            thumbs.push(dom: thumbnail.render({}, true), data: item)
+        files.push file.path for file in ds.view()
 
-            # turn the thumbnail into something clickable
+        filewrapper.readBulk(files).done (message) =>
+            compare = (a, b) ->
+                if a.name > b.name
+                    return -1
+
+                if a.name < b.name
+                    return 1
+
+                return 0
+
+            message.sort compare
+            console.log message
+
+            thumbs = []
+
+            for item in message
+                thumbnail = new kendo.View(pages.next, template)
+                thumbs.push(dom: thumbnail.render({}, true), data: item)
+
+                # turn the thumbnail into something clickable
 
 
-        $("#gallery").css "pointer-events", "none"
+            $("#gallery").css "pointer-events", "none"
 
-        complete = =>
+            complete = =>
 
-            setTimeout ->
-                for item in thumbs
-                    do ->
-                        element = create(item.data)
-                        item.dom.append(element)
-            , 50
-
-            # the current page becomes the next page
-            pages.next.show()
-
-            justPaged = pages.previous
-            justPaged.hide()
-            justPaged.empty()
-
-            pages.previous = pages.next
-            pages.next = justPaged
-
-            flipping = false
-
-            arrows.left.toggle ds.page() > 1
-            arrows.right.toggle ds.page() < ds.totalPages()
-
-            $("#gallery").css "pointer-events", "auto"
-
-            if flip
                 setTimeout ->
-                    at (ds.page() - 1) * pageSize
+                    for item in thumbs
+                        do ->
+                            element = create(item.data)
+                            item.dom.append(element)
                 , 50
 
-        if flip
-            # move the current page out and the next page in
-            container.kendoAnimate
-                effects: animation.effects
-                face: if animation.reverse then pages.next else pages.previous
-                back: if animation.reverse then pages.previous else pages.next
-                duration: animation.duration
-                reverse: animation.reverse
-                complete: complete
+                # the current page becomes the next page
+                pages.next.show()
 
-        else
-            complete()
+                justPaged = pages.previous
+                justPaged.hide()
+                justPaged.empty()
+
+                pages.previous = pages.next
+                pages.next = justPaged
+
+                flipping = false
+
+                arrows.left.toggle ds.page() > 1
+                arrows.right.toggle ds.page() < ds.totalPages()
+
+                $("#gallery").css "pointer-events", "auto"
+
+                if flip
+                    setTimeout ->
+                        at (ds.page() - 1) * pageSize
+                    , 50
+
+            if flip
+                # move the current page out and the next page in
+                container.kendoAnimate
+                    effects: animation.effects
+                    face: if animation.reverse then pages.next else pages.previous
+                    back: if animation.reverse then pages.previous else pages.next
+                    duration: animation.duration
+                    reverse: animation.reverse
+                    complete: complete
+
+            else
+                complete()
 
     keys = {
         tokens: [],
@@ -324,26 +341,6 @@ define [
             pages.previous = page1.render().addClass("page gallery")
             active = pages.next = page2.render().addClass("page gallery")
 
-            # page1.container.on "click", ->
-            #     deselect()
-
-            #delegate some events to the gallery
-            # page1.container.on "dblclick", ".thumbnail", (e) ->
-            #     thumb = $(@).children(":first")
-            #     $.publish "/details/show", [ get("#{thumb.data("name")}") ]
-
-            # page1.container.on "click", ".thumbnail", (e) ->
-            #     thumb = $(@).children(":first")
-            #     $.publish "/top/update", ["selected"]
-            #     select thumb.data("name")
-            #     e.stopPropagation()
-
-            $.subscribe "/pictures/bulk", (message) =>
-                ds = dataSource.create(message.message)
-                ds.read()
-                if ds.view().length > 0
-                    $.publish "/bottom/thumbnail", [ds.view()[0]]
-
             $.subscribe "/gallery/details", (d) ->
                 details = d
 
@@ -364,7 +361,12 @@ define [
             $.subscribe "/gallery/keyboard", ->
                 keys.bind()
 
-            $.publish "/postman/deliver", [ {}, "/file/read" ]
+            filewrapper.fileListing().done (message) =>
+                ds = dataSource.create message
+                ds.read()
+                if ds.view().length > 0
+                    filewrapper.readFile(ds.view()[0]).done (file) =>
+                        $.publish "/bottom/thumbnail", [file]
 
             return gallery
 

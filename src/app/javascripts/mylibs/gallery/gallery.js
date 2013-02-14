@@ -172,61 +172,80 @@
       return element;
     };
     render = function(flip) {
-      var complete, item, thumbnail, thumbs, _i, _len, _ref;
-      thumbs = [];
+      var file, _i, _len, _ref;
+      files = [];
       _ref = ds.view();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        thumbnail = new kendo.View(pages.next, template);
-        thumbs.push({
-          dom: thumbnail.render({}, true),
-          data: item
-        });
+        file = _ref[_i];
+        files.push(file.path);
       }
-      $("#gallery").css("pointer-events", "none");
-      complete = function() {
-        var justPaged;
-        setTimeout(function() {
-          var _j, _len1, _results;
-          _results = [];
-          for (_j = 0, _len1 = thumbs.length; _j < _len1; _j++) {
-            item = thumbs[_j];
-            _results.push((function() {
-              var element;
-              element = create(item.data);
-              return item.dom.append(element);
-            })());
+      return filewrapper.readBulk(files).done(function(message) {
+        var compare, complete, item, thumbnail, thumbs, _j, _len1;
+        compare = function(a, b) {
+          if (a.name > b.name) {
+            return -1;
           }
-          return _results;
-        }, 50);
-        pages.next.show();
-        justPaged = pages.previous;
-        justPaged.hide();
-        justPaged.empty();
-        pages.previous = pages.next;
-        pages.next = justPaged;
-        flipping = false;
-        arrows.left.toggle(ds.page() > 1);
-        arrows.right.toggle(ds.page() < ds.totalPages());
-        $("#gallery").css("pointer-events", "auto");
-        if (flip) {
-          return setTimeout(function() {
-            return at((ds.page() - 1) * pageSize);
-          }, 50);
+          if (a.name < b.name) {
+            return 1;
+          }
+          return 0;
+        };
+        message.sort(compare);
+        console.log(message);
+        thumbs = [];
+        for (_j = 0, _len1 = message.length; _j < _len1; _j++) {
+          item = message[_j];
+          thumbnail = new kendo.View(pages.next, template);
+          thumbs.push({
+            dom: thumbnail.render({}, true),
+            data: item
+          });
         }
-      };
-      if (flip) {
-        return container.kendoAnimate({
-          effects: animation.effects,
-          face: animation.reverse ? pages.next : pages.previous,
-          back: animation.reverse ? pages.previous : pages.next,
-          duration: animation.duration,
-          reverse: animation.reverse,
-          complete: complete
-        });
-      } else {
-        return complete();
-      }
+        $("#gallery").css("pointer-events", "none");
+        complete = function() {
+          var justPaged;
+          setTimeout(function() {
+            var _k, _len2, _results;
+            _results = [];
+            for (_k = 0, _len2 = thumbs.length; _k < _len2; _k++) {
+              item = thumbs[_k];
+              _results.push((function() {
+                var element;
+                element = create(item.data);
+                return item.dom.append(element);
+              })());
+            }
+            return _results;
+          }, 50);
+          pages.next.show();
+          justPaged = pages.previous;
+          justPaged.hide();
+          justPaged.empty();
+          pages.previous = pages.next;
+          pages.next = justPaged;
+          flipping = false;
+          arrows.left.toggle(ds.page() > 1);
+          arrows.right.toggle(ds.page() < ds.totalPages());
+          $("#gallery").css("pointer-events", "auto");
+          if (flip) {
+            return setTimeout(function() {
+              return at((ds.page() - 1) * pageSize);
+            }, 50);
+          }
+        };
+        if (flip) {
+          return container.kendoAnimate({
+            effects: animation.effects,
+            face: animation.reverse ? pages.next : pages.previous,
+            back: animation.reverse ? pages.previous : pages.next,
+            duration: animation.duration,
+            reverse: animation.reverse,
+            complete: complete
+          });
+        } else {
+          return complete();
+        }
+      });
     };
     keys = {
       tokens: [],
@@ -325,13 +344,6 @@
         arrows.init($(selector).parent());
         pages.previous = page1.render().addClass("page gallery");
         active = pages.next = page2.render().addClass("page gallery");
-        $.subscribe("/pictures/bulk", function(message) {
-          ds = dataSource.create(message.message);
-          ds.read();
-          if (ds.view().length > 0) {
-            return $.publish("/bottom/thumbnail", [ds.view()[0]]);
-          }
-        });
         $.subscribe("/gallery/details", function(d) {
           return details = d;
         });
@@ -353,7 +365,15 @@
         $.subscribe("/gallery/keyboard", function() {
           return keys.bind();
         });
-        $.publish("/postman/deliver", [{}, "/file/read"]);
+        filewrapper.fileListing().done(function(message) {
+          ds = dataSource.create(message);
+          ds.read();
+          if (ds.view().length > 0) {
+            return filewrapper.readFile(ds.view()[0]).done(function(file) {
+              return $.publish("/bottom/thumbnail", [file]);
+            });
+          }
+        });
         return gallery;
       }
     };

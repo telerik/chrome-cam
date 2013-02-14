@@ -1,264 +1,249 @@
 define ['mylibs/utils/utils'],
 (utils) ->
-  ###   File
+    ###     File
 
-  The file module takes care of all the reading and writing to and from the file system
+    The file module takes care of all the reading and writing to and from the file system
 
-  ###
+    ###
 
-  # normalize file system
-  window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem
+    # normalize file system
+    window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem
 
-  # object level vars
-  fileSystem = null
-  myPicturesDir = {}
-  blobBuiler = {}
+    # object level vars
+    fileSystem = null
+    myPicturesDir = {}
+    blobBuiler = {}
 
-  # custom compare function that sorts images by their date
-  compare = (a,b) ->
+    # custom compare function that sorts images by their date
+    compare = (a,b) ->
 
-    if a.name < b.name
-      return -1
+        if a.name < b.name
+            return -1
 
-    if a.name > b.name
-      return 1
+        if a.name > b.name
+            return 1
 
-    return 0
+        return 0
 
-  getFileExtension = (filename) ->
-      filename.split('.').pop()
+    getFileExtension = (filename) ->
+            filename.split('.').pop()
 
-  # generic error handler. called everytime there is an exception thrown here.
-  errorHandler = (e) ->
+    # generic error handler. called everytime there is an exception thrown here.
+    errorHandler = (e) ->
 
-    msg = ''
+        msg = ''
 
-    console.log e
+        console.log e
 
-    if e.type == "error"
-      switch e.code || e.target.error.code
-        when FileError.QUOTA_EXCEEDED_ERR
-          msg = 'QUOTA_EXCEEDED_ERR'
-        when FileError.NOT_FOUND_ERR
-          msg = 'NOT_FOUND_ERR'
-        when FileError.SECURITY_ERR
-          msg = 'SECURITY_ERR'
-        when FileError.INVALID_MODIFICATION_ERR
-          msg = 'INVALID_MODIFICATION_ERR'
-        when FileError.INVALID_STATE_ERR
-          msg = 'INVALID_STATE_ERR'
+        if e.type == "error"
+            switch e.code || e.target.error.code
+                when FileError.QUOTA_EXCEEDED_ERR
+                    msg = 'QUOTA_EXCEEDED_ERR'
+                when FileError.NOT_FOUND_ERR
+                    msg = 'NOT_FOUND_ERR'
+                when FileError.SECURITY_ERR
+                    msg = 'SECURITY_ERR'
+                when FileError.INVALID_MODIFICATION_ERR
+                    msg = 'INVALID_MODIFICATION_ERR'
+                when FileError.INVALID_STATE_ERR
+                    msg = 'INVALID_STATE_ERR'
+                else
+                    msg = 'Unknown Error'
+
+        $.publish "/notify/show", [ "File Error", msg, true ]
+
+        $.publish "/notify/show", [ "File Access Denied", "Access to the file system could not be obtained.", false ]
+
+    withFileSystem = (fn) ->
+        if fileSystem
+            fn fileSystem
         else
-          msg = 'Unknown Error'
+            # request storage. requested amount is 50 meg but storage is specified as unlimited in manifest?
+            window.webkitStorageInfo.requestQuota PERSISTENT, 5000 * 1024, (grantedBytes) ->
+                success = (fs) ->
+                    fileSystem = fs
+                    fn fs
+                # get a persistant storage grant
+                window.requestFileSystem PERSISTENT, grantedBytes, success, errorHandler
 
-    $.publish "/notify/show", [ "File Error", msg, true ]
+    # saves a file to the file system. overwrites the file if it exists.
+    save = (name, blob) ->
 
-    $.publish "/notify/show", [ "File Access Denied", "Access to the file system could not be obtained.", false ]
+        if typeof blob == "string"
+            blob = utils.toBlob blob
 
-  withFileSystem = (fn) ->
-    if fileSystem
-      fn fileSystem
-    else
-      # request storage. requested amount is 50 meg but storage is specified as unlimited in manifest?
-      window.webkitStorageInfo.requestQuota PERSISTENT, 5000 * 1024, (grantedBytes) ->
-        success = (fs) ->
-          fileSystem = fs
-          fn fs
-        # get a persistant storage grant
-        window.requestFileSystem PERSISTENT, grantedBytes, success, errorHandler
+        window.theBlob = blob
 
-  # saves a file to the file system. overwrites the file if it exists.
-  save = (name, blob) ->
+        onwrite = (e) ->
+            $.publish "/share/gdrive/upload", [ blob ]
+            $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
+            $.publish "/file/saved/#{name}"
 
-    if typeof blob == "string"
-      blob = utils.toBlob blob
+        # get the file from the file system, creating it if it doesn't exist
+        withFileSystem (fs) ->
+            fs.root.getFile name, create: true, (fileEntry) ->
 
-    window.theBlob = blob
+                # create a writer
+                fileEntry.createWriter (fileWriter) ->
 
-    onwrite = (e) ->
-      $.publish "/share/gdrive/upload", [ blob ]
-      $.publish "/postman/deliver", [ {}, "/file/saved/#{name}", [] ]
-      $.publish "/file/saved/#{name}"
+                    # called when the write ends
+                    fileWriter.onwrite = onwrite
 
-    # get the file from the file system, creating it if it doesn't exist
-    withFileSystem (fs) ->
-      fs.root.getFile name, create: true, (fileEntry) ->
+                    # called when the write pukes
+                    fileWriter.onerror = errorHandler
 
-        # create a writer
-        fileEntry.createWriter (fileWriter) ->
+                    # write the blob to the file system
+                    fileWriter.write blob
 
-          # called when the write ends
-          fileWriter.onwrite = onwrite
+            # we didn't get access to the file system for some reason
+            , errorHandler
 
-          # called when the write pukes
-          fileWriter.onerror = errorHandler
+    # deletes a file if it exists, throws an exception if it does not.
+    destroy = (name) ->
 
-          # write the blob to the file system
-          fileWriter.write blob
+            # get the file reference from the file system by name
+            withFileSystem ->
+                fileSystem.root.getFile name, create: false, (fileEntry) ->
 
-      # we didn't get access to the file system for some reason
-      , errorHandler
+                    # kill it
+                    fileEntry.remove ->
 
-  # deletes a file if it exists, throws an exception if it does not.
-  destroy = (name) ->
+                            # dispatch events that we killed it
+                            $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
 
-      # get the file reference from the file system by name
-      withFileSystem ->
-        fileSystem.root.getFile name, create: false, (fileEntry) ->
+                    # file couldn't be deleted
+                    , errorHandler
 
-          # kill it
-          fileEntry.remove ->
+                # access to the file system could not be had
+                , errorHandler
 
-              # dispatch events that we killed it
-              $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
+    # allows user to save the file to a specific place on their hard drive
+    download = (name, dataURL) ->
 
-          # file couldn't be deleted
-          , errorHandler
+        # convert the incoming data url to a blob
+        blob = utils.toBlob(dataURL)
 
-        # access to the file system could not be had
-        , errorHandler
+        # invoke the chrome file chooser saying that we are going to save a file
+        chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
 
-  # allows user to save the file to a specific place on their hard drive
-  download = (name, dataURL) ->
+            return unless fileEntry?
 
-    # convert the incoming data url to a blob
-    blob = utils.toBlob(dataURL)
+            # create the writer
+            fileEntry.createWriter (fileWriter) ->
 
-    # invoke the chrome file chooser saying that we are going to save a file
-    chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
+                # called when the file has been written successfully
+                fileWriter.onwriteend = (e) ->
 
-      return unless fileEntry?
+                # the file could not be written.
+                fileWriter.onerror = (e) ->
 
-      # create the writer
-      fileEntry.createWriter (fileWriter) ->
+                    errorHandler e
 
-        # called when the file has been written successfully
-        fileWriter.onwriteend = (e) ->
+                # save the file to the user specified file and folder
+                fileWriter.write blob
 
-        # the file could not be written.
-        fileWriter.onerror = (e) ->
+    fileListing = ->
+        withFileSystem (fs) ->
+            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
 
-          errorHandler e
+                entries = []
 
-        # save the file to the user specified file and folder
-        fileWriter.write blob
+                dirReader = fs.root.createReader()
 
-  # reads all images from the "MyPictures" folder in the file system
-  read = ->
+                dirReader.readEntries (results) ->
+                    for entry in results
+                        if entry.isFile
+                            entries.push { path: entry.fullPath, name: entry.name, type: entry.name.split(".").pop() }
 
-    # we were granted storage
-    withFileSystem (fs) ->
+                    $.publish "/postman/deliver", [ { message: entries }, "/file/listing/response" ]
+            , errorHandler
 
-      # get the pictures directory. create it if it doesn't yet exist.
-      fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
+    readFile = (filename) ->
+        withFileSystem (fs) ->
+            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
+                dirEntry.getFile filename, create: false, (fileEntry) ->
 
-        # cache the directory entry returned
-        myPicturesDir = dirEntry
+                    name = fileEntry.name
+                    type = name.split(".").pop()
 
-        # create an array for file entries
-        entries = []
+                    fileEntry.file (file) ->
+                        reader = new FileReader()
 
-        # create an array for actual files
-        files = []
+                        reader.onloadend = (e) ->
+                            data =
+                                name: name
+                                type: type
+                                file: this.result
 
-        # create a reader for reading files
-        dirReader = fs.root.createReader()
+                            $.publish "/postman/deliver", [ { message: data }, "/file/read/#{name}" ]
 
-        # read from the file system
-        read = ->
+                        reader.readAsDataURL file
 
-          # loop through the reader
-          dirReader.readEntries (results) ->
+                , errorHandler
 
-            # get a count of how many files we are expecting by adding them to an array
-            # if they are of type 'file'
-            for entry in results
-              if entry.isFile
-                entries.push(entry)
+    readBulk = (files, token) ->
+        withFileSystem (fs) ->
+            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
+                entries = []
 
-            # read the current file
-            readFile = (i) ->
+                for file in files
+                    dirEntry.getFile file, create: false, (fileEntry) ->
+                        name = fileEntry.name
+                        type = name.split(".").pop()
 
-              # add the current file entry to the array
-              entry = entries[i]
+                        fileEntry.file (f) ->
+                            reader = new FileReader()
 
-              # only process this file if it is in fact a file, and not a directory
-              if entry and entry.isFile
+                            reader.onloadend = (e) ->
+                                data =
+                                    name: name,
+                                    type: type,
+                                    file: this.result
 
-                # store the name and type
-                name = entry.name
-                type = name.split(".").pop()
+                                entries.push data
 
-                # get a reference to the file so we can ready from it
-                entry.file (file) ->
+                                if (entries.length == files.length)
+                                    $.publish "/postman/deliver", [ { message: entries }, "/file/bulk/#{token}" ]
 
-                    # create a file reader
-                    reader = new FileReader()
+                            reader.readAsDataURL f
 
-                    # when the reader loads, we are going to read all the files in one pop
-                    reader.onloadend = (e) ->
+    clear = ->
+        withFileSystem (fs) ->
+            dirReader = fs.root.createReader()
+            dirReader.readEntries (entries) ->
 
-                      # we are going to add this to an array of files to be sent over.  They need to display in the same order everytime
-                      # in order to do that we need to collect them here by checking the length of the array we are building against the length
-                      # of the array that is holding the file entries.  Once they are the same, we know we have them all and we can sort by name
-                      # which is the timestamp, and send them down to the app.
-                      files.push({ name: name, file: this.result, type: type, strip: false })
+                deletedCount = 0
+                totalCount = entries.length
 
-                      if files.length == entries.length
+                for entry in entries
+                    do (entry) ->
+                        entry.remove ->
+                            ++deletedCount
+                            if deletedCount == totalCount
+                                $.publish "/postman/deliver", [ {}, "/file/cleared" ]
 
-                        # sort the files array by name
-                        files.sort(compare)
+    pub =
 
-                        # send it down to the app
-                        $.publish "/postman/deliver", [ { message: files }, "/pictures/bulk", [] ]
+        init: (kb) ->
 
-                      else
-                        readFile(++i)
+            # subscribe to events
+            $.subscribe "/file/save", (message) ->
+                save message.name, message.file
 
-                    # read files as data urls
-                    reader.readAsDataURL(file)
+            $.subscribe "/file/delete", (message) ->
+                destroy message.name
 
-            # if our entries array has files in it, start reading them.
-            if entries.length > 0
-              readFile(0)
-            else
-              $.publish "/postman/deliver", [ { message: [] }, "/pictures/bulk", [] ]
+            $.subscribe "/file/download", (message) ->
+                download message.name, message.file
 
-        read()
+            $.subscribe "/file/clear", (message) ->
+                clear()
 
-      # we did not get file system access
-      , errorHandler
+            $.subscribe "/file/listing", (message) ->
+                fileListing()
 
-  clear = ->
-    withFileSystem (fs) ->
-      dirReader = fs.root.createReader()
-      dirReader.readEntries (entries) ->
+            $.subscribe "/file/read", (message) ->
+                readFile message.file
 
-        deletedCount = 0
-        totalCount = entries.length
-
-        for entry in entries
-          do (entry) ->
-            entry.remove ->
-              ++deletedCount
-              if deletedCount == totalCount
-                $.publish "/postman/deliver", [ {}, "/file/cleared" ]
-
-  pub =
-
-    init: (kb) ->
-
-      # subscribe to events
-      $.subscribe "/file/save", (message) ->
-        save message.name, message.file
-
-      $.subscribe "/file/delete", (message) ->
-        destroy message.name
-
-      $.subscribe "/file/read", (message) ->
-        read()
-
-      $.subscribe "/file/download", (message) ->
-        download message.name, message.file
-
-      $.subscribe "/file/clear", (message) ->
-        clear()
+            $.subscribe "/file/bulk", (message) ->
+                readBulk message.files, message.token

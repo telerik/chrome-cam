@@ -14,9 +14,6 @@
       return deferred.promise();
     };
     return pub = window.filewrapper = {
-      readAll: function() {
-        return asyncFileRequest("/file/read", "/pictures/bulk", {});
-      },
       deleteFile: function(filename) {
         return asyncFileRequest("/file/delete", "/file/deleted/" + filename, {
           name: filename
@@ -29,6 +26,22 @@
         return asyncFileRequest("/file/save", "/file/saved/" + filename, {
           name: filename,
           file: blob
+        });
+      },
+      fileListing: function() {
+        return asyncFileRequest("/file/listing", "/file/listing/response", {});
+      },
+      readFile: function(file) {
+        return asyncFileRequest("/file/read", "/file/read/" + file.name, {
+          file: file.path
+        });
+      },
+      readBulk: function(files) {
+        var token;
+        token = new Date().getTime();
+        return asyncFileRequest("/file/bulk", "/file/bulk/" + token, {
+          files: files,
+          token: token
         });
       }
     };

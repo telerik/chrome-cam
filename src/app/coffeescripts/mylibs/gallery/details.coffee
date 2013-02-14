@@ -1,8 +1,9 @@
 define [
   'Kendo'
   'mylibs/utils/utils'
+  'mylibs/file/filewrapper'
   'text!mylibs/gallery/views/details.html'
-], (kendo, utils, template) ->
+], (kendo, utils, filewrapper, template) ->
 
     index = 0
 
@@ -10,14 +11,14 @@ define [
     details = {}
 
     viewModel = kendo.observable
-        video: 
+        video:
             src: -> utils.placeholder.image()
         img:
             src: -> utils.placeholder.image()
         type: "jpeg"
         isVideo: ->
             @get("type") == "webm"
-        next: 
+        next:
             visible: false
         previous:
             visible: false
@@ -35,20 +36,21 @@ define [
         update(message)
         details.container.kendoStop(true).kendoAnimate
             effects: "zoomIn"
-            show: true 	
+            show: true
             complete: ->
                 $.publish "/top/update", ["details"]
                 $.subscribe "/gallery/delete", ->
                     hide()
 
     update = (message) ->
-        viewModel.set("type", message.item.type)
-        viewModel.set("img.src", message.item.file)
-        viewModel.set("next.visible", message.index < message.length - 1)
-        viewModel.set("previous.visible", message.index > 0 and message.length > 1)
-        index = message.index
+        filewrapper.readFile(message.item).done (data) =>
+            viewModel.set("type", message.item.type)
+            viewModel.set("img.src", data.file)
+            viewModel.set("next.visible", message.index < message.length - 1)
+            viewModel.set("previous.visible", message.index > 0 and message.length > 1)
+            index = message.index
 
-    pub = 
+    pub =
 
         init: (selector) ->
 
@@ -83,6 +85,6 @@ define [
 
         next: (e) ->
             $.publish "/gallery/at", [index + 1]
-        
+
         previous: (e) ->
             $.publish "/gallery/at", [index - 1]
