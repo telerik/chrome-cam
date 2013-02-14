@@ -123,7 +123,6 @@ define [
             # start the countdown
             capture = ->
                 $.publish "/capture/#{mode}"
-                $.publish "/full/capture/end"
 
             $.publish "/countdown/#{mode}"
             if event.ctrlKey or event.metaKey

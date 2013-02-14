@@ -108,8 +108,7 @@
         $.publish("/full/capture/begin", [mode]);
         states.capture();
         capture = function() {
-          $.publish("/capture/" + mode);
-          return $.publish("/full/capture/end");
+          return $.publish("/capture/" + mode);
         };
         $.publish("/countdown/" + mode);
         if (event.ctrlKey || event.metaKey) {
