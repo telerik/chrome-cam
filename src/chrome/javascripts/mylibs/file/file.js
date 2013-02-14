@@ -7,7 +7,7 @@
     The file module takes care of all the reading and writing to and from the file system
     */
 
-    var blobBuiler, clear, compare, destroy, download, errorHandler, fileListing, fileSystem, getFileExtension, myPicturesDir, pub, readBulk, readFile, save, withFileSystem;
+    var blobBuiler, clear, compare, destroy, download, errorHandler, fileListing, fileSystem, getFileExtension, loadFile, myPicturesDir, pub, readBulk, readFile, save, withFileSystem;
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
     fileSystem = null;
     myPicturesDir = {};
@@ -137,7 +137,6 @@
               entry = results[_i];
               if (entry.isFile) {
                 entries.push({
-                  path: entry.fullPath,
                   name: entry.name,
                   type: entry.name.split(".").pop()
                 });
@@ -152,36 +151,44 @@
         }, errorHandler);
       });
     };
+    loadFile = function(dirEntry, filename) {
+      var deferred;
+      deferred = $.Deferred();
+      dirEntry.getFile("/" + filename, {
+        create: false
+      }, function(fileEntry) {
+        var name, type;
+        name = fileEntry.name;
+        type = name.split(".").pop();
+        return fileEntry.file(function(file) {
+          var reader;
+          reader = new FileReader();
+          reader.onloadend = function(e) {
+            var data;
+            data = {
+              name: name,
+              type: type,
+              file: this.result
+            };
+            return deferred.resolve(data);
+          };
+          return reader.readAsDataURL(file);
+        });
+      }, errorHandler);
+      return deferred.promise();
+    };
     readFile = function(filename) {
       return withFileSystem(function(fs) {
         return fs.root.getDirectory("MyPictures", {
           create: true
         }, function(dirEntry) {
-          return dirEntry.getFile("/" + filename, {
-            create: false
-          }, function(fileEntry) {
-            var name, type;
-            name = fileEntry.name;
-            type = name.split(".").pop();
-            return fileEntry.file(function(file) {
-              var reader;
-              reader = new FileReader();
-              reader.onloadend = function(e) {
-                var data;
-                data = {
-                  name: name,
-                  type: type,
-                  file: this.result
-                };
-                return $.publish("/postman/deliver", [
-                  {
-                    message: data
-                  }, "/file/read/" + name
-                ]);
-              };
-              return reader.readAsDataURL(file);
-            });
-          }, errorHandler);
+          return loadFile(dirEntry, filename).done(function(data) {
+            return $.publish("/postman/deliver", [
+              {
+                message: data
+              }, "/file/read/" + filename
+            ]);
+          });
         });
       });
     };
@@ -190,41 +197,25 @@
         return fs.root.getDirectory("MyPictures", {
           create: true
         }, function(dirEntry) {
-          var entries, file, _i, _len, _results;
+          var deferreds, entries, file;
           entries = [];
-          _results = [];
-          for (_i = 0, _len = files.length; _i < _len; _i++) {
-            file = files[_i];
-            _results.push(dirEntry.getFile("/" + file, {
-              create: false
-            }, function(fileEntry) {
-              var name, type;
-              name = fileEntry.name;
-              type = name.split(".").pop();
-              return fileEntry.file(function(f) {
-                var reader;
-                reader = new FileReader();
-                reader.onloadend = function(e) {
-                  var data;
-                  data = {
-                    name: name,
-                    type: type,
-                    file: this.result
-                  };
-                  entries.push(data);
-                  if (entries.length === files.length) {
-                    return $.publish("/postman/deliver", [
-                      {
-                        message: entries
-                      }, "/file/bulk/" + token
-                    ]);
-                  }
-                };
-                return reader.readAsDataURL(f);
-              });
-            }));
-          }
-          return _results;
+          deferreds = (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = files.length; _i < _len; _i++) {
+              file = files[_i];
+              _results.push(loadFile(dirEntry, file));
+            }
+            return _results;
+          })();
+          return $.when.apply($, deferreds).then(function() {
+            entries = Array.prototype.slice.call(arguments, 0);
+            return $.publish("/postman/deliver", [
+              {
+                message: entries
+              }, "/file/bulk/" + token
+            ]);
+          });
         });
       });
     };

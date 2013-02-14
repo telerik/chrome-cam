@@ -153,59 +153,52 @@ define ['mylibs/utils/utils'],
                 dirReader.readEntries (results) ->
                     for entry in results
                         if entry.isFile
-                            entries.push { path: entry.fullPath, name: entry.name, type: entry.name.split(".").pop() }
+                            entries.push { name: entry.name, type: entry.name.split(".").pop() }
 
                     $.publish "/postman/deliver", [ { message: entries }, "/file/listing/response" ]
             , errorHandler
 
+    loadFile = (dirEntry, filename) ->
+        deferred = $.Deferred()
+
+        dirEntry.getFile "/#{filename}", create: false, (fileEntry) ->
+
+            name = fileEntry.name
+            type = name.split(".").pop()
+
+            fileEntry.file (file) ->
+                reader = new FileReader()
+
+                reader.onloadend = (e) ->
+                    data =
+                        name: name
+                        type: type
+                        file: this.result
+
+                    deferred.resolve(data)
+
+                reader.readAsDataURL file
+
+        , errorHandler
+
+        return deferred.promise()
+
     readFile = (filename) ->
         withFileSystem (fs) ->
             fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
-                dirEntry.getFile "/#{filename}", create: false, (fileEntry) ->
-
-                    name = fileEntry.name
-                    type = name.split(".").pop()
-
-                    fileEntry.file (file) ->
-                        reader = new FileReader()
-
-                        reader.onloadend = (e) ->
-                            data =
-                                name: name
-                                type: type
-                                file: this.result
-
-                            $.publish "/postman/deliver", [ { message: data }, "/file/read/#{name}" ]
-
-                        reader.readAsDataURL file
-
-                , errorHandler
+                loadFile(dirEntry, filename).done (data) ->
+                    $.publish "/postman/deliver", [ { message: data }, "/file/read/#{filename}" ]
 
     readBulk = (files, token) ->
         withFileSystem (fs) ->
             fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
                 entries = []
 
-                for file in files
-                    dirEntry.getFile "/#{file}", create: false, (fileEntry) ->
-                        name = fileEntry.name
-                        type = name.split(".").pop()
+                deferreds = (loadFile dirEntry, file for file in files)
 
-                        fileEntry.file (f) ->
-                            reader = new FileReader()
-
-                            reader.onloadend = (e) ->
-                                data =
-                                    name: name,
-                                    type: type,
-                                    file: this.result
-
-                                entries.push data
-
-                                if (entries.length == files.length)
-                                    $.publish "/postman/deliver", [ { message: entries }, "/file/bulk/#{token}" ]
-
-                            reader.readAsDataURL f
+                $.when.apply($, deferreds).then ->
+                    entries = Array::slice.call(arguments, 0)
+                    $.publish "/postman/deliver", [ { message: entries }, "/file/bulk/#{token}" ]
 
     clear = ->
         withFileSystem (fs) ->
