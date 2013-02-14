@@ -33,7 +33,7 @@
       },
       readFile: function(file) {
         return asyncFileRequest("/file/read", "/file/read/" + file.name, {
-          file: file.path
+          file: file.name
         });
       },
       readBulk: function(files) {

@@ -140,7 +140,6 @@
     add = function(item) {
       item = {
         name: item.name,
-        file: item.file,
         type: item.type
       };
       if (!ds) {
@@ -177,7 +176,7 @@
       _ref = ds.view();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         file = _ref[_i];
-        files.push(file.path);
+        files.push(file.name);
       }
       return filewrapper.readBulk(files).done(function(message) {
         var compare, complete, item, thumbnail, thumbs, _j, _len1;
@@ -191,7 +190,6 @@
           return 0;
         };
         message.sort(compare);
-        console.log(message);
         thumbs = [];
         for (_j = 0, _len1 = message.length; _j < _len1; _j++) {
           item = message[_j];

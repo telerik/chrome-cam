@@ -25,7 +25,7 @@ define [], (file) ->
             asyncFileRequest "/file/listing", "/file/listing/response", {}
 
         readFile: (file) ->
-            asyncFileRequest "/file/read", "/file/read/#{file.name}", file: file.path
+            asyncFileRequest "/file/read", "/file/read/#{file.name}", file: file.name
 
         readBulk: (files) ->
             token = new Date().getTime()

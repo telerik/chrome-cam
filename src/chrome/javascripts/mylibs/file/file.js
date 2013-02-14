@@ -157,7 +157,7 @@
         return fs.root.getDirectory("MyPictures", {
           create: true
         }, function(dirEntry) {
-          return dirEntry.getFile(filename, {
+          return dirEntry.getFile("/" + filename, {
             create: false
           }, function(fileEntry) {
             var name, type;
@@ -195,7 +195,7 @@
           _results = [];
           for (_i = 0, _len = files.length; _i < _len; _i++) {
             file = files[_i];
-            _results.push(dirEntry.getFile(file, {
+            _results.push(dirEntry.getFile("/" + file, {
               create: false
             }, function(fileEntry) {
               var name, type;

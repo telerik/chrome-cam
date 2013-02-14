@@ -161,7 +161,7 @@ define ['mylibs/utils/utils'],
     readFile = (filename) ->
         withFileSystem (fs) ->
             fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
-                dirEntry.getFile filename, create: false, (fileEntry) ->
+                dirEntry.getFile "/#{filename}", create: false, (fileEntry) ->
 
                     name = fileEntry.name
                     type = name.split(".").pop()
@@ -187,7 +187,7 @@ define ['mylibs/utils/utils'],
                 entries = []
 
                 for file in files
-                    dirEntry.getFile file, create: false, (fileEntry) ->
+                    dirEntry.getFile "/#{file}", create: false, (fileEntry) ->
                         name = fileEntry.name
                         type = name.split(".").pop()
 

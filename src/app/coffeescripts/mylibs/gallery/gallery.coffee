@@ -136,7 +136,7 @@ define [
                         id: "name"
 
     add = (item) =>
-        item = { name: item.name, file: item.file, type: item.type }
+        item = { name: item.name, type: item.type }
         # check to make sure there is a data source before trying to add to it
         if not ds
             ds = dataSource.create([item])
@@ -174,7 +174,7 @@ define [
 
         files = []
 
-        files.push file.path for file in ds.view()
+        files.push file.name for file in ds.view()
 
         filewrapper.readBulk(files).done (message) =>
             compare = (a, b) ->
@@ -187,7 +187,6 @@ define [
                 return 0
 
             message.sort compare
-            console.log message
 
             thumbs = []
 
