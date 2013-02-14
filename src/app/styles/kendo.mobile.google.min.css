@@ -19,9 +19,7 @@
     font-size: 1em
 }
 
-.km-root *:focus {
-    outline: 0
-}
+.km-root *:focus {}
 
 .km-root,.km-vertical,.km-horizontal {
     width: 100%;
