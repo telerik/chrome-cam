@@ -33,14 +33,12 @@
 
 		<div data-role="view" id="settings" data-before-show="APP.settings.before" data-hide="APP.settings.hide" data-transition="slide:left" data-stretch="true"></div>
 
-		<div data-role="modalview" id="confirm" data-width="500" data-height="120">
+		<div data-role="modalview" id="confirm" class="modal-window" data-width="500" data-height="120">
 			<h1 class="title"></h1>
 			<p class="message"></p>
 			<div data-role="footer">
-				<div style="text-align: right">
-					<a data-role="button" data-click="APP.confirm.yes">Yes</a>
-					<a data-role="button" data-click="APP.confirm.no">No</a>
-				</div>
+				<a class="yes" data-role="button" data-click="APP.confirm.yes">Yes</a>
+				<a class="no" data-role="button" data-click="APP.confirm.no">No</a>
 			</div>
 		</div>
 

@@ -54,39 +54,10 @@ iframe {
     }
 
 .paparazzi-1 .paparazzi,
-.paparazzi-2 .paparazzi:before,
-.paparazzi-3 .paparazzi:after {
+.paparazzi-2 .paparazzi, .paparazzi-2 .paparazzi:before,
+.paparazzi-3 .paparazzi, .paparazzi-3 .paparazzi:before, .paparazzi-3 .paparazzi:after {
     background: rgb(45, 45, 45);
-    border-color: rgba(225,225,225,.3);
-}
-
-.paparazzi-2 .paparazzi,
-.paparazzi-3 .paparazzi,
-.paparazzi-3 .paparazzi:before {
-    border-width: 5px 5px 0 0;
-    width: 15px;
-    height: 15px;
-    background: transparent;
-    border-color: #d2d2d2;
-}
-
-.paparazzi-2 .paparazzi:before {
-  top: 1px;
-  left: -6px;
-}
-.paparazzi-2 .paparazzi:after {
-  top: -13px;
-  left: -12px;
-}
-
-.paparazzi-3 .paparazzi:before {
-  top: 1px;
-  left: -6px;
-}
-
-.paparazzi-3 .paparazzi:after {
-  top: -13px;
-  left: -12px;
+    border-color: rgba(225,225,225,.9);
 }
 
 .thumbnail {

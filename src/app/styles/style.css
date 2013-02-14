@@ -529,6 +529,13 @@ a.canvas {
         left: 50%;
     }
 
+/************ Modal Windows ************/
+
+.modal-window .km-footer {
+    text-align: right;
+    height: 35px;
+}
+    .modal-window .km-footer a { margin-left: 5px; }
 /************ Clearfix ************/
 
 .clearfix:after {
@@ -556,5 +563,3 @@ html[xmlns] .clearfix {
     position: fixed;
     z-index: 999999999;
 }
-
-*:focus { border-color: #000; }
