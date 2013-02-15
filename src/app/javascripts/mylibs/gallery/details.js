@@ -2,10 +2,11 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, template) {
-    var details, hide, index, pub, show, update, viewModel, visible;
+    var details, hide, index, pub, show, token, update, viewModel, visible;
     index = 0;
     visible = false;
     details = {};
+    token = null;
     viewModel = kendo.observable({
       video: {
         src: function() {
@@ -31,25 +32,18 @@
     hide = function() {
       $.publish("/top/update", ["gallery"]);
       $.publish("/gallery/keyboard");
-      return details.container.kendoStop(true).kendoAnimate({
-        effects: "zoomOut",
-        hide: true,
-        complete: function() {
-          return $.unsubscribe("/gallery/delete");
-        }
+      return kendo.fx(details.container).zoom("out").play().done(function() {
+        $.unsubscribe(token);
+        return token = null;
       });
     };
     show = function(message) {
       update(message);
-      return details.container.kendoStop(true).kendoAnimate({
-        effects: "zoomIn",
-        show: true,
-        complete: function() {
-          $.publish("/top/update", ["details"]);
-          return $.subscribe("/gallery/delete", function() {
-            return hide();
-          });
-        }
+      token = $.subscribe("/gallery/delete", function() {
+        return hide();
+      });
+      return kendo.fx(details.container).zoom("in").play().done(function() {
+        return $.publish("/top/update", ["details"]);
       });
     };
     update = function(message) {

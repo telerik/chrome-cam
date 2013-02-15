@@ -9,6 +9,7 @@ define [
 
     visible = false
     details = {}
+    token = null
 
     viewModel = kendo.observable
         video:
@@ -26,21 +27,18 @@ define [
     hide = ->
         $.publish "/top/update", ["gallery"]
         $.publish "/gallery/keyboard"
-        details.container.kendoStop(true).kendoAnimate
-            effects: "zoomOut"
-            hide: true
-            complete: ->
-                $.unsubscribe "/gallery/delete"
+        kendo.fx(details.container).zoom("out").play().done ->
+            $.unsubscribe token
+            token = null
 
     show = (message) ->
         update(message)
-        details.container.kendoStop(true).kendoAnimate
-            effects: "zoomIn"
-            show: true
-            complete: ->
-                $.publish "/top/update", ["details"]
-                $.subscribe "/gallery/delete", ->
-                    hide()
+
+        token = $.subscribe "/gallery/delete", ->
+            hide()
+
+        kendo.fx(details.container).zoom("in").play().done ->
+            $.publish "/top/update", ["details"]
 
     update = (message) ->
         filewrapper.readFile(message.item).done (data) =>
