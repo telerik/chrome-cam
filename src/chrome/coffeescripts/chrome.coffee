@@ -4,7 +4,8 @@ define [
     'mylibs/file/file'
     'mylibs/localization/localization'
     'mylibs/camera/camera'
-], (postman, utils, file, localization, camera) ->
+    'mylibs/link/opener'
+], (postman, utils, file, localization, camera, opener) ->
     'use strict'
 
     iframe = iframe = document.getElementById("iframe")
@@ -36,6 +37,8 @@ define [
             postman.init iframe.contentWindow
 
             camera.init()
+
+            opener.init()
 
             # get the localization dictionary from the app
             $.subscribe "/localization/request", ->

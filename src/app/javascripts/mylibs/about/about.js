@@ -2,9 +2,16 @@
 (function() {
 
   define(['Kendo', 'mylibs/navigation/navigation', 'text!mylibs/about/views/about.html'], function(kendo, navigation, template) {
-    var previous, pub, viewModel;
+    var click, previous, pub, viewModel;
     previous = "#home";
     viewModel = kendo.observable({});
+    click = function(e) {
+      return $.publish("/postman/deliver", [
+        {
+          link: e.target.href
+        }, "/link/open"
+      ]);
+    };
     return pub = {
       before: function() {
         return $.publish("/postman/deliver", [
@@ -17,6 +24,7 @@
         var view;
         view = new kendo.View(selector, template);
         view.render(viewModel, true);
+        view.find("a").on("click", click);
         return $.subscribe('/menu/click/chrome-cam-about-menu', function() {
           $.publish("/postman/deliver", [false, "/menu/enable"]);
           previous = window.APP.app.view().id;
