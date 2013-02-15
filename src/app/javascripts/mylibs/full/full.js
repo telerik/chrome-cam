@@ -21,7 +21,7 @@
       current: function() {
         var i, _i, _ref;
         for (i = _i = 0, _ref = APP.filters.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          if (APP.filters.id === effectId) {
+          if (APP.filters[i].id === effectId) {
             return i;
           }
         }

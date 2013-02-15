@@ -24,7 +24,7 @@ define [
     index =
         current: ->
             # return is compulsory here; otherwise CoffeeScript will build an array.
-            return i for i in [0...APP.filters.length] when APP.filters.id is effectId
+            return i for i in [0...APP.filters.length] when APP.filters[i].id is effectId
         max: ->
             APP.filters.length
         select: (i) ->
