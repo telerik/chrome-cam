@@ -180,6 +180,7 @@ define [
         photo: ->
             callback = ->
                 $.publish "/bottom/update", [ "full" ]
+                $.publish "/full/capture/end"
 
             capture callback, index: 0, count: 1
 
@@ -189,6 +190,7 @@ define [
                 callback = ->
                     callback = ->
                         $.publish "/bottom/update", [ "full" ]
+                        $.publish "/full/capture/end"
                     setTimeout (-> capture callback, index: 2, count: 3) , 1000
                 setTimeout (-> capture callback, index: 1, count: 3), 1000
             capture callback, index: 0, count: 3

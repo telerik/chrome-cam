@@ -190,7 +190,8 @@
       photo: function() {
         var callback;
         callback = function() {
-          return $.publish("/bottom/update", ["full"]);
+          $.publish("/bottom/update", ["full"]);
+          return $.publish("/full/capture/end");
         };
         return capture(callback, {
           index: 0,
@@ -202,7 +203,8 @@
         callback = function() {
           callback = function() {
             callback = function() {
-              return $.publish("/bottom/update", ["full"]);
+              $.publish("/bottom/update", ["full"]);
+              return $.publish("/full/capture/end");
             };
             return setTimeout((function() {
               return capture(callback, {
