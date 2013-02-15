@@ -43,6 +43,13 @@
           files: files,
           token: token
         });
+      },
+      download: function(file) {
+        return $.publish("/postman/deliver", [
+          {
+            name: file.name
+          }, "/file/download"
+        ]);
       }
     };
   });

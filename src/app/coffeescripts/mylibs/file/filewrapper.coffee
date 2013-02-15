@@ -30,3 +30,6 @@ define [], (file) ->
         readBulk: (files) ->
             token = new Date().getTime()
             asyncFileRequest "/file/bulk", "/file/bulk/#{token}", files: files, token: token
+
+        download: (file) ->
+            $.publish "/postman/deliver", [ name: file.name, "/file/download" ]

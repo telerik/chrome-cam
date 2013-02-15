@@ -118,29 +118,34 @@ define ['mylibs/utils/utils'],
                 , errorHandler
 
     # allows user to save the file to a specific place on their hard drive
-    download = (name, dataURL) ->
+    download = (filename) ->
+        withFileSystem (fs) ->
+            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
 
-        # convert the incoming data url to a blob
-        blob = utils.toBlob(dataURL)
+                deferred = loadFile dirEntry, filename
 
-        # invoke the chrome file chooser saying that we are going to save a file
-        chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
+                deferred.done (data) ->
+                    # convert the incoming data url to a blob
+                    blob = utils.toBlob(data.file)
 
-            return unless fileEntry?
+                    # invoke the chrome file chooser saying that we are going to save a file
+                    chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
 
-            # create the writer
-            fileEntry.createWriter (fileWriter) ->
+                        return unless fileEntry?
 
-                # called when the file has been written successfully
-                fileWriter.onwriteend = (e) ->
+                        # create the writer
+                        fileEntry.createWriter (fileWriter) ->
 
-                # the file could not be written.
-                fileWriter.onerror = (e) ->
+                            # called when the file has been written successfully
+                            fileWriter.onwriteend = (e) ->
 
-                    errorHandler e
+                            # the file could not be written.
+                            fileWriter.onerror = (e) ->
 
-                # save the file to the user specified file and folder
-                fileWriter.write blob
+                                errorHandler e
+
+                            # save the file to the user specified file and folder
+                            fileWriter.write blob
 
     fileListing = ->
         withFileSystem (fs) ->
@@ -227,7 +232,7 @@ define ['mylibs/utils/utils'],
                 destroy message.name
 
             $.subscribe "/file/download", (message) ->
-                download message.name, message.file
+                download message.name
 
             $.subscribe "/file/clear", (message) ->
                 clear()

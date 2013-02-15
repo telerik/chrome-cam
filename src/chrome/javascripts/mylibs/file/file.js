@@ -104,22 +104,32 @@
         }, errorHandler);
       });
     };
-    download = function(name, dataURL) {
-      var blob;
-      blob = utils.toBlob(dataURL);
-      return chrome.fileSystem.chooseEntry({
-        type: "saveFile",
-        suggestedName: name
-      }, function(fileEntry) {
-        if (fileEntry == null) {
-          return;
-        }
-        return fileEntry.createWriter(function(fileWriter) {
-          fileWriter.onwriteend = function(e) {};
-          fileWriter.onerror = function(e) {
-            return errorHandler(e);
-          };
-          return fileWriter.write(blob);
+    download = function(filename) {
+      return withFileSystem(function(fs) {
+        return fs.root.getDirectory("MyPictures", {
+          create: true
+        }, function(dirEntry) {
+          var deferred;
+          deferred = loadFile(dirEntry, filename);
+          return deferred.done(function(data) {
+            var blob;
+            blob = utils.toBlob(data.file);
+            return chrome.fileSystem.chooseEntry({
+              type: "saveFile",
+              suggestedName: name
+            }, function(fileEntry) {
+              if (fileEntry == null) {
+                return;
+              }
+              return fileEntry.createWriter(function(fileWriter) {
+                fileWriter.onwriteend = function(e) {};
+                fileWriter.onerror = function(e) {
+                  return errorHandler(e);
+                };
+                return fileWriter.write(blob);
+              });
+            });
+          });
         });
       });
     };
@@ -252,7 +262,7 @@
           return destroy(message.name);
         });
         $.subscribe("/file/download", function(message) {
-          return download(message.name, message.file);
+          return download(message.name);
         });
         $.subscribe("/file/clear", function(message) {
           return clear();

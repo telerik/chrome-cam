@@ -1,8 +1,9 @@
 define [
     'Kendo'
     'mylibs/navigation/navigation'
+    'mylibs/file/filewrapper'
     'text!mylibs/bar/views/top.html'
-], (kendo, navigation, template) ->
+], (kendo, navigation, filewrapper, template) ->
 
     # create a view model for the top bar
     # VIEW MODEL ISN'T WORKING. WHY NOT?
@@ -71,9 +72,7 @@ define [
             ]
 
         save: (e) ->
-
-            file = viewModel.get("current")
-            $.publish "/postman/deliver", [ name: file.name, file: file.file, "/file/download" ]
+            filewrapper.download viewModel.get("current")
 
         home: (e) ->
             navigation.navigate "#home"
