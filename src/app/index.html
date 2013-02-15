@@ -2,61 +2,61 @@
 
 <html>
 
-	<head>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<title>Camera</title>
-		<link rel="stylesheet" type="text/css" href="styles/kendo.mobile.google.min.css">
-		<link rel="stylesheet" type="text/css" href="styles/style.css">
-	</head>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>Camera</title>
+        <link rel="stylesheet" type="text/css" href="styles/kendo.mobile.google.min.css">
+        <link rel="stylesheet" type="text/css" href="styles/style.css">
+    </head>
 
-	<body id="static">
+    <body id="static">
 
-		<div id="splash" class="splash"><h1 id="loading">Loading...</h1></div>
+        <div id="splash" class="splash"><h1 id="loading">Loading...</h1></div>
 
-		<div data-role="view" data-stretch="true" id="home" data-layout="bottom" data-model="APP.full" data-hide="APP.full.hide" data-before-show="APP.full.before">
-			<div class="full" id="capture"></div>
-		</div>
+        <div data-role="view" data-stretch="true" id="home" data-layout="bottom" data-model="APP.full" data-hide="APP.full.hide" data-before-show="APP.full.before">
+            <div class="full" id="capture"></div>
+        </div>
 
-		<div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="top" data-scrollable="false" data-hide="APP.gallery.hide">
-			<div data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
-				<div id="thumbnails" class="flip"></div>
-				<span data-role="clickable" data-click="APP.gallery.previous" class="previous">&#8249;</span>
-				<span data-role="clickable" data-click="APP.gallery.next" class="next">&#8250;</span>
-			</div>
-			<div id="details" class="full"></div>
-		</div>
+        <div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="top" data-scrollable="false" data-hide="APP.gallery.hide">
+            <div data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
+                <div id="thumbnails" class="flip"></div>
+                <span data-role="clickable" data-click="APP.gallery.previous" class="previous">&#8249;</span>
+                <span data-role="clickable" data-click="APP.gallery.next" class="next">&#8250;</span>
+            </div>
+            <div id="details" class="full"></div>
+        </div>
 
-		<div data-role="view" id="no-camera" data-stretch="true" data-transition="none">
-		</div>
+        <div data-role="view" id="no-camera" data-stretch="true" data-transition="none">
+        </div>
 
-		<div data-role="view" id="about" data-stretch="true" data-transition="slide:right" data-before-show="APP.about.before"></div>
+        <div data-role="view" id="about" data-stretch="true" data-transition="slide:right" data-before-show="APP.about.before"></div>
 
-		<div data-role="view" id="settings" data-before-show="APP.settings.before" data-hide="APP.settings.hide" data-transition="slide:left" data-stretch="true"></div>
+        <div data-role="view" id="settings" data-before-show="APP.settings.before" data-hide="APP.settings.hide" data-transition="slide:left" data-stretch="true"></div>
 
-		<div data-role="modalview" id="confirm" class="modal-window" data-width="500" data-height="120">
-			<h1 class="title"></h1>
-			<p class="message"></p>
-			<div data-role="footer">
-				<a class="yes" data-role="button" data-click="APP.confirm.yes">Yes</a>
-				<a class="no" data-role="button" data-click="APP.confirm.no">No</a>
-			</div>
-		</div>
+        <div data-role="modalview" id="confirm" class="modal-window" data-width="500" data-height="120">
+            <h1 class="title"></h1>
+            <p class="message"></p>
+            <div data-role="footer">
+                <a class="yes" data-role="button" data-click="APP.confirm.yes">Yes</a>
+                <a class="no" data-role="button" data-click="APP.confirm.no">No</a>
+            </div>
+        </div>
 
-		<div data-role="layout" data-id="top">
-			<div data-role="footer" data-model="APP.top.viewModel">
-				<div class="footer top"></div>
-			</div>
-		</div>
+        <div data-role="layout" data-id="top">
+            <div data-role="footer" data-model="APP.top.viewModel">
+                <div class="footer top"></div>
+            </div>
+        </div>
 
-		<div data-role="layout" data-id="bottom">
-			<div data-role="footer">
-				<div class="footer bottom"></div>
-			</div>
-		</div>
+        <div data-role="layout" data-id="bottom">
+            <div data-role="footer">
+                <div class="footer bottom"></div>
+            </div>
+        </div>
 
-		<script src="javascripts/jquery.min.js"></script>
-		<script src="javascripts/kendo.mobile.js"></script>
-		<script src='javascripts/require.js' data-main='javascripts/main'></script>
+        <script src="javascripts/jquery.min.js"></script>
+        <script src="javascripts/kendo.mobile.js"></script>
+        <script src='javascripts/require.js' data-main='javascripts/main'></script>
 
-	</body>
+    </body>
 </html>

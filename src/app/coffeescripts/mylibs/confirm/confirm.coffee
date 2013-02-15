@@ -1,47 +1,47 @@
 define [
-  'Kendo'
-  'text!mylibs/confirm/views/confirm.html' 	
+    'Kendo'
+    'text!mylibs/confirm/views/confirm.html'
 ], (kendo, template) ->
-	
-	view = {}
-	@callback = null
-	open = false
 
-	pub = 
+    view = {}
+    @callback = null
+    open = false
 
-		yes: (e) =>
-			view.data("kendoMobileModalView").close()
-			open = false
-			if @callback
-				@callback()
+    pub =
 
-		no: (e) ->
-			open = false
-			view.data("kendoMobileModalView").close()
+        yes: (e) =>
+            view.data("kendoMobileModalView").close()
+            open = false
+            if @callback
+                @callback()
 
-		init: (selector) =>
+        no: (e) ->
+            open = false
+            view.data("kendoMobileModalView").close()
 
-			# view = new kendo.View(selector, template)
-			# view.render(viewModel, true)
-			view = $(selector)
+        init: (selector) =>
 
-			$.subscribe "/confirm/show", (title, message, callback) =>
+            # view = new kendo.View(selector, template)
+            # view.render(viewModel, true)
+            view = $(selector)
 
-				@callback = callback
+            $.subscribe "/confirm/show", (title, message, callback) =>
 
-				view.find(".title").html(title)
-				view.find(".message").html(message)
+                @callback = callback
 
-				view.find(".yes").text window.APP.localization.yesButton
-				view.find(".no").text window.APP.localization.noButton
+                view.find(".title").html(title)
+                view.find(".message").html(message)
 
-				view.data("kendoMobileModalView").open()
-				open = true
+                view.find(".yes").text window.APP.localization.yesButton
+                view.find(".no").text window.APP.localization.noButton
 
-			esc = ->
-				if open
-					pub.no()
-					return false
+                view.data("kendoMobileModalView").open()
+                open = true
 
-			$.subscribe "/keyboard/esc", esc, true
+            esc = ->
+                if open
+                    pub.no()
+                    return false
+
+            $.subscribe "/keyboard/esc", esc, true
 
