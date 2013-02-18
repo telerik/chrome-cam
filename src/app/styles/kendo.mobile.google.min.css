@@ -19,7 +19,7 @@
     font-size: 1em
 }
 
-.km-root *:focus {}
+.km-root *:focus { }
 
 .km-root,.km-vertical,.km-horizontal {
     width: 100%;
@@ -219,7 +219,7 @@
     background-color: rgba(192, 192, 192, 1);
 }
 
-.km-button:visited { 
+.km-button:visited {
     color: #666;
     text-decoration: none;
 }
