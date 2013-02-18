@@ -161,6 +161,7 @@
       element.onload = fadeIn(element);
       element.src = item.file;
       element.setAttribute("data-name", item.name);
+      element.setAttribute("data-tabbable", "");
       element.setAttribute("draggable", true);
       element.width = 240;
       element.height = 180;
