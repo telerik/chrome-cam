@@ -14,8 +14,9 @@ define [
     'mylibs/confirm/confirm'
     'mylibs/assets/assets'
     'mylibs/navigation/navigation'
+    'mylibs/tabbing/tabbing'
     "text!mylibs/nocamera/views/nocamera.html"
-], (kendo, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, navigation, nocamera) ->
+], (kendo, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, navigation, tabbing, nocamera) ->
 
     pub =
         init: ->
@@ -83,6 +84,8 @@ define [
 
                 # start up full view
                 full.show APP.filters[0]
+
+                tabbing.init()
 
                 # we are done loading the app. have the postman deliver that msg.
                 $.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]

@@ -132,6 +132,8 @@ body div { padding-top: 0px; }
     border-bottom-left-radius: 2px;
     border-top-left-radius: 2px;
     border-right-width: 0px;
+    position: relative;
+    left: 4px;
 }
 .mode .km-button:last-child {
     border-top-right-radius: 2px;
