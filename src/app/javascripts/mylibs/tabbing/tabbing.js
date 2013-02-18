@@ -2,10 +2,13 @@
 (function() {
 
   define(['mylibs/utils/utils'], function(utils) {
-    var pub;
+    var kill, pub;
+    kill = function() {
+      return $("[data-tabbable]").removeAttr("tabindex");
+    };
     return pub = {
       init: function() {
-        return $(document.body).on("keydown", "*[data-tabable]", function(e) {
+        return $(document.body).on("keydown", "*[data-tabbable]", function(e) {
           var target;
           if (!(e.which === utils.keys.space || e.which === utils.keys.enter)) {
             return;
@@ -19,6 +22,14 @@
             return target.trigger("click", e);
           }
         });
+      },
+      setup: function(view) {
+        kill();
+        console.log(view);
+        window.deviltry = view;
+        return setTimeout((function() {
+          return console.log($("[data-tabbable]", $(view)).attr("tabindex", 1));
+        }), 2000);
       }
     };
   });

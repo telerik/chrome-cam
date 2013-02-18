@@ -3,8 +3,9 @@ define [
     'mylibs/utils/utils'
     'mylibs/file/filewrapper'
     'mylibs/navigation/navigation'
+    'mylibs/tabbing/tabbing'
     'text!mylibs/full/views/full.html'
-], (kendo, utils, filewrapper, navigation, template) ->
+], (kendo, utils, filewrapper, navigation, tabbing, template) ->
     paused = true
     frame = 0
     full = {}
@@ -123,6 +124,9 @@ define [
 
             return deferred.promise()
 
+        always: (previous, next) ->
+            tabbing.setup next
+
     pub =
         init: (selector) ->
 
@@ -131,6 +135,7 @@ define [
 
             navigation.navigating.to "#home", navigating.to
             navigation.navigating.from "#home", navigating.from
+            navigation.navigating.always navigating.always
 
             # find and cache the necessary elements
             elements.cache full
