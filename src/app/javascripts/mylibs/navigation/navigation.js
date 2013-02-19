@@ -7,30 +7,24 @@
     var callbacks, pub;
     callbacks = {
       to: {},
-      from: {},
-      always: []
+      from: {}
     };
     return pub = {
       navigate: function(view) {
-        var callback, deferreds, previous, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+        var callback, deferreds, previous, _i, _j, _len, _len1, _ref, _ref1;
         deferreds = [];
         previous = window.APP.app.view().id;
-        _ref = callbacks.always;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          callback = _ref[_i];
-          callback(previous, view);
-        }
         if (previous in callbacks.from) {
-          _ref1 = callbacks.from[previous];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            callback = _ref1[_j];
+          _ref = callbacks.from[previous];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            callback = _ref[_i];
             deferreds.push(callback());
           }
         }
         if (view in callbacks.to) {
-          _ref2 = callbacks.to[view];
-          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-            callback = _ref2[_k];
+          _ref1 = callbacks.to[view];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            callback = _ref1[_j];
             deferreds.push(callback());
           }
         }
@@ -39,9 +33,6 @@
         });
       },
       navigating: {
-        always: function(callback) {
-          return callbacks.always.push(callback);
-        },
         to: function(view, callback) {
           if (!(view in callbacks.to)) {
             callbacks.to[view] = [];

@@ -1,6 +1,8 @@
 define [ 'mylibs/utils/utils' ], (utils) ->
+    level = 0
+
     removeTabindices = ->
-        $("[data-tabbable]").removeAttr "tabindex"
+        $("[data-tabbable]").attr "tabindex", -1
 
     pub =
         init: ->
@@ -15,7 +17,11 @@ define [ 'mylibs/utils/utils' ], (utils) ->
                 else
                     target.trigger "click", e
 
-        setup: (view) ->
+        setLevel: (level) ->
+            return unless @level != level
+
+            @level = level
+
             deferred = $.Deferred()
 
             removeTabindices()
@@ -25,8 +31,12 @@ define [ 'mylibs/utils/utils' ], (utils) ->
             # be overwritten by the (older) copy kendo keeps in memory. We need to wait
             # for the transition to finish before we can set the tabindex's.
             setTimeout (->
-                $("[data-tabbable]", $(view)).attr "tabindex", 1
+                $("[data-tab-level='#{level}']").attr "tabindex", 0
+                $("[data-tab-level='#{level}'][data-default-action]").focus()
                 deferred.resolve()
             ), 400
 
             return deferred.promise()
+
+        refresh: ->
+            $("[data-tab-level='#{level}']").attr "tabindex", 0

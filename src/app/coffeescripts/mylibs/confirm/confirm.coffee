@@ -10,6 +10,7 @@ define [
     pub =
         yes: (e) =>
             view.data("kendoMobileModalView").close()
+            tabbing.setLevel 0
             open = false
             if @callback
                 @callback()
@@ -17,6 +18,7 @@ define [
         no: (e) ->
             open = false
             view.data("kendoMobileModalView").close()
+            tabbing.setLevel 0
 
         init: (selector) =>
 
@@ -36,8 +38,8 @@ define [
 
                 view.data("kendoMobileModalView").open()
 
-                tabbing.setup(selector).done ->
-                    view.find(".yes").focus()
+                # HACK: These levels probably shouldn't be hard coded
+                tabbing.setLevel 1
 
                 open = true
 

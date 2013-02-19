@@ -132,9 +132,6 @@
         });
         $.publish("/postman/deliver", [null, "/camera/snapshot/request"]);
         return deferred.promise();
-      },
-      always: function(previous, next) {
-        return tabbing.setup(next);
       }
     };
     return pub = {
@@ -143,7 +140,6 @@
         full.render();
         navigation.navigating.to("#home", navigating.to);
         navigation.navigating.from("#home", navigating.from);
-        navigation.navigating.always(navigating.always);
         elements.cache(full);
         return subscribe(pub);
       },
