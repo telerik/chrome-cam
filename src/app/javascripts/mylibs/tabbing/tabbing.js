@@ -2,8 +2,8 @@
 (function() {
 
   define(['mylibs/utils/utils'], function(utils) {
-    var kill, pub;
-    kill = function() {
+    var pub, removeTabindices;
+    removeTabindices = function() {
       return $("[data-tabbable]").removeAttr("tabindex");
     };
     return pub = {
@@ -24,7 +24,7 @@
         });
       },
       setup: function(view) {
-        kill();
+        removeTabindices();
         return setTimeout((function() {
           return $("[data-tabbable]", $(view)).attr("tabindex", 1);
         }), 600);

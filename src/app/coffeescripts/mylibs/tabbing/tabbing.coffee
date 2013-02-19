@@ -1,5 +1,5 @@
 define [ 'mylibs/utils/utils' ], (utils) ->
-    kill = ->
+    removeTabindices = ->
         $("[data-tabbable]").removeAttr "tabindex"
 
     pub =
@@ -16,7 +16,7 @@ define [ 'mylibs/utils/utils' ], (utils) ->
                     target.trigger "click", e
 
         setup: (view) ->
-            kill()
+            removeTabindices()
 
             # This is extremely hacky, but kendo seems to be storing the view we're
             # navigating to in memory. So if we make changes to it in the DOM, it'll
