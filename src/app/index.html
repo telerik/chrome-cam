@@ -18,7 +18,7 @@
         </div>
 
         <div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="top" data-scrollable="false" data-hide="APP.gallery.hide">
-            <div data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
+            <div id="list" data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
                 <div id="thumbnails" class="flip"></div>
                 <span data-role="clickable" data-click="APP.gallery.previous" data-tabbable class="previous">&#8249;</span>
                 <span data-role="clickable" data-click="APP.gallery.next" data-tabbable class="next">&#8250;</span>
@@ -37,8 +37,8 @@
             <h1 class="title"></h1>
             <p class="message"></p>
             <div data-role="footer">
-                <a class="yes" data-role="button" data-click="APP.confirm.yes">Yes</a>
-                <a class="no" data-role="button" data-click="APP.confirm.no">No</a>
+                <a class="yes" data-tabbable data-role="button" data-click="APP.confirm.yes">Yes</a>
+                <a class="no" data-tabbable data-role="button" data-click="APP.confirm.no">No</a>
             </div>
         </div>
 

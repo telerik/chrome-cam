@@ -336,11 +336,13 @@
         return select(thumb.data("name"));
       },
       init: function(selector) {
-        var page1, page2;
-        page1 = new kendo.View(selector, null);
-        page2 = new kendo.View(selector, null);
+        var list, page1, page2, thumbnails;
+        list = $(selector);
+        thumbnails = $("#thumbnails", list);
+        page1 = new kendo.View(thumbnails, null);
+        page2 = new kendo.View(thumbnails, null);
         container = page1.container;
-        arrows.init($(selector).parent());
+        arrows.init($(list));
         pages.previous = page1.render().addClass("page gallery");
         active = pages.next = page2.render().addClass("page gallery");
         $.subscribe("/gallery/details", function(d) {
@@ -354,6 +356,12 @@
         });
         $.subscribe("/gallery/at", function(index) {
           return at(index);
+        });
+        $.subscribe("/gallery/show", function() {
+          return list.show();
+        });
+        $.subscribe("/gallery/hide", function() {
+          return list.hide();
         });
         $.subscribe("/gallery/clear", function() {
           $.publish("/bottom/thumbnail");

@@ -43,6 +43,7 @@ define [
         # click which will open the details view
         if selected.hasClass("selected")
             keys.unbind()
+
             $.publish "/details/show", [ get("#{item.data("name")}") ]
 
         else
@@ -326,17 +327,20 @@ define [
             select thumb.data("name")
 
         init: (selector) =>
+            list = $(selector)
+
+            thumbnails = $("#thumbnails", list)
 
             # create the pages that hold the thumbnails
             # in order to page through previews, we need to create two pages. the current
             # page and the next page.
-            page1 = new kendo.View(selector, null)
-            page2 = new kendo.View(selector, null)
+            page1 = new kendo.View(thumbnails, null)
+            page2 = new kendo.View(thumbnails, null)
 
             # get a reference to the view container
             container = page1.container
 
-            arrows.init $(selector).parent()
+            arrows.init $(list)
 
             pages.previous = page1.render().addClass("page gallery")
             active = pages.next = page2.render().addClass("page gallery")
@@ -352,6 +356,12 @@ define [
 
             $.subscribe "/gallery/at", (index) ->
                 at(index)
+
+            $.subscribe "/gallery/show", ->
+                list.show()
+
+            $.subscribe "/gallery/hide", ->
+                list.hide()
 
             $.subscribe "/gallery/clear", =>
                 $.publish "/bottom/thumbnail"

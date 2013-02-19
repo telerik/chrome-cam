@@ -16,6 +16,8 @@ define [ 'mylibs/utils/utils' ], (utils) ->
                     target.trigger "click", e
 
         setup: (view) ->
+            deferred = $.Deferred()
+
             removeTabindices()
 
             # This is extremely hacky, but kendo seems to be storing the view we're
@@ -24,4 +26,7 @@ define [ 'mylibs/utils/utils' ], (utils) ->
             # for the transition to finish before we can set the tabindex's.
             setTimeout (->
                 $("[data-tabbable]", $(view)).attr "tabindex", 1
-            ), 600
+                deferred.resolve()
+            ), 400
+
+            return deferred.promise()

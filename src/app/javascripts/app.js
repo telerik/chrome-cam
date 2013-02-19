@@ -41,7 +41,7 @@
           APP.popover = popover.init("#gallery");
           full.init("#capture");
           details.init("#details");
-          gallery.init("#thumbnails");
+          gallery.init("#list");
           about.init("#about");
           confirm.init("#confirm");
           full.show(APP.filters[0]);

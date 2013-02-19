@@ -24,10 +24,14 @@
         });
       },
       setup: function(view) {
+        var deferred;
+        deferred = $.Deferred();
         removeTabindices();
-        return setTimeout((function() {
-          return $("[data-tabbable]", $(view)).attr("tabindex", 1);
-        }), 600);
+        setTimeout((function() {
+          $("[data-tabbable]", $(view)).attr("tabindex", 1);
+          return deferred.resolve();
+        }), 400);
+        return deferred.promise();
       }
     };
   });
