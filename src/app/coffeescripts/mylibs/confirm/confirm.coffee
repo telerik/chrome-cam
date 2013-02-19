@@ -1,14 +1,13 @@
 define [
     'Kendo'
-    'text!mylibs/confirm/views/confirm.html'
-], (kendo, template) ->
+    'mylibs/tabbing/tabbing'
+], (kendo, tabbing) ->
 
     view = {}
     @callback = null
     open = false
 
     pub =
-
         yes: (e) =>
             view.data("kendoMobileModalView").close()
             open = false
@@ -36,6 +35,10 @@ define [
                 view.find(".no").text window.APP.localization.noButton
 
                 view.data("kendoMobileModalView").open()
+
+                tabbing.setup(selector).done ->
+                    view.find(".yes").focus()
+
                 open = true
 
             esc = ->

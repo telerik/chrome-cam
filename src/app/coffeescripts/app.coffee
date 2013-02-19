@@ -74,7 +74,7 @@ define [
                 details.init "#details"
 
                 # initialize the thumbnail gallery
-                gallery.init "#thumbnails"
+                gallery.init "#list"
 
                 # initialize the about view
                 about.init "#about"
