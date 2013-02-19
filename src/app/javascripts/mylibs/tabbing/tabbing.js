@@ -8,7 +8,7 @@
     };
     return pub = {
       init: function() {
-        return $(document.body).on("keydown", "*[data-tabbable]", function(e) {
+        return $(document.body).on("keydown", "[data-tabbable]", function(e) {
           var target;
           if (!(e.which === utils.keys.space || e.which === utils.keys.enter)) {
             return;
@@ -25,11 +25,9 @@
       },
       setup: function(view) {
         kill();
-        console.log(view);
-        window.deviltry = view;
         return setTimeout((function() {
-          return console.log($("[data-tabbable]", $(view)).attr("tabindex", 1));
-        }), 2000);
+          return $("[data-tabbable]", $(view)).attr("tabindex", 1);
+        }), 600);
       }
     };
   });

@@ -4,7 +4,7 @@ define [ 'mylibs/utils/utils' ], (utils) ->
 
     pub =
         init: ->
-            $(document.body).on "keydown", "*[data-tabbable]", (e) ->
+            $(document.body).on "keydown", "[data-tabbable]", (e) ->
                 return unless e.which is utils.keys.space or e.which is utils.keys.enter
 
                 target = $(e.target)
@@ -18,7 +18,10 @@ define [ 'mylibs/utils/utils' ], (utils) ->
         setup: (view) ->
             kill()
 
-            console.log view
-            window.deviltry = view
-            setTimeout (-> console.log $("[data-tabbable]", $(view)).attr("tabindex", 1)), 2000
-
+            # This is extremely hacky, but kendo seems to be storing the view we're
+            # navigating to in memory. So if we make changes to it in the DOM, it'll
+            # be overwritten by the (older) copy kendo keeps in memory. We need to wait
+            # for the transition to finish before we can set the tabindex's.
+            setTimeout (->
+                $("[data-tabbable]", $(view)).attr "tabindex", 1
+            ), 600
