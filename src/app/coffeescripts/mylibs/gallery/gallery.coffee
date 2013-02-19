@@ -357,10 +357,10 @@ define [
             $.subscribe "/gallery/at", (index) ->
                 at(index)
 
-            $.subscribe "/gallery/show", ->
+            $.subscribe "/details/hiding", ->
                 list.show()
 
-            $.subscribe "/gallery/hide", ->
+            $.subscribe "/details/shown", ->
                 list.hide()
 
             $.subscribe "/gallery/clear", =>

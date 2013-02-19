@@ -32,7 +32,7 @@
     hide = function() {
       $.publish("/top/update", ["gallery"]);
       $.publish("/gallery/keyboard");
-      $.publish("/gallery/show");
+      $.publish("/details/hiding");
       return kendo.fx(details.container).zoom("out").play().done(function() {
         $.unsubscribe(token);
         return token = null;
@@ -44,7 +44,7 @@
         return hide();
       });
       return kendo.fx(details.container).zoom("in").play().done(function() {
-        $.publish("/gallery/hide");
+        $.publish("/details/shown");
         return $.publish("/top/update", ["details"]);
       });
     };
