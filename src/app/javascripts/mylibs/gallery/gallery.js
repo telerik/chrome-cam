@@ -357,10 +357,10 @@
         $.subscribe("/gallery/at", function(index) {
           return at(index);
         });
-        $.subscribe("/gallery/show", function() {
+        $.subscribe("/details/hiding", function() {
           return list.show();
         });
-        $.subscribe("/gallery/hide", function() {
+        $.subscribe("/details/shown", function() {
           return list.hide();
         });
         $.subscribe("/gallery/clear", function() {

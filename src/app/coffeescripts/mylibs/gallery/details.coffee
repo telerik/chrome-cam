@@ -27,7 +27,7 @@ define [
     hide = ->
         $.publish "/top/update", ["gallery"]
         $.publish "/gallery/keyboard"
-        $.publish "/gallery/show"
+        $.publish "/details/hiding"
 
         kendo.fx(details.container).zoom("out").play().done ->
             $.unsubscribe token
@@ -40,7 +40,7 @@ define [
             hide()
 
         kendo.fx(details.container).zoom("in").play().done ->
-            $.publish "/gallery/hide"
+            $.publish "/details/shown"
             $.publish "/top/update", ["details"]
 
     update = (message) ->
