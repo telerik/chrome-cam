@@ -46,6 +46,7 @@
           confirm.init("#confirm");
           full.show(APP.filters[0]);
           tabbing.init();
+          tabbing.setLevel(0);
           $.publish("/postman/deliver", [
             {
               message: ""

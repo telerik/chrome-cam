@@ -1,15 +1,15 @@
 <section class="about">
-	<hgroup class="appInfoHeader">
-		<h1 data-bind="localeText: appName"></h1>
-		<h2>Version 1.0</h2>
-	</hgroup>
-	<div>
-		<hgroup>
-			<h3 data-bind="localeHtml: about_kendo"></h3>
-			<h4 data-bind="localeHtml: about_kendo_license"></h4>
-			<h5 data-bind="localeText: about_credits"></h5>
-		</hgroup>
-	</div>
-	<button data-role="button" data-click="APP.about.back" data-bind="localeText: back_button" class="button back"></button>
-	<button data-role="button" data-click="APP.about.clear" data-bind="localeText: clear_gallery_button" class="button"></button>
+    <hgroup class="appInfoHeader">
+        <h1 data-bind="localeText: appName"></h1>
+        <h2>Version 1.0</h2>
+    </hgroup>
+    <div>
+        <hgroup>
+            <h3 data-bind="localeHtml: about_kendo"></h3>
+            <h4 data-bind="localeHtml: about_kendo_license"></h4>
+            <h5 data-bind="localeText: about_credits"></h5>
+        </hgroup>
+    </div>
+    <button data-role="button" data-click="APP.about.clear" data-tabbable data-tab-level="0" data-bind="localeText: clear_gallery_button" class="button"></button>
+    <button data-role="button" data-click="APP.about.back" data-tabbable data-tab-level="0" data-bind="localeText: back_button" class="button back"></button>
 </section>

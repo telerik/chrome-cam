@@ -10,6 +10,7 @@
     return pub = {
       yes: function(e) {
         view.data("kendoMobileModalView").close();
+        tabbing.setLevel(0);
         open = false;
         if (_this.callback) {
           return _this.callback();
@@ -17,7 +18,8 @@
       },
       no: function(e) {
         open = false;
-        return view.data("kendoMobileModalView").close();
+        view.data("kendoMobileModalView").close();
+        return tabbing.setLevel(0);
       },
       init: function(selector) {
         var esc;
@@ -29,9 +31,7 @@
           view.find(".yes").text(window.APP.localization.yesButton);
           view.find(".no").text(window.APP.localization.noButton);
           view.data("kendoMobileModalView").open();
-          tabbing.setup(selector).done(function() {
-            return view.find(".yes").focus();
-          });
+          tabbing.setLevel(1);
           return open = true;
         });
         esc = function() {

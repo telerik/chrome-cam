@@ -124,9 +124,6 @@ define [
 
             return deferred.promise()
 
-        always: (previous, next) ->
-            tabbing.setup next
-
     pub =
         init: (selector) ->
 
@@ -135,7 +132,6 @@ define [
 
             navigation.navigating.to "#home", navigating.to
             navigation.navigating.from "#home", navigating.from
-            navigation.navigating.always navigating.always
 
             # find and cache the necessary elements
             elements.cache full

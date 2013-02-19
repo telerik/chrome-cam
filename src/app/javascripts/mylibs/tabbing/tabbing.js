@@ -2,9 +2,10 @@
 (function() {
 
   define(['mylibs/utils/utils'], function(utils) {
-    var pub, removeTabindices;
+    var level, pub, removeTabindices;
+    level = 0;
     removeTabindices = function() {
-      return $("[data-tabbable]").removeAttr("tabindex");
+      return $("[data-tabbable]").attr("tabindex", -1);
     };
     return pub = {
       init: function() {
@@ -23,15 +24,23 @@
           }
         });
       },
-      setup: function(view) {
+      setLevel: function(level) {
         var deferred;
+        if (this.level === level) {
+          return;
+        }
+        this.level = level;
         deferred = $.Deferred();
         removeTabindices();
         setTimeout((function() {
-          $("[data-tabbable]", $(view)).attr("tabindex", 1);
+          $("[data-tab-level='" + level + "']").attr("tabindex", 0);
+          $("[data-tab-level='" + level + "'][data-default-action]").focus();
           return deferred.resolve();
         }), 400);
         return deferred.promise();
+      },
+      refresh: function() {
+        return $("[data-tab-level='" + level + "']").attr("tabindex", 0);
       }
     };
   });
