@@ -62,6 +62,7 @@ body div { padding-top: 0px; }
     cursor: pointer;
     text-decoration: none;
     font-family: "Droid Sans Bold";
+    min-width: 64px;
 }
 
 .km-button img { width: 20px; }
@@ -517,7 +518,7 @@ a.canvas {
     -webkit-box-pack: center;
     -webkit-box-orient: vertical;
     width: 100%;
-    padding: 60px 0;
+    padding: 60px 0 20px;
 }
 .appInfoHeader + * hgroup {
     background: url("images/kendoUILogo.png") -12px 0 no-repeat;
@@ -525,10 +526,8 @@ a.canvas {
     background-size: 80px 80px;
 }
     .about .back {
-        position: absolute;
-        top: 90%;
-        margin-left: -26px;
-        left: 50%;
+        display: block;
+        margin-top: 50px;
     }
 
 /************ Modal Windows ************/
