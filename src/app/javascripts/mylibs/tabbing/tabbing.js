@@ -2,8 +2,7 @@
 (function() {
 
   define(['mylibs/utils/utils'], function(utils) {
-    var keydown, level, pub, removeTabindices, setLevel;
-    level = 0;
+    var keydown, pub, removeTabs, restoreTabs;
     keydown = function(e) {
       var target;
       if (!(e.which === utils.keys.space || e.which === utils.keys.enter)) {
@@ -16,24 +15,27 @@
         return target.data("kendoMobileClickable").trigger("click", e);
       }
     };
-    removeTabindices = function() {
-      return $("[data-tabbable]").attr("tabindex", -1);
+    removeTabs = function(parent) {
+      return $("[tabindex]", parent).each(function() {
+        var tabbable;
+        tabbable = $(this);
+        tabbable.attr("data-old-tabindex", tabbable.attr("tabindex"));
+        return tabbable.attr("tabindex", -1);
+      });
     };
-    setLevel = function(level) {
-      this.level = level;
-      removeTabindices();
-      return setTimeout((function() {
-        $("[data-tab-level='" + level + "']").attr("tabindex", 0);
-        return $("[data-tab-level='" + level + "'][data-default-action]").focus();
-      }), 400);
+    restoreTabs = function(parent) {
+      return $("[data-old-tabindex]", parent).each(function() {
+        var tabbable;
+        tabbable = $(this);
+        tabbable.attr("tabindex", tabbable.attr("data-old-tabindex"));
+        return tabbable.removeAttr("data-old-tabindex");
+      });
     };
     return pub = {
       init: function() {
         $(document.body).on("keydown", "[data-tabbable]", keydown);
-        $.subscribe("/tabbing/level/set", setLevel);
-        return $.subscribe("/tabbing/refresh", function() {
-          return $("[data-tab-level='" + level + "']").attr("tabindex", 0);
-        });
+        $.subscribe("/tabbing/remove", removeTabs);
+        return $.subscribe("/tabbing/restore", restoreTabs);
       }
     };
   });

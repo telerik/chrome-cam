@@ -19,9 +19,9 @@
 
         <div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="top" data-scrollable="false" data-hide="APP.gallery.hide">
             <div id="list" data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
+                <span data-role="clickable" data-click="APP.gallery.previous" data-tabbable tabindex="0" class="previous">&#8249;</span>
                 <div id="thumbnails" class="flip"></div>
-                <span data-role="clickable" data-click="APP.gallery.previous" data-tabbable data-tab-level="0" class="previous">&#8249;</span>
-                <span data-role="clickable" data-click="APP.gallery.next" data-tabbable data-tab-level="0" class="next">&#8250;</span>
+                <span data-role="clickable" data-click="APP.gallery.next" data-tabbable tabindex="0" class="next">&#8250;</span>
             </div>
             <div id="details" class="full"></div>
         </div>
@@ -37,8 +37,8 @@
             <h1 class="title"></h1>
             <p class="message"></p>
             <div data-role="footer">
-                <button class="yes" data-tabbable data-default-action data-tab-level="1" data-role="button" data-click="APP.confirm.yes">Yes</button>
-                <button class="no" data-tabbable data-tab-level="1" data-role="button" data-click="APP.confirm.no">No</button>
+                <button class="yes" data-tabbable data-default-action tabindex="0" data-role="button" data-click="APP.confirm.yes">Yes</button>
+                <button class="no" data-tabbable tabindex="0" data-role="button" data-click="APP.confirm.no">No</button>
             </div>
         </div>
 

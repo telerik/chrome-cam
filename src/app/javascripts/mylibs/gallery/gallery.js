@@ -34,6 +34,7 @@
       return $.publish("/top/update", ["deselected"]);
     };
     select = function(name) {
+      debugger;
       var item;
       item = container.find("[data-name='" + name + "']");
       selected = item.parent(":first");
@@ -161,7 +162,6 @@
       element.onload = fadeIn(element);
       element.src = item.file;
       element.setAttribute("data-name", item.name);
-      element.setAttribute("data-tabbable", "");
       element.setAttribute("draggable", true);
       element.width = 240;
       element.height = 180;
@@ -204,17 +204,19 @@
         complete = function() {
           var justPaged;
           setTimeout(function() {
-            var _k, _len2, _results;
-            _results = [];
+            var first, _fn, _k, _len2;
+            _fn = function() {
+              var element;
+              element = create(item.data);
+              return item.dom.append(element);
+            };
             for (_k = 0, _len2 = thumbs.length; _k < _len2; _k++) {
               item = thumbs[_k];
-              _results.push((function() {
-                var element;
-                element = create(item.data);
-                return item.dom.append(element);
-              })());
+              _fn();
             }
-            return _results;
+            first = thumbs[0].dom;
+            first.attr("tabindex", 0);
+            return first.attr("data-tabbable", "");
           }, 50);
           pages.next.show();
           justPaged = pages.previous;
@@ -225,7 +227,6 @@
           flipping = false;
           arrows.left.toggle(ds.page() > 1);
           arrows.right.toggle(ds.page() < ds.totalPages());
-          $.publish("/tabbing/refresh");
           $("#gallery").css("pointer-events", "auto");
           if (flip) {
             return setTimeout(function() {

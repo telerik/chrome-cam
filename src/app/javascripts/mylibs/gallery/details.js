@@ -65,7 +65,6 @@
         that = this;
         details = new kendo.View(selector, template);
         details.render(viewModel, true);
-        $.publish("/tabbing/refresh");
         $.subscribe("/details/hide", function() {
           visible = false;
           return hide();
