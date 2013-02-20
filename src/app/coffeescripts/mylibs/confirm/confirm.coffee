@@ -22,7 +22,7 @@ define [
             view.data("kendoMobileModalView").close()
 
             $.publish "/tabbing/restore", [ $(document.body) ]
-            $(document.body).focus(())
+            $(document.body).focus()
 
         init: (selector) =>
 
@@ -45,6 +45,7 @@ define [
                 # HACK: This should probably be done in a better way.
                 $.publish "/tabbing/remove", [ $(document.body) ]
                 $.publish "/tabbing/restore", [ view ]
+
                 setTimeout (->
                     view.find(".yes").focus()
                 ), 250
