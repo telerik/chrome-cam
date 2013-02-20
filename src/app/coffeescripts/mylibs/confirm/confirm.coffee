@@ -10,7 +10,8 @@ define [
         yes: (e) =>
             view.data("kendoMobileModalView").close()
 
-            $.publish "/tabbing/level/set", [ 0 ]
+            $.publish "/tabbing/restore", [ $(document.body) ]
+            $(document.body).focus()
 
             open = false
             if @callback
@@ -20,7 +21,8 @@ define [
             open = false
             view.data("kendoMobileModalView").close()
 
-            $.publish "/tabbing/level/set", [ 0 ]
+            $.publish "/tabbing/restore", [ $(document.body) ]
+            $(document.body).focus(())
 
         init: (selector) =>
 
@@ -40,8 +42,12 @@ define [
 
                 view.data("kendoMobileModalView").open()
 
-                # HACK: These levels probably shouldn't be hard coded
-                $.publish "/tabbing/level/set", [ 1 ]
+                # HACK: This should probably be done in a better way.
+                $.publish "/tabbing/remove", [ $(document.body) ]
+                $.publish "/tabbing/restore", [ view ]
+                setTimeout (->
+                    view.find(".yes").focus()
+                ), 250
 
                 open = true
 

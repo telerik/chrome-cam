@@ -1,9 +1,9 @@
 <section class="bar">
     <section class="left">
-        <button data-role="button" class="button filters" data-click="APP.bottom.filters" data-bind="visible: filters.visible, localeText: filters_button" data-tabbable data-tab-level="0"></button>
+        <button data-role="button" class="button filters" data-click="APP.bottom.filters" data-bind="visible: filters.visible, localeText: filters_button" data-tabbable tabindex="0"></button>
         <span class="mode" data-bind="visible: mode.visible">
             <button data-role="button" data-click="APP.bottom.mode" data-bind="localeTitle: photo" class="selected" data-mode="photo"
-               data-tabbable data-tab-level="0">
+               data-tabbable tabindex="0">
                 <img src="styles/images/singleMode.png">
             </button>
             <button data-role="button" data-click="APP.bottom.mode" data-mode="paparazzi" data-bind="localeTitle: paparazzi" data-mode="paparazzi"
@@ -36,7 +36,7 @@
         <div class="thumbnail">
             <div class="absolute" id="destination" class="thumbnail" ></div>
             <div class="absolute">
-                <a data-role="clickable" data-click="APP.bottom.gallery" data-bind="visible: thumbnail.visible, localeTitle: gallery" class="galleryLink" data-tabbable data-tab-level="0"></a>
+                <a data-role="clickable" data-click="APP.bottom.gallery" data-bind="visible: thumbnail.visible, localeTitle: gallery" class="galleryLink" data-tabbable tabindex="0"></a>
             </div>
         <div>
     </section>

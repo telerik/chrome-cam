@@ -10,7 +10,8 @@
     return pub = {
       yes: function(e) {
         view.data("kendoMobileModalView").close();
-        $.publish("/tabbing/level/set", [0]);
+        $.publish("/tabbing/restore", [$(document.body)]);
+        $(document.body).focus();
         open = false;
         if (_this.callback) {
           return _this.callback();
@@ -19,7 +20,8 @@
       no: function(e) {
         open = false;
         view.data("kendoMobileModalView").close();
-        return $.publish("/tabbing/level/set", [0]);
+        $.publish("/tabbing/restore", [$(document.body)]);
+        return $(document.body).focus();
       },
       init: function(selector) {
         var esc;
@@ -31,7 +33,11 @@
           view.find(".yes").text(window.APP.localization.yesButton);
           view.find(".no").text(window.APP.localization.noButton);
           view.data("kendoMobileModalView").open();
-          $.publish("/tabbing/level/set", [1]);
+          $.publish("/tabbing/remove", [$(document.body)]);
+          $.publish("/tabbing/restore", [view]);
+          setTimeout((function() {
+            return view.find(".yes").focus();
+          }), 250);
           return open = true;
         });
         esc = function() {

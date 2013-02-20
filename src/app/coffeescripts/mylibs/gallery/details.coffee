@@ -60,8 +60,6 @@ define [
             details = new kendo.View(selector, template)
             details.render(viewModel, true)
 
-            $.publish "/tabbing/refresh"
-
             # subscribe to events
             $.subscribe "/details/hide", ->
                 visible = false

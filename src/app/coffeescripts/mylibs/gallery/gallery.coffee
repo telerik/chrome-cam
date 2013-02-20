@@ -35,6 +35,7 @@ define [
         $.publish "/top/update", [ "deselected" ]
 
     select = (name) =>
+        debugger
         # find the item with the specified name
         item = container.find("[data-name='#{name}']")
         selected = item.parent(":first")
@@ -45,7 +46,6 @@ define [
             keys.unbind()
 
             $.publish "/details/show", [ get("#{item.data("name")}") ]
-
         else
             container.find(".thumbnail").removeClass "selected"
             selected.addClass "selected"
@@ -158,7 +158,6 @@ define [
 
         element.src = item.file
         element.setAttribute("data-name", item.name)
-        element.setAttribute("data-tabbable", "")
         element.setAttribute("draggable", true)
 
         element.width = 240
@@ -208,6 +207,10 @@ define [
                         do ->
                             element = create(item.data)
                             item.dom.append(element)
+
+                    first = thumbs[0].dom
+                    first.attr "tabindex", 0
+                    first.attr "data-tabbable", ""
                 , 50
 
                 # the current page becomes the next page
@@ -224,8 +227,6 @@ define [
 
                 arrows.left.toggle ds.page() > 1
                 arrows.right.toggle ds.page() < ds.totalPages()
-
-                $.publish "/tabbing/refresh"
 
                 $("#gallery").css "pointer-events", "auto"
 
@@ -324,7 +325,7 @@ define [
             page (e.direction == "right") - (e.direction == "left")
 
         click: (e) ->
-            thumb = @.element
+            thumb = @element
             $.publish "/top/update", ["selected"]
             select thumb.data("name")
 

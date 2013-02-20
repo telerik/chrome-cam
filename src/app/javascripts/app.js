@@ -46,7 +46,6 @@
           confirm.init("#confirm");
           full.show(APP.filters[0]);
           tabbing.init();
-          $.publish("/tabbing/level/set", [0]);
           $.publish("/postman/deliver", [
             {
               message: ""
