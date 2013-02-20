@@ -3,9 +3,8 @@ define [
     'mylibs/utils/utils'
     'mylibs/file/filewrapper'
     'mylibs/navigation/navigation'
-    'mylibs/tabbing/tabbing'
     'text!mylibs/full/views/full.html'
-], (kendo, utils, filewrapper, navigation, tabbing, template) ->
+], (kendo, utils, filewrapper, navigation, template) ->
     paused = true
     frame = 0
     full = {}

@@ -86,7 +86,8 @@ define [
                 full.show APP.filters[0]
 
                 tabbing.init()
-                tabbing.setLevel 0
+
+                $.publish "/tabbing/level/set", [ 0 ]
 
                 # we are done loading the app. have the postman deliver that msg.
                 $.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
