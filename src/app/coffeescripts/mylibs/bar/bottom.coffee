@@ -138,15 +138,15 @@ define [
 
         mode: (e) ->
 
-            a = $(e.target).closest("a")
+            button = $(e.target).closest("button")
 
-            viewModel.set "mode.active", a.data("mode")
+            viewModel.set "mode.active", button.data("mode")
 
             # loop through all of the buttons and remove the active class
-            a.closest(".bar").find("a").removeClass "selected"
+            button.closest(".bar").find("button").removeClass "selected"
 
             # add the active class to this anchor
-            a.addClass "selected"
+            button.addClass "selected"
 
         gallery: ->
             navigation.navigate "#gallery"

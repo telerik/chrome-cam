@@ -2,9 +2,8 @@ define [
   'Kendo'
   'mylibs/utils/utils'
   'mylibs/file/filewrapper'
-  'mylibs/tabbing/tabbing'
   'text!mylibs/gallery/views/details.html'
-], (kendo, utils, filewrapper, tabbing, template) ->
+], (kendo, utils, filewrapper, template) ->
 
     index = 0
 
@@ -61,7 +60,7 @@ define [
             details = new kendo.View(selector, template)
             details.render(viewModel, true)
 
-            tabbing.refresh()
+            $.publish "/tabbing/refresh"
 
             # subscribe to events
             $.subscribe "/details/hide", ->

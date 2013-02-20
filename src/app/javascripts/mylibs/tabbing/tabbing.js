@@ -2,45 +2,38 @@
 (function() {
 
   define(['mylibs/utils/utils'], function(utils) {
-    var level, pub, removeTabindices;
+    var keydown, level, pub, removeTabindices, setLevel;
     level = 0;
+    keydown = function(e) {
+      var target;
+      if (!(e.which === utils.keys.space || e.which === utils.keys.enter)) {
+        return;
+      }
+      target = $(e.target);
+      if (target.data("role") === "button") {
+        return target.data("kendoMobileButton").trigger("click", e);
+      } else if (target.data("role") === "clickable") {
+        return target.data("kendoMobileClickable").trigger("click", e);
+      }
+    };
     removeTabindices = function() {
       return $("[data-tabbable]").attr("tabindex", -1);
     };
+    setLevel = function(level) {
+      this.level = level;
+      removeTabindices();
+      return setTimeout((function() {
+        $("[data-tab-level='" + level + "']").attr("tabindex", 0);
+        return $("[data-tab-level='" + level + "'][data-default-action]").focus();
+      }), 400);
+    };
     return pub = {
       init: function() {
-        return $(document.body).on("keydown", "[data-tabbable]", function(e) {
-          var target;
-          if (!(e.which === utils.keys.space || e.which === utils.keys.enter)) {
-            return;
-          }
-          target = $(e.target);
-          if (target.data("role") === "button") {
-            return target.data("kendoMobileButton").trigger("click", e);
-          } else if (target.data("role") === "clickable") {
-            return target.data("kendoMobileClickable").trigger("click", e);
-          } else {
-            return target.trigger("click", e);
-          }
+        $(document.body).on("keydown", "[data-tabbable]", keydown);
+        $.subscribe("/tabbing/level/set", setLevel);
+        return $.subscribe("/tabbing/refresh", function() {
+          return $("[data-tab-level='" + level + "']").attr("tabindex", 0);
         });
-      },
-      setLevel: function(level) {
-        var deferred;
-        if (this.level === level) {
-          return;
-        }
-        this.level = level;
-        deferred = $.Deferred();
-        removeTabindices();
-        setTimeout((function() {
-          $("[data-tab-level='" + level + "']").attr("tabindex", 0);
-          $("[data-tab-level='" + level + "'][data-default-action]").focus();
-          return deferred.resolve();
-        }), 400);
-        return deferred.promise();
-      },
-      refresh: function() {
-        return $("[data-tab-level='" + level + "']").attr("tabindex", 0);
       }
     };
   });

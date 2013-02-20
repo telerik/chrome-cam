@@ -126,11 +126,11 @@
         return $.publish("/full/filters/show", [viewModel.filters.open]);
       },
       mode: function(e) {
-        var a;
-        a = $(e.target).closest("a");
-        viewModel.set("mode.active", a.data("mode"));
-        a.closest(".bar").find("a").removeClass("selected");
-        return a.addClass("selected");
+        var button;
+        button = $(e.target).closest("button");
+        viewModel.set("mode.active", button.data("mode"));
+        button.closest(".bar").find("button").removeClass("selected");
+        return button.addClass("selected");
       },
       gallery: function() {
         return navigation.navigate("#gallery");

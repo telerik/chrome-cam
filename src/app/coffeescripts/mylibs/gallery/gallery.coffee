@@ -2,9 +2,8 @@ define [
     'Kendo'
     'mylibs/utils/utils'
     'mylibs/file/filewrapper'
-    'mylibs/tabbing/tabbing'
     'text!mylibs/gallery/views/thumb.html'
-], (kendo, utils, filewrapper, tabbing, template) ->
+], (kendo, utils, filewrapper, template) ->
     columns = 3
     rows = 3
     pageSize = columns * rows
@@ -226,7 +225,7 @@ define [
                 arrows.left.toggle ds.page() > 1
                 arrows.right.toggle ds.page() < ds.totalPages()
 
-                tabbing.refresh()
+                $.publish "/tabbing/refresh"
 
                 $("#gallery").css "pointer-events", "auto"
 
