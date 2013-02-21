@@ -34,7 +34,6 @@
       return $.publish("/top/update", ["deselected"]);
     };
     select = function(name) {
-      debugger;
       var item;
       item = container.find("[data-name='" + name + "']");
       selected = item.parent(":first");
@@ -42,8 +41,10 @@
         keys.unbind();
         return $.publish("/details/show", [get("" + (item.data("name")))]);
       } else {
-        container.find(".thumbnail").removeClass("selected");
+        container.find(".thumbnail").removeClass("selected").removeAttr("tabindex");
         selected.addClass("selected");
+        selected.attr("tabindex", 0);
+        selected.focus();
         $.publish("/item/selected", [get(name)]);
         return $.publish("/top/update", ["selected"]);
       }
@@ -166,6 +167,9 @@
       element.width = 240;
       element.height = 180;
       element.setAttribute("class", "hidden");
+      $(element).on("focus", function(e) {
+        return $(e.target).parent().addClass("selected");
+      });
       $(element).kendoMobileClickable({
         click: pub.click
       });
@@ -228,11 +232,9 @@
           arrows.left.toggle(ds.page() > 1);
           arrows.right.toggle(ds.page() < ds.totalPages());
           $("#gallery").css("pointer-events", "auto");
-          if (flip) {
-            return setTimeout(function() {
-              return at((ds.page() - 1) * pageSize);
-            }, 50);
-          }
+          return setTimeout(function() {
+            return at((ds.page() - 1) * pageSize);
+          }, 50);
         };
         if (flip) {
           return container.kendoAnimate({

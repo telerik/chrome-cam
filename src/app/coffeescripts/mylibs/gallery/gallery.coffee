@@ -35,7 +35,6 @@ define [
         $.publish "/top/update", [ "deselected" ]
 
     select = (name) =>
-        debugger
         # find the item with the specified name
         item = container.find("[data-name='#{name}']")
         selected = item.parent(":first")
@@ -47,8 +46,10 @@ define [
 
             $.publish "/details/show", [ get("#{item.data("name")}") ]
         else
-            container.find(".thumbnail").removeClass "selected"
+            container.find(".thumbnail").removeClass("selected").removeAttr "tabindex"
             selected.addClass "selected"
+            selected.attr "tabindex", 0
+            selected.focus()
 
             $.publish "/item/selected", [ get(name) ]
             $.publish "/top/update", [ "selected" ]
@@ -165,6 +166,9 @@ define [
 
         element.setAttribute("class", "hidden")
 
+        $(element).on "focus", (e) ->
+            $(e.target).parent().addClass "selected"
+
         $(element).kendoMobileClickable {
             click: pub.click
         }
@@ -230,10 +234,9 @@ define [
 
                 $("#gallery").css "pointer-events", "auto"
 
-                if flip
-                    setTimeout ->
-                        at (ds.page() - 1) * pageSize
-                    , 50
+                setTimeout ->
+                    at (ds.page() - 1) * pageSize
+                , 50
 
             if flip
                 # move the current page out and the next page in
