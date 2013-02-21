@@ -64,7 +64,7 @@ define [
             $.when(promises.effects.promise(), promises.localization.promise()).then ->
                 # create the top and bottom bars
                 bottom.init(".bottom")
-                galleryBar.init ".top"
+                galleryBar.init ".galleryBar"
 
                 APP.popover = popover.init("#gallery")
 

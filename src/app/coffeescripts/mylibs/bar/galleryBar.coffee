@@ -35,7 +35,6 @@ define [
     pub =
 
         init: (container) =>
-
             # create the bottom bar for the gallery
             view = new kendo.View(container, template)
 

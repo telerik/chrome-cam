@@ -37,7 +37,7 @@
         $.when(promises.effects.promise(), promises.localization.promise()).then(function() {
           var hideSplash;
           bottom.init(".bottom");
-          galleryBar.init(".top");
+          galleryBar.init(".galleryBar");
           APP.popover = popover.init("#gallery");
           full.init("#capture");
           details.init("#details");

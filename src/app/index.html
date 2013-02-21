@@ -17,7 +17,7 @@
             <div class="full" id="capture"></div>
         </div>
 
-        <div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="top" data-scrollable="false" data-hide="APP.gallery.hide">
+        <div data-role="view" id="gallery" data-show="APP.gallery.show" data-transition="slide:left" data-before-show="APP.gallery.before"  data-layout="galleryBar" data-scrollable="false" data-hide="APP.gallery.hide">
             <div id="list" data-role="touch" data-swipe="APP.gallery.swipe" data-enable-swipe="true">
                 <span data-role="clickable" data-click="APP.gallery.previous" data-tabbable tabindex="0" class="previous">&#8249;</span>
                 <div id="thumbnails" class="flip"></div>
@@ -42,9 +42,9 @@
             </div>
         </div>
 
-        <div data-role="layout" data-id="top">
+        <div data-role="layout" data-id="galleryBar">
             <div data-role="footer" data-model="APP.galleryBar.viewModel">
-                <div class="footer top"></div>
+                <div class="footer galleryBar"></div>
             </div>
         </div>
 
