@@ -2,12 +2,13 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'mylibs/navigation/navigation', 'text!mylibs/full/views/full.html'], function(kendo, utils, filewrapper, navigation, template) {
-    var capture, effectId, elements, frame, full, index, navigating, paparazzi, paused, pub, subscribe;
+    var arrow, capture, effectId, elements, frame, full, index, navigating, paparazzi, paused, pub, subscribe, tokens;
     paused = true;
     frame = 0;
     full = {};
     effectId = "";
     paparazzi = {};
+    tokens = {};
     capture = function(callback, progress) {
       var captured;
       captured = $.subscribe("/captured/image", function(file) {
@@ -40,6 +41,17 @@
       },
       saved: 0
     };
+    arrow = function(dir) {
+      if (paused) {
+        return;
+      }
+      if (dir === "up" && index.current() > 0) {
+        index.select(index.current() - 1);
+      }
+      if (dir === "down" && index.current() + 1 < index.max()) {
+        return index.select(index.current() + 1);
+      }
+    };
     subscribe = function(pub) {
       $.subscribe("/full/show", function(item) {
         return pub.show(item);
@@ -60,6 +72,7 @@
         var duration;
         duration = 200;
         if (show) {
+          tokens.keyboard = $.subscribe("/keyboard/arrow", arrow);
           return full.el.filters.kendoStop().kendoAnimate({
             effects: "slideIn:right fade:in",
             show: true,
@@ -67,6 +80,8 @@
             duration: duration
           });
         } else {
+          $.unsubscribe(tokens.keyboard);
+          tokens.keyboard = null;
           return full.el.filters.kendoStop().kendoAnimate({
             effects: "slide:left fade:out",
             hide: true,
@@ -79,19 +94,8 @@
         $.publish("/postman/deliver", [mode, "/camera/capture/prepare"]);
         return full.el.wrapper.addClass("capturing");
       });
-      $.subscribe("/full/capture/end", function() {
+      return $.subscribe("/full/capture/end", function() {
         return full.el.wrapper.removeClass("capturing");
-      });
-      return $.subscribe("/keyboard/arrow", function(dir) {
-        if (paused) {
-          return;
-        }
-        if (dir === "up" && index.current() > 0) {
-          index.select(index.current() - 1);
-        }
-        if (dir === "down" && index.current() + 1 < index.max()) {
-          return index.select(index.current() + 1);
-        }
       });
     };
     elements = {
@@ -107,6 +111,7 @@
       to: function() {
         var deferred, updated;
         deferred = $.Deferred();
+        paused = false;
         APP.bottom.pause(false);
         updated = $.subscribe("/camera/updated", function() {
           var token;
@@ -124,6 +129,7 @@
       from: function() {
         var deferred, token;
         deferred = $.Deferred();
+        paused = true;
         APP.bottom.pause(true);
         token = $.subscribe("/camera/snapshot/response", function(url) {
           $.unsubscribe(token);

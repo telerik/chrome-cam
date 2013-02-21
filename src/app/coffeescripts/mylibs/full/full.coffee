@@ -11,6 +11,7 @@ define [
     effectId = ""
 
     paparazzi = {}
+    tokens = {}
 
     capture = (callback, progress) ->
         captured = $.subscribe "/captured/image", (file) ->
@@ -35,6 +36,14 @@ define [
             pub.select APP.filters[index.saved]
         saved: 0
 
+    arrow = (dir) ->
+        return if paused
+
+        if dir is "up" and index.current() > 0
+            index.select index.current() - 1
+        if dir is "down" and index.current() + 1 < index.max()
+            index.select index.current() + 1
+
     subscribe = (pub) ->
         $.subscribe "/full/show", (item) ->
             pub.show(item)
@@ -54,12 +63,17 @@ define [
         $.subscribe "/full/filters/show", (show) ->
             duration = 200
             if show
+                tokens.keyboard = $.subscribe "/keyboard/arrow", arrow
+
                 full.el.filters.kendoStop().kendoAnimate
                     effects: "slideIn:right fade:in"
                     show: true
                     hide: false
                     duration: duration
             else
+                $.unsubscribe tokens.keyboard
+                tokens.keyboard = null
+
                 full.el.filters.kendoStop().kendoAnimate
                     effects: "slide:left fade:out"
                     hide: true
@@ -73,14 +87,6 @@ define [
         $.subscribe "/full/capture/end", ->
             full.el.wrapper.removeClass "capturing"
 
-        $.subscribe "/keyboard/arrow", (dir) ->
-            return if paused
-
-            if dir is "up" and index.current() > 0
-                index.select index.current() - 1
-            if dir is "down" and index.current() + 1 < index.max()
-                index.select index.current() + 1
-
     elements =
         cache: (full) ->
             full.find(".timer", "timer")
@@ -93,6 +99,7 @@ define [
         to: ->
             deferred = $.Deferred()
 
+            paused = false
             APP.bottom.pause false
 
             updated = $.subscribe "/camera/updated", ->
@@ -112,6 +119,7 @@ define [
         from: ->
             deferred = $.Deferred()
 
+            paused = true
             APP.bottom.pause true
 
             token = $.subscribe "/camera/snapshot/response", (url) ->
