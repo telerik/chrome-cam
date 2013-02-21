@@ -39,9 +39,10 @@ define [
             $.publish "/confirm/show", [
                 window.APP.localization.clear_gallery_dialog_title,
                 window.APP.localization.clear_gallery_confirmation,
-                ->
-                    $.publish("/gallery/clear")
-                    navigation.navigate "#home"
+                (destroy) ->
+                    if destroy
+                        $.publish "/gallery/clear"
+                        navigation.navigate "#home"
             ]
 
 

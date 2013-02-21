@@ -64,11 +64,17 @@ define [
             e.preventDefault()
 
         destroy: (e) ->
+            view = if viewModel.get("back.details") then "details" else "gallery"
+
+            $.publish "/#{view}/keyboard", [ false ]
 
             $.publish "/confirm/show", [
                 window.APP.localization.delete_dialog_title,
                 window.APP.localization.delete_confirmation,
-                -> $.publish("/gallery/delete")
+                (destroy) ->
+                    $.publish "/#{view}/keyboard", [ true ]
+                    if destroy
+                        $.publish "/gallery/delete"
             ]
 
         save: (e) ->

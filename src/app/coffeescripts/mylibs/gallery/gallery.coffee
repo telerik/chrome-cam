@@ -253,7 +253,10 @@ define [
 
     keys = {
         tokens: [],
+        bound: false,
         bind: ->
+            return if @bound
+
             @tokens.push(
                 $.subscribe "/keyboard/arrow", (key) ->
                     position = index % pageSize
@@ -282,11 +285,15 @@ define [
                     # keys.unbind()
                     # $.publish "/details/show", [ item: item ]
             )
+            @bound = true
 
         unbind: ->
+            return unless @bound
+
             @tokens = $.map(@tokens, (item) ->
                 $.unsubscribe(item)
             )
+            @bound = false
     }
 
     arrows =
@@ -374,8 +381,11 @@ define [
                 filewrapper.clear().done =>
                     clear()
 
-            $.subscribe "/gallery/keyboard", ->
-                keys.bind()
+            $.subscribe "/gallery/keyboard", (bind) ->
+                if bind
+                    keys.bind()
+                else
+                    keys.unbind()
 
             filewrapper.fileListing().done (message) =>
                 ds = dataSource.create message

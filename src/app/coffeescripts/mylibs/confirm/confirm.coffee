@@ -3,36 +3,32 @@ define [
 ], (kendo) ->
 
     view = {}
-    @callback = null
+    callback = null
     open = false
 
+    close = (result) ->
+        view.data("kendoMobileModalView").close()
+
+        $.publish "/tabbing/restore", [ $(document.body) ]
+        $(document.body).focus()
+
+        open = false
+        if callback
+            callback result
+
     pub =
-        yes: (e) =>
-            view.data("kendoMobileModalView").close()
+        yes: (e) -> close true
 
-            $.publish "/tabbing/restore", [ $(document.body) ]
-            $(document.body).focus()
+        no: (e) -> close false
 
-            open = false
-            if @callback
-                @callback()
-
-        no: (e) ->
-            open = false
-            view.data("kendoMobileModalView").close()
-
-            $.publish "/tabbing/restore", [ $(document.body) ]
-            $(document.body).focus()
-
-        init: (selector) =>
+        init: (selector) ->
 
             # view = new kendo.View(selector, template)
             # view.render(viewModel, true)
             view = $(selector)
 
-            $.subscribe "/confirm/show", (title, message, callback) =>
-
-                @callback = callback
+            $.subscribe "/confirm/show", (title, message, cb) ->
+                callback = cb
 
                 view.find(".title").html(title)
                 view.find(".message").html(message)

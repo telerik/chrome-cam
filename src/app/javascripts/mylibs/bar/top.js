@@ -59,9 +59,15 @@
         return e.preventDefault();
       },
       destroy: function(e) {
+        var view;
+        view = viewModel.get("back.details") ? "details" : "gallery";
+        $.publish("/" + view + "/keyboard", [false]);
         return $.publish("/confirm/show", [
-          window.APP.localization.delete_dialog_title, window.APP.localization.delete_confirmation, function() {
-            return $.publish("/gallery/delete");
+          window.APP.localization.delete_dialog_title, window.APP.localization.delete_confirmation, function(destroy) {
+            $.publish("/" + view + "/keyboard", [true]);
+            if (destroy) {
+              return $.publish("/gallery/delete");
+            }
           }
         ]);
       },

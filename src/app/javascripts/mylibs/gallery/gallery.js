@@ -252,7 +252,11 @@
     };
     keys = {
       tokens: [],
+      bound: false,
       bind: function() {
+        if (this.bound) {
+          return;
+        }
         this.tokens.push($.subscribe("/keyboard/arrow", function(key) {
           var position;
           position = index % pageSize;
@@ -286,14 +290,19 @@
             return page(1);
           }
         }));
-        return this.tokens.push($.subscribe("/keyboard/enter", function() {
+        this.tokens.push($.subscribe("/keyboard/enter", function() {
           return at(index % pageSize);
         }));
+        return this.bound = true;
       },
       unbind: function() {
-        return this.tokens = $.map(this.tokens, function(item) {
+        if (!this.bound) {
+          return;
+        }
+        this.tokens = $.map(this.tokens, function(item) {
           return $.unsubscribe(item);
         });
+        return this.bound = false;
       }
     };
     arrows = {
@@ -373,8 +382,12 @@
             return clear();
           });
         });
-        $.subscribe("/gallery/keyboard", function() {
-          return keys.bind();
+        $.subscribe("/gallery/keyboard", function(bind) {
+          if (bind) {
+            return keys.bind();
+          } else {
+            return keys.unbind();
+          }
         });
         filewrapper.fileListing().done(function(message) {
           ds = dataSource.create(message);

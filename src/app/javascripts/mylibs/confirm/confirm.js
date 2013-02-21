@@ -2,32 +2,31 @@
 (function() {
 
   define(['Kendo'], function(kendo) {
-    var open, pub, view,
-      _this = this;
+    var callback, close, open, pub, view;
     view = {};
-    this.callback = null;
+    callback = null;
     open = false;
+    close = function(result) {
+      view.data("kendoMobileModalView").close();
+      $.publish("/tabbing/restore", [$(document.body)]);
+      $(document.body).focus();
+      open = false;
+      if (callback) {
+        return callback(result);
+      }
+    };
     return pub = {
       yes: function(e) {
-        view.data("kendoMobileModalView").close();
-        $.publish("/tabbing/restore", [$(document.body)]);
-        $(document.body).focus();
-        open = false;
-        if (_this.callback) {
-          return _this.callback();
-        }
+        return close(true);
       },
       no: function(e) {
-        open = false;
-        view.data("kendoMobileModalView").close();
-        $.publish("/tabbing/restore", [$(document.body)]);
-        return $(document.body).focus();
+        return close(false);
       },
       init: function(selector) {
         var esc;
         view = $(selector);
-        $.subscribe("/confirm/show", function(title, message, callback) {
-          _this.callback = callback;
+        $.subscribe("/confirm/show", function(title, message, cb) {
+          callback = cb;
           view.find(".title").html(title);
           view.find(".message").html(message);
           view.find(".yes").text(window.APP.localization.yesButton);

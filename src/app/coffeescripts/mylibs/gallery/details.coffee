@@ -9,6 +9,7 @@ define [
 
     visible = false
     details = {}
+    tokens = {}
     token = null
 
     viewModel = kendo.observable
@@ -24,19 +25,32 @@ define [
         previous:
             visible: false
 
+    page = (direction) ->
+        return unless visible
+
+        if direction is "left" and viewModel.previous.visible
+            pub.previous()
+        if direction is "right" and viewModel.next.visible
+            pub.next()
+        return false
+
     hide = ->
         $.publish "/top/update", ["gallery"]
-        $.publish "/gallery/keyboard"
+        $.publish "/gallery/keyboard", [ true ]
         $.publish "/details/hiding"
 
+        keys.unbind()
+
         kendo.fx(details.container).zoom("out").play().done ->
-            $.unsubscribe token
-            token = null
+            $.unsubscribe tokens.delete
+            tokens.delete = null
 
     show = (message) ->
         update(message)
 
-        token = $.subscribe "/gallery/delete", ->
+        keys.bind()
+
+        tokens.delete = $.subscribe "/gallery/delete", ->
             hide()
 
         kendo.fx(details.container).zoom("in").play().done ->
@@ -50,6 +64,24 @@ define [
             viewModel.set("next.visible", message.index < message.length - 1)
             viewModel.set("previous.visible", message.index > 0 and message.length > 1)
             index = message.index
+
+    keys =
+        bound: false,
+        bind: ->
+            return if @bound
+
+            tokens.arrow = $.subscribe "/keyboard/arrow", page, true
+            tokens.esc = $.subscribe "/keyboard/esc", hide
+
+            @bound = true
+
+        unbind: ->
+            return unless @bound
+
+            $.unsubscribe tokens.arrow
+            $.unsubscribe tokens.esc
+
+            @bound = false
 
     pub =
 
@@ -72,17 +104,11 @@ define [
             $.subscribe "/details/update", (message) =>
                 update(message)
 
-            page = (direction) ->
-                return unless visible
-
-                if direction is "left" and viewModel.previous.visible
-                    that.previous()
-                if direction is "right" and viewModel.next.visible
-                    that.next()
-                return false
-
-            $.subscribe "/keyboard/arrow", page, true
-            $.subscribe "/keyboard/esc", hide
+            $.subscribe "/details/keyboard", (bind) ->
+                if bind
+                    keys.bind()
+                else
+                    keys.unbind()
 
         next: (e) ->
             $.publish "/gallery/at", [index + 1]

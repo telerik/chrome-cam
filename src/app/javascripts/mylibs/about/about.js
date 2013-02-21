@@ -37,9 +37,11 @@
       },
       clear: function() {
         return $.publish("/confirm/show", [
-          window.APP.localization.clear_gallery_dialog_title, window.APP.localization.clear_gallery_confirmation, function() {
-            $.publish("/gallery/clear");
-            return navigation.navigate("#home");
+          window.APP.localization.clear_gallery_dialog_title, window.APP.localization.clear_gallery_confirmation, function(destroy) {
+            if (destroy) {
+              $.publish("/gallery/clear");
+              return navigation.navigate("#home");
+            }
           }
         ]);
       }

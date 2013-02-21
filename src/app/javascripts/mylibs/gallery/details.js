@@ -2,10 +2,11 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, template) {
-    var details, hide, index, pub, show, token, update, viewModel, visible;
+    var details, hide, index, keys, page, pub, show, token, tokens, update, viewModel, visible;
     index = 0;
     visible = false;
     details = {};
+    tokens = {};
     token = null;
     viewModel = kendo.observable({
       video: {
@@ -29,18 +30,32 @@
         visible: false
       }
     });
+    page = function(direction) {
+      if (!visible) {
+        return;
+      }
+      if (direction === "left" && viewModel.previous.visible) {
+        pub.previous();
+      }
+      if (direction === "right" && viewModel.next.visible) {
+        pub.next();
+      }
+      return false;
+    };
     hide = function() {
       $.publish("/top/update", ["gallery"]);
-      $.publish("/gallery/keyboard");
+      $.publish("/gallery/keyboard", [true]);
       $.publish("/details/hiding");
+      keys.unbind();
       return kendo.fx(details.container).zoom("out").play().done(function() {
-        $.unsubscribe(token);
-        return token = null;
+        $.unsubscribe(tokens["delete"]);
+        return tokens["delete"] = null;
       });
     };
     show = function(message) {
       update(message);
-      token = $.subscribe("/gallery/delete", function() {
+      keys.bind();
+      tokens["delete"] = $.subscribe("/gallery/delete", function() {
         return hide();
       });
       return kendo.fx(details.container).zoom("in").play().done(function() {
@@ -58,9 +73,28 @@
         return index = message.index;
       });
     };
+    keys = {
+      bound: false,
+      bind: function() {
+        if (this.bound) {
+          return;
+        }
+        tokens.arrow = $.subscribe("/keyboard/arrow", page, true);
+        tokens.esc = $.subscribe("/keyboard/esc", hide);
+        return this.bound = true;
+      },
+      unbind: function() {
+        if (!this.bound) {
+          return;
+        }
+        $.unsubscribe(tokens.arrow);
+        $.unsubscribe(tokens.esc);
+        return this.bound = false;
+      }
+    };
     return pub = {
       init: function(selector) {
-        var page, that,
+        var that,
           _this = this;
         that = this;
         details = new kendo.View(selector, template);
@@ -76,20 +110,13 @@
         $.subscribe("/details/update", function(message) {
           return update(message);
         });
-        page = function(direction) {
-          if (!visible) {
-            return;
+        return $.subscribe("/details/keyboard", function(bind) {
+          if (bind) {
+            return keys.bind();
+          } else {
+            return keys.unbind();
           }
-          if (direction === "left" && viewModel.previous.visible) {
-            that.previous();
-          }
-          if (direction === "right" && viewModel.next.visible) {
-            that.next();
-          }
-          return false;
-        };
-        $.subscribe("/keyboard/arrow", page, true);
-        return $.subscribe("/keyboard/esc", hide);
+        });
       },
       next: function(e) {
         return $.publish("/gallery/at", [index + 1]);
