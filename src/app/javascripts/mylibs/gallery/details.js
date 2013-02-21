@@ -43,7 +43,7 @@
       return false;
     };
     hide = function() {
-      $.publish("/top/update", ["gallery"]);
+      $.publish("/galleryBar/update", ["gallery"]);
       $.publish("/gallery/keyboard", [true]);
       $.publish("/details/hiding");
       keys.unbind();
@@ -60,7 +60,7 @@
       });
       return kendo.fx(details.container).zoom("in").play().done(function() {
         $.publish("/details/shown");
-        return $.publish("/top/update", ["details"]);
+        return $.publish("/galleryBar/update", ["details"]);
       });
     };
     update = function(message) {

@@ -31,7 +31,7 @@
     deselect = function() {
       container.find(".thumbnail").removeClass("selected");
       selected = null;
-      return $.publish("/top/update", ["deselected"]);
+      return $.publish("/galleryBar/update", ["deselected"]);
     };
     select = function(name) {
       var item;
@@ -46,7 +46,7 @@
         selected.attr("tabindex", 0);
         selected.focus();
         $.publish("/item/selected", [get(name)]);
-        return $.publish("/top/update", ["selected"]);
+        return $.publish("/galleryBar/update", ["selected"]);
       }
     };
     page = function(direction) {
@@ -81,7 +81,7 @@
         hide: true,
         complete: function() {
           return filewrapper.deleteFile(name).done(function() {
-            $.publish("/top/update", ["deselected"]);
+            $.publish("/galleryBar/update", ["deselected"]);
             selected.remove();
             ds.remove(ds.get(name));
             return render();
@@ -345,7 +345,7 @@
       click: function(e) {
         var thumb;
         thumb = this.element;
-        $.publish("/top/update", ["selected"]);
+        $.publish("/galleryBar/update", ["selected"]);
         return select(thumb.data("name"));
       },
       init: function(selector) {

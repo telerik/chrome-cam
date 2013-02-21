@@ -40,7 +40,7 @@
         view = new kendo.View(container, template);
         view.render(viewModel, true);
         back = view.find(".back.button");
-        $.subscribe("/top/update", function(state) {
+        $.subscribe("/galleryBar/update", function(state) {
           return states.set(state);
         });
         $.subscribe("/item/selected", function(message) {

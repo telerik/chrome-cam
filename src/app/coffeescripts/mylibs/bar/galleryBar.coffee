@@ -46,7 +46,7 @@ define [
             back = view.find(".back.button")
 
             # wire up events
-            $.subscribe "/top/update", (state) ->
+            $.subscribe "/galleryBar/update", (state) ->
                 states.set state
 
             $.subscribe "/item/selected", (message) ->

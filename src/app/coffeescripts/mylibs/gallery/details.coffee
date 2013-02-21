@@ -35,7 +35,7 @@ define [
         return false
 
     hide = ->
-        $.publish "/top/update", ["gallery"]
+        $.publish "/galleryBar/update", ["gallery"]
         $.publish "/gallery/keyboard", [ true ]
         $.publish "/details/hiding"
 
@@ -55,7 +55,7 @@ define [
 
         kendo.fx(details.container).zoom("in").play().done ->
             $.publish "/details/shown"
-            $.publish "/top/update", ["details"]
+            $.publish "/galleryBar/update", ["details"]
 
     update = (message) ->
         filewrapper.readFile(message.item).done (data) =>

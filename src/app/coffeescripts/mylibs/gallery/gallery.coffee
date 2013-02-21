@@ -32,7 +32,7 @@ define [
     deselect = =>
         container.find(".thumbnail").removeClass "selected"
         selected = null
-        $.publish "/top/update", [ "deselected" ]
+        $.publish "/galleryBar/update", [ "deselected" ]
 
     select = (name) =>
         # find the item with the specified name
@@ -52,7 +52,7 @@ define [
             selected.focus()
 
             $.publish "/item/selected", [ get(name) ]
-            $.publish "/top/update", [ "selected" ]
+            $.publish "/galleryBar/update", [ "selected" ]
 
     page = (direction) =>
 
@@ -86,7 +86,7 @@ define [
             hide: true
             complete: =>
                 filewrapper.deleteFile(name).done =>
-                    $.publish "/top/update", ["deselected"]
+                    $.publish "/galleryBar/update", ["deselected"]
                     selected.remove()
                     ds.remove(ds.get(name))
                     render()
@@ -336,7 +336,7 @@ define [
 
         click: (e) ->
             thumb = @element
-            $.publish "/top/update", ["selected"]
+            $.publish "/galleryBar/update", ["selected"]
             select thumb.data("name")
 
         init: (selector) =>
