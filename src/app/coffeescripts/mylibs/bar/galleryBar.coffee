@@ -2,7 +2,7 @@ define [
     'Kendo'
     'mylibs/navigation/navigation'
     'mylibs/file/filewrapper'
-    'text!mylibs/bar/views/top.html'
+    'text!mylibs/bar/views/galleryBar.html'
 ], (kendo, navigation, filewrapper, template) ->
 
     # create a view model for the top bar
