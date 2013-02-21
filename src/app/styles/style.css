@@ -190,6 +190,11 @@ body div { padding-top: 0px; }
     top: -1px;
 }
 
+.location {
+    font-size: .8em;
+    opacity: .5;
+}
+
 .bar .galleryLink {
     display: block;
     background: white;

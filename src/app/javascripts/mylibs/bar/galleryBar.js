@@ -10,6 +10,10 @@
       back: {
         details: false,
         text: "< Camera"
+      },
+      location: {
+        visible: false,
+        text: ""
       }
     });
     states = {
@@ -42,6 +46,10 @@
         back = view.find(".back.button");
         $.subscribe("/galleryBar/update", function(state) {
           return states.set(state);
+        });
+        $.subscribe("/galleryBar/location", function(message) {
+          viewModel.set("location.visible", message.visible);
+          return viewModel.set("location.text", message.text);
         });
         $.subscribe("/item/selected", function(message) {
           return viewModel.set("current", message.item);

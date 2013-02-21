@@ -65,6 +65,14 @@
     };
     update = function(message) {
       var _this = this;
+      if (visible) {
+        $.publish("/galleryBar/location", [
+          {
+            visible: true,
+            text: "Photo " + (message.index + 1) + " of " + message.length
+          }
+        ]);
+      }
       return filewrapper.readFile(message.item).done(function(data) {
         viewModel.set("type", message.item.type);
         viewModel.set("img.src", data.file);
