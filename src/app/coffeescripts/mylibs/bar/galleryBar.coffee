@@ -37,13 +37,13 @@ define [
         init: (container) =>
 
             # create the bottom bar for the gallery
-            @view = new kendo.View(container, template)
+            view = new kendo.View(container, template)
 
             # render the bar and binds it to the view model
-            @view.render(viewModel, true)
+            view.render(viewModel, true)
 
             # find and cache some DOM elements
-            back = @view.find(".back.button")
+            back = view.find(".back.button")
 
             # wire up events
             $.subscribe "/top/update", (state) ->

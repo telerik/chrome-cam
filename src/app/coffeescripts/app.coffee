@@ -1,7 +1,7 @@
 define [
     'Kendo'
     'mylibs/bar/bottom'
-    'mylibs/bar/top'
+    'mylibs/bar/galleryBar'
     'mylibs/popover/popover'
     'mylibs/full/full'
     'mylibs/postman/postman'
@@ -16,7 +16,7 @@ define [
     'mylibs/navigation/navigation'
     'mylibs/tabbing/tabbing'
     "text!mylibs/nocamera/views/nocamera.html"
-], (kendo, bottom, top, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, navigation, tabbing, nocamera) ->
+], (kendo, bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, assets, navigation, tabbing, nocamera) ->
 
     pub =
         init: ->
@@ -27,7 +27,7 @@ define [
             APP.about = about
             APP.confirm = confirm
             APP.bottom = bottom
-            APP.top = top
+            APP.galleryBar = galleryBar
             APP.details = details
 
             # bind document level events
@@ -64,7 +64,8 @@ define [
             $.when(promises.effects.promise(), promises.localization.promise()).then ->
                 # create the top and bottom bars
                 bottom.init(".bottom")
-                top.init(".top")
+                galleryBar.init ".top"
+
                 APP.popover = popover.init("#gallery")
 
                 # initialize the full screen capture mode
