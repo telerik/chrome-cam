@@ -39,6 +39,7 @@
           bottom.init(".bottom");
           galleryBar.init(".galleryBar");
           APP.popover = popover.init("#gallery");
+          navigation.init();
           full.init("#capture");
           details.init("#details");
           gallery.init("#list");

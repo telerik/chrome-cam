@@ -6,6 +6,10 @@ define [], ->
         from: {}
 
     pub =
+        init: ->
+            window.addEventListener "hashchange", (e) ->
+                window.APP.confirm.esc()
+
         navigate: (view) ->
             deferreds = []
 

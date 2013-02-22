@@ -23,8 +23,13 @@
       no: function(e) {
         return close(false);
       },
+      esc: function() {
+        if (open) {
+          pub.no();
+          return false;
+        }
+      },
       init: function(selector) {
-        var esc;
         view = $(selector);
         $.subscribe("/confirm/show", function(title, message, cb) {
           callback = cb;
@@ -41,13 +46,7 @@
           $.publish("/postman/deliver", [false, "/menu/enable"]);
           return open = true;
         });
-        esc = function() {
-          if (open) {
-            pub.no();
-            return false;
-          }
-        };
-        return $.subscribe("/keyboard/esc", esc, true);
+        return $.subscribe("/keyboard/esc", this.esc, true);
       }
     };
   });

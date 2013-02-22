@@ -23,6 +23,11 @@ define [
 
         no: (e) -> close false
 
+        esc: ->
+            if open
+                pub.no()
+                return false
+
         init: (selector) ->
 
             # view = new kendo.View(selector, template)
@@ -52,10 +57,5 @@ define [
 
                 open = true
 
-            esc = ->
-                if open
-                    pub.no()
-                    return false
-
-            $.subscribe "/keyboard/esc", esc, true
+            $.subscribe "/keyboard/esc", @esc, true
 

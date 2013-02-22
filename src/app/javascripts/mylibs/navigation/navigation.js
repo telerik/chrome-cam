@@ -10,6 +10,11 @@
       from: {}
     };
     return pub = {
+      init: function() {
+        return window.addEventListener("hashchange", function(e) {
+          return window.APP.confirm.esc();
+        });
+      },
       navigate: function(view) {
         var callback, deferreds, previous, _i, _j, _len, _len1, _ref, _ref1;
         deferreds = [];

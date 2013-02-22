@@ -68,6 +68,8 @@ define [
 
                 APP.popover = popover.init("#gallery")
 
+                navigation.init()
+
                 # initialize the full screen capture mode
                 full.init "#capture"
 
