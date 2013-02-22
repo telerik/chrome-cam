@@ -17,6 +17,9 @@ define [
         before: ->
             $.publish "/postman/deliver", [{ paused: true }, "/camera/pause"]
 
+        hide: ->
+            $.publish "/postman/deliver", [ true, "/menu/enable" ]
+
         init: (selector) ->
 
             # create the about view
@@ -44,5 +47,3 @@ define [
                         $.publish "/gallery/clear"
                         navigation.navigate "#home"
             ]
-
-

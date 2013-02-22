@@ -20,6 +20,9 @@
           }, "/camera/pause"
         ]);
       },
+      hide: function() {
+        return $.publish("/postman/deliver", [true, "/menu/enable"]);
+      },
       init: function(selector) {
         var view;
         view = new kendo.View(selector, template);
