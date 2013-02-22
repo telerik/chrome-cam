@@ -10,6 +10,7 @@
       view.data("kendoMobileModalView").close();
       $.publish("/tabbing/restore", [$(document.body)]);
       $(document.body).focus();
+      $.publish("/postman/deliver", [true, "/menu/enable"]);
       open = false;
       if (callback) {
         return callback(result);
@@ -37,6 +38,7 @@
           setTimeout((function() {
             return view.find(".yes").focus();
           }), 250);
+          $.publish("/postman/deliver", [false, "/menu/enable"]);
           return open = true;
         });
         esc = function() {

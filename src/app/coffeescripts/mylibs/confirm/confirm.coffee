@@ -12,6 +12,8 @@ define [
         $.publish "/tabbing/restore", [ $(document.body) ]
         $(document.body).focus()
 
+        $.publish "/postman/deliver", [ true, "/menu/enable" ]
+
         open = false
         if callback
             callback result
@@ -45,6 +47,8 @@ define [
                 setTimeout (->
                     view.find(".yes").focus()
                 ), 250
+
+                $.publish "/postman/deliver", [ false, "/menu/enable" ]
 
                 open = true
 
