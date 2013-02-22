@@ -11,6 +11,7 @@ define [
     details = {}
     tokens = {}
     token = null
+    updating = false
 
     viewModel = kendo.observable
         video:
@@ -26,11 +27,13 @@ define [
             visible: false
 
     page = (direction) ->
-        return unless visible
+        return unless visible or not updating
 
         if direction is "left" and viewModel.previous.visible
+            updating = true
             pub.previous()
         if direction is "right" and viewModel.next.visible
+            updating = true
             pub.next()
         return false
 
@@ -64,6 +67,7 @@ define [
             viewModel.set("next.visible", message.index < message.length - 1)
             viewModel.set("previous.visible", message.index > 0 and message.length > 1)
             index = message.index
+            updating = false
 
     keys =
         bound: false,

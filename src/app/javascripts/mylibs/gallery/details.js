@@ -2,12 +2,13 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/details.html'], function(kendo, utils, filewrapper, template) {
-    var details, hide, index, keys, page, pub, show, token, tokens, update, viewModel, visible;
+    var details, hide, index, keys, page, pub, show, token, tokens, update, updating, viewModel, visible;
     index = 0;
     visible = false;
     details = {};
     tokens = {};
     token = null;
+    updating = false;
     viewModel = kendo.observable({
       video: {
         src: function() {
@@ -31,13 +32,15 @@
       }
     });
     page = function(direction) {
-      if (!visible) {
+      if (!(visible || !updating)) {
         return;
       }
       if (direction === "left" && viewModel.previous.visible) {
+        updating = true;
         pub.previous();
       }
       if (direction === "right" && viewModel.next.visible) {
+        updating = true;
         pub.next();
       }
       return false;
@@ -70,7 +73,8 @@
         viewModel.set("img.src", data.file);
         viewModel.set("next.visible", message.index < message.length - 1);
         viewModel.set("previous.visible", message.index > 0 && message.length > 1);
-        return index = message.index;
+        index = message.index;
+        return updating = false;
       });
     };
     keys = {
