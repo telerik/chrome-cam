@@ -58,9 +58,6 @@ define [
             $.publish "/galleryBar/update", ["details"]
 
     update = (message) ->
-        if visible
-            $.publish "/galleryBar/location", [ { visible: true, text: "Photo #{message.index+1} of #{message.length}" } ]
-
         filewrapper.readFile(message.item).done (data) =>
             viewModel.set("type", message.item.type)
             viewModel.set("img.src", data.file)

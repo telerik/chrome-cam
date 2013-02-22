@@ -2,7 +2,7 @@
 (function() {
 
   define(['Kendo', 'mylibs/utils/utils', 'mylibs/file/filewrapper', 'text!mylibs/gallery/views/thumb.html'], function(kendo, utils, filewrapper, template) {
-    var active, add, animation, arrows, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, keys, page, pageSize, pages, pub, render, rows, select, selected, total, updateLocation,
+    var active, add, animation, arrows, at, clear, columns, container, create, data, dataSource, deselect, destroy, details, ds, el, files, flipping, get, index, keyboard, keys, page, pageSize, pages, pub, render, rows, select, selected, total,
       _this = this;
     columns = 3;
     rows = 3;
@@ -88,16 +88,6 @@
           });
         }
       });
-    };
-    updateLocation = function() {
-      if (!details) {
-        return $.publish("/galleryBar/location", [
-          {
-            visible: true,
-            text: "Page " + (ds.page()) + " of " + (ds.totalPages())
-          }
-        ]);
-      }
     };
     get = function(name) {
       var match, position;
@@ -241,7 +231,6 @@
           flipping = false;
           arrows.left.toggle(ds.page() > 1);
           arrows.right.toggle(ds.page() < ds.totalPages());
-          updateLocation();
           $("#gallery").css("pointer-events", "auto");
           return setTimeout(function() {
             return at((ds.page() - 1) * pageSize);
@@ -370,8 +359,7 @@
         pages.previous = page1.render().addClass("page gallery");
         active = pages.next = page2.render().addClass("page gallery");
         $.subscribe("/gallery/details", function(d) {
-          details = d;
-          return updateLocation();
+          return details = d;
         });
         $.subscribe("/gallery/delete", function() {
           return destroy();

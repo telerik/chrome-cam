@@ -91,9 +91,6 @@ define [
                     ds.remove(ds.get(name))
                     render()
 
-    updateLocation = ->
-        if not details
-            $.publish "/galleryBar/location", [ { visible: true, text: "Page #{ds.page()} of #{ds.totalPages()}" } ]
 
     get = (name) =>
         # find the match in the data source
@@ -235,8 +232,6 @@ define [
                 arrows.left.toggle ds.page() > 1
                 arrows.right.toggle ds.page() < ds.totalPages()
 
-                updateLocation()
-
                 $("#gallery").css "pointer-events", "auto"
 
                 setTimeout ->
@@ -365,7 +360,6 @@ define [
 
             $.subscribe "/gallery/details", (d) ->
                 details = d
-                updateLocation()
 
             $.subscribe "/gallery/delete", ->
                 destroy()

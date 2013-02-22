@@ -13,9 +13,6 @@ define [
         back:
             details: false
             text: "< Camera"
-        location:
-            visible: false
-            text: ""
 
     # TODO: Refactor Once View Model Is Working
     states =
@@ -50,10 +47,6 @@ define [
             # wire up events
             $.subscribe "/galleryBar/update", (state) ->
                 states.set state
-
-            $.subscribe "/galleryBar/location", (message) ->
-                viewModel.set "location.visible", message.visible
-                viewModel.set "location.text", message.text
 
             $.subscribe "/item/selected", (message) ->
                 viewModel.set("current", message.item)
