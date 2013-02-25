@@ -57,10 +57,8 @@ define [
                     back.trigger "click"
 
         back: (e) ->
-
             $.publish "/details/hide"
             states.gallery()
-            e.preventDefault()
 
         destroy: (e) ->
             view = if viewModel.get("back.details") then "details" else "gallery"

@@ -55,8 +55,7 @@
       },
       back: function(e) {
         $.publish("/details/hide");
-        states.gallery();
-        return e.preventDefault();
+        return states.gallery();
       },
       destroy: function(e) {
         var view;
