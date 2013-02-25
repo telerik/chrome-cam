@@ -10,9 +10,9 @@
       }
       target = $(e.target);
       if (target.data("role") === "button") {
-        return target.data("kendoMobileButton").trigger("click", e);
+        return target.data("kendoMobileButton").trigger("click");
       } else if (target.data("role") === "clickable") {
-        return target.data("kendoMobileClickable").trigger("click", e);
+        return target.data("kendoMobileClickable").trigger("click");
       }
     };
     removeTabs = function(parent) {
