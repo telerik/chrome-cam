@@ -27,7 +27,7 @@ define [
 
     update = ->
         # the camera is paused when it isn't being used to increase app performance
-        ctx.drawImage video, canvas.width, 0, -canvas.width, canvas.height
+        ctx.drawImage video, 0, 0, canvas.width, canvas.height
 
         if effect.tracks and frame % 4 == 0
            track = face.track canvas

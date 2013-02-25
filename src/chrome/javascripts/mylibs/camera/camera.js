@@ -24,7 +24,7 @@
       return window.requestAnimationFrame(draw);
     };
     update = function() {
-      ctx.drawImage(video, canvas.width, 0, -canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       if (effect.tracks && frame % 4 === 0) {
         track = face.track(canvas);
       }
