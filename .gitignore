@@ -1,5 +1,5 @@
 node_modules
-chrome-cam
+build
 *.pem
 .DS_Store
 chrome-cam.crx
