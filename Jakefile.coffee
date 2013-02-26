@@ -7,7 +7,6 @@ system = do ->
 
 isWindows = /^win/.test(process.platform)
 
-chromeCamDir = "chrome-cam"
 buildDir = "build"
 appBuildDir = "#{buildDir}/app"
 chromeBuildDir = "#{buildDir}/chrome"
