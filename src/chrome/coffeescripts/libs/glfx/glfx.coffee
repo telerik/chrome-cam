@@ -1,1 +1,0 @@
-define [ 'order!libs/glfx/glfx.min' ], -> fx
