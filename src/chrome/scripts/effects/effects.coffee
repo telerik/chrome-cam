@@ -248,7 +248,7 @@ define [
                 kind: "webgl"
                 filter: (canvas, element) ->
                     effect = (canvas, element) ->
-                        canvas.kaleidoscope canvas.width / 2,  canvas.height / 2, 120, 0
+                        canvas.kaleidoscope canvas.width / 2,  canvas.height / 2, 260, 0
                     draw(canvas, element, effect)
             }
 
