@@ -4,9 +4,9 @@ define [ 'utils/utils' ], (utils) ->
 
         target = $(e.target)
         if target.data("role") == "button"
-            target.data("kendoMobileButton").trigger "click"
+            target.data("kendoMobileButton").trigger "click", { target: e.target }
         else if target.data("role") == "clickable"
-            target.data("kendoMobileClickable").trigger "click"
+            target.data("kendoMobileClickable").trigger "click", { target: e.target }
 
     removeTabs = (parent) ->
         $("[tabindex]", parent).each ->
