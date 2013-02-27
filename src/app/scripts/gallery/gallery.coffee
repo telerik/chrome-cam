@@ -95,11 +95,11 @@ define [
         # find the match in the data source
         match = ds.get(name)
         # now get its index in the current view
-        index = ds.view().indexOf(match)
+        relativeIndex = ds.view().indexOf(match)
         # the actual index of this item in relation to the whole set
         # of data is the page number times. it's zero based so we have to do
         # some funky calculations
-        position = if ds.page() > 1 then pageSize * (ds.page() - 1) + index else index
+        position = if ds.page() > 1 then pageSize * (ds.page() - 1) + relativeIndex else relativeIndex
         return { length: ds.data().length, index: position, item: match }
 
     at = (newIndex, noPage) =>

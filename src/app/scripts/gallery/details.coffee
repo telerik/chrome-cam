@@ -43,9 +43,10 @@ define [
 
         keys.unbind()
 
-        kendo.fx(details.container).zoom("out").play().done ->
-            $.unsubscribe tokens.delete
-            tokens.delete = null
+        $.unsubscribe tokens.delete
+        tokens.delete = null
+
+        kendo.fx(details.container).zoom("out").play()
 
     show = (message) ->
         update(message)

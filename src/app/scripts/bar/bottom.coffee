@@ -61,10 +61,12 @@ define [
             viewModel.set "mode.visible", false
             viewModel.set "capture.visible", false
             viewModel.set "filters.visible", false
+            viewModel.set "thumbnail.visible", false
         full: ->
             viewModel.set "mode.visible", true
             viewModel.set "capture.visible", true
             viewModel.set "filters.visible", true
+            viewModel.set "thumbnail.visible", true
         set: (state) ->
             this[state]()
 
