@@ -100,68 +100,62 @@ define ['utils/utils'],
 
     # deletes a file if it exists, throws an exception if it does not.
     destroy = (name) ->
+        # get the file reference from the file system by name
+        withFileSystem (fs) ->
+            fs.root.getFile name, create: false, (fileEntry) ->
 
-            # get the file reference from the file system by name
-            withFileSystem ->
-                fileSystem.root.getFile name, create: false, (fileEntry) ->
+                # kill it
+                fileEntry.remove ->
 
-                    # kill it
-                    fileEntry.remove ->
+                    # dispatch events that we killed it
+                    $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
 
-                            # dispatch events that we killed it
-                            $.publish "/postman/deliver", [ { message: "" }, "/file/deleted/#{name}", [] ]
-
-                    # file couldn't be deleted
-                    , errorHandler
-
-                # access to the file system could not be had
+                # file couldn't be deleted
                 , errorHandler
+
+            # access to the file system could not be had
+            , errorHandler
 
     # allows user to save the file to a specific place on their hard drive
     download = (filename) ->
         withFileSystem (fs) ->
-            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
+            deferred = loadFile fs.root, filename
 
-                deferred = loadFile dirEntry, filename
+            deferred.done (data) ->
+                # convert the incoming data url to a blob
+                blob = utils.toBlob(data.file)
 
-                deferred.done (data) ->
-                    # convert the incoming data url to a blob
-                    blob = utils.toBlob(data.file)
+                # invoke the chrome file chooser saying that we are going to save a file
+                chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
 
-                    # invoke the chrome file chooser saying that we are going to save a file
-                    chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
+                    return unless fileEntry?
 
-                        return unless fileEntry?
+                    # create the writer
+                    fileEntry.createWriter (fileWriter) ->
 
-                        # create the writer
-                        fileEntry.createWriter (fileWriter) ->
+                        # called when the file has been written successfully
+                        fileWriter.onwriteend = (e) ->
 
-                            # called when the file has been written successfully
-                            fileWriter.onwriteend = (e) ->
+                        # the file could not be written.
+                        fileWriter.onerror = (e) ->
 
-                            # the file could not be written.
-                            fileWriter.onerror = (e) ->
+                            errorHandler e
 
-                                errorHandler e
-
-                            # save the file to the user specified file and folder
-                            fileWriter.write blob
+                        # save the file to the user specified file and folder
+                        fileWriter.write blob
 
     fileListing = ->
         withFileSystem (fs) ->
-            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
+            entries = []
 
-                entries = []
+            dirReader = fs.root.createReader()
 
-                dirReader = fs.root.createReader()
+            dirReader.readEntries (results) ->
+                for entry in results
+                    if entry.isFile
+                        entries.push { name: entry.name, type: entry.name.split(".").pop() }
 
-                dirReader.readEntries (results) ->
-                    for entry in results
-                        if entry.isFile
-                            entries.push { name: entry.name, type: entry.name.split(".").pop() }
-
-                    $.publish "/postman/deliver", [ { message: entries }, "/file/listing/response" ]
-            , errorHandler
+                $.publish "/postman/deliver", [ { message: entries }, "/file/listing/response" ]
 
     loadFile = (dirEntry, filename) ->
         deferred = $.Deferred()
@@ -190,20 +184,18 @@ define ['utils/utils'],
 
     readFile = (filename) ->
         withFileSystem (fs) ->
-            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
-                loadFile(dirEntry, filename).done (data) ->
-                    $.publish "/postman/deliver", [ { message: data }, "/file/read/#{filename}" ]
+            loadFile(fs.root, filename).done (data) ->
+                $.publish "/postman/deliver", [ { message: data }, "/file/read/#{filename}" ]
 
     readBulk = (files, token) ->
         withFileSystem (fs) ->
-            fs.root.getDirectory "MyPictures", create: true, (dirEntry) ->
-                entries = []
+            entries = []
 
-                deferreds = (loadFile dirEntry, file for file in files)
+            deferreds = (loadFile fs.root, file for file in files)
 
-                $.when.apply($, deferreds).then ->
-                    entries = Array::slice.call(arguments, 0)
-                    $.publish "/postman/deliver", [ { message: entries }, "/file/bulk/#{token}" ]
+            $.when.apply($, deferreds).then ->
+                entries = Array::slice.call(arguments, 0)
+                $.publish "/postman/deliver", [ { message: entries }, "/file/bulk/#{token}" ]
 
     clear = ->
         withFileSystem (fs) ->
