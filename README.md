@@ -6,7 +6,7 @@ In order to run this application, you will need the latest build of [Chrome Cana
 
 Install the [App Launcher](https://chrome.google.com/webstore/detail/odmpalfplhaahlgnkkonchfhpegdcgjm "Chrome Web Store - App Launcher")
 
-Navigate to 
+Navigate to
 
     chrome://extensions
 
@@ -14,9 +14,9 @@ Check **Developer Mode**
 
 Click **Load Unpacked Extension**
 
-Select the **chrome-cam** folder that is created when you build the application
+Select the **build** folder that is created when you build the application
 
-Launch the application with the App Launcher 
+Launch the application with the App Launcher
 
 ## Building The Application
 
@@ -29,15 +29,15 @@ Install [Node & NPM](http://nodejs.org/ "node.js")
 ### Install Necessary Node Modules
 
 Install the CoffeeScript transpiler (Global)
-	
+
 	npm install -g coffee-script
 
 Install RequireJS for building the src/app directory (Global)
-	
+
 	npm install -g requirejs
 
 Install Jake for automated builds (Global)
-	
+
 	npm install -g jake
 
 ### Building With RequireJS
