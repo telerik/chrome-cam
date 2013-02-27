@@ -5,16 +5,14 @@ define [
 
     backCanvas = document.createElement "canvas"
     backContext = backCanvas.getContext "2d"
-    w = 300 / 4 * 0.8
-    h = 270 / 4 * 0.8
     cache = {}
 
     pub =
 
         init: (x, y, width, height) ->
 
-            backCanvas.width = 120
-            backCanvas.height = 90
+            backCanvas.width = 120 * 1.2
+            backCanvas.height = 90 * 1.2
 
             cache.comp = [{
                 x: x
