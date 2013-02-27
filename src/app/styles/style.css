@@ -67,6 +67,11 @@ body div { padding-top: 0px; }
 
 .km-button img { width: 20px; }
 
+.km-button .km-text {
+    display: block;
+    margin: 0 auto;
+}
+
 /************ Animations ************/
 
 .animate { -webkit-transition: all 0.5s ease-out; }
