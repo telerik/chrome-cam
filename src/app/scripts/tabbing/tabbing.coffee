@@ -8,6 +8,8 @@ define [ 'utils/utils' ], (utils) ->
         else if target.data("role") == "clickable"
             target.data("kendoMobileClickable").trigger "click", { target: e.target }
 
+        e.stopPropagation()
+
     removeTabs = (parent) ->
         $("[tabindex]", parent).each ->
             tabbable = $(this)

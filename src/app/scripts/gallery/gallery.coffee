@@ -103,6 +103,7 @@ define [
         return { length: ds.data().length, index: position, item: match }
 
     at = (newIndex, noPage) =>
+        return if newIndex < 0 or newIndex >= ds.data().length
         index = newIndex
 
         # we may need to page the data before grabbing the item.
@@ -213,7 +214,6 @@ define [
 
                     first = thumbs[0].dom
                     first.attr "tabindex", 0
-                    first.attr "data-tabbable", ""
                 , 50
 
                 # the current page becomes the next page
