@@ -102,7 +102,7 @@ define [
         position = if ds.page() > 1 then pageSize * (ds.page() - 1) + relativeIndex else relativeIndex
         return { length: ds.data().length, index: position, item: match }
 
-    at = (newIndex, noPage) =>
+    at = (newIndex, noPage, noSelect) =>
         return if newIndex < 0 or newIndex >= ds.data().length
         index = newIndex
 
@@ -121,7 +121,7 @@ define [
         match = { length: ds.data().length, index: index, item: ds.view()[position] }
         $.publish "/details/update", [match]
 
-        select match.item.name
+        select match.item.name unless noSelect
 
     dataSource =
         create: (data) =>
@@ -214,6 +214,7 @@ define [
 
                     first = thumbs[0].dom
                     first.attr "tabindex", 0
+                    first.addClass "selected"
                 , 50
 
                 # the current page becomes the next page
@@ -234,7 +235,7 @@ define [
                 $("#gallery").css "pointer-events", "auto"
 
                 setTimeout ->
-                    at (ds.page() - 1) * pageSize
+                    at (ds.page() - 1) * pageSize, false, true
                 , 50
 
             if flip
@@ -261,13 +262,13 @@ define [
                     position = index % pageSize
                     switch key
                         when "left" then if index % columns > 0
-                            at index - 1, true
+                            at index - 1, true, false
                         when "right" then if index % columns < columns - 1
-                            at index + 1, true
+                            at index + 1, true, false
                         when "up" then if position >= columns
-                            at index-columns, true
+                            at index-columns, true, false
                         when "down" then if position < (rows-1)*columns
-                            at index+columns, true
+                            at index+columns, true, false
             )
 
             @tokens.push(
@@ -280,7 +281,7 @@ define [
 
             @tokens.push(
                 $.subscribe "/keyboard/enter", ->
-                    at index
+                    at index, false, false
                     # keys.unbind()
                     # $.publish "/details/show", [ item: item ]
             )
@@ -367,7 +368,7 @@ define [
                 add(item)
 
             $.subscribe "/gallery/at", (index) ->
-                at(index)
+                at index, false, false
 
             $.subscribe "/details/hiding", ->
                 list.show()
