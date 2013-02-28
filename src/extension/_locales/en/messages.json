@@ -80,6 +80,10 @@
         "message": "Created using <a href='http://www.kendoui.com' title='KendoUI' target='_blank'>KendoUI</a> from <a href='http://www.telerik.com' title='Telerik' target='_blank'>Telerik</a>."
     },
 
+    "about_version": {
+        "message": "Version 2.0"
+    },
+
     "photo": {
         "message": "Photo"
     },
