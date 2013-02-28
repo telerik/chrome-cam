@@ -121,7 +121,11 @@ define [
         match = { length: ds.data().length, index: index, item: ds.view()[position] }
         $.publish "/details/update", [match]
 
-        select match.item.name unless noSelect
+        if noSelect
+            $.publish "/item/selected", [ match ]
+            $.publish "/galleryBar/update", [ "selected" ]
+        else
+            select match.item.name
 
     dataSource =
         create: (data) =>
@@ -215,6 +219,7 @@ define [
                     first = thumbs[0].dom
                     first.attr "tabindex", 0
                     first.addClass "selected"
+                    selected = first
                 , 50
 
                 # the current page becomes the next page
@@ -367,12 +372,6 @@ define [
 
             $.subscribe "/gallery/at", (index) ->
                 at index, false, false
-
-            $.subscribe "/details/hiding", ->
-                list.show()
-
-            $.subscribe "/details/shown", ->
-                list.hide()
 
             $.subscribe "/gallery/clear", =>
                 $.publish "/bottom/thumbnail"

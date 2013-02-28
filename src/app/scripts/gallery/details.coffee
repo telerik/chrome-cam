@@ -39,11 +39,14 @@ define [
     hide = ->
         $.publish "/galleryBar/update", ["gallery"]
         $.publish "/gallery/keyboard", [ true ]
-        $.publish "/details/hiding"
+
+        # HACK: I have no excuse...
+        $.publish "/tabbing/restore", $("#list")
 
         keys.unbind()
 
-        $.unsubscribe tokens.delete
+        # Horrible hack! Find a better way to fix this issue...
+        $.unsubscribe tokens.delete if tokens.delete
         tokens.delete = null
 
         kendo.fx(details.container).zoom("out").play()
@@ -53,11 +56,12 @@ define [
 
         keys.bind()
 
+        $.publish "tabbing/remove", $("#list")
+
         tokens.delete = $.subscribe "/gallery/delete", ->
             hide()
 
         kendo.fx(details.container).zoom("in").play().done ->
-            $.publish "/details/shown"
             $.publish "/galleryBar/update", ["details"]
 
     update = (message) ->
