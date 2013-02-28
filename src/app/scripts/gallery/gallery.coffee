@@ -280,7 +280,7 @@ define [
 
             @tokens.push(
                 $.subscribe "/keyboard/enter", ->
-                    at index % pageSize
+                    at index
                     # keys.unbind()
                     # $.publish "/details/show", [ item: item ]
             )
