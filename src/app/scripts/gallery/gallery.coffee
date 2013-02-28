@@ -282,8 +282,6 @@ define [
             @tokens.push(
                 $.subscribe "/keyboard/enter", ->
                     at index, false, false
-                    # keys.unbind()
-                    # $.publish "/details/show", [ item: item ]
             )
             @bound = true
 
