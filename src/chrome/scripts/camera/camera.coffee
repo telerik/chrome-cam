@@ -114,6 +114,7 @@ define [
 
         paused = message.paused
         wrapper.toggle not paused
+        effects.clearBuffer() if paused
 
     prepare = (mode) ->
         if mode == "paparazzi"

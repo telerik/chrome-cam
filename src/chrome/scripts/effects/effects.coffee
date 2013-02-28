@@ -8,7 +8,6 @@ define [
 
     eyeFactor = .09
 
-    timeStripsBuffer = []
     ghostBuffer = []
 
     webgl = fx.canvas()
@@ -36,7 +35,6 @@ define [
 
         clearBuffer: ->
 
-            timeStripsBuffer = []
             ghostBuffer = []
 
         init: ->
