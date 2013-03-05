@@ -125,8 +125,12 @@ define ['utils/utils'],
                 # convert the incoming data url to a blob
                 blob = utils.toBlob(data.file)
 
+                accepts = [
+                    { description: "*.jpg", extensions: [ "jpg" ]}
+                ]
+
                 # invoke the chrome file chooser saying that we are going to save a file
-                chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name }, (fileEntry) ->
+                chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name, accepts: accepts }, (fileEntry) ->
 
                     return unless fileEntry?
 
