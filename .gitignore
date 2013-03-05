@@ -3,4 +3,3 @@ build
 *.pem
 .DS_Store
 chrome-cam.crx
-chrome-cam.*
