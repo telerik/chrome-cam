@@ -126,11 +126,11 @@ define ['utils/utils'],
                 blob = utils.toBlob(data.file)
 
                 accepts = [
-                    { description: "*.jpg", extensions: [ "jpg" ]}
+                    { description: "*.jpg", extensions: [ "jpg" ], mimeTypes: [ "image/jpeg" ]}
                 ]
 
                 # invoke the chrome file chooser saying that we are going to save a file
-                chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: name, accepts: accepts }, (fileEntry) ->
+                chrome.fileSystem.chooseEntry { type: "saveFile", suggestedName: filename, accepts: accepts }, (fileEntry) ->
 
                     return unless fileEntry?
 

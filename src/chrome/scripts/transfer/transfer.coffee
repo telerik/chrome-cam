@@ -70,7 +70,10 @@ define [], () ->
             deferreds = (slideIn element, key for element, key in elements)
             $.when.apply($, deferreds).done ->
                 kendo.fx(last).transfer(destination).duration(1000).play().done ->
-                    last.remove()
+                    # HACK: For slower machines
+                    setTimeout ->
+                        last.remove()
+                    , 250
 
                     for element in elements
                         element.remove()

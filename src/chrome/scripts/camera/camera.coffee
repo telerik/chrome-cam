@@ -16,6 +16,8 @@ define [
     paparazzi = $(".paparazzi", wrapper)
 
     frame = 0
+    frequency = 8
+    faceTrackingEnabled = true
 
     supported = true
 
@@ -29,7 +31,7 @@ define [
         # the camera is paused when it isn't being used to increase app performance
         ctx.drawImage video, 0, 0, canvas.width, canvas.height
 
-        if effect.tracks and frame % 4 == 0
+        if faceTrackingEnabled and effect.tracks and frame % frequency == 0
            track = face.track canvas
 
         # increment the curent frame counter. this is used for animated effects
@@ -84,6 +86,7 @@ define [
 
         callback = ->
             $.publish "/postman/deliver", [ file, "/bottom/thumbnail" ]
+            faceTrackingEnabled = true
 
         if progress.index == 0
             transfer.setup()
@@ -91,6 +94,7 @@ define [
         transfer.add file, progress
 
         if progress.index == progress.count-1
+            faceTrackingEnabled = false
             setTimeout (->
                 transfer.run callback
             ), 200
