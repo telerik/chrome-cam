@@ -21,6 +21,8 @@ define [
 
     supported = true
 
+    appReady = $.Deferred()
+
     effect = effects.data[0]
 
     draw = ->
@@ -113,6 +115,9 @@ define [
             paused = true
             $.publish "/postman/deliver", [ {}, "/camera/unsupported" ]
 
+        $.when(appReady).then ->
+            update()
+
     pause = (message) ->
         return unless paused != message.paused
 
@@ -132,6 +137,10 @@ define [
             stream.stop()
 
         init: ->
+            appReady.promise()
+
+            $.subscribe "/app/ready", -> appReady.resolve()
+
             transfer.init()
 
             # start the camera
