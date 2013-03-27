@@ -24,10 +24,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
     var dimensions = {
         defaultWidth: width,
         minWidth: width,
-        maxWidth: width,
         defaultHeight: height,
         minHeight: height,
-        maxHeight: height,
         id: 'camera'
     };
 
