@@ -16,8 +16,6 @@ chrome.app.runtime.onLaunched.addListener(function() {
         win.onClosed.addListener(function() {
             APP.contentWindow.cleanup();
         });
-
-        console.log(APP);
     }
 
     var width = 989;
