@@ -18,6 +18,7 @@ define [
     frame = 0
     frequency = 8
     faceTrackingEnabled = true
+    unsupported = false
 
     supported = true
 
@@ -115,11 +116,12 @@ define [
             paused = true
             $.publish "/postman/deliver", [ {}, "/camera/unsupported" ]
 
+        unsupported = true
         $.when(appReady).then ->
             update()
 
     pause = (message) ->
-        return unless paused != message.paused
+        return unless paused != message.paused and not unsupported
 
         paused = message.paused
         wrapper.toggle not paused
