@@ -61,12 +61,14 @@ iframe {
 }
 
 .thumbnail {
-    top: 633px;
-    left: 902px;
+    right: 15px;
+    bottom: 2px;
     visibility: hidden;
     pointer-events: none;
-    height: 54px;
     width: 72px;
+    height: 54px;
+    margin: 0;
+    padding: 0;
 }
 
 .transfer {
