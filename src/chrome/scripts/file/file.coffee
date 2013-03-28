@@ -59,7 +59,7 @@ define ['utils/utils'],
             fn fileSystem
         else
             # request storage. requested amount is 50 meg but storage is specified as unlimited in manifest?
-            window.webkitStorageInfo.requestQuota PERSISTENT, 5000 * 1024, (grantedBytes) ->
+            navigator.webkitPersistentStorage.requestQuota 5000 * 1024, (grantedBytes) ->
                 success = (fs) ->
                     fileSystem = fs
                     fn fs
