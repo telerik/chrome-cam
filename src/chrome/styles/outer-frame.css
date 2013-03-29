@@ -14,7 +14,7 @@ iframe {
 
 .hidden { display: none }
 
-#video, #canvas, .wrapper {
+#video, #canvas {
     width: 720px;
     height: 540px;
 }
@@ -24,8 +24,12 @@ iframe {
 .wrapper {
     position: absolute;
     z-index: 1000;
-    top: 43px;
-    left: 135px;
+    left: 50%;
+    top: 45%;
+    width: 722px;
+    height: 542px;
+    margin-left: -360px;
+    margin-top: -267px;
 }
 
 #canvas, .transfer { border: 1px solid #2d2d2d; }
