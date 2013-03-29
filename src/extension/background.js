@@ -10,16 +10,24 @@ chrome.runtime.onInstalled.addListener(function() {
 
 chrome.app.runtime.onLaunched.addListener(function() {
     var onWindowLoaded = function(win) {
+        var releasePower = function() {};
+
         APP = win;
 
-        win.onClosed.addListener(function() {
-            APP.contentWindow.cleanup();
-
+        if (win.isFullscreen()) {
             try {
-                chrome.power.releaseKeepAwake("display");
+                chrome.power.requestKeepAwake("display");
+                releasePower = function() {
+                    chrome.power.releaseKeepAwake("display");
+                };
             } catch (ex) {
                 // this device probably doesn't support the power API.
             }
+        }
+
+        win.onClosed.addListener(function() {
+            APP.contentWindow.cleanup();
+            releasePower();
         });
     }
 
@@ -33,12 +41,6 @@ chrome.app.runtime.onLaunched.addListener(function() {
         minHeight: height,
         id: 'camera'
     };
-
-    try {
-        chrome.power.requestKeepAwake("display");
-    } catch (ex) {
-        // this device probably doesn't support the power API.
-    }
 
     var win = chrome.app.window.create('main.html', dimensions, onWindowLoaded);
 });
