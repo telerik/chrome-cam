@@ -22,7 +22,8 @@
    { "fileSystem": ["write"] },
    "contextMenus",
    "storage",
-   "power"
+   "power",
+   "kiosk_enabled"
  ],
   "sandbox": {
     "pages": [ "app/index.html" ],
