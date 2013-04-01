@@ -76,5 +76,10 @@ define [
         save: (e) ->
             filewrapper.download viewModel.get("current")
 
+        print: (e) ->
+            name = viewModel.get("current").name
+            img = $("img[data-name='#{name}']").attr("src")
+            $.publish "/postman/deliver", [ { content: img, contentType: 'image/jpeg' }, "/printer/print" ]
+
         home: (e) ->
             navigation.navigate "#home"

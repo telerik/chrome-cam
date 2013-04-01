@@ -48,8 +48,9 @@ define [
             $.subscribe "/window/close", ->
                 window.close()
 
-            $.subscribe "/printer/print", ->
-                printer.print("Hi there!")
+            $.subscribe "/printer/print", (message) ->
+                console.log message
+                printer.print message.content, message.contentType
 
             # get the files
             file.init()

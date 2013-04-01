@@ -37,6 +37,9 @@
     "save_button": {
         "message": "Save"
     },
+    "print_button": {
+        "message": "Print"
+    },
     "delete_dialog_title": {
         "message": "Delete"
     },

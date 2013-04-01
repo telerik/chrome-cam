@@ -14,6 +14,7 @@ define [], ->
         "back_to_gallery_button"
         "back_to_camera_button"
         "save_button"
+        "print_button"
         "delete_dialog_title"
         "delete_confirmation"
         "yes_button"
