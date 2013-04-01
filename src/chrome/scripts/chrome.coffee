@@ -5,7 +5,8 @@ define [
     'localization/localization'
     'camera/camera'
     'link/opener'
-], (postman, utils, file, localization, camera, opener) ->
+    'printer/printer'
+], (postman, utils, file, localization, camera, opener, printer) ->
     'use strict'
 
     iframe = iframe = document.getElementById("iframe")
@@ -46,6 +47,9 @@ define [
 
             $.subscribe "/window/close", ->
                 window.close()
+
+            $.subscribe "/printer/print", ->
+                printer.print("Hi there!")
 
             # get the files
             file.init()

@@ -1,10 +1,22 @@
 {
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "2.0.4",
+  "key": "gkojbaegnidkckijpiofpbpiegjcaoec",
+  "version": "2.0.5",
   "manifest_version": 2,
   "offline_enabled" : true,
   "default_locale": "en",
+  "oauth2": {
+    "client_id": "1066229426336-mq4dh1q2ufe2d8hp0un5jfjft8n0oc8o.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloudprint"
+    ]
+  },
+  "requirements": {
+    "3D": {
+      "features": ["webgl"]
+    }
+  },
   "app": {
     "background": {
       "scripts": [ "background.js" ]
@@ -23,7 +35,10 @@
     "contextMenus",
     "storage",
     "power",
-    "kiosk_enabled"
+    "kiosk_enabled",
+    "experimental",
+    "https://www.google.com/cloudprint/search",
+    "https://www.google.com/cloudprint/submit"
   ],
   "sandbox": {
     "pages": [ "app/index.html" ],
