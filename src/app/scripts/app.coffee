@@ -13,8 +13,9 @@ define [
     'confirm/confirm'
     'navigation/navigation'
     'tabbing/tabbing'
+    'printer/printer'
     "text!views/nocamera.html"
-], (bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, navigation, tabbing, nocamera) ->
+], (bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, navigation, tabbing, printer, nocamera) ->
 
     pub =
         init: ->
@@ -27,6 +28,8 @@ define [
             APP.bottom = bottom
             APP.galleryBar = galleryBar
             APP.details = details
+
+            APP.printer = printer
 
             # bind document level events
             events.init()
@@ -47,6 +50,7 @@ define [
             promises =
                 effects: $.Deferred()
                 localization: $.Deferred()
+                printers: $.Deferred()
 
             $.subscribe "/effects/response", (filters) ->
                 APP.filters = filters
@@ -57,9 +61,10 @@ define [
                 promises.localization.resolve()
 
             $.subscribe "/printer/list/response", (printers) ->
-                console.log printers
+                printer.init printers
+                promises.printers.resolve()
 
-            $.when(promises.effects.promise(), promises.localization.promise()).then ->
+            $.when.apply($, (v.promise() for k, v of promises)).then ->
                 # create the top and bottom bars
                 bottom.init(".bottom")
                 galleryBar.init ".galleryBar"
@@ -99,6 +104,10 @@ define [
                         duration: 1000,
                         hide: true
                 setTimeout hideSplash, 100
+
+                setTimeout ->
+                    printer.prompt()
+                , 1000
 
                 $.subscribe "/keyboard/close", ->
                     $.publish "/postman/deliver", [ null, "/window/close" ]
