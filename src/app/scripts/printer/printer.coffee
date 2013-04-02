@@ -3,15 +3,11 @@ define [], ->
     printers = []
     pub =
         select: ->
-            console.log "SELECTED!"
             $.publish "/postman/deliver", [ { paused: false }, "/camera/pause" ]
-
             $.publish "/postman/deliver", [ modal.find("select").val(), "/printer/select" ]
-
             modal.data("kendoMobileModalView").close()
         init: (data) ->
             printers = data
-
             modal = $("#printerList")
         prompt: ->
             $.publish "/postman/deliver", [ { paused: true }, "/camera/pause" ]

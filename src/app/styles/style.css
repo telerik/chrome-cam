@@ -554,6 +554,26 @@ a.canvas {
     height: 35px;
 }
     .modal-window .km-footer a { margin-left: 5px; }
+
+.printer-select {
+    margin: 30px auto;
+    text-align: center;
+}
+    .km-root .printer-select select {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        font-size: .8em;
+        border-color: rgba(0, 0, 0, 0.1);
+        background: url('images/down-arrow.png');
+        background-repeat: no-repeat;
+        background-position: 97% center;
+        background-size: 11px;
+    }
+    .km-root .printer-select button {
+        position: relative;
+        top: 1px;
+    }
+
 /************ Clearfix ************/
 
 .clearfix:after {
