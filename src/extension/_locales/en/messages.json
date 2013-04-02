@@ -40,6 +40,9 @@
     "print_button": {
         "message": "Print"
     },
+    "email_button": {
+        "message": "Email"
+    },
     "delete_dialog_title": {
         "message": "Delete"
     },

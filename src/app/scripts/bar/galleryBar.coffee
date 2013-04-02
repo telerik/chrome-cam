@@ -81,5 +81,9 @@ define [
             img = $("img[data-name='#{name}']").attr("src")
             $.publish "/postman/deliver", [ { content: img, contentType: 'dataUrl' }, "/printer/print" ]
 
+        email: (e) ->
+            name = viewModel.get("current").name
+            $.publish "/email/send", [ src: $("img[data-name='#{name}']").attr("src") ]
+
         home: (e) ->
             navigation.navigate "#home"

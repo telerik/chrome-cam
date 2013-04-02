@@ -574,6 +574,10 @@ a.canvas {
         top: 1px;
     }
 
+.email-preview {
+    max-width: 320px;
+}
+
 /************ Clearfix ************/
 
 .clearfix:after {

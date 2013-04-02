@@ -50,6 +50,17 @@
             </div>
         </div>
 
+        <div data-role="modalview" id="emailShare" class="modal-window" data-width="500" data-height="500">
+            <h1 class="title">Send via Email</a>
+            <label for="recipient">To</label>
+            <input type="email" name="recipient" id="recipient" data-tabbable>
+            <img class="email-preview">
+            <div data-role="footer">
+                <button data-tabbable tabindex="0" data-role="button" data-click="APP.email.confirm">Send</button>
+                <button data-tabbable tabindex="0" data-role="button" data-click="APP.email.cancel">Cancel</button>
+            </div>
+        </div>
+
         <div data-role="layout" data-id="galleryBar">
             <div data-role="footer" data-model="APP.galleryBar.viewModel">
                 <div class="footer galleryBar"></div>

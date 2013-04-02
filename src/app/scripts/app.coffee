@@ -14,8 +14,9 @@ define [
     'navigation/navigation'
     'tabbing/tabbing'
     'printer/printer'
+    'share/email'
     "text!views/nocamera.html"
-], (bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, navigation, tabbing, printer, nocamera) ->
+], (bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, navigation, tabbing, printer, email, nocamera) ->
 
     pub =
         init: ->
@@ -30,6 +31,7 @@ define [
             APP.details = details
 
             APP.printer = printer
+            APP.email = email
 
             # bind document level events
             events.init()
@@ -92,6 +94,8 @@ define [
                 full.show APP.filters[0]
 
                 tabbing.init()
+
+                email.init()
 
                 # we are done loading the app. have the postman deliver that msg.
                 $.publish "/postman/deliver", [ { message: ""}, "/app/ready" ]
