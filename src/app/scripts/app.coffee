@@ -56,6 +56,9 @@ define [
                 APP.localization = dict
                 promises.localization.resolve()
 
+            $.subscribe "/printer/list/response", (printers) ->
+                console.log printers
+
             $.when(promises.effects.promise(), promises.localization.promise()).then ->
                 # create the top and bottom bars
                 bottom.init(".bottom")
@@ -102,3 +105,4 @@ define [
 
             $.publish "/postman/deliver", [ null, "/localization/request" ]
             $.publish "/postman/deliver", [ null, "/effects/request" ]
+            $.publish "/postman/deliver", [ null, "/printer/list" ]

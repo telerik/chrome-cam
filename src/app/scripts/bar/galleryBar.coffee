@@ -79,7 +79,7 @@ define [
         print: (e) ->
             name = viewModel.get("current").name
             img = $("img[data-name='#{name}']").attr("src")
-            $.publish "/postman/deliver", [ { content: img, contentType: 'image/jpeg' }, "/printer/print" ]
+            $.publish "/postman/deliver", [ { content: img, contentType: 'dataUrl' }, "/printer/print" ]
 
         home: (e) ->
             navigation.navigate "#home"
