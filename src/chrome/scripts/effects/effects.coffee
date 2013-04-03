@@ -342,4 +342,18 @@ define [
                         canvas.zoomBlur canvas.width / 2,  canvas.height / 2, 2, canvas.height / 5
                     draw(canvas, element, effect)
             }
+
+            {
+                id: "theNothing"
+                name: "The Nothing"
+                tracks: true
+                filter: (canvas, element, frame, stream) ->
+                    factor = element.width / stream.trackWidth
+
+                    ctx = canvas.getContext("2d")
+                    for face in (stream.faces or [])
+                        ctx.fillStyle = 'black'
+                        ctx.fillRect face.x * factor, face.y * factor, face.width * factor, face.height * factor
+                        ctx.fillStyle = 'white'
+            }
         ]

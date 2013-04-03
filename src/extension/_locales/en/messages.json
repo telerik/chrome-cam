@@ -124,5 +124,6 @@
     "reflection": { "message": "Reflection" },
     "sepia": { "message": "Sepia" },
     "swirl": { "message": "Swirl" },
-    "zoomBlur": { "message": "Zoom Blur" }
+    "zoomBlur": { "message": "Zoom Blur" },
+    "theNothing": { "message": "The Nothing" }
 }
