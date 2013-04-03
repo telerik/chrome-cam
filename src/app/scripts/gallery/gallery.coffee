@@ -37,7 +37,6 @@ define [
         duration: 800
 
     deselect = =>
-        refresh()
         container.find(".thumbnail").removeClass "selected"
         selected = null
         $.publish "/galleryBar/update", [ "deselected" ]
