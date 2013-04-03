@@ -348,8 +348,21 @@ define [
                 name: "Angelic"
                 tracks: true
                 filter: (canvas, element, frame, stream) ->
+                    weight =
+                        old: 3
+                        new: 1
+                    weight.total = weight.old + weight.new
                     if stream.faces.length
-                        faces = stream.faces
+                        for i in [0...stream.faces.length]
+                            if faces[i]
+                                faces[i] =
+                                    x: (faces[i].x * weight.old + stream.faces[i].x * weight.new) / weight.total
+                                    y: (faces[i].y * weight.old + stream.faces[i].y * weight.new) / weight.total
+                                    width: (faces[i].width * weight.old + stream.faces[i].width * weight.new) / weight.total
+                                    height: (faces[i].height * weight.old + stream.faces[i].height * weight.new) / weight.total
+                            else
+                                faces[i] = stream.faces[i]
+                        faces = faces[0...stream.faces.length]
 
                     halo = halo or do ->
                         img = new Image()
@@ -358,13 +371,17 @@ define [
                     factor = element.width / stream.trackWidth
 
                     ctx = canvas.getContext("2d")
+
                     for face in faces
-                        ctx.fillStyle = 'black'
-                        #ctx.fillRect face.x * factor, face.y * factor, face.width * factor, face.height * factor
-                        scale = Math.min(1, 1.25 * (face.width * factor) / halo.width)
+                        face = faces[0]
+
+                        scale = Math.min(1, 1.2 * (face.width * factor) / halo.width)
 
                         x = (face.x + face.width / 2) * factor - halo.width * scale / 2
-                        y = face.y * factor - face.height * factor * .5 + Math.sin(frame * 0.20) * 12 * scale
+                        y = face.y * factor - face.height * factor * .45 + Math.sin(frame * 0.15) * 15 * scale
+
+                        if isNaN(x) or isNaN(y)
+                            debugger
 
                         ctx.save()
 
@@ -373,6 +390,5 @@ define [
                         ctx.drawImage halo, 0, 0
 
                         ctx.restore()
-                        ctx.fillStyle = 'white'
             }
         ]
