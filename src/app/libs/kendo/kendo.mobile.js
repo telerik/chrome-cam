@@ -11317,7 +11317,8 @@ function pad(number, digits, end) {
             }
 
             if (!that._hovered && !contains(that.element[0], document.activeElement)) {
-                that.close();
+                // HACK: fixes issue with resizing window closing the modal.
+                // that.close();
             }
         },
 
