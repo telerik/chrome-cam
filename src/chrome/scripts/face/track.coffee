@@ -41,7 +41,6 @@ define [
                 cache.comp = comp
 
             for i in cache.comp
-                console.log i
                 track.faces.push {
                     x: i.x
                     y: i.y

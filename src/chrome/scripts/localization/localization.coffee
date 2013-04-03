@@ -48,7 +48,7 @@ define [], ->
         "reflection"
         "sepia"
         "swirl"
-        "theNothing"
+        "angel"
         "zoomBlur"
         "about_credits"
         "about_kendo"

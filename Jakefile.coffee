@@ -77,5 +77,8 @@ task 'default', (params) ->
         fatLog "Copying Libs for Chrome"
         jake.cpR "#{srcDir}/chrome/libs", "#{chromeBuildDir}/libs"
 
-        fatLog "Copying styles for App"
+        fatLog "Copying styles for Chrome"
         jake.cpR "#{srcDir}/chrome/styles", "#{chromeBuildDir}/styles"
+
+        fatLog "Copying props for Chrome"
+        jake.cpR "#{srcDir}/chrome/props", "#{chromeBuildDir}/props"

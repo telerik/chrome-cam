@@ -344,16 +344,35 @@ define [
             }
 
             {
-                id: "theNothing"
-                name: "The Nothing"
+                id: "angel"
+                name: "Angelic"
                 tracks: true
                 filter: (canvas, element, frame, stream) ->
+                    if stream.faces.length
+                        faces = stream.faces
+
+                    halo = halo or do ->
+                        img = new Image()
+                        img.src = "chrome/props/halo.png"
+                        return img
                     factor = element.width / stream.trackWidth
 
                     ctx = canvas.getContext("2d")
-                    for face in (stream.faces or [])
+                    for face in faces
                         ctx.fillStyle = 'black'
-                        ctx.fillRect face.x * factor, face.y * factor, face.width * factor, face.height * factor
+                        #ctx.fillRect face.x * factor, face.y * factor, face.width * factor, face.height * factor
+                        scale = Math.min(1, 1.25 * (face.width * factor) / halo.width)
+
+                        x = (face.x + face.width / 2) * factor - halo.width * scale / 2
+                        y = face.y * factor - face.height * factor * .5 + Math.sin(frame * 0.20) * 12 * scale
+
+                        ctx.save()
+
+                        ctx.translate x, y
+                        ctx.scale scale, -scale
+                        ctx.drawImage halo, 0, 0
+
+                        ctx.restore()
                         ctx.fillStyle = 'white'
             }
         ]
