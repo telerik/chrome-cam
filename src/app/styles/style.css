@@ -574,8 +574,26 @@ a.canvas {
         top: 1px;
     }
 
+.send-email { text-align: center; }
+
 .email-preview {
     max-width: 320px;
+    margin: 40px auto 50px;
+    display: block;
+}
+
+.send-email div { margin: 20px 0 0; }
+
+.send-email label { padding-right: .5em; }
+
+#emailShare .send-email input[type="email"] {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    font-size: .8em;
+    border-color: rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: -2px;
+    width: 50%;
 }
 
 /************ Clearfix ************/

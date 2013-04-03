@@ -51,13 +51,15 @@
         </div>
 
         <div data-role="modalview" id="emailShare" class="modal-window" data-width="500" data-height="500">
-            <h1 class="title">Send via Email</a>
-            <label for="recipient">To</label>
-            <input type="email" name="recipient" id="recipient" data-tabbable>
-            <img class="email-preview">
-            <div data-role="footer">
-                <button data-tabbable tabindex="0" data-role="button" data-click="APP.email.confirm">Send</button>
-                <button data-tabbable tabindex="0" data-role="button" data-click="APP.email.cancel">Cancel</button>
+            <h1 class="title">Send via Email</h1>
+            <div class="send-email">
+                <img class="email-preview">
+                <label for="recipient">To:</label>
+                <input type="email" name="recipient" id="recipient" data-tabbable placeholder="foo@bar.com">
+                <div data-role="footer">
+                    <button data-tabbable tabindex="0" data-role="button" data-click="APP.email.confirm">Send</button>
+                    <button data-tabbable tabindex="0" data-role="button" data-click="APP.email.cancel">Cancel</button>
+                </div>
             </div>
         </div>
 

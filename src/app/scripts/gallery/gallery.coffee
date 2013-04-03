@@ -23,9 +23,10 @@ define [
     active = {}
     details = false
     keyboard = {}
+    keepAlive = false
 
     back = ->
-        navigation.navigate "#home"
+        navigation.navigate "#home" unless keepAlive
     refresh = utils.debounce(back, 15000)
 
     navigation.navigating.to "#gallery", ->
@@ -387,6 +388,10 @@ define [
                 $.publish "/bottom/thumbnail"
                 filewrapper.clear().done =>
                     clear()
+
+            $.subscribe "/gallery/keepAlive", (flag) ->
+                keepAlive = flag
+                refresh()
 
             $.subscribe "/gallery/keyboard", (bind) ->
                 if bind
