@@ -10,7 +10,7 @@ define [], ->
             window.addEventListener "hashchange", (e) ->
                 window.APP.confirm.esc()
 
-        navigate: (view) ->
+        navigate: (view, options) ->
             deferreds = []
 
 
@@ -23,7 +23,7 @@ define [], ->
                 deferreds.push callback() for callback in callbacks.to[view]
 
             $.when.apply($, deferreds).done ->
-                window.APP.app.navigate view
+                window.APP.app.navigate view unless options and options.skip
 
         navigating:
             to: (view, callback) ->
