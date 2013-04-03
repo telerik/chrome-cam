@@ -1,8 +1,9 @@
 define [
     'utils/utils'
     'file/filewrapper'
+    'navigation/navigation'
     'text!views/gallery/thumb.html'
-], (utils, filewrapper, template) ->
+], (utils, filewrapper, navigation, template) ->
     columns = 3
     rows = 3
     pageSize = columns * rows
@@ -23,17 +24,26 @@ define [
     details = false
     keyboard = {}
 
+    back = ->
+        navigation.navigate "#home"
+    refresh = utils.debounce(back, 15000)
+
+    navigation.navigating.to "#gallery", ->
+        refresh()
+
     animation =
         effects: "pageturn:horizontal"
         reverse: false
         duration: 800
 
     deselect = =>
+        refresh()
         container.find(".thumbnail").removeClass "selected"
         selected = null
         $.publish "/galleryBar/update", [ "deselected" ]
 
     select = (name) =>
+        refresh()
         # find the item with the specified name
         item = container.find("[data-name='#{name}']")
         selected = item.parent(":first")
@@ -77,7 +87,7 @@ define [
         $.publish "/postman/deliver", [ {}, "/file/read" ]
 
     destroy = ->
-
+        refresh()
         name = selected.children(":first").attr("data-name")
 
         selected.kendoStop(true).kendoAnimate
@@ -362,6 +372,7 @@ define [
             active = pages.next = page2.render().addClass("page gallery")
 
             $.subscribe "/gallery/details", (d) ->
+                refresh()
                 details = d
 
             $.subscribe "/gallery/delete", ->

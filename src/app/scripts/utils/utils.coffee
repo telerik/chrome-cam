@@ -11,6 +11,15 @@ define [], ->
                 when "up" then "down"
                 when "down" then "up"
 
+        debounce: (fn, wait) ->
+            timeout = null
+            wrapped = ->
+                clearTimeout timeout if timeout
+                bounce = ->
+                    timeout = null
+                    fn()
+                timeout = setTimeout(bounce, wait)
+
         keys:
             arrows:
                 up: 38
