@@ -14,6 +14,29 @@ define [
 
     texture = null
 
+    resources =
+        halo: do ->
+            img = new Image()
+            img.src = "chrome/props/halo.png"
+            return img
+
+    averageFaces = (stream) ->
+        weight =
+            old: 3
+            new: 1
+        weight.total = weight.old + weight.new
+        if stream.faces.length
+            for i in [0...stream.faces.length]
+                if faces[i]
+                    faces[i] =
+                        x: (faces[i].x * weight.old + stream.faces[i].x * weight.new) / weight.total
+                        y: (faces[i].y * weight.old + stream.faces[i].y * weight.new) / weight.total
+                        width: (faces[i].width * weight.old + stream.faces[i].width * weight.new) / weight.total
+                        height: (faces[i].height * weight.old + stream.faces[i].height * weight.new) / weight.total
+                else
+                    faces[i] = stream.faces[i]
+            faces = faces[0...stream.faces.length]
+
     draw = (canvas, element, effect) ->
         ctx = canvas.getContext "2d"
 
@@ -348,47 +371,23 @@ define [
                 name: "Angelic"
                 tracks: true
                 filter: (canvas, element, frame, stream) ->
-                    weight =
-                        old: 3
-                        new: 1
-                    weight.total = weight.old + weight.new
-                    if stream.faces.length
-                        for i in [0...stream.faces.length]
-                            if faces[i]
-                                faces[i] =
-                                    x: (faces[i].x * weight.old + stream.faces[i].x * weight.new) / weight.total
-                                    y: (faces[i].y * weight.old + stream.faces[i].y * weight.new) / weight.total
-                                    width: (faces[i].width * weight.old + stream.faces[i].width * weight.new) / weight.total
-                                    height: (faces[i].height * weight.old + stream.faces[i].height * weight.new) / weight.total
-                            else
-                                faces[i] = stream.faces[i]
-                        faces = faces[0...stream.faces.length]
+                    averageFaces stream
 
-                    halo = halo or do ->
-                        img = new Image()
-                        img.src = "chrome/props/halo.png"
-                        return img
+                    halo = resources.halo
                     factor = element.width / stream.trackWidth
 
                     ctx = canvas.getContext("2d")
 
                     for face in faces
-                        face = faces[0]
-
-                        scale = Math.min(1, 1.2 * (face.width * factor) / halo.width)
+                        scale = Math.min(1, 1.2 * face.width * factor / halo.width)
 
                         x = (face.x + face.width / 2) * factor - halo.width * scale / 2
                         y = face.y * factor - face.height * factor * .45 + Math.sin(frame * 0.15) * 15 * scale
 
-                        if isNaN(x) or isNaN(y)
-                            debugger
-
                         ctx.save()
-
                         ctx.translate x, y
                         ctx.scale scale, -scale
                         ctx.drawImage halo, 0, 0
-
                         ctx.restore()
             }
         ]
