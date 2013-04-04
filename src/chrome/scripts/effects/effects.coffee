@@ -14,11 +14,14 @@ define [
 
     texture = null
 
+    prop = (src) ->
+        img = new Image()
+        img.src = "chrome/props/" + src
+        return img
+
     resources =
-        halo: do ->
-            img = new Image()
-            img.src = "chrome/props/halo.png"
-            return img
+        halo: prop("halo.png")
+        disguise: prop("glasses.png")
 
     averageFaces = (stream) ->
         weight =
@@ -388,6 +391,32 @@ define [
                         ctx.translate x, y
                         ctx.scale scale, -scale
                         ctx.drawImage halo, 0, 0
+                        ctx.restore()
+            }
+
+            {
+                id: "disguise"
+                name: "Disguise"
+                tracks: true
+                filter: (canvas, element, frame, stream) ->
+                    averageFaces stream
+
+                    disguise = resources.disguise
+                    factor = element.width / stream.trackWidth
+
+                    ctx = canvas.getContext("2d")
+
+                    for face in faces
+                        sx = face.width * factor / disguise.width
+                        sy = face.height * factor / disguise.height
+
+                        x = (face.x + face.width / 2) * factor - disguise.width * sx / 2
+                        y = face.y * factor
+
+                        ctx.save()
+                        ctx.translate x, y
+                        ctx.scale sx, sy
+                        ctx.drawImage disguise, 0, 0
                         ctx.restore()
             }
         ]

@@ -125,5 +125,6 @@
     "sepia": { "message": "Sepia" },
     "swirl": { "message": "Swirl" },
     "zoomBlur": { "message": "Zoom Blur" },
-    "angel": { "message": "Angelic" }
+    "angel": { "message": "Angelic" },
+    "disguise": { "message": "Disguise" }
 }
