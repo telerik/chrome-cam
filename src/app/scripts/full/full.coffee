@@ -3,7 +3,8 @@ define [
     'file/filewrapper'
     'navigation/navigation'
     'text!views/full.html'
-], (utils, filewrapper, navigation, template) ->
+    'text!views/filterlist.html'
+], (utils, filewrapper, navigation, template, filterlist) ->
     paused = true
     frame = 0
     full = {}
@@ -141,6 +142,9 @@ define [
 
             # find and cache the necessary elements
             elements.cache full
+
+            filters = kendo.template(filterlist)
+            full.el.filters.html(filters({}))
 
             # subscribe to external events an map them to internal functions
             subscribe pub
