@@ -5,6 +5,7 @@ define ["navigation/navigation"], (navigation) ->
         select: ->
             $.publish "/tabbing/restore", [ $(document.body) ]
             $.publish "/postman/deliver", [ { paused: false }, "/camera/pause" ]
+            $.publish "/postman/deliver", [ true, "/menu/enable" ]
             $.publish "/postman/deliver", [ modal.find("select").val(), "/printer/select" ]
             modal.data("kendoMobileModalView").close()
             navigation.navigate "#home", skip: true
