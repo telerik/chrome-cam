@@ -50,7 +50,7 @@ define [], ->
         "swirl"
         "zoomBlur"
         "angel"
-        "diguise"
+        "disguise"
         "about_credits"
         "about_kendo"
         "about_version"
