@@ -9,6 +9,7 @@ define [
     'gallery/details'
     'events/events'
     'file/filewrapper'
+    'filterlist/filterlist'
     'about/about'
     'confirm/confirm'
     'navigation/navigation'
@@ -16,7 +17,7 @@ define [
     'printer/printer'
     'share/email'
     "text!views/nocamera.html"
-], (bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, about, confirm, navigation, tabbing, printer, email, nocamera) ->
+], (bottom, galleryBar, popover, full, postman, utils, gallery, details, events, filewrapper, filterlist, about, confirm, navigation, tabbing, printer, email, nocamera) ->
 
     pub =
         init: ->
@@ -55,7 +56,8 @@ define [
                 printers: $.Deferred()
 
             $.subscribe "/effects/response", (filters) ->
-                APP.filters = filters
+                filterlist.init filters
+                APP.filters = filterlist
                 promises.effects.resolve()
 
             $.subscribe "/localization/response", (dict) ->
@@ -91,7 +93,7 @@ define [
                 confirm.init "#confirm"
 
                 # start up full view
-                full.show APP.filters[0]
+                full.show APP.filters.items[0]
 
                 tabbing.init()
 

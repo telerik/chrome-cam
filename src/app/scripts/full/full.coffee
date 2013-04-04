@@ -25,15 +25,15 @@ define [
     index =
         current: ->
             # return is compulsory here; otherwise CoffeeScript will build an array.
-            return i for i in [0...APP.filters.length] when APP.filters[i].id is effectId
+            return i for i in [0...APP.filters.items.length] when APP.filters.items[i].id is effectId
         max: ->
-            APP.filters.length
+            APP.filters.items.length
         select: (i) ->
-            pub.select APP.filters[i]
+            pub.select APP.filters.items[i]
         preview: (i) ->
-            pub.select APP.filters[i], true
+            pub.select APP.filters.items[i], true
         unpreview: ->
-            pub.select APP.filters[index.saved]
+            pub.select APP.filters.items[index.saved]
         saved: 0
 
     arrow = (dir) ->
