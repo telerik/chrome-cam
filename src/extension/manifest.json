@@ -38,7 +38,8 @@
     "kiosk_enabled",
     "experimental",
     "https://www.google.com/cloudprint/search",
-    "https://www.google.com/cloudprint/submit"
+    "https://www.google.com/cloudprint/submit",
+    "http://camera-kiosk.appspot.com/send"
   ],
   "sandbox": {
     "pages": [ "app/index.html" ],

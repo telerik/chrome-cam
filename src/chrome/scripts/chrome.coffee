@@ -6,7 +6,8 @@ define [
     'camera/camera'
     'link/opener'
     'printer/printer'
-], (postman, utils, file, localization, camera, opener, printer) ->
+    'share/email'
+], (postman, utils, file, localization, camera, opener, printer, email) ->
     'use strict'
 
     iframe = iframe = document.getElementById("iframe")
@@ -49,6 +50,7 @@ define [
                 window.close()
 
             printer.init()
+            email.init()
 
             # get the files
             file.init()
