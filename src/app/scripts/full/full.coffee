@@ -8,7 +8,7 @@ define [
     paused = true
     frame = 0
     full = {}
-    effectId = ""
+    effectId = "normal"
 
     paparazzi = {}
     tokens = {}
