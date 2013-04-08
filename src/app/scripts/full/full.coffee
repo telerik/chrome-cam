@@ -188,6 +188,9 @@ define [
                 index.preview $(e.target).data("filter-index")
             mouseout: (e) ->
                 index.unpreview()
+            page: (e) ->
+                i = $(e.target).data('filter-page')
+                $("#filter-scrollview").data("kendoMobileScrollView").scrollTo i
         photo: ->
             callback = ->
                 $.publish "/bottom/update", [ "full" ]

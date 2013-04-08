@@ -293,6 +293,7 @@ body div { padding-top: 0px; }
 .filters-list {
     position: absolute;
     left: -135px;
+    width: 135px;
     font-size: 13px;
 }
 
@@ -300,18 +301,39 @@ body div { padding-top: 0px; }
         list-style-type: none;
     }
 
-    .filters-list li { padding: 5px 12px; }
-        .filters-list li:hover {
+    .filters-list .filters-list-page,
+    .filters-list .filters-list-page ul {
+        width: 135px !important;
+    }
+
+    .filters-list .filters-list-page li { padding: 5px 12px; }
+        .filters-list .filters-list-page li:hover {
             background: #eee;
             cursor: pointer;
         }
 
-    .filters-list .selected {
+    .filters-list .filters-list-page .selected {
         border-left: 4px solid #DD4B39;
         padding-left: 8px;
         font-weight: bold;
         color: #DD4B39;
     }
+
+    .filter-page-navigator {
+        list-style-type: none;
+        text-align: center;
+    }
+        .filter-page-navigator li {
+            display: inline;
+        }
+            .filter-page-navigator li .dot {
+                display: inline-block;
+                border-radius: 50%;
+                width: 1em;
+                height: 1em;
+                text-indent: -20000px;
+                background-color: #aaa;
+            }
 
 /************ Gallery view ************/
 

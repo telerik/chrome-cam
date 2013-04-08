@@ -2,5 +2,6 @@ define [], ->
     pub =
         init: (filters) ->
             pub.items = filters
-        render: ->
         items: []
+        page:
+            size: 20
