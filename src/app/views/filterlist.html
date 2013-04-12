@@ -1,16 +1,21 @@
 <div class="scrollview-container">
-    <div id="filter-scrollview" data-role="scrollview">
-    # var pages = Math.ceil(APP.filters.items.length / APP.filters.page.size); #
-    # for (var page = 0; page < pages; ++page) { #
-        <div class="filters-list-page" data-role="page">
-            <ul>
-            # for (var i = page * APP.filters.page.size; i < Math.min((page + 1) * APP.filters.page.size, APP.filters.items.length); ++i) { #
-                <li data-role="clickable" data-click="APP.full.filter.click" data-bind="events: { mouseover: filter.mouseover, mouseout: filter.mouseout }" data-filter-index="#: i #" data-filter-id="#: APP.filters.items[i].id #">#: APP.filters.items[i].name #</li>
-            # } #
-            </ul>
-        </div>
-    # } #
-    </div>
+    <div id="filter-scrollview" data-role="scrollview">#
+    var pages = Math.ceil(APP.filters.items.length / APP.filters.page.size);
+    var startPage, endPage;
+
+    for (var page = 0; page < pages; ++page) {
+        #<div class="filters-list-page" data-role="page">
+            <ul>#
+            startPage = page * APP.filters.page.size;
+            endPage = Math.min((page + 1) * APP.filters.page.size, APP.filters.items.length);
+
+            for (var i = startPage; i < endPage; ++i) {
+                #<li data-role="clickable" data-click="APP.full.filter.click" data-bind="events: { mouseover: filter.mouseover, mouseout: filter.mouseout }" data-filter-index="#: i #" data-filter-id="#: APP.filters.items[i].id #">#: APP.filters.items[i].name #</li>#
+            }
+            #</ul>
+        </div>#
+    }
+    #</div>
     <ul class="filter-page-navigator">
     # for (var page = 0; page < pages; ++page) { #
         <li #= page == 0 ? 'class="selected"' : '' #>
