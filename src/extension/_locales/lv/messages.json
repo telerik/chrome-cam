@@ -73,11 +73,11 @@
     },
 
     "about_kendo_license": {
-        "message": "Visit <a href='http:/www.kendoui.com' title='KendoUI' target='_blank'>KendoUI.com</a> for app license and details."
+        "message": "Visit <a href='http:/www.kendoui.com' tabindex=0 title='KendoUI' target='_blank'>KendoUI.com</a> for app license and details."
     },
 
     "about_kendo": {
-        "message": "Created using <a href='http://www.kendoui.com' title='KendoUI' target='_blank'>KendoUI</a> from <a href='http://www.telerik.com' title='Telerik' target='_blank'>Telerik</a>."
+        "message": "Created using <a href='http://www.kendoui.com' tabindex=0 title='KendoUI' target='_blank'>KendoUI</a> from <a href='http://www.telerik.com' tabindex=0 title='Telerik' target='_blank'>Telerik</a>."
     },
 
     "photo": {
