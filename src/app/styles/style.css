@@ -304,6 +304,7 @@ body div { padding-top: 0px; }
     .filters-list .filters-list-page,
     .filters-list .filters-list-page ul {
         width: 135px !important;
+        vertical-align: top;
     }
 
     .filters-list .filters-list-page li { padding: 5px 12px; }
