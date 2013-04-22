@@ -1,5 +1,5 @@
 <div class="scrollview-container">
-    <div id="filter-scrollview" data-role="scrollview">#
+    <div id="filter-scrollview" data-role="scrollview" data-change="APP.full.filter.paged">#
     var pages = Math.ceil(APP.filters.items.length / APP.filters.page.size);
     var startPage, endPage;
 
@@ -18,8 +18,8 @@
     #</div>
     <ul class="filter-page-navigator">
     # for (var page = 0; page < pages; ++page) { #
-        <li #= page == 0 ? 'class="selected"' : '' #>
-            <a data-role="clickable" class="dot" data-click="APP.full.filter.page" data-filter-page="#= page #">#= page #</a>
+        <li>
+            <a data-role="clickable" class="dot #= page === 0 ? 'selected' : '' #" data-click="APP.full.filter.page" data-filter-page="#= page #">#= page #</a>
         </li>
     # } #
     </ul>

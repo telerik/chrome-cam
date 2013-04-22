@@ -336,6 +336,10 @@ body div { padding-top: 0px; }
                 background-color: #aaa;
             }
 
+            .filter-page-navigator li .dot.selected {
+                background-color: #DD4B39;
+            }
+
 /************ Gallery view ************/
 
 .gallery {

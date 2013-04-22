@@ -9,6 +9,7 @@ define [
     frame = 0
     full = {}
     effectId = "normal"
+    scrollView = null
 
     paparazzi = {}
     tokens = {}
@@ -146,6 +147,10 @@ define [
             filters = kendo.template(filterlist)
             full.el.filters.html(filters({}))
 
+            setTimeout ->
+                scrollView = $("#filter-scrollview").data("kendoMobileScrollView")
+            , 0
+
             # subscribe to external events an map them to internal functions
             subscribe pub
 
@@ -190,7 +195,12 @@ define [
                 index.unpreview()
             page: (e) ->
                 i = $(e.target).data('filter-page')
-                $("#filter-scrollview").data("kendoMobileScrollView").scrollTo i
+                scrollView.scrollTo i
+                scrollView.trigger "change", page: i
+            paged: (e) ->
+                dots = $(".filter-page-navigator .dot")
+                dots.removeClass("selected")
+                dots.filter("[data-filter-page=#{e.page}]").addClass("selected")
         photo: ->
             callback = ->
                 $.publish "/bottom/update", [ "full" ]
