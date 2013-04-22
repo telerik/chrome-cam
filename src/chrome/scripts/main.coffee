@@ -15,4 +15,12 @@ require.config
 require [
     'chrome'
 ], (app) ->
+    el = new Everlive('7TAb2POEnVjwQuch')
+
+    login = Everlive.$.Users.login('cwagner', 'BrownsSuck2013!')
+    login.then (data) ->
+        console.log JSON.stringify(data)
+    , (error) ->
+        console.log JSON.stringify(error)
+
     app.init()
