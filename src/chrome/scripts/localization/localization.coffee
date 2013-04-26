@@ -58,6 +58,7 @@ define [], ->
         "photo"
         "paparazzi"
         "gallery"
+        "hipster"
     ]
 
     pub[key] = chrome.i18n.getMessage(key) for key in keys

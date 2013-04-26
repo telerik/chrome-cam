@@ -22,6 +22,10 @@ define [
     resources =
         halo: prop("halo.png")
         disguise: prop("glasses.png")
+        hipster: prop("hipster.png")
+
+    standardProp = (prop, stream) ->
+
 
     averageFaces = (stream) ->
         weight =
@@ -417,6 +421,32 @@ define [
                         ctx.translate x, y
                         ctx.scale sx, sy
                         ctx.drawImage disguise, 0, 0
+                        ctx.restore()
+            }
+
+            {
+                id: "hipster"
+                name: "Hipster"
+                tracks: true
+                filter: (canvas, element, frame, stream) ->
+                    averageFaces stream
+
+                    hipster = resources.hipster
+                    factor = element.width / stream.trackWidth
+
+                    ctx = canvas.getContext("2d")
+
+                    for face in faces
+                        sx = face.width * factor / hipster.width
+                        sy = 2 * face.height * factor / hipster.height
+
+                        x = (face.x + face.width / 2) * factor - hipster.width * sx / 2
+                        y = factor * (face.y)
+
+                        ctx.save()
+                        ctx.translate x, y
+                        ctx.scale sx, sy
+                        ctx.drawImage hipster, 0, 0
                         ctx.restore()
             }
         ]
