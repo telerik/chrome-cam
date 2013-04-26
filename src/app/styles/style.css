@@ -340,6 +340,10 @@ body div { padding-top: 0px; }
                 background-color: #DD4B39;
             }
 
+    .filters-list .km-pages {
+        display: none;
+    }
+
 /************ Gallery view ************/
 
 .gallery {
