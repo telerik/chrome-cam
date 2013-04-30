@@ -625,6 +625,11 @@ a.canvas {
     position: relative;
     top: -2px;
     width: 50%;
+    outline: 0;
+}
+
+#emailShare .send-email input[type="email"].error {
+    outline: 1px solid red !important;
 }
 
 /************ Clearfix ************/

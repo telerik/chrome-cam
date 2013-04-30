@@ -15,9 +15,16 @@ define [], ->
             view.find(".email-preview").attr "src", image.src
             modal().open()
         confirm: ->
+            recipient = view.find("[name=recipient]")
+            recipient.removeClass "error"
+
+            if /^\s*$/.test(recipient.val())
+                recipient.addClass "error"
+                return
+
             args =
                 image: state.image.src
-                email: view.find("[name=recipient]").val()
+                email: recipient.val()
 
             $.publish "/postman/deliver", [ args, "/email/post" ]
 
