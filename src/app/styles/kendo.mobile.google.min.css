@@ -62,16 +62,6 @@
     vertical-align: top
 }
 
-:-moz-any(.km-view,.km-vertical,.km-horizontal) {
-    overflow: hidden;
-    position: relative
-}
-
-.km-splitview :-moz-any(.km-pane) {
-    overflow: hidden;
-    position: relative
-}
-
 .km-content {
     -moz-box-flex: 1;
     -webkit-box-flex: 1;
@@ -89,12 +79,6 @@
     width: auto;
     overflow: hidden;
     position: relative
-}
-
-:-moz-any(.km-content,.km-scroll-container,.km-scrollview) {
-    width: 0;
-    display: -moz-box;
-    -moz-box-orient: vertical
 }
 
 .km-content p,.km-content h1,.km-content h2,.km-content h3,.km-content h4,.km-content h5,.km-content h6 {
@@ -394,11 +378,6 @@
     height: 1.1rem
 }
 
-:-moz-any(.km-detail) {
-    width: 1rem;
-    height: 1rem
-}
-
 .km-detail:after,.km-detail:before,.km-listview-link:after {
     width: .3em;
     height: .3em;
@@ -448,16 +427,6 @@
     height: .7rem;
     margin-left: -0.34em;
     margin-left: -.44rem
-}
-
-.km-button::-moz-focus-inner {
-    padding: 0;
-    border: 0
-}
-
-.km-badge:-moz-first-node,:-moz-first-node ~ .km-badge {
-    right: -0.5em;
-    top: -1em
 }
 
 .km-root .km-buttongroup {
@@ -588,10 +557,6 @@
     overflow: hidden;
     display: block;
     border-width: 0 0 1px 0
-}
-
-.km-root div:-moz-any(.km-toolbar,.km-navbar) {
-    overflow: visible
 }
 
 .km-navbar .km-view-title,.km-toolbar .km-button,.km-navbar .km-button {
@@ -2209,7 +2174,8 @@ body:after {
 }
 
 .km-android input[type=color],.km-android input[type=week],.km-android input[type=date],.km-android input[type=time],.km-android input[type=month],.km-android input[type=datetime],.km-android select:not([multiple]),.km-android .k-dropdown-wrap {
-    background: 100% 50% no-repeat url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAADICAMAAAB28zu6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIVBMVEX////19fT19fX19fX19fT19fT19fX19fP19fT19fT19fRLB2KYAAAACnRSTlMA7xBQr5/PMN+AkwDcBAAAANFJREFUeF7t2LuVwzAAA0HKpPxh/wVfiFS+SPCbqQDBRhg/BAAAAAAAAAAAAAAAAACA13Nf93yNW3jvb7zHLezvGP1v5/7GOW7hcezrjse4h7mvm+Mu1r5qjSgIJHHcxSyKI1ZTHAmkJ46YRXHEaoojgfTEEbMojlhNcSSQnjhiFsURqymOBNITR8yiOGI1xZFAeuKIWRRHrKY4EkhPHDGL4ojVFkcCSRwdZlEcsZriSCCJo8dMHEXOPKRFPsc+PuO3AQAAAAAAAAAAAAAAAADwB5LFJn8OLOPPAAAAAElFTkSuQmCC"),// Strange this one is... 100% 0 no-repeat -webkit-linear-gradient(left,rgba(0,0,0,0.3),rgba(0,0,0,0.3)),-webkit-linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,0.2)) #eee;
+    background: 100% 50% no-repeat url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAADICAMAAAB28zu6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIVBMVEX////19fT19fX19fX19fT19fT19fX19fP19fT19fT19fRLB2KYAAAACnRSTlMA7xBQr5/PMN+AkwDcBAAAANFJREFUeF7t2LuVwzAAA0HKpPxh/wVfiFS+SPCbqQDBRhg/BAAAAAAAAAAAAAAAAACA13Nf93yNW3jvb7zHLezvGP1v5/7GOW7hcezrjse4h7mvm+Mu1r5qjSgIJHHcxSyKI1ZTHAmkJ46YRXHEaoojgfTEEbMojlhNcSSQnjhiFsURqymOBNITR8yiOGI1xZFAeuKIWRRHrKY4EkhPHDGL4ojVFkcCSRwdZlEcsZriSCCJo8dMHEXOPKRFPsc+PuO3AQAAAAAAAAAAAAAAAADwB5LFJn8OLOPPAAAAAElFTkSuQmCC");
+    /* Strange this one is... 100% 0 no-repeat -webkit-linear-gradient(left,rgba(0,0,0,0.3),rgba(0,0,0,0.3)),-webkit-linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,0.2)) #eee; */
     background-size: auto 100%,1.8em 100%,auto;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.5),0 1px 0 rgba(0,0,0,.2);
     -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.5),0 1px 0 rgba(0,0,0,.2)
