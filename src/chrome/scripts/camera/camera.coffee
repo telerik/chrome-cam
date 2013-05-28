@@ -67,7 +67,7 @@ define [
 
         flash(callback)
 
-        image = canvas.toDataURL("image/jpeg", 1.0)
+        image = webgl.toDataURL("image/jpeg", 1.0)
         name = new Date().getTime()
 
         # set the name of this image to the current time string

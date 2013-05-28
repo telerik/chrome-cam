@@ -14,7 +14,7 @@ iframe {
 
 .hidden { display: none }
 
-#video, #canvas, .wrapper {
+#video, canvas, .wrapper {
     width: 720px;
     height: 540px;
 }
@@ -28,7 +28,7 @@ iframe {
     left: 135px;
 }
 
-#canvas, .transfer { border: 1px solid #2d2d2d; }
+canvas, .transfer { border: 1px solid #2d2d2d; }
 
 .paparazzi-wrapper { position: absolute; }
 

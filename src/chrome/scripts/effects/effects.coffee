@@ -11,39 +11,33 @@ define [
     ghostBuffer = []
 
     webgl = fx.canvas()
+    @webgl = webgl
 
     texture = null
 
     draw = (canvas, element, effect) ->
-        ctx = canvas.getContext "2d"
-
         webgl.draw texture
-        # canvas.draw(texture)
-
         effect webgl, element
-
         webgl.update()
 
-        ctx.drawImage webgl, 0, 0, webgl.width, webgl.height
-
     simple = (canvas, element, x, y, width, height) ->
-
         ctx = canvas.getContext "2d"
         ctx.drawImage element, x, y, width, height
 
     pub =
 
         clearBuffer: ->
-
             ghostBuffer = []
 
         init: ->
+            canvas = document.getElementById('canvas')
+            $(canvas).detach()
+            texture = webgl.texture(canvas)
+            webgl.draw texture
+            $(".wrapper").append $(webgl)
 
         advance: (element) ->
-            if texture?
-                texture.loadContentsOf element
-            else
-                texture = webgl.texture(element)
+            texture.loadContentsOf element
 
         data: [
             {
