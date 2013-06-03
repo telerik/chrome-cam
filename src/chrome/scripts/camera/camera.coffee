@@ -178,4 +178,4 @@ define [
 
             # HACK: This should be done some where else.
             effects.init()
-            effect.name = localization[effect.id] for effect in effects.data
+            e.name = localization[e.id] for e in effects.data
