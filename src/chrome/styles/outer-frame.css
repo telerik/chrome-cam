@@ -28,6 +28,11 @@ iframe {
     left: 135px;
 }
 
+.wrapper canvas {
+  transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+}
+
 canvas, .transfer { border: 1px solid #2d2d2d; }
 
 .paparazzi-wrapper { position: absolute; }
