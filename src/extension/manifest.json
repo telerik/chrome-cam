@@ -6,6 +6,7 @@
   "manifest_version": 2,
   "offline_enabled" : true,
   "default_locale": "en",
+  "kiosk_enabled": true,
   "oauth2": {
     "client_id": "1066229426336-mq4dh1q2ufe2d8hp0un5jfjft8n0oc8o.apps.googleusercontent.com",
     "scopes": [
@@ -35,8 +36,7 @@
     "contextMenus",
     "storage",
     "power",
-    "kiosk_enabled",
-    "experimental",
+    "identity",
     "https://www.google.com/cloudprint/search",
     "https://www.google.com/cloudprint/submit",
     "http://camera-kiosk.appspot.com/send"

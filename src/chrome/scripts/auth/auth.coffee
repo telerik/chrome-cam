@@ -1,9 +1,9 @@
 define [], ->
     pub =
         getToken: (callback) ->
-            chrome.experimental.identity.getAuthToken { interactive: true }, (token) ->
+            chrome.identity.getAuthToken { interactive: false }, (token) ->
                 if token
                     callback token
                 else
-                    chrome.experimental.identity.getAuthToken { interactive: true }, (token) ->
+                    chrome.identity.getAuthToken { interactive: true }, (token) ->
                         callback token
